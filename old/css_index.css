@@ -1,0 +1,115 @@
+ 
+/*-------------------------*/
+
+/*-------------------------*/
+
+
+#form_search {
+  margin: 0px auto 1px;
+  max-width: 728px;
+  border: 0px solid #EEE;
+  background: #F5F5F5;
+  border-width: 1px 0px;
+  padding: 20px 0 0px;
+  position: relative;}
+
+#form_search_data {    padding: 0 25px;
+    min-height: 70px;
+    text-align: left;
+    font-size: 13px;
+    color: #777;}
+
+#form_search_bottom {  border: 1px solid #ccc;
+  border-width: 1px 0 0 0;
+  text-align: center;
+  padding: 10px;
+  margin: 30px 0px 0px;} 
+ 
+
+
+/* --- Нижний блок, красный ---  */ 
+
+/* -- block_static_tip --*/
+#block_static_alert {
+  display: block;
+  padding: 10px 20px; 
+  background: #FF9999; 
+  color: #FFF;
+  font-size: 14px; 
+  text-decoration: none;
+}
+
+#block_static_alert u{
+  display: inline-block;
+  text-decoration: none;
+  border-bottom: 1px dashed #fff;
+}
+
+#block_static_alert:hover {
+  background-image: -webkit-linear-gradient(top, #FF9999, #FF9999); color: #FFF;
+}   
+/* -- block_static_tip --*/
+
+ 
+ 
+/* ---------- ajax_name --------------- */ 
+
+#tip_general {
+    text-align: left;
+    margin: 0px auto 0px;
+    display: inline-block;
+    min-width: 698px;
+    padding: 10px 15px;
+  margin-bottom: 1px;
+    background: #FFF1C9;
+    border: 0px solid Gainsboro;
+    position: relative;
+  color: #444;
+  font-size: 14px;
+  border-radius: 0px;
+}
+
+#tip_general a {
+  color: #777;
+}
+
+#tip_general a:hover  {
+  color: #444;
+}
+
+#tip_general .close_tip {
+    position: absolute;
+    right: 5px;
+    top: 1px;
+}
+
+#tip_general .close_tip a {
+    font-size: 10px;
+    color: DimGray;
+    text-decoration: none;
+}
+
+#tip_general.name  {
+    background: #89D363;
+  color: #fff;
+}
+
+#tip_general.pink {
+    background: #f9c;
+}
+
+#tip_general.name a {
+  color: #f5f5f5;
+}
+
+#tip_general.name a:hover  {
+  color: #FFF;
+}
+
+
+
+
+
+
+
+

@@ -1,0 +1,113 @@
+
+     
+/* Статическая панель настроек */ 
+#option_static_block {  
+  /*display: none;*/ 
+  position: absolute; 
+  top: 40px; 
+  bottom: 0px; 
+  left:  0px; 
+  right: 0px;        
+  z-index: 100;
+}
+ 
+#option_static_cover {
+  position: absolute; 
+  top: 0px; 
+  bottom: 0px; 
+  left: 0px; 
+  right: 0px; 
+  background: #CCC; 
+  opacity: 0.5;
+}
+ 
+#static_loader {   
+  display: none; 
+  position: absolute; 
+  top: 0px; 
+  bottom: 0px; 
+  left: 0px; 
+  right: 0px; 
+  background: url(/static/img/icon/loader_static96.png) center center no-repeat;
+}
+ 
+#option_static_wrapper {
+  position: absolute; 
+  top: 0px;  
+  bottom: 0px; 
+  left: 0px; 
+  right: 0px; 
+  padding: 10px 10px;
+}
+
+#option_static_container {
+  background: #fff;
+  padding: 20px 10px 25px;
+}
+
+#option_static_close {
+  position: absolute; 
+  top: 10px; 
+  right: 10px; 
+  background: #fff; 
+  font-size: 15px; 
+  padding: 5px 10px;    
+  color: #999;
+  cursor: pointer;
+}
+
+    
+/* Форма отдельных опций */ 
+.tab_right {
+  width: 200px; text-align: right;
+  vertical-align: top;
+  color: #777;
+  padding: 5px 10px 5px 5px;
+}
+.tab_left  {
+  text-align: left;
+  color: #000;
+  padding: 5px ;
+}
+
+.option_cap {
+  padding: 3px 0;
+  margin-bottom: 0px;
+  font-size: 16px;
+  border-bottom: 1px solid #EEE;
+}
+
+.cap_link {
+  font-size: 13px;
+  margin-left: 10px;
+}
+
+.option_tab {
+  text-align: left;
+  padding: 0 25px 10px;
+  font-size: 13px; 
+}
+
+.tab_context {
+  font-size: 14px;
+  padding: 10px 0px;
+  max-width: 500px;
+}
+
+.hint_context {
+  margin-bottom: 10px; 
+  padding: 10px 15px; 
+  border: 1px solid #e5e5e5; 
+  background: #f5f5f5; 
+  color: #666; 
+  font-size: @default-font-size; 
+}
+
+.tab_input {
+  font-size: 14px;
+  padding: 5px 0px;
+}
+
+.table_opt { }
+
+

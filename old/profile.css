@@ -1,0 +1,38 @@
+#notification {     
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  text-align: center;  }
+
+#profile_alert {
+ position: relative;
+ text-align: left;
+ top: 7px;
+ display: inline-block;
+ margin: 0px auto 0;
+ color: #777;
+ background: #F9ECBF ;
+ padding: 7px 15px;
+ border-radius: 7px;}
+
+#tab_alert {
+  font-size: 12px;
+  padding: 10px 15px;
+  background: #F9ECBF ;
+  border-radius: 10px;
+  max-width: 500px;
+  margin-top: 5px;
+  color: #666;
+}
+
+.alert_text {  color: #FF8080;}
+
+.question_mark{ width: 13px;
+ height: 14px;}
+
+    a {
+      color: #0066CC;
+      text-decoration: none;
+    }
+
