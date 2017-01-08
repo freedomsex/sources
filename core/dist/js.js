@@ -1,3 +1,48 @@
+ 
+$(document).ready(function() 
+{               
+    userinfo.init();
+    slider.init();
+    storage.init();
+    giper_chat.init();
+    notepad.init();
+               
+    mailsett.init(); 
+    report.init(); 
+    navigate.init();
+  
+    name_suggest.init(); 
+    city_suggest.init(); 
+    
+    option_static.init(); 
+    option_sex.init(); 
+    option_email.init();
+    profile_alert.init();
+    profile_option.init();
+    
+    user_tag.init();
+    desire_clip.init();
+    
+}); 
+      
+   
+
+
+// -- Получить новый хэш ---
+var hash; 
+function simple_hash() { 
+  var now = new Date(); 
+   hash = now.getTime();  
+}
+     
+function disabled_with_timeout(elem,time) {  
+ elem.prop("disabled",true);
+ setTimeout( function (){
+  elem.prop("disabled",false);
+ },time * 1000); 
+}
+     
+
    
 // -- Автогенератор информации ---        
 var auto_gen = {    
@@ -749,35 +794,6 @@ var giper_chat = {
    giper_chat.new_message ({age: "45",count_unread: "1",mess_id: "36925678",name: "Саша",reply: "",sity: "Ивантеевка",text: "До тех пор, пока не нажата кнопка «Выход» на свою анкету можно зайти именно с этого компьютера или телефона в любое время. Если вы впервые зашли на сайт из телефона и хотите",time: "1415561723",type: "new_message",user: "699208"});
           */      
   }) ;
-
- 
-$(document).ready(function() 
-{               
-    userinfo.init();
-    slider.init();
-    storage.init();
-    giper_chat.init();
-    notepad.init();
-               
-    mailsett.init(); 
-    report.init(); 
-    navigate.init();
-  
-    name_suggest.init(); 
-    city_suggest.init(); 
-    
-    option_static.init(); 
-    option_sex.init(); 
-    option_email.init();
-    profile_alert.init();
-    profile_option.init();
-    
-    user_tag.init();
-    desire_clip.init();
-    
-}); 
-      
-   
 
 
 var json = {
@@ -2736,22 +2752,6 @@ var userinfo = {
     }    
 } 
 
-
-
-// -- Получить новый хэш ---
-var hash; 
-function simple_hash() { 
-  var now = new Date(); 
-   hash = now.getTime();  
-}
-     
-function disabled_with_timeout(elem,time) {  
- elem.prop("disabled",true);
- setTimeout( function (){
-  elem.prop("disabled",false);
- },time * 1000); 
-}
-     
 
    
 // -- Список посещенных страниц ---
