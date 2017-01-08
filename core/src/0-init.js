@@ -21,7 +21,10 @@ $(document).ready(function()
     profile_option.init();
     
     user_tag.init();
-    desire_clip.init();
+    desire_clip.init();   
+     
+    result_list.init();  
+    visited.init();
     
 }); 
       
