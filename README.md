@@ -1,5 +1,7 @@
 ## Файлы javascript
 
+[![Join the chat at https://gitter.im/freedomsex/javascript](https://badges.gitter.im/freedomsex/javascript.svg)](https://gitter.im/freedomsex/javascript?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Исходники для javascript файлов. Есть настройки для планировщика сборки из исходников и готовые файлы. Для сборки используется [Grunt](http://gruntjs.com/).  
 * core - общие для проекта скрипты
 * mess - для страницы сообщений
