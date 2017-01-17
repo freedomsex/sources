@@ -6,6 +6,12 @@
   font-size: 12px;
  }
 
+#human_cent_block {
+  position: relative; 
+  margin-bottom: 20px;
+}
+
+
 /* message list */
 
 .message_list_title_date {
@@ -25,8 +31,8 @@
 
 .message_list_block{
   border: 0px solid #eee;
-  padding: 0px 0px;
-  margin: 0px auto 20px;
+  padding: 0px 0px 20px;
+  margin: 0px auto 0px;
 }
                    
 .message_list_body {
@@ -68,28 +74,34 @@
 }
 
 .message_list_save {
-    font-size: 11px;
-    color: #FFF;
+    font-size: 11px;    
+   color: #999;   
     vertical-align: top;
   text-decoration: none;
   margin-right: 0px;
   -webkit-transition: color 0.2s ease;
   -moz-transition: color 0.2s ease;
   -o-transition: color 0.2s ease;
-  transition: color 0.2s ease;
-}
-
-.message_list_block:hover
-.message_list_save {
-   color: #999;            
+  transition: color 0.2s ease;    
+    display: none;         
    cursor: pointer;
 } 
 
-.remove_mess { 
-  padding-right: 15px;
-  background: url(/img/icon/remove_mess.png) no-repeat right 72%;
+.remove_mess {  
+  padding-right: 5px; /*
+  background: url(/img/icon/remove_mess.png) no-repeat right 72%; */
 }
 
+.bunned_mess { 
+  margin-left: 3px; 
+  vertical-align: bottom;
+}
+
+
+#mess_option_hint {   
+  margin-top: 5px;  
+  border-top: 1px dotted #CCC;
+}
 
  
 /* end message list */
@@ -129,10 +141,10 @@ div.alert_block a:hover {
 
 div.alert_block_mess {
     color: #999;
-  background: #F9ECBF ;
-    font-size: 11px;
+  background: #F9ECBF;
+    font-size: 13px;
     margin: 0px 0px 0px 0px  ;
-    padding: 5px 0px 5px 15px  ;
+    padding: 10px 0px 10px 15px  ;
   border-bottom-left-radius: 0px;
   border-bottom-right-radius: 0px;
   text-align: left;
@@ -163,52 +175,34 @@ div.alert_block_mess a:hover {
   margin-bottom: 15px;
 } 
 
+
 /* --- Правка контакт --- */
-.edit_contact_icon {
-  width: 14px;
-  height: 14px;
-  border: 1px solid #FFF;
-  padding: 3px;
-  border-radius: 5px;
-  margin-left: 3px;
+#edit_cont_btn {
+  width: 16px;
+  height: 16px;
   position: relative;
-  bottom: -5px;
+  top: -3px;
+  margin-left: 3px;
+  cursor: pointer;
+  opacity: 0.8; 
 }
 
-.edit_contact_icon:hover {
-  border: 1px solid #EFEFEF;
+#edit_cont_btn:hover {
+  opacity: 1;
 } 
 /* --- Правка контакт --- */
 
 
-/* --- Социальные сети, метки --- */ 
-.social_lab {
-     width:12px;height:12px;
-     display: inline-block;
-     position: relative;
-     bottom: -2px;
-  padding-left: 5px;
-  text-decoration: none;
+#contact_load_menu {
+  white-space: nowrap;
+  margin: 0px 6px 0px; 
+  position: relative;
+  border-bottom: 1px solid #E5E5E5;
 }
 
-.vk { background: url(/img/icon/ct_vk_gr.png) no-repeat left center; }
-.sk { background: url(/img/icon/ct_sk_gr.png) no-repeat left center; }
-.ok { background: url(/img/icon/ct_ok_gr.png) no-repeat left center; }
-.fb { background: url(/img/icon/ct_fb_gr.png) no-repeat left center; }
-.ph { background: url(/img/icon/ct_ph_gr.png) no-repeat left center; }
-.em { background: url(/img/icon/ct_em_gr.png) no-repeat left center; }
-.go { background: url(/img/icon/ct_go_gr.png) no-repeat left center; } 
-/* --- Социальные сети, метки --- */ 
-
-
-
-/*----- Список контактов -----*/ 
-.message_listbox {
-  max-height: 272px;
+.message_listbox { 
   padding-bottom: 0px;
-  border-left: 1px solid #CCC;
-  overflow-y: auto, noscroll;
-  overflow-x: hidden;
+  border-left: 1px solid #E5E5E5;
   margin-bottom: 0px;
 }
 
@@ -224,16 +218,20 @@ div.alert_block_mess a:hover {
   background: GhostWhite;
 }
 
-#list_contact_block {  
-    padding: 0px 5px; 
+#list_contact_block {
+  display: none;    
+  max-height: 800px;   
+    padding: 0px 5px;   
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .listbox_recover,
 .message_listbox_link {
     display: block;
-    padding: 12px 10px;
+    padding: 12px 3px;
     margin: 0;
-    border-bottom: 1px solid #D4D4D4;
+    border-bottom: 1px solid #E5E5E5;
     text-decoration: none;
     color: #333;
 }
@@ -253,13 +251,12 @@ div.alert_block_mess a:hover {
     display: inline-block;
     text-align: center;
     color: White;
-  border-radius: 5px;
-    border: 1px solid White;
+  border-radius: 5px; 
     background: White;
     padding: 0px 0px;
     font-size: 9px;
-  width: 5px;
-  height: 5px;
+  width: 7px;
+  height: 7px;
   margin-right: 5px;
 }
 /*
@@ -269,89 +266,110 @@ div.alert_block_mess a:hover {
 .list_line_bro:hover {
     border: 1px solid OrangeRed;
 }     */
-
-.message_listbox_line:hover .list_line_bro {
-    background: GhostWhite;
-    border: 1px solid GhostWhite;
-}
-
+  
 .list_line_sex {
-    background: Pink;
-    border: 1px solid Violet;
+  background: Pink; 
 }
-
-.message_listbox_line:hover .list_line_sex{
-    border: 1px solid Pink;
-}
-
+  
 .list_line_new {
-    background: LightGreen;
-    border: 1px solid YellowGreen;
+  background: LightGreen; 
 }
-
-.message_listbox_line:hover .list_line_new{
-    border: 1px solid LightGreen;
-}
-
+  
 .list_line_onl {
-  background: Gold;
-    border: 1px solid Orange;
+  background: Gold; 
 }
-
-.message_listbox_line:hover .list_line_onl{
-    border: 1px solid Gold;
-}
-
+  
 .list_line_del {
-    background: WhiteSmoke;
-    border: 1px solid Gainsboro;
+  background: WhiteSmoke;     
 }
+ 
 
-.message_listbox_line:hover .list_line_del{
-    background: Gainsboro;
-    border: 1px solid Gainsboro;
+.cont_list_del_user {    
+  display: none;
+  color: #FFF;    
+  position: absolute;    
+  top: 12px;  
+  right: 3px;   
+  color: White;
+  text-decoration: none;          
+  background: #FF6600;   
+  border: 1px solid #EEE;   
+  padding: 2px 3px 1px;
+  border-radius: 15px;  
+  font-weight: bold;
+  font-size: 9px;        
 }
-
-.message_listbox_user_delete {
-    display: block;
-    position: absolute;
-    right: 0px;
-    top: 7px;    
-    padding: 5px 7px;
-    color: White;
-    text-decoration: none;
+  
+.cont_list_fav_user {
+  position: absolute;    
+  top: 6px;  
+  right: 0px;    
+  padding: 5px 3px;               
 }
-
-.message_listbox_line:hover .message_listbox_user_delete {
-    color: #CCC;
+  
+.cont_list_fav_user i {
+  display: block;    
+  width: 16px; 
+  height: 16px;          
+  background: url(/static/img/icon/favorite.png) no-repeat;   
 }
-
-.message_listbox_line:hover .message_listbox_user_delete:hover {
-    color: #333;
+  
+.cont_list_fav_user i.favorite {
+    background-position: -16px 0; 
 }
+           
+#contact_list_link {
+  display: inline-block;    
+  padding: 5px 0px 5px 2px; 
+} 
+ 
+#contact_list_icon {
+  display: inline-block;  
+  vertical-align: middle;  
+  width: 8px; 
+  height: 16px;          
+  background: url(/static/img/icon/list.png) no-repeat; 
+} 
+ 
 
 #listbox_caption {
   background: url(/img/icon/list_icon.png) no-repeat 10px 9px #CCFF99;
   margin: 5px;  position: relative; 
 }
 
-#listbox_caption a {  
-  display: block;
-  padding: 10px 30px;  
-  font-size: 14px; 
-  color: #336633;
-  text-shadow: #FFF 0px 1px 0px;
-  text-decoration: none; 
+.listbox_tab {  
+  display: inline-block;  
+  padding: 12px 5px; 
+  color: #aaa;
+  cursor: pointer;   
+}          
+
+.listbox_tab.active {
+  font-weight: bold;
+  color: #555;
 }
 
+#list_show_optn {   
+  display: inline-block;    
+  padding: 5px 0px; 
+  margin-left: 0px;   
+  color: #aaa;    
+  font-size: 10px; 
+  cursor: pointer;  
+}
+
+#list_load_next {     
+  display: inline-block;   
+  padding: 5px 4px; 
+}
 
 /*----- tips -----*/
 
 #tip_list_users {
   position: relative;
-    font-size: 14px;
-    color: #777;
-    padding: 15px 15px 10px ;
+  font-size: 14px;
+  color: #777;
+  padding: 15px 15px 10px ;
 } 
 
 #tip_list_green_text {
@@ -371,50 +389,88 @@ div.alert_block_mess a:hover {
   border-radius: 2px;
   padding: 10px 15px ; 
   background: #FF9900; 
-  font-weight: ;
+  font-weight: normal;
   background-image: -webkit-linear-gradient(top, #FF9900, #FFCC66); 
   display: block; 
   text-decoration: none;   
   text-shadow: #FF9900 0px 1px 0px;
 } 
 
+
 /*----- Список контактов -----*/
-
-
-
-#edit_contact {
-    padding: 0 0 10px;
+ 
+#human_data_print {
+  min-height: 30px;
+}
+#human_photo_min {
+  width: 24px; 
+  height: 24px;
+  position: relative;
+  margin-right: 3px;
+  top: -5px;
 }
 
-#edit_contact input{
-    margin: 0;
+#edit_cont_elem {       
+  display: none; 
+  vertical-align: bottom;
 }
+
+#edit_cont_elem input{
+  margin: 0; 
+  padding: 3px 2px ; 
+}
+
+#edit_human_name {
+  width: 100px;
+}
+
+#edit_human_age {
+  width: 30px;
+}
+
+#edit_human_city {
+  width: 80px;
+}
+
+
 
  
 .save_notice {
-    color: #777;
-    background: #F7F7F7;
+  color: #777;
+  background: #F7F7F7;
   padding: 5px 15px ;
-   margin: 10px 0 0;  
-    border: 1px solid #CCC;
-
+  margin: 10px 0 0;  
+  border: 1px solid #CCC; 
 }
 
 
+#human_anketa_block { 
+  margin-bottom: 0px; 
+}
 
-#human_data {
-  margin-bottom: 2px;
+#human_labe_block {
+  position: absolute; 
+  top: 10px; 
+  right: 0px; 
+  display: inline-block;
+}
+
+#human_data_block {
+  margin-bottom: 2px; 
+  min-height: 30px;
 }
 
 .human_name {
   color: #333;
-  font-size: 24px;
+  font-size: 24px;  
+  margin-right: 5px; 
 }
   
 #anketa_text {
-    font-size: 12px;
-    color: #444;
-    margin-top: 15px;
+  font-size: 12px;
+  color: #444;
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
 
 #lock {
@@ -427,7 +483,8 @@ div.alert_block_mess a:hover {
     text-decoration: none;
 }
 
-#agreement {
+#agreement {       
+  position: relative;
   clear: both; font-size: 11px; 
   padding: 15px 20px 15px;
   border-top: 1px solid #CCCCCC;
@@ -466,7 +523,7 @@ div.alert_block_mess a:hover {
   margin: 0px ; 
   background: #FFC; 
   padding: 10px 0 10px 15px ;
-  border: 1px solid #CCC; 
+  border: 1px solid #E5E5E5; 
   border-width: 1px 0 1px; 
   margin-top: 7px;
   position: relative;
@@ -476,7 +533,8 @@ div.alert_block_mess a:hover {
   background-repeat: no-repeat;
 }
 
-#mail_setting_caption {
+#mail_setting_caption { 
+  display: inline-block;
   font-size: 16px; 
   margin: 5px 5px 5px 0px ; 
   font-weight: normal;
@@ -486,10 +544,9 @@ div.alert_block_mess a:hover {
 #form_mail_setting {
   padding-top: 5px ;  
 }
-
-#mail_setting_caption a {
-  font-size: 12px;
-  display: none;
+ 
+#mail_setting_show {
+  display: none;   
 }
 
 #mail_setting_hide {
@@ -525,11 +582,24 @@ div.alert_block_mess a:hover {
   border-radius: 3px;
 }
 
+#opt_up,
+#opt_to {
+  width: 35px;
+}
+
+
+#block_mail_setting label {
+  margin-bottom: 0px;
+  font-weight: normal;
+}
+
+
+/* Быстрые сообщения */
 
 #mess_shab_text_block {
   padding-top: 5px; 
 }
-
+ 
 #mess_shab_text_caption {    
   border: 1px solid #CCCCCC;
   border-bottom: 0px solid #CCCCCC;
@@ -570,6 +640,49 @@ div.alert_block_mess a:hover {
   margin-bottom: 5px;
 }
 
+#message_form_caption {     
+  display: inline-block;  
+  padding: 5px 0px;
+  color: #888;
+}
+
+#message_form_caption_block {
+  margin: 0px 0 2px; 
+  padding: 0; 
+  font-size: 14px; 
+}   
+
+#post_form .glyphicon {
+  margin-right: 3px;
+}
+
+
+
+
+
+#anketa_collaps {   
+  display: inline-block;     
+  vertical-align: bottom;
+  padding: 5px 3px 5px 0px; 
+}
+
+#anketa_collaps_icon {   
+  display: inline-block; 
+  width: 16px;
+  height: 16px;
+  background-image: url(/static/img/icon/collapse.png);  
+  background-repeat: no-repeat; 
+}  
+
+#anketa_collaps_link {
+  font-size: 12px;   
+  margin-left: 5px; 
+}   
+
+.anketa_collaps_down {    
+  background-position: -16px 0px; 
+}
+
 #mail_abuse_public_block {
   margin-bottom: 5px;
 }
@@ -584,7 +697,7 @@ div.alert_block_mess a:hover {
   font-size: 14px;
   padding: 10px 15px;
   margin: 0px 0px 15px;
-  background:  ;
+  background: #FFF;
   border: 1px solid #ccc;
   position: relative;
   font-size: 12px; 
@@ -601,7 +714,7 @@ div.alert_block_mess a:hover {
   background: url(/img/icon/contact_update.png) no-repeat ; 
   position: absolute;  
   right: 3px; 
-  top: 9px; 
+  top: 11px; 
   width: 24px; 
   height: 24px; 
   cursor: pointer;
@@ -610,12 +723,67 @@ div.alert_block_mess a:hover {
 #notepad_on {    
   display: inline-block; 
   background: #f2f2f2 ;  
-  padding: 0 3px; 
-  font-size: 9px; 
+  padding: 1px 5px; 
+  font-size: 10px; 
   color: #5d5d5d;
   border: 1px solid #CCC;  
   cursor: pointer;
 } 
+ 
+#notice_post {    
+  display: none; 
+  position: absolute; 
+  font-size: 9px; 
+  margin: 0px 5px; 
+  padding: 2px 5px;  
+  bottom: 7px; 
+  text-decoration: none; 
+} 
+
+.notice_post {      
+  background: #fff; 
+  border: 1px solid #CCCCCC; 
+  color: #666; 
+}
+
+.notice_alert{
+  background: #F33; 
+  border: 1px solid #F00; 
+  color: #fff;
+}
+
+    
+
+#added_info_block {   
+  margin: 15px 1px 5px;         
+}
+
+#added_info_btn {  
+  display: none;   
+  background: url(/img/sprite-plus.png) no-repeat ; 
+  padding-left: 19px; 
+  min-height: 16px;    
+  cursor: pointer;
+
+}
+
+#added_info_btn span{  
+  border-bottom: 0px dashed #999;
+  color: #06C;        
+}
+
+#added_info {  
+  display: none; 
+  color: #666;         
+}
+
+#added_age,
+#added_name,
+#added_city {  
+  width: 120px;   
+  margin-right: 5px;       
+} 
+
 
 /* Замечания к анкете */
 
@@ -645,14 +813,6 @@ div.alert_block_mess a:hover {
   text-align: right;
 }
 
-.gray_link {    
-  color: #999; 
-}
-
-.red_link {   
-  color: red; 
-}
-
 #abuse_button_show_link {  
   display: none;     /*
   color: #06C;
@@ -672,8 +832,7 @@ div.alert_block_mess a:hover {
   font-size: 10px; 
   border: 1px solid #CCC;
   border-width: 1px 0; 
-  padding: 5px 5px 5px;      
-  display:  ; 
+  padding: 5px 5px 5px;
   margin-bottom: 10px;  
   background: #FFFFCC; 
 }
@@ -708,5 +867,58 @@ div.alert_block_mess a:hover {
 
 
 
+/* Обратная связь */
+.report_gray, 
+.report_blue,
+.report_orange {     
+  display: inline-block; 
+  color: #fff; 
+  font-size: 12px;
+  border-width: 1px 0 1px 1px;  
+  position: relative;     
+   text-align: center;   
+  padding: 4px 15px;  
+  text-decoration: none;   
+}   
+ 
+.report_gray {  
+  background: #CCC;     
+  border: 1px solid #999;
+}
+
+.report_blue {     
+  border-top-left-radius: 10px;   
+  background: #809FFF;    
+  border: 1px solid #6666FF; 
+}
+
+.report_orange {        
+  border-top-right-radius: 10px;  
+  background: #FFCC66;       
+  border: 1px solid #FF9966;  
+}
 
 
+.quick_mess_tab {  
+  display: inline-block; 
+  border: 1px solid #CCC; 
+  border-top-width: 0px; 
+  background: #FFF;
+  color: #666;    
+  padding: 0px 12px 0px;    
+  border-bottom-left-radius: 7px;
+  border-bottom-right-radius: 7px;
+  cursor: pointer; 
+}
+
+#quick_tab_public {      
+  background: #CCFF99;
+}
+
+#quick_tab_offer {         
+  background: #FFCCCC;
+}
+
+#quick_tab_virt {              
+  background: #CCCCFF;
+}

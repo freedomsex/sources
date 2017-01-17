@@ -1,15 +1,22 @@
 module.exports = function (grunt) {
     grunt.initConfig({
+        less: {
+            dev: {
+                options: { 
+                },
+                files: {
+                  "mess/dist/mess.css": "mess/src/_main.less"
+                }
+            }    
+        },
         watch: {
             options: {
                 livereload: true
             },
-            scripts: {
+            styles: {
                 files: [
-                    'Gruntfile.js',
-                    'core/src/*.js',
-                    'mess/src/*.js',
-                    'admin/src/*.js',
+                    'Gruntfile.js', 
+                    'mess/src/*',
                 ],
                 tasks: ['default'],
                 options: {
@@ -17,31 +24,15 @@ module.exports = function (grunt) {
                 },
             },
         },
-        //Склеивание файлов
-        concat: {
-            options: {
-            },
-            core: {
-                src: ['core/src/*.js'],
-                dest: 'core/dist/core.js',
-            },
-            mess: {
-                src: ['mess/src/*.js'],
-                dest: 'mess/dist/mess.js',
-            },
-            admin: {
-                src: ['admin/src/*.js'],
-                dest: 'admin/dist/admin.js',
-            },
-        },
     });
 
     // Загрузка модулей, которые предварительно установлены
+    grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-watch');
 
     // Эти задания будут выполнятся сразу же когда вы в консоли напечатание grunt, и нажмете Enter
-    grunt.registerTask('default', ['concat']);
-    grunt.registerTask('w',   ['concat', 'watch']);
+    grunt.registerTask('default', ['less']);
+    grunt.registerTask('w',   ['less', 'watch']);
 };
 
