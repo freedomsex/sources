@@ -1,76 +1,70 @@
-// Color variables (appears count calculates by raw css)
-@color0: #4d9900; // Appears 2 times
-@color1: #cc00cc; // Appears 2 times
-@color2: #ffffff; // Appears 2 times
-@color3: #cccccc; // Appears 2 times
-@color4: #ffcc66; // Appears 2 times
-@color5: #ff9900; // Appears 2 times
+@import "../../_colors.less";
 
-// Width variables (appears count calculates by raw css)
 @width0: 230px; // Appears 2 times
 
+@import "formater.less";
 
 .ex_left_im {
-	border-radius: 2px;
-	border: 4px solid @color2;
-	margin-bottom: 2px;
-	margin: 0px;
-	width: 234px;
+    border-radius: 2px;
+    border: 4px solid @white;
+    margin-bottom: 2px;
+    margin: 0px;
+    width: 234px;
 }
 .ex_marker {
-	background-color: @color4;
-	background: -webkit-linear-gradient(top, @color5, @color4) @color5;
-	border-radius: 3px;
-	color: @color2;
-	font-size: 14px;
-	margin: 0 0 3px 3px;
-	padding: 5px 3px;
-	text-align: center;
-	text-decoration: none;
-	width: @width0;
+    background-color: @orange-light;
+    background: -webkit-linear-gradient(top, @orange, @orange-light) @orange;
+    border-radius: 3px;
+    color: @white;
+    font-size: 14px;
+    margin: 0 0 3px 3px;
+    padding: 5px 3px;
+    text-align: center;
+    text-decoration: none;
+    width: @width0;
 }
 .cm_line {
-	border-radius: 3px;
-	color: #444444;
-	font-size: 14px;
-	line-height: 1.5;
-	margin: 0 0 3px 3px;
-	padding: 5px 5px;
-	text-align: left;
-	text-decoration: none;
-	width: @width0;
+    border-radius: 3px;
+    color: @dark;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0 0 3px 3px;
+    padding: 5px 5px;
+    text-align: left;
+    text-decoration: none;
+    width: @width0;
 }
 .cm_smile {
-	margin: 0;
-	padding: 0;
-	text-decoration: none;
-	vertical-align: middle;
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    vertical-align: middle;
 }
 .comment_block {
-	border-radius: 0px;
-	border-top: 0px solid @color3;
-	color: #5b5b5b;
-	font-size: 12px;
-	margin: 15px 0 0 0px;
-	text-align: left;
+    border-radius: 0px;
+    border-top: 0px solid @gray;
+    color: @dark-light;
+    font-size: 12px;
+    margin: 15px 0 0 0px;
+    text-align: left;
 }
 .comment_block.man {
-	b {
-		border-top: 1px solid @color0;
-		color: @color0;
-	}
+    b {
+        border-top: 1px solid @green-dark;
+        color: @green-dark;
+    }
 }
 .comment_block.woman {
-	b {
-		border-top: 1px solid @color1;
-		color: @color1;
-	}
+    b {
+        border-top: 1px solid @violet-dark;
+        color: @violet-dark;
+    }
 }
 .comment_block.reply {
-	background: #FFFFCC;
-	border: 0px solid @color3;
-	font-size: 11px;
-	margin-left: 15px;
-	margin-top: 5px;
-	padding: 7px 15px;
+    background: @yellow-light;
+    border: 0px solid @gray;
+    font-size: 11px;
+    margin-left: 15px;
+    margin-top: 5px;
+    padding: 7px 15px;
 }

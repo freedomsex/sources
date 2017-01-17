@@ -41,7 +41,7 @@
   text-decoration: none;
 }
 .message_list_title {
-  color: #449911;
+  color: #669933;
   margin-bottom: 5px;
   position: relative;
 }
@@ -54,7 +54,7 @@
   top: 0;
 }
 .unread {
-  color: #ff8800;
+  color: #ff9900;
 }
 .message_list_save {
   -moz-transition: color 0.2s ease;
@@ -81,7 +81,7 @@
   margin-top: 5px;
 }
 div.alert_block {
-  background: #ffff99;
+  background: #f9ecbf;
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
   border-top: 0px solid #ffffff;
@@ -107,7 +107,7 @@ div.alert_block a:hover {
   top: 7px;
 }
 div.alert_block_mess {
-  background: #F9ECBF;
+  background: #f9ecbf;
   border-bottom-left-radius: 0px;
   border-bottom-right-radius: 0px;
   color: #999999;
@@ -262,7 +262,7 @@ div.alert_block_mess b {
   width: 8px;
 }
 #listbox_caption {
-  background: url(/img/icon/list_icon.png) no-repeat 10px 9px #ccff99;
+  background: url(/img/icon/list_icon.png) no-repeat 10px 9px #CBE6B3;
   margin: 5px;
   position: relative;
 }
@@ -273,7 +273,7 @@ div.alert_block_mess b {
   padding: 12px 5px;
 }
 .listbox_tab.active {
-  color: #555555;
+  color: #666666;
   font-weight: bold;
 }
 #list_show_optn {
@@ -304,7 +304,7 @@ div.alert_block_mess b {
   padding: 0px 15px 12px;
 }
 #tip_list_users_orange {
-  background-image: -webkit-linear-gradient(top, #ff9900, #ffd633);
+  background-image: -webkit-linear-gradient(top, #ff9900, #ffcc66);
   background: #ff9900;
   border-radius: 2px;
   color: white;
@@ -344,7 +344,7 @@ div.alert_block_mess b {
   width: 80px;
 }
 .save_notice {
-  background: #F7F7F7;
+  background: #f2f2f2;
   border: 1px solid #cccccc;
   color: #666666;
   margin: 10px 0 0;
@@ -394,7 +394,7 @@ div.alert_block_mess b {
   text-shadow: #ffffff 0px 1px 0px;
 }
 #ask_green {
-  background: #66CC00;
+  background: #84bf3b;
   border-radius: 5px;
   color: #ffffff;
   cursor: default;
@@ -445,7 +445,7 @@ div.alert_block_mess b {
   background-image: url(/img/icon/minus.gif);
   background-position: 0% 1px;
   background-repeat: no-repeat;
-  color: #5C5C5C;
+  color: #666666;
   padding-left: 20px;
   text-decoration: none;
 }
@@ -461,7 +461,7 @@ div.alert_block_mess b {
   text-decoration: none;
 }
 #saved_setting {
-  background: #ccff99;
+  background: #CBE6B3;
   border-radius: 3px;
   bottom: 5px;
   display: none;
@@ -505,7 +505,7 @@ div.alert_block_mess b {
   border-bottom: 1px dashed #669933;
 }
 #offer_form_element {
-  color: #ff3399;
+  color: #ff6666;
   font-size: 12px;
   margin-left: 15px;
 }
@@ -513,7 +513,7 @@ div.alert_block_mess b {
   margin-bottom: 5px;
 }
 #message_form_caption {
-  color: #888888;
+  color: #999999;
   display: inline-block;
   padding: 5px 0px;
 }
@@ -558,7 +558,7 @@ div.alert_block_mess b {
 #mail_bad_text_alert {
   background: #ffffff;
   border: 1px solid #cccccc;
-  color: #3D3D3D;
+  color: #333333;
   font-size: 12px;
   font-size: 14px;
   margin: 0px 0px 15px;
@@ -581,7 +581,7 @@ div.alert_block_mess b {
 #notepad_on {
   background: #f2f2f2;
   border: 1px solid #cccccc;
-  color: #5d5d5d;
+  color: #666666;
   cursor: pointer;
   display: inline-block;
   font-size: 10px;
@@ -602,8 +602,8 @@ div.alert_block_mess b {
   color: #666666;
 }
 .notice_alert {
-  background: #ff3333;
-  border: 1px solid #ff0000;
+  background: #ff9966;
+  border: 1px solid #ff3333;
   color: #ffffff;
 }
 #added_info_block {
@@ -711,10 +711,10 @@ div.alert_block_mess b {
   text-decoration: none;
 }
 .report_blue {
-  background: #809FFF;
+  background: #6F92D8;
   border-top-left-radius: 10px;
   border-width: 1px 0 1px 1px;
-  border: 1px solid #6666FF;
+  border: 1px solid #9999ff;
   color: #ffffff;
   display: inline-block;
   font-size: 12px;
@@ -724,10 +724,10 @@ div.alert_block_mess b {
   text-decoration: none;
 }
 .report_orange {
-  background: #ffd633;
+  background: #ffcc66;
   border-top-right-radius: 10px;
   border-width: 1px 0 1px 1px;
-  border: 1px solid #FF9966;
+  border: 1px solid #ff9900;
   color: #ffffff;
   display: inline-block;
   font-size: 12px;
@@ -748,7 +748,7 @@ div.alert_block_mess b {
   padding: 0px 12px 0px;
 }
 #quick_tab_public {
-  background: #ccff99;
+  background: #CBE6B3;
 }
 #quick_tab_offer {
   background: #ffcccc;

@@ -49,48 +49,6 @@ table.users {
   border: 1px solid #f2f2f2;
   width: 100%;
 }
-.bg_wht {
-  background: #ffffff;
-}
-.bg_red {
-  background: #FFD1B3;
-}
-.bg_grn {
-  background: #CCFF99;
-}
-.bg_mgn {
-  background: #F2D9F2;
-}
-.bg_yel {
-  background: #FFF0B3;
-}
-.bg_gra {
-  background: #f5f5f5;
-}
-.bg_blu {
-  background: #CCCCFF;
-}
-.bg_bla {
-  border-color: #333333;
-}
-.bg_ored {
-  background: #FFE0CC;
-}
-.bg_ogrn {
-  background: #DAFFB3;
-}
-.bg_omgn {
-  background: #FFF2E5;
-}
-.bg_oyel {
-  background: #ffffcc;
-}
-.bg_ogra {
-  background: #f7f7f7;
-}
-.bg_oblu {
-  background: #CCD6FF;
-}
 .br_red {
   border-color: #ff9966;
 }
@@ -101,7 +59,7 @@ table.users {
   border-color: #DDBBDD;
 }
 .br_yel {
-  border-color: #ffd633;
+  border-color: #ffcc66;
 }
 .br_blu {
   border-color: #9999ff;
@@ -114,24 +72,6 @@ table.users {
 }
 .br_bla {
   border-color: #999999;
-}
-.bg_dblu {
-  background: #6F92D8;
-}
-.bg_dgrn {
-  background: #84bf3b;
-}
-.bg_dgra {
-  background: #cccccc;
-}
-.bg_dred {
-  background: #ff9966;
-}
-.bg_dyel {
-  background: #ffd633;
-}
-.bg_dbla {
-  background: #666666;
 }
 .line_stnd {
   color: #666666;
@@ -291,7 +231,7 @@ table.users {
   padding: 10px 10px 12px;
 }
 .review {
-  background: #f7f7f7;
+  background: #f2f2f2;
   border-top: 1px solid #cccccc;
   color: #333333;
   font-size: 13px;
@@ -327,8 +267,8 @@ table.users {
   color: #84bf3b;
 }
 .visual.red {
-  border: 1px solid #ff5757;
-  color: #ff5757;
+  border: 1px solid #ff6666;
+  color: #ff6666;
 }
 .visual.blu {
   border: 1px solid #0066cc;
@@ -397,8 +337,8 @@ table.users {
   background: #e5e5e5;
 }
 .extra_button {
-  background: #f7f7f7;
-  border: 1px solid #dddddd;
+  background: #f2f2f2;
+  border: 1px solid #e5e5e5;
   color: #cccccc;
   display: block;
   padding: 5px 7px;
@@ -407,18 +347,18 @@ table.users {
 }
 .extra_button.blue {
   background: #9999ff;
-  border: 1px solid #6666FF;
+  border: 1px solid #4262a9;
   color: #ffffff;
 }
 .extra_button.green {
   background: #ffffff;
   border: 1px solid #84bf3b;
-  color: #66B307;
+  color: #669933;
 }
 .extra_button.red {
   background: #ffffff;
-  border: 1px solid #FF8888;
-  color: #FF6666;
+  border: 1px solid #ff9999;
+  color: #ff6666;
 }
 .extra_saved {
   background: url(/static/img/icon/ok.png) no-repeat;

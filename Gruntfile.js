@@ -19,6 +19,7 @@ module.exports = function (grunt) {
             styles: {
                 files: [
                     'Gruntfile.js', 
+                    'colors.less',
                     'core/src/*', 
                     'mess/src/*',
                     'admin/src/*',
