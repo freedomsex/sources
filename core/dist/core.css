@@ -1001,3 +1001,87 @@ a.name:hover {
   background: #F9ECBF;
   padding: 10px 15px;
 }
+#form_search {
+  background: #f2f2f2;
+  border-width: 1px 0px;
+  border: 0px solid #eeeeee;
+  margin: 0px auto 1px;
+  max-width: 728px;
+  padding: 20px 0 0px;
+  position: relative;
+}
+#form_search_data {
+  color: #666666;
+  font-size: 13px;
+  min-height: 70px;
+  padding: 0 25px;
+  text-align: left;
+}
+#form_search_bottom {
+  border-width: 1px 0 0 0;
+  border: 1px solid #cccccc;
+  font-size: 14px;
+  margin: 30px 0px 0px;
+  padding: 10px;
+  text-align: center;
+}
+#block_static_alert {
+  background: #ff9999;
+  color: #ffffff;
+  display: block;
+  font-size: 14px;
+  padding: 10px 20px;
+  text-decoration: none;
+}
+#block_static_alert u {
+  border-bottom: 1px dashed #ffffff;
+  display: inline-block;
+  text-decoration: none;
+}
+#block_static_alert:hover {
+  background-image: -webkit-linear-gradient(top, #ff9999, #ff9999);
+  color: #ffffff;
+}
+#tip_general {
+  background: #FFF1C9;
+  border-radius: 0px;
+  border: 0px solid Gainsboro;
+  color: #333333;
+  display: inline-block;
+  font-size: 14px;
+  margin-bottom: 1px;
+  margin: 0px auto 0px;
+  min-width: 698px;
+  padding: 10px 15px;
+  position: relative;
+  text-align: left;
+}
+#tip_general a {
+  color: #666666;
+}
+#tip_general a:hover {
+  color: #333333;
+}
+#tip_general .close_tip {
+  position: absolute;
+  right: 5px;
+  top: 1px;
+}
+#tip_general .close_tip a {
+  color: DimGray;
+  font-size: 10px;
+  text-decoration: none;
+}
+#tip_general.name {
+  background: #89D363;
+  color: #ffffff;
+}
+#tip_general.name a {
+  color: #f2f2f2;
+}
+#tip_general.name a:hover {
+  color: #ffffff;
+}
+#tip_general.pink {
+  background: #ff99cc;
+}
