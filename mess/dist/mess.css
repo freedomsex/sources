@@ -21,7 +21,7 @@
   top: -8px;
 }
 .message_list_block {
-  border: 0px solid #eeeeee;
+  border: 0px solid #e5e5e5;
   margin: 0px auto 0px;
   padding: 0px 0px 20px;
 }
@@ -47,7 +47,7 @@
 }
 .message_list_time {
   border: 0px solid green;
-  color: #777777;
+  color: #666666;
   font-size: 11px;
   position: absolute;
   right: 0;
@@ -86,17 +86,17 @@ div.alert_block {
   border-bottom-right-radius: 12px;
   border-top: 0px solid #ffffff;
   border: 1px solid #cccccc;
-  color: #444444;
+  color: #333333;
   display: inline-block;
   margin: 0px auto;
   padding: 4px 15px;
 }
 div.alert_block a {
-  color: #aaaaaa;
+  color: #999999;
   text-decoration: none;
 }
 div.alert_block a:hover {
-  color: #444444;
+  color: #333333;
   text-decoration: underline;
 }
 #verify {
@@ -124,7 +124,7 @@ div.alert_block_mess a:hover {
   text-decoration: underline;
 }
 div.alert_block_mess b {
-  color: #777777;
+  color: #666666;
 }
 .mail_confirm_block {
   background: Snow;
@@ -224,9 +224,8 @@ div.alert_block_mess b {
 .cont_list_del_user {
   background: #FF6600;
   border-radius: 15px;
-  border: 1px solid #eeeeee;
+  border: 1px solid #e5e5e5;
   color: #ffffff;
-  color: White;
   display: none;
   font-size: 9px;
   font-weight: bold;
@@ -268,7 +267,7 @@ div.alert_block_mess b {
   position: relative;
 }
 .listbox_tab {
-  color: #aaaaaa;
+  color: #999999;
   cursor: pointer;
   display: inline-block;
   padding: 12px 5px;
@@ -278,7 +277,7 @@ div.alert_block_mess b {
   font-weight: bold;
 }
 #list_show_optn {
-  color: #aaaaaa;
+  color: #999999;
   cursor: pointer;
   display: inline-block;
   font-size: 10px;
@@ -290,7 +289,7 @@ div.alert_block_mess b {
   padding: 5px 4px;
 }
 #tip_list_users {
-  color: #777777;
+  color: #666666;
   font-size: 14px;
   padding: 15px 15px 10px;
   position: relative;
@@ -305,7 +304,7 @@ div.alert_block_mess b {
   padding: 0px 15px 12px;
 }
 #tip_list_users_orange {
-  background-image: -webkit-linear-gradient(top, #ff9900, #ffcc66);
+  background-image: -webkit-linear-gradient(top, #ff9900, #ffd633);
   background: #ff9900;
   border-radius: 2px;
   color: white;
@@ -347,7 +346,7 @@ div.alert_block_mess b {
 .save_notice {
   background: #F7F7F7;
   border: 1px solid #cccccc;
-  color: #777777;
+  color: #666666;
   margin: 10px 0 0;
   padding: 5px 15px;
 }
@@ -370,7 +369,7 @@ div.alert_block_mess b {
   margin-right: 5px;
 }
 #anketa_text {
-  color: #444444;
+  color: #333333;
   font-size: 12px;
   margin-bottom: 15px;
   margin-top: 15px;
@@ -430,7 +429,7 @@ div.alert_block_mess b {
   margin-bottom: 0px;
 }
 #mail_setting_caption {
-  border-bottom: 0px solid #777777;
+  border-bottom: 0px solid #666666;
   display: inline-block;
   font-size: 16px;
   font-weight: normal;
@@ -725,7 +724,7 @@ div.alert_block_mess b {
   text-decoration: none;
 }
 .report_orange {
-  background: #ffcc66;
+  background: #ffd633;
   border-top-right-radius: 10px;
   border-width: 1px 0 1px 1px;
   border: 1px solid #FF9966;

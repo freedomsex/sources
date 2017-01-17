@@ -1,0 +1,60 @@
+.ex_left_im {
+  border-radius: 2px;
+  border: 4px solid #ffffff;
+  margin-bottom: 2px;
+  margin: 0px;
+  width: 234px;
+}
+.ex_marker {
+  background-color: #ffcc66;
+  background: -webkit-linear-gradient(top, #ff9900, #ffcc66) #ff9900;
+  border-radius: 3px;
+  color: #ffffff;
+  font-size: 14px;
+  margin: 0 0 3px 3px;
+  padding: 5px 3px;
+  text-align: center;
+  text-decoration: none;
+  width: 230px;
+}
+.cm_line {
+  border-radius: 3px;
+  color: #444444;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0 0 3px 3px;
+  padding: 5px 5px;
+  text-align: left;
+  text-decoration: none;
+  width: 230px;
+}
+.cm_smile {
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+  vertical-align: middle;
+}
+.comment_block {
+  border-radius: 0px;
+  border-top: 0px solid #cccccc;
+  color: #5b5b5b;
+  font-size: 12px;
+  margin: 15px 0 0 0px;
+  text-align: left;
+}
+.comment_block.man b {
+  border-top: 1px solid #4d9900;
+  color: #4d9900;
+}
+.comment_block.woman b {
+  border-top: 1px solid #cc00cc;
+  color: #cc00cc;
+}
+.comment_block.reply {
+  background: #FFFFCC;
+  border: 0px solid #cccccc;
+  font-size: 11px;
+  margin-left: 15px;
+  margin-top: 5px;
+  padding: 7px 15px;
+}

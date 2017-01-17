@@ -5,7 +5,10 @@ module.exports = function (grunt) {
                 options: { 
                 },
                 files: {
-                  "mess/dist/mess.css": "mess/src/_main.less"
+                  "admin/dist/admin.css": "admin/src/_main.less",
+                  "core/dist/core.css": "core/src/_main.less",
+                  "mess/dist/mess.css": "mess/src/_main.less",
+                  "blog/dist/blog.css": "blog/src/_main.less",
                 }
             }    
         },
@@ -16,7 +19,10 @@ module.exports = function (grunt) {
             styles: {
                 files: [
                     'Gruntfile.js', 
+                    'core/src/*', 
                     'mess/src/*',
+                    'admin/src/*',
+                    'blog/src/*',
                 ],
                 tasks: ['default'],
                 options: {

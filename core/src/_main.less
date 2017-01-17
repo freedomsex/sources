@@ -12,22 +12,34 @@
 
 @link-color:    #0066cc; // Appears 5 times
 
-@menu-color:    #4262a9; // Appears 2 times
+@menu-color:    #3A5795; // Appears 2 times
+@menu-hover:    #4262a9;
+@menu-light:    #BBCCCC;
+
+@purpur-light:  #CCCCFF; // #CCD6FF;
 @purpur:        #9999ff; // Appears 2 times
 
+@green-light:   #D9FFB3; // Appears 2 times
 @green:         #84bf3b; // Appears 2 times
 @green-dark:    #669933; // Appears 3 times
 
-@pink-light: #ffcccc; // Appears 2 times
-@pink: #ff9999; // Appears 3 times
+@pink-light:    #ffcccc; // Appears 2 times
+@pink:          #ff9999; // Appears 3 times
 
-@violet-light: #ddbbdd; // Appears 2 times
-@violet: #c082c0; // Appears 2 times
+@violet-light:      #F2D9F2;
+@violet:            #ddbbdd; // Appears 2 times
+@violet-dark:       #c082c0; // Appears 2 times
 
-@alert-sand: #fff2e5; // Appears 2 times
+@alert-sand:    #fff2e5; // Appears 2 times
 
-@orange-light: #ffd633; // Appears 2 times
-@orange-dark: #ff9900; // Appears 2 times
+@yellow-light:  #ffffcc; // Appears 4 times
+@yellow:        #FFF0B3;
+
+@red-light:     #FFE0CC; // #FFD1B3
+@red:           #ff9966;
+
+@orange-light:  #ffd633; // Appears 2 times
+@orange-dark:   #ff9900; // Appears 2 times
 
 // Width variables (appears count calculates by raw css)
 @width0: 1067px; // Appears 2 times
@@ -83,25 +95,25 @@ textarea {
 	width: @width14;
 }
 .bg_red {
-	background: #FFD1B3;
+	background: @red-light;
 }
 .bg_grn {
-	background: #D9FFB3;
+	background: @green-light;
 }
 .bg_mgn {
-	background: #F2D9F2;
+	background: @violet-light;
 }
 .bg_yel {
-	background: #FFF0B3;
+	background: @yellow;
 }
 .bg_gra {
 	background: @light;
 }
 .bg_blu {
-	background: #CCCCFF;
+	background: @purpur-light;
 }
 .bg_ored {
-	background: #FFE0CC;
+	background: @red-light;
 }
 .bg_ogrn {
 	background: @alert-sand;
@@ -110,22 +122,22 @@ textarea {
 	background: @alert-sand;
 }
 .bg_oyel {
-	background: #FFFFCC;
+	background: @yellow-light;
 }
 .bg_ogra {
 	background: @light;
 }
 .bg_oblu {
-	background: #CCD6FF;
+	background: @purpur-light;
 }
 .br_red {
-	border-color: @pink;
+	border-color: @red;
 }
 .br_grn {
-	border-color: @color23;
+	border-color: @green;
 }
 .br_mgn {
-	border-color: @violet-light;
+	border-color: @violet;
 }
 .br_yel {
 	border-color: @orange-light;
@@ -143,10 +155,10 @@ textarea {
 	color: @pink;
 }
 .cl_grn {
-	color: @color23;
+	color: @green;
 }
 .cl_mgn {
-	color: @violet-light;
+	color: @violet;
 }
 .cl_yel {
 	color: @orange-light;
@@ -160,9 +172,7 @@ textarea {
 .elem_online {
 	background: @white;
 	border-radius: 3px;
-	border: 1px solid @gray-dark;
 	border: 1px solid @orange-dark;
-	color: @gray-dark;
 	color: @orange-dark;
 	display: inline-block;
 	font-size: 11px;
@@ -183,8 +193,7 @@ textarea {
 	background: @white;
 	border-color: @green;
 	border-radius: 3px;
-	border: 1px solid @gray-dark;
-	color: @gray-dark;
+	border: 1px solid @green;
 	color: @green;
 	display: inline-block;
 	font-size: 11px;
@@ -233,100 +242,9 @@ textarea {
 .go {
 	background: url(/img/icon/ct_go.png) no-repeat left center;
 }
-div.menu_user_outer {
-	background: #3A5795;
-	height: @height8;
-	margin: 0 0 0 0;
-	min-width: @width10;
-	padding: 0;
-	text-align: center;
-	a {
-		color: @light;
-		text-decoration: none;
-		&:hover {
-			color: @white;
-		}
-	}
-}
-div.menu_user_inner {
-	margin: 0px auto;
-	overflow: hidden;
-	padding: 0;
-	text-align: left;
-	width: @width0;
-	width: @width10;
-}
-#home_page {
-	display: inline-block;
-	float: left;
-	margin-left: 15px;
-	margin-top: 17px;
-	width: 35px;
-}
-ul.menu_user, ul.menu_user li, ul.menu_user_right, ul.menu_user_right li  {
-	display: inline-block;
-	float: left;
-	list-style:none;
-	margin: 0;
-	padding: 0;
-}
-ul.menu_user_right {
-	float: right;
-}
-ul.menu_user {
-	li {
-		a {
-			&:hover {
-				background: @menu-color;
-			}
-		}
-	}
-}
-li.menu_user_link a, li.menu_user_link_search a, li.menu_user_link_exit span, li.menu_user_link_shop a  {
-	color: @white;
-	cursor: pointer;
-	display: inline-block;
-	font-size: 15px;
-	height: @height8;
-	line-height: @height8;
-	padding: 0px 10px;
-}
-li.menu_user_link {
-	img {
-		bottom: 1px;
-		position: relative;
-		vertical-align: middle;
-	}
-}
-li.menu_user_link_exit {
-	float: left;
-	span {
-		&:hover {
-			background: @menu-color;
-		}
-	}
-}
-li.menu_user_name_string {
-	span {
-		border-bottom: 1px dashed @gray-dark;
-		color: #BBCCCC;
-		cursor: pointer;
-		font-size: 15px;
-		line-height: @height8;
-		margin: 0px 5px;
-	}
-}
-li.menu_user_link_shop {
-	a {
-		color: @gray-dark;
-		font-size: 13px;
-		padding-right: 15px;
-	}
-}
-li.menu_user_link_ear {
-	width: 0px;
-	width: 350px;
-}
+
+@import "menu-user.less";
+
 #block_static_tip {
 	background: #A1D067;
 	border-radius: 0px;
@@ -672,9 +590,9 @@ a.name {
 	}
 }
 .air_user {
-	border: 1px solid @violet;
+	border: 1px solid @violet-dark;
 	.title {
-		background: @violet;
+		background: @violet-dark;
 	}
 }
 .timer {
