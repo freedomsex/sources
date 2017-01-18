@@ -213,7 +213,7 @@ div.alert_block_mess b {
   background: Pink;
 }
 .list_line_new {
-  background: LightGreen;
+  background: #84bf3b;
 }
 .list_line_onl {
   background: Gold;
@@ -384,8 +384,8 @@ div.alert_block_mess b {
 }
 #agreement {
   background: #ffcccc;
-  border-bottom: 1px solid #cccccc;
-  border-top: 1px solid #cccccc;
+  border-bottom: 0px solid #cccccc;
+  border-top: 0px solid #cccccc;
   clear: both;
   color: #333333;
   font-size: 11px;

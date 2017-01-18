@@ -1,6 +1,18 @@
 
 @import "../../_colors.less";
 
+@indent-xl: 25px;
+@indent-lg: 20px;
+@indent-md: 15px;
+@indent-sm: 10px;
+@indent-xs:  5px;
+
+@font-xl:  24px;
+@font-lg:  18px;
+@font-md:  16px;
+@font-sm:  12px;
+@font-xs:  10px;
+
 // Width variables (appears count calculates by raw css)
 @width0: 1067px; // Appears 2 times
 @width3: 180px; // Appears 2 times
@@ -405,7 +417,7 @@ a.name {
     
 }
 .list_user_new {
-    background: LightGreen;
+    background: @green-light;
 }
 #flov_message {
     bottom: 20px;
@@ -980,6 +992,8 @@ a.name {
     background: @yellow;
     padding: 10px 15px;
 }
+
+@import "footer.less";
 
 @import "index.less";
 @import "profile.less";

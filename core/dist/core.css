@@ -451,7 +451,7 @@ a.name:hover {
   width: 7px;
 }
 .list_user_new {
-  background: LightGreen;
+  background: #CBE6B3;
 }
 #flov_message {
   bottom: 20px;
@@ -1020,6 +1020,78 @@ a.name:hover {
 #alert_line_block {
   background: #f9ecbf;
   padding: 10px 15px;
+}
+#footer {
+  clear: both;
+  padding: 20px 20px 20px;
+  color: #333333;
+  background: #fff2e5;
+  border-top: 0px solid #e5e5e5;
+}
+#footer-info {
+  background: #ffffff;
+  border-top: 1px solid #e5e5e5;
+  padding: 15px 20px 0 20px;
+  color: #666666;
+  border-bottom: 1px solid #e5e5e5;
+}
+.footer-info__more-photo {
+  color: #666666;
+  font-size: 18px;
+  text-decoration: none;
+}
+#extra-count {
+  font-size: 16px;
+  text-align: right;
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+  margin-bottom: 15px;
+}
+.extra-count__link {
+  color: #666666;
+  text-decoration: none;
+}
+.extra-count__count {
+  color: #ff9900;
+  font-size: 24px;
+  margin: 0px 10px;
+}
+#nav-table td {
+  vertical-align: middle;
+  padding-right: 15px;
+}
+.nav-table_git-link {
+  padding: 0px;
+  background: url('/static/img/icon/github.png') no-repeat;
+  display: inline-block;
+  width: 100px;
+  height: 37px;
+  margin-right: 15px;
+}
+.nav-table_link {
+  color: #666666;
+  padding: 0 5px 10px 0;
+  text-decoration: none;
+}
+.nav-table_link:hover {
+  color: #333333;
+}
+#info-table {
+  margin: 15px 0;
+}
+#info-table td {
+  vertical-align: top;
+  padding-right: 15px;
+}
+.info-table__link {
+  color: #666666;
+  padding: 0 5px 10px 0;
+  text-decoration: none;
+  display: block;
+}
+.info-table__link:hover {
+  color: #333333;
 }
 #form_search {
   background: #f2f2f2;
