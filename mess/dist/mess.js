@@ -39,6 +39,19 @@ $( document ).ready(function()
 
 
 
+var abuse_list_component = new Vue({
+    el: '#abuse_list_component',
+    data: {
+        message: 'Hello Vue!',
+        isFormShow: false,
+    },
+    methods: {
+        show_form: function (event) {
+            console.log("isFormShow",this.isFormShow);
+            this.isFormShow = !this.isFormShow;
+        }
+    }
+});
 
 // -- Список жалоб на пользователя ---
 var abuse_list = {     
@@ -47,8 +60,8 @@ var abuse_list = {
     
     init: function () 
     {          
-       $('#abuse_button_show_link span').click( function (){ form_public.show_form(); });
-       $('#abuse_list_show_link').click( function (){ abuse_list.show_list();  }); 
+       //$('#abuse_button_show_link span').click( function (){ form_public.show_form(); });
+       //$('#abuse_list_show_link').click( function (){ abuse_list.show_list();  }); 
                                         
        $('#abuse_button_post').click( function (){ form_public.abuse_post(); });
        $('#abuse_captcha_post').click( function (){ form_public.abuse_post(); });

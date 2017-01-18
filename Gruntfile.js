@@ -7,6 +7,9 @@ module.exports = function (grunt) {
             scripts: {
                 files: [
                     'Gruntfile.js',
+                    'core/src/*.js',
+                    'mess/src/*.js',
+                    'admin/src/*.js',
                 ],
                 tasks: ['default'],
                 options: {
@@ -39,6 +42,6 @@ module.exports = function (grunt) {
 
     // Эти задания будут выполнятся сразу же когда вы в консоли напечатание grunt, и нажмете Enter
     grunt.registerTask('default', ['concat']);
-    grunt.registerTask('watch',   ['concat', 'watch']);
+    grunt.registerTask('w',   ['concat', 'watch']);
 };
 
