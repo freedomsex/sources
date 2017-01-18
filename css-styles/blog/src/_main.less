@@ -1,0 +1,70 @@
+@import "../../_colors.less";
+
+@width0: 230px; // Appears 2 times
+
+@import "formater.less";
+
+.ex_left_im {
+    border-radius: 2px;
+    border: 4px solid @white;
+    margin-bottom: 2px;
+    margin: 0px;
+    width: 234px;
+}
+.ex_marker {
+    background-color: @orange-light;
+    background: -webkit-linear-gradient(top, @orange, @orange-light) @orange;
+    border-radius: 3px;
+    color: @white;
+    font-size: 14px;
+    margin: 0 0 3px 3px;
+    padding: 5px 3px;
+    text-align: center;
+    text-decoration: none;
+    width: @width0;
+}
+.cm_line {
+    border-radius: 3px;
+    color: @dark;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0 0 3px 3px;
+    padding: 5px 5px;
+    text-align: left;
+    text-decoration: none;
+    width: @width0;
+}
+.cm_smile {
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    vertical-align: middle;
+}
+.comment_block {
+    border-radius: 0px;
+    border-top: 0px solid @gray;
+    color: @dark-light;
+    font-size: 12px;
+    margin: 15px 0 0 0px;
+    text-align: left;
+}
+.comment_block.man {
+    b {
+        border-top: 1px solid @green-dark;
+        color: @green-dark;
+    }
+}
+.comment_block.woman {
+    b {
+        border-top: 1px solid @violet-dark;
+        color: @violet-dark;
+    }
+}
+.comment_block.reply {
+    background: @yellow-light;
+    border: 0px solid @gray;
+    font-size: 11px;
+    margin-left: 15px;
+    margin-top: 5px;
+    padding: 7px 15px;
+}

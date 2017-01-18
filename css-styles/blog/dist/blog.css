@@ -1,0 +1,126 @@
+#cent_info {
+  border-left: 1px solid #cccccc;
+  float: right;
+  font-size: 14px;
+  margin-bottom: 100px;
+  padding: 0px 15px 15px 15px;
+  width: 505px;
+}
+.left_line {
+  border-top: 0px solid WhiteSmoke;
+  color: #0066cc;
+  display: block;
+  font-size: 13px;
+  padding: 7px 0px 7px 15px;
+  text-decoration: none;
+}
+.left_line:hover {
+  background: #f2f2f2;
+  text-decoration: none;
+}
+.inner {
+  color: #333333;
+  font-size: 13px;
+  padding: 7px 0px 7px 20px;
+}
+.active {
+  background: #f2f2f2;
+}
+p {
+  background: #ffffcc;
+  border: 1px solid #cccccc;
+  color: #333333;
+  font-size: 14px;
+  margin: 15px 0px;
+  padding: 10px 15px 12px;
+}
+b a {
+  color: #333333;
+  text-decoration: none;
+}
+h1 {
+  color: #333333;
+  font-size: 16px;
+  margin: 0px;
+  padding: 0px 0 15px 0px;
+}
+img.left {
+  border-radius: 5px;
+  border: 5px solid WhiteSmoke;
+  float: right;
+  margin: 0 0 12px 12px;
+}
+img.right {
+  border-radius: 5px;
+  border: 5px solid WhiteSmoke;
+  float: left;
+  margin: 0 12px 12px 0;
+}
+.board {
+  border-radius: 5px;
+  border: 5px solid WhiteSmoke;
+  margin: 20px 0;
+}
+.noborder {
+  border-width: 0px;
+}
+.ex_left_im {
+  border-radius: 2px;
+  border: 4px solid #ffffff;
+  margin-bottom: 2px;
+  margin: 0px;
+  width: 234px;
+}
+.ex_marker {
+  background-color: #ffcc66;
+  background: -webkit-linear-gradient(top, #ff9900, #ffcc66) #ff9900;
+  border-radius: 3px;
+  color: #ffffff;
+  font-size: 14px;
+  margin: 0 0 3px 3px;
+  padding: 5px 3px;
+  text-align: center;
+  text-decoration: none;
+  width: 230px;
+}
+.cm_line {
+  border-radius: 3px;
+  color: #333333;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0 0 3px 3px;
+  padding: 5px 5px;
+  text-align: left;
+  text-decoration: none;
+  width: 230px;
+}
+.cm_smile {
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+  vertical-align: middle;
+}
+.comment_block {
+  border-radius: 0px;
+  border-top: 0px solid #cccccc;
+  color: #666666;
+  font-size: 12px;
+  margin: 15px 0 0 0px;
+  text-align: left;
+}
+.comment_block.man b {
+  border-top: 1px solid #669933;
+  color: #669933;
+}
+.comment_block.woman b {
+  border-top: 1px solid #c082c0;
+  color: #c082c0;
+}
+.comment_block.reply {
+  background: #ffffcc;
+  border: 0px solid #cccccc;
+  font-size: 11px;
+  margin-left: 15px;
+  margin-top: 5px;
+  padding: 7px 15px;
+}
