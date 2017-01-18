@@ -441,15 +441,7 @@ a.name:hover {
   margin-right: 5px;
   text-decoration: none;
 }
-.list_user_new {
-  background: LightGreen;
-  background: White;
-  border-radius: 5px;
-  display: inline-block;
-  height: 7px;
-  margin-right: 5px;
-  width: 7px;
-}
+.list_user_new,
 .marker {
   background: White;
   border-radius: 5px;
@@ -457,6 +449,9 @@ a.name:hover {
   height: 7px;
   margin-right: 5px;
   width: 7px;
+}
+.list_user_new {
+  background: LightGreen;
 }
 #flov_message {
   bottom: 20px;
@@ -1043,8 +1038,8 @@ a.name:hover {
   text-align: left;
 }
 #form_search_bottom {
-  border-width: 1px 0 0 0;
   border: 1px solid #cccccc;
+  border-width: 1px 0 0 0;
   font-size: 14px;
   margin: 30px 0px 0px;
   padding: 10px;
