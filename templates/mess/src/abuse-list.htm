@@ -1,0 +1,33 @@
+  
+ <div id="abuse_list_component">
+   <div class="right">
+     <span id="abuse_list_show_link" class="gray_link" @click="show_form">&nbsp;</span>
+   </div> 
+   
+   <div id="abuse_list" style="display: none; padding: 0px 0 0;  border-top: 1px solid #fff;" v-show="isFormShow">
+    <div id="abuse_button_show_link" class="right" v-show="isFormShow">
+     <span class="gray_link">Опубликовать замечание</span>        
+     <a href="/блог/анонимное-замечание-к-анкете/" class="abuse_info" target="_blank"></a>
+    </div> 
+   </div>
+     
+   <div id="mail_abuse_public_block"> 
+     <div style="font-size: 14px; padding: 0px 0px 5px 0px;">Опубликовать замечание  &nbsp;
+       <a href="/блог/анонимное-замечание-к-анкете/" target="_blank" class="link_simple" style="font-size: 12px;">Это анонимно...</a>
+     </div>
+     <input id="abuse_text_val"> 
+     <div id="strong_captcha_block_abuse" style="display: none; margin: 0 0 5px; "> 
+      <p style="padding: 0px 0 10px 0; margin: 0;"> 
+       - без оскорблений, клеветы и домыслов <br> 
+       - только серьёзные и негативные замечания<br> 
+       - описание обстоятельств приветствуется
+      </p>     
+      <img src="" style="width: 122px; vertical-align: bottom; margin: 2px 0; border: 1px solid #AAA; ">
+      <input type="text" id="abuse_code_val" style="width: 120px;" placeholder="Введите код"> 
+     </div>   
+     <input id="abuse_button_post" type="button" value="Опубликовать" style="font-size: 11px;">  &nbsp; 
+       <span id="link_abuse_cancel" class="link_simple">Отмена</span>
+   </div>      
+   
+   <div style=" padding-bottom: 10px;"></div> 
+ </div> 
