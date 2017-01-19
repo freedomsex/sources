@@ -35,6 +35,7 @@ module.exports = function (grunt) {
         // Сборка файлов шаблонов
         processhtml: {
             options: { 
+                recursive: true,
             },
             dist: {
                 files: {
