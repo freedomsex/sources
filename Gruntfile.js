@@ -21,15 +21,26 @@ module.exports = function (grunt) {
         less: {
             dev: {
                 options: { 
+                  paths: ['css-styles/0_import/resourses'],
                   rootpath: 'css-styles',
                 },
                 files: {
-                  "admin/dist/admin.css": "admin/src/_main.less",
-                  "core/dist/core.css":   "core/src/_main.less",
-                  "mess/dist/mess.css":   "mess/src/_main.less",
-                  "blog/dist/blog.css":   "blog/src/_main.less",
+                  "css-styles/admin/dist/admin.css": "css-styles/admin/src/_main.less",
+                  "css-styles/core/dist/core.css":   "css-styles/core/src/_main.less",
+                  "css-styles/mess/dist/mess.css":   "css-styles/mess/src/_main.less",
+                  "css-styles/blog/dist/blog.css":   "css-styles/blog/src/_main.less",
                 }
             }    
+        },
+        // Сборка файлов шаблонов
+        processhtml: {
+            options: { 
+            },
+            dist: {
+                files: {
+                    'templates/mess/dist/mess.htm': ['templates/mess/src/_main.htm']
+                }
+            }
         },
         // Наблюдение за изменениями в файлах исходниках
         watch: {
@@ -76,9 +87,10 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-processhtml');
 
     // Эти задания будут выполнятся сразу же когда вы в консоли напечатание grunt, и нажмете Enter
-    grunt.registerTask('default', ['concat', 'less']);
-    grunt.registerTask('w',   ['default']);
+    grunt.registerTask('default', ['concat', 'less', 'processhtml']);
+    grunt.registerTask('w',       ['concat', 'less', 'watch']);
 };
 
