@@ -149,59 +149,59 @@
       }   
   </script>
   
-  
+
 <div id="abuse-list-component">
-  <div class="right"> 
+  <div class="right">
     <span class="abuse-list__indicator-good" @click="showForm" v-show="!abuseStatus" style="display: none;">Замечаний нет</span>
     <span class="abuse-list__indicator-bad" @click="showList" v-show="abuseStatus" style="display: none;">Есть замечания</span>
-  </div> 
+  </div>
 
   <div class="abuse-list__list" style="display: none;" v-show="isListShow"></div>
-  
+
   <abuse-form :show="isFormShow" @cancel="hideForm"></abuse-form>
 
   <div class="abuse-list__add-btn" @click="showForm" v-show="isButtonShow" style="display: none;">
-    <span class="gray_link">Опубликовать замечание</span>        
+    <span class="gray_link">Опубликовать замечание</span>
     <a href="/блог/анонимное-замечание-к-анкете/" class="abuse_info" target="_blank"></a>
-  </div>  
-  <div style=" padding-bottom: 10px;"></div> 
-</div> 
-  
-  
+  </div>
+  <div style=" padding-bottom: 10px;"></div>
+</div>
 
-  
 
-<template id="abuse-form"> 
+
+
+
+<template id="abuse-form">
   <div id="abuse-form" style="display: none;" v-show="show">
     <div class="abuse-form__caption">
       Отправьте замечание  &nbsp;
       <a href="/блог/анонимное-замечание-к-анкете/" target="_blank" class="link_simple" style="font-size: 12px;">Это анонимно...</a>
     </div>
 
-    <div class="abuse-form__editor" style="display: none;" v-show="isEditorShow && !isSuggestShow"> 
+    <div class="abuse-form__editor" style="display: none;" v-show="isEditorShow && !isSuggestShow">
       <textarea class="abuse-form__input" v-model="text"></textarea>
 
-      <div id="strong_captcha_block_abuse" style="display: none; margin: 0 0 5px; "> 
-        <p style="padding: 0px 0 10px 0; margin: 0;"> 
-          - без оскорблений, клеветы и домыслов <br> 
-          - только серьёзные и негативные замечания<br> 
+      <div id="strong_captcha_block_abuse" style="display: none; margin: 0 0 5px; ">
+        <p style="padding: 0px 0 10px 0; margin: 0;">
+          - без оскорблений, клеветы и домыслов <br>
+          - только серьёзные и негативные замечания<br>
           - описание обстоятельств приветствуется
-        </p>     
+        </p>
         <img src="" style="width: 122px; vertical-align: bottom; margin: 2px 0; border: 1px solid #AAA; ">
-        <input type="text" id="abuse_code_val" style="width: 120px;" placeholder="Введите код"> 
-      </div>  
-      <button class="btn btn-sm btn-warning" type="button" @click="post">
+        <input type="text" id="abuse_code_val" style="width: 120px;" placeholder="Введите код">
+      </div>
+      <button class="btn btn-sm btn-warning abuse-form__btn" type="button" @click="post">
         <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
         Отправить
-      </button>  &nbsp; 
+      </button>  &nbsp;
       <span class="link_simple" @click="cancel">Не отправлять</span>
     </div>
 
     <div class=" list-group abuse-form__suggest" v-show="isSuggestShow">
       <a class="list-group-item abuse-form__suggest-item" v-for="item in suggest" @click="choiceText">{{ item }}</a>
-    </div> 
+    </div>
   </div>
-</template>  
+</template>
         
      
 %%MAIL_CONFIRM_BLOCK_DN%% 
@@ -666,18 +666,19 @@ border-radius: 3px;">Сохранено</span>
 
    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+  <script src="http://underscorejs.org/underscore-min.js"></script>
   <script src="https://unpkg.com/vue/dist/vue.js"></script>
   <script src="https://unpkg.com/vue-resource/dist/vue-resource.js"></script>
-  
+
   <script type="text/javascript" src="%%JS_FILE%%"></script>
   <script type="text/javascript" src="%%JS_MESS%%"></script>
-  
-     
+
+
    <script type="text/javascript">
       var addthis_config = {"data_track_addressbar":false};
        addthis_config.data_track_addressbar = false;
        addthis_config.data_track_clickback = false;</script>
    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4fb88f475e8b2e81"></script>
- 
+
 </body>
 </html>

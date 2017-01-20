@@ -28,7 +28,7 @@ $(document).ready(function()
     
 }); 
       
-   
+   Vue.http.options.emulateJSON = true;
 
 
 // -- Получить новый хэш ---
