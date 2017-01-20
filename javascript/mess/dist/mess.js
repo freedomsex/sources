@@ -107,7 +107,7 @@ var abuse_list_component = new Vue({
     el: '#abuse-list-component',
     data: {
         abuseStatus:   0,
-        isFormShow:    1,
+        isFormShow:    0,
         isListShow:    0,
         isButtonShow:  0,
     },
