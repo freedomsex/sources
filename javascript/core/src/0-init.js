@@ -28,4 +28,3 @@ $(document).ready(function()
     
 }); 
       
-   Vue.http.options.emulateJSON = true;

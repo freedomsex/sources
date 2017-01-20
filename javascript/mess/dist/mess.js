@@ -36,6 +36,8 @@ $( document ).ready(function()
 
 // -- Список жалоб на пользователя ---
 
+Vue.http.options.emulateJSON = true;
+
 Vue.component('abuse-form', {
     template: '#abuse-form',
     props: [
