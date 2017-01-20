@@ -793,7 +793,7 @@ div.alert_block_mess b {
   padding: 0px 0 0;
   border-top: 1px solid #ffffff;
 }
-.abuse-form {
+#abuse-form {
   background: #fff5cc;
   border: 1px solid #cccccc;
   margin-bottom: 0px;
@@ -808,8 +808,15 @@ div.alert_block_mess b {
   display: block;
   padding: 9px 5px 9px;
   margin-bottom: 10px;
-  height: 40px;
-  min-height: 40px;
+  height: 42px;
+  min-height: 42px;
+}
+.abuse-form__suggest {
+  margin-bottom: 5px;
+}
+.abuse-form__suggest-item {
+  cursor: pointer;
+  color: #666666;
 }
 #abuse_list_none {
   color: #999999;
