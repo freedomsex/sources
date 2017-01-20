@@ -183,7 +183,7 @@
   text-decoration: none;
 }
 .message_list_title {
-  color: #669933;
+  color: #3A5795;
   margin-bottom: 5px;
   position: relative;
 }
@@ -927,4 +927,26 @@ div.alert_block_mess b {
 }
 #quick_tab_virt {
   background: #CCCCFF;
+}
+#moder_button {
+  margin-top: 15px;
+  font-size: 15px;
+  padding: 10px 15px;
+  border: 1px solid #4262a9;
+  color: #3A5795;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-width: 1px 0px 1px 1px;
+  cursor: pointer;
+}
+#moder_block {
+  position: fixed;
+  z-index: 1000;
+  background: #fff;
+  padding: 20px 20px 20px;
+  border: 1px solid #999;
+  top: 50px;
+  left: 50%;
+  width: 670px;
+  margin-left: -356px;
 }
