@@ -1,43 +1,37 @@
-   
-$( document ).ready(function() 
-{    
+
+$( document ).ready(function()
+{
     // Получение GET параметров по имени
     $.urlParam = function(name){
       var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(window.location.href);
       return results[1] || 0;
-    }  
-                       
-    cont_list.init();       
-    mess_list.init();           
-  
-    lock_user.init();             
+    }
+
+    cont_list.init();
+    mess_list.init();
+
+    lock_user.init();
     confirm_block_dn.init();
-    form_public.init();
-    abuse_list.init(); 
-                             
-    moderator.init();  
-    
-    edit_cont.init(); 
-    added_info.init();  
-    part_info.init(); 
-                         
-    quick_photo.init(); 
+
+    moderator.init();
+
+    edit_cont.init();
+    added_info.init();
+    part_info.init();
+
+    quick_photo.init();
     quick_mess.init();
-    
-    mess_sett.init();    
-    dating_time.init(); 
-    
+
+    mess_sett.init();
+    dating_time.init();
+
     anketa.init();
     add_contact.init();
-    
+
     if (tid) {
         visited.action.save(tid);
-        
     }
-      
  });
-
-
 
 
 // -- Список жалоб на пользователя ---
