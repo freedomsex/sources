@@ -771,12 +771,16 @@ div.alert_block_mess b {
   width: 120px;
 }
 /* Замечания к анкете */
-.abuse-list__indicator-good {
+.abuse-indicator {
+  text-align: right;
+  margin-bottom: 10px;
+}
+.abuse-indicator__good {
   color: #999999;
   cursor: pointer;
   text-decoration: none;
 }
-.abuse-list__indicator-bad {
+.abuse-indicator__bad {
   color: #999999;
   color: red;
   cursor: pointer;
@@ -785,7 +789,7 @@ div.alert_block_mess b {
 .abuse-list__add-btn {
   margin-bottom: 5px;
   text-align: right;
-  color: #999999;
+  color: red;
   cursor: pointer;
   text-decoration: none;
 }

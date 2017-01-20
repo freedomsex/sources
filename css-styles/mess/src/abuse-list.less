@@ -1,9 +1,13 @@
 
 /* Замечания к анкете */
-.abuse-list__indicator-good {
+.abuse-indicator {
+    text-align: right;
+    margin-bottom: @indent-sm;
+}
+.abuse-indicator__good {
     .gray_link;
 }
-.abuse-list__indicator-bad {
+.abuse-indicator__bad {
     .gray_link;
     .red_link;
 }
@@ -11,11 +15,11 @@
 .abuse-list__add-btn {
     margin-bottom: 5px;
     .right;
-    .gray_link;
+    .red_link;
 }
 
 .abuse-list__list {
-    padding: 0px 0 0;  
+    padding: 0px 0 0;
     border-top: 1px solid @white;
 }
 
@@ -29,20 +33,20 @@
 }
 
 .abuse-form__caption {
-    font-size: 14px; 
+    font-size: 14px;
     margin-bottom: @indent-sm;
 }
 
 .abuse-form__input {
     display: block;
     padding: 9px 5px 9px;
-    margin-bottom: @indent-sm;    
+    margin-bottom: @indent-sm;
     height: 42px;
     min-height: 42px;
 }
 
 .abuse-form__suggest {
-    margin-bottom: @indent-xs;  
+    margin-bottom: @indent-xs;
 }
 
 .abuse-form__suggest-item {
@@ -51,49 +55,49 @@
 }
 
 #abuse_list_none {
-	color: @gray-dark;
-	cursor: pointer;
-	margin-bottom: 5px;
-	text-align: right;
+    color: @gray-dark;
+    cursor: pointer;
+    margin-bottom: 5px;
+    text-align: right;
 }
 .abuse_info {
-	background-image: url(/img/icon/info.png);
-	background-repeat: no-repeat;
-	display: inline-block;
-	height: 12px;
-	margin-left: 3px;
-	vertical-align: middle;
-	width: 12px;
+    background-image: url(/img/icon/info.png);
+    background-repeat: no-repeat;
+    display: inline-block;
+    height: 12px;
+    margin-left: 3px;
+    vertical-align: middle;
+    width: 12px;
 }
 #abuse_button_show_link {
-	cursor: pointer;
-	display: none;
-	margin-bottom: 5px;
+    cursor: pointer;
+    display: none;
+    margin-bottom: 5px;
 }
 .abuse_list_line {
-	border-top: 1px solid @gray;
-	cursor: pointer;
-	padding: 10px 5px;
-	position: relative;
-	&:hover {
-		background: #f5f5f5;
-	}
+    border-top: 1px solid @gray;
+    cursor: pointer;
+    padding: 10px 5px;
+    position: relative;
+    &:hover {
+        background: #f5f5f5;
+    }
 }
 .abuse_list_hint {
-	background: @yellow-light;
-	border-width: 1px 0;
-	border: 1px solid @gray;
-	font-size: 10px;
-	margin-bottom: 10px;
-	padding: 5px 5px 5px;
+    background: @yellow-light;
+    border-width: 1px 0;
+    border: 1px solid @gray;
+    font-size: 10px;
+    margin-bottom: 10px;
+    padding: 5px 5px 5px;
 }
 .abuse_agree {
-	background-image: url('/img/icon/check_ok.png');
-	bottom: 1px;
-	float: left;
-	height: @height5;
-	margin-right: 5px;
-	position: relative;
-	vertical-align: middle;
-	width: @width5;
+    background-image: url('/img/icon/check_ok.png');
+    bottom: 1px;
+    float: left;
+    height: @height5;
+    margin-right: 5px;
+    position: relative;
+    vertical-align: middle;
+    width: @width5;
 }

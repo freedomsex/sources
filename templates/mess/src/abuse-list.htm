@@ -1,8 +1,8 @@
 
 <div id="abuse-list-component">
-  <div class="right">
-    <span class="abuse-list__indicator-good" @click="showForm" v-show="!abuseStatus" style="display: none;">Замечаний нет</span>
-    <span class="abuse-list__indicator-bad" @click="showList" v-show="abuseStatus" style="display: none;">Есть замечания</span>
+  <div class="abuse-indicator">
+    <span class="abuse-indicator__good" @click="showForm" v-show="!abuseStatus && !isButtonShow" style="display: none;">Замечаний нет</span>
+    <span class="abuse-indicator__bad" @click="showList" v-show="abuseStatus && !isButtonShow" style="display: none;">Есть замечания</span>
   </div>
 
   <div class="abuse-list__list" style="display: none;" v-show="isListShow"></div>
@@ -10,7 +10,7 @@
   <abuse-form :show="isFormShow" @cancel="hideForm"></abuse-form>
 
   <div class="abuse-list__add-btn" @click="showForm" v-show="isButtonShow" style="display: none;">
-    <span class="gray_link">Опубликовать замечание</span>
+    <span>Опубликовать замечание</span>
     <a href="/блог/анонимное-замечание-к-анкете/" class="abuse_info" target="_blank"></a>
   </div>
   <div style=" padding-bottom: 10px;"></div>
