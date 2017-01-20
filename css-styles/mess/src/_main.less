@@ -1,5 +1,5 @@
 
-@import "_colors.less";
+@import "_imports.less";
 
 // Width variables (appears count calculates by raw css)
 @width0: 120px; // Appears 3 times
@@ -424,10 +424,10 @@ div.alert_block_mess {
     }
 }
 #block_mail_setting {
+    background: @yellow-light;
     background-image: url(/img/icon/nastroika_big.png);
     background-position: 100% 0%;
     background-repeat: no-repeat;
-    background: @yellow-light;
     border-width: 1px 0 1px;
     border: 1px solid @gray-light;
     margin-top: 7px;
@@ -556,14 +556,6 @@ div.alert_block_mess {
 }
 .anketa_collaps_down {
     background-position: -16px 0px;
-}
-#mail_abuse_public_block {
-    background: @yellow-light;
-    border: 1px solid @gray;
-    display: none;
-    margin-bottom: 0px;
-    margin-bottom: 5px;
-    padding: 10px 15px;
 }
 #mail_messages_block {
     padding-top: 5px;

@@ -27,7 +27,7 @@
   background: #f2f2f2;
 }
 p {
-  background: #ffffcc;
+  background: #fff5cc;
   border: 1px solid #cccccc;
   color: #333333;
   font-size: 14px;
@@ -117,7 +117,7 @@ img.right {
   color: #c082c0;
 }
 .comment_block.reply {
-  background: #ffffcc;
+  background: #fff5cc;
   border: 0px solid #cccccc;
   font-size: 11px;
   margin-left: 15px;

@@ -1,35 +1,5 @@
-html {
-  height: 100%;
-  width: 100%;
-}
-body {
-  background: #f2f2f2;
-  color: #333333;
-  font-family: Arial, Tahoma, Verdana, sans-serif;
-  font-size: 12px;
-  height: 100%;
-  line-height: 1;
-  margin: 0;
-  width: 100%;
-}
-a {
-  -moz-transition: color 0.2s ease;
-  -o-transition: color 0.2s ease;
-  -webkit-transition: color 0.2s ease;
-  color: #0066cc;
-  transition: color 0.2s ease;
-}
-form {
-  margin: 0px;
-  padding: 0px;
-}
-textarea {
-  display: block;
-  margin: 0px;
-  min-height: 60px;
-  padding-bottom: 9px;
-  resize: vertical;
-  width: 100%;
+.hide {
+  display: none;
 }
 .bg_wht {
   background: #ffffff;
@@ -65,7 +35,7 @@ textarea {
   background: #fff2e5;
 }
 .bg_oyel {
-  background: #ffffcc;
+  background: #fff5cc;
 }
 .bg_ogra {
   background: #f2f2f2;
@@ -132,6 +102,76 @@ textarea {
 }
 .cl_gra {
   color: #cccccc;
+}
+.color_gray {
+  color: #999999;
+}
+.link {
+  cursor: pointer;
+  text-decoration: none;
+}
+.link_simple {
+  color: #0066cc;
+  cursor: pointer;
+  text-decoration: none;
+}
+.link_dashed {
+  border-bottom: 1px dashed #0066cc;
+  color: #0066cc;
+  cursor: pointer;
+  text-decoration: none;
+}
+.link_underline {
+  text-decoration: underline;
+  color: #0066cc;
+  cursor: pointer;
+  text-decoration: none;
+}
+.gray_link {
+  color: #999999;
+  cursor: pointer;
+  text-decoration: none;
+}
+.red_link {
+  color: red;
+  cursor: pointer;
+  text-decoration: none;
+}
+.right {
+  text-align: right;
+}
+html {
+  height: 100%;
+  width: 100%;
+}
+body {
+  background: #f2f2f2;
+  color: #333333;
+  font-family: Arial, Tahoma, Verdana, sans-serif;
+  font-size: 12px;
+  height: 100%;
+  line-height: 1;
+  margin: 0;
+  width: 100%;
+}
+a {
+  -moz-transition: color 0.2s ease;
+  -o-transition: color 0.2s ease;
+  -webkit-transition: color 0.2s ease;
+  color: #0066cc;
+  transition: color 0.2s ease;
+}
+form {
+  margin: 0px;
+  padding: 0px;
+}
+textarea {
+  display: block;
+  margin: 0px;
+  min-height: 60px;
+  padding-bottom: 9px;
+  resize: vertical;
+  width: 100%;
 }
 .elem_online {
   background: #ffffff;
@@ -635,34 +675,8 @@ a.name:hover {
   right: -100px;
   top: 150px;
 }
-.link_simple {
-  color: #0066cc;
-  cursor: pointer;
-  text-decoration: none;
-}
-.link_dashed {
-  border-bottom: 1px dashed #0066cc;
-  color: #0066cc;
-  cursor: pointer;
-  text-decoration: none;
-}
-.link_underline {
-  color: #0066cc;
-  cursor: pointer;
-  text-decoration: none;
-  text-decoration: underline;
-}
-.color_gray {
-  color: #999999;
-}
 #mess_text_val {
   max-width: 429px;
-}
-.gray_link {
-  color: #999999;
-}
-.red_link {
-  color: red;
 }
 .she_chat_inline {
   background: #ffffff;

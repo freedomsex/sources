@@ -1,3 +1,145 @@
+.hide {
+  display: none;
+}
+.bg_wht {
+  background: #ffffff;
+}
+.bg_red {
+  background: #FFE0CC;
+}
+.bg_grn {
+  background: #CBE6B3;
+}
+.bg_mgn {
+  background: #F2D9F2;
+}
+.bg_yel {
+  background: #f9ecbf;
+}
+.bg_gra {
+  background: #f2f2f2;
+}
+.bg_blu {
+  background: #CCCCFF;
+}
+.bg_bla {
+  border-color: #333333;
+}
+.bg_ored {
+  background: #FFE0CC;
+}
+.bg_ogrn {
+  background: #fff2e5;
+}
+.bg_omgn {
+  background: #fff2e5;
+}
+.bg_oyel {
+  background: #fff5cc;
+}
+.bg_ogra {
+  background: #f2f2f2;
+}
+.bg_oblu {
+  background: #CCCCFF;
+}
+.br_red {
+  border-color: #ff9966;
+}
+.br_grn {
+  border-color: #84bf3b;
+}
+.br_mgn {
+  border-color: #ddbbdd;
+}
+.br_yel {
+  border-color: #ffcc66;
+}
+.br_blu {
+  border-color: #9999ff;
+}
+.br_gra {
+  border-color: #cccccc;
+}
+.br_ogra {
+  border-color: #e5e5e5;
+}
+.br_bla {
+  border-color: #999999;
+}
+.bg_dblu {
+  background: #6F92D8;
+}
+.bg_dgrn {
+  background: #84bf3b;
+}
+.bg_dgra {
+  background: #cccccc;
+}
+.bg_dred {
+  background: #ff9966;
+}
+.bg_dyel {
+  background: #ffcc66;
+}
+.bg_dbla {
+  background: #666666;
+}
+.cl_red {
+  color: #ff9999;
+}
+.cl_grn {
+  color: #84bf3b;
+}
+.cl_mgn {
+  color: #ddbbdd;
+}
+.cl_yel {
+  color: #ffcc66;
+}
+.cl_blu {
+  color: #9999ff;
+}
+.cl_gra {
+  color: #cccccc;
+}
+.color_gray {
+  color: #999999;
+}
+.link {
+  cursor: pointer;
+  text-decoration: none;
+}
+.link_simple {
+  color: #0066cc;
+  cursor: pointer;
+  text-decoration: none;
+}
+.link_dashed {
+  border-bottom: 1px dashed #0066cc;
+  color: #0066cc;
+  cursor: pointer;
+  text-decoration: none;
+}
+.link_underline {
+  text-decoration: underline;
+  color: #0066cc;
+  cursor: pointer;
+  text-decoration: none;
+}
+.gray_link {
+  color: #999999;
+  cursor: pointer;
+  text-decoration: none;
+}
+.red_link {
+  color: red;
+  cursor: pointer;
+  text-decoration: none;
+}
+.right {
+  text-align: right;
+}
 html {
   background: #ffffff;
   font-size: 13px;
@@ -223,7 +365,7 @@ table.users {
   background-position: 0 -57px;
 }
 .idea {
-  background: #ffffcc;
+  background: #fff5cc;
   border-top: 1px solid #cccccc;
   color: #333333;
   font-size: 14px;

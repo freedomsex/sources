@@ -40,10 +40,8 @@
 <script type="text/javascript" src="http://userapi.com/js/api/openapi.js?49"></script>
 </head>
 <body>
-
 %%USER_MENUE_BLOCK%%
 %%JS_USER_VARS%%
-
 <div id="earlap">
 <div id="index_cent">
 %%ALERT_BLOCK_TOP_GEN%%
@@ -152,23 +150,30 @@
   </script>
   
   
- <div id="abuse_list_component">
-   <div class="right">
-     <span id="abuse_list_show_link" class="gray_link" @click="show_form">&nbsp;</span>
+ <div id="abuse-list-component">
+   <div class="right"> 
+       <span class="abuse-list__indicator-good" @click="showForm" v-show="!abuseStatus" style="display: none;">Замечаний нет</span>
+       <span class="abuse-list__indicator-bad" @click="showList" v-show="abuseStatus" style="display: none;">Есть замечания</span>
    </div> 
    
-   <div id="abuse_list" style="display: none; padding: 0px 0 0;  border-top: 1px solid #fff;" v-show="isFormShow">
-    <div id="abuse_button_show_link" class="right" v-show="isFormShow">
-     <span class="gray_link">Опубликовать замечание</span>        
-     <a href="/блог/анонимное-замечание-к-анкете/" class="abuse_info" target="_blank"></a>
-    </div> 
+   <div class="abuse-list__list" style="display: none;" v-show="isListShow"> 
+
    </div>
      
-   <div id="mail_abuse_public_block"> 
-     <div style="font-size: 14px; padding: 0px 0px 5px 0px;">Опубликовать замечание  &nbsp;
+   <div class="abuse-list__add-btn" @click="showForm" v-show="isButtonShow && !isFormShow" style="display: none;">
+     <span class="gray_link">Опубликовать замечание</span>        
+     <a href="/блог/анонимное-замечание-к-анкете/" class="abuse_info" target="_blank"></a>
+   </div>  
+     
+   <div class="abuse-form" style="display: none;" v-show="isFormShow"> 
+     <div class="abuse-form__caption">
+       Отправьте замечание  &nbsp;
        <a href="/блог/анонимное-замечание-к-анкете/" target="_blank" class="link_simple" style="font-size: 12px;">Это анонимно...</a>
      </div>
-     <input id="abuse_text_val"> 
+       
+   <div class="abuse-form__editor" style="display: none;" v-show="isEditorShow"> 
+     <textarea class="abuse-form__input"></textarea>
+     
      <div id="strong_captcha_block_abuse" style="display: none; margin: 0 0 5px; "> 
       <p style="padding: 0px 0 10px 0; margin: 0;"> 
        - без оскорблений, клеветы и домыслов <br> 
@@ -177,9 +182,26 @@
       </p>     
       <img src="" style="width: 122px; vertical-align: bottom; margin: 2px 0; border: 1px solid #AAA; ">
       <input type="text" id="abuse_code_val" style="width: 120px;" placeholder="Введите код"> 
-     </div>   
-     <input id="abuse_button_post" type="button" value="Опубликовать" style="font-size: 11px;">  &nbsp; 
-       <span id="link_abuse_cancel" class="link_simple">Отмена</span>
+     </div>  
+   </div>
+       
+       <div class="abuse-form__suggest list-group" @click="choiceText" v-show="isSuggestShow">
+           <a class="list-group-item">Предложение оплаты услуг, вирт за деньги, проституция</a>
+           <a class="list-group-item">Мошенничество, развод на деньги, шантаж, вымогательство</a>
+           <a class="list-group-item">Фото из интернета, вымышленные данные, обман, фейк</a>
+           <a class="list-group-item">Оскорбления, хамство, троллинг, грубые сообщения</a>
+           <a class="list-group-item">Рассылает интим фото, спамит или провоцирует</a>
+       </div> 
+     
+       
+     
+    
+     
+       <button class="btn btn-warning" type="button" style="font-size: 11px;">
+           <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+           Отправить
+       </button>  &nbsp; 
+     <span class="link_simple" @click="hideForm">Не отправлять</span>
    </div>      
    
    <div style=" padding-bottom: 10px;"></div> 
@@ -582,7 +604,7 @@ border-radius: 3px;">Сохранено</span>
 %%LOAD_AVEREGE_COUNT%%
 </div>
 </div>
-</div>
+
            
 <!-- Статические опции, absolute -->
  <div id="option_static_block">
@@ -594,7 +616,7 @@ border-radius: 3px;">Сохранено</span>
      <div id="option_static_close">Закрыть</div> 
    </div> 
  </div>
-                  
+</div>
    <div id="giper_chat">                  
      <div id="giper_reply" style="display: none;"> 
        <textarea></textarea>  
@@ -604,8 +626,7 @@ border-radius: 3px;">Сохранено</span>
      <div id="giper_stock">  
      </div> 
    </div>
-</div><!-- earlap -->
-
+</div>
                              
 
 <div>   

@@ -61,11 +61,22 @@ module.exports = function (grunt) {
             },
             cstyles: {
                 files: [ 
-                    'css-styles/0_import/*',
+                    'css-styles/0_import/**/*',
                     'css-styles/core/src/*', 
                     'css-styles/mess/src/*',
                     'css-styles/admin/src/*',
                     'css-styles/blog/src/*',
+                ],
+                tasks: ['default'],
+                options: {
+                    spawn: false,
+                },
+            },
+            templates: {
+                files: [
+                    'templates/core/src/*.htm',
+                    'templates/mess/src/*.htm',
+                    'templates/admin/src/*.htm',
                 ],
                 tasks: ['default'],
                 options: {
@@ -92,6 +103,6 @@ module.exports = function (grunt) {
 
     // Эти задания будут выполнятся сразу же когда вы в консоли напечатание grunt, и нажмете Enter
     grunt.registerTask('default', ['concat', 'less', 'processhtml']);
-    grunt.registerTask('w',       ['concat', 'less', 'watch']);
+    grunt.registerTask('w',       ['default', 'watch']);
 };
 

@@ -40,16 +40,37 @@ $( document ).ready(function()
 
 
 var abuse_list_component = new Vue({
-    el: '#abuse_list_component',
+    el: '#abuse-list-component',
     data: {
-        message: 'Hello Vue!',
-        isFormShow: false,
+        abuseStatus:   0,
+        isFormShow:    1,
+        isEditorShow:  0,
+        isSuggestShow: 1,
+        isListShow:    0,
+        isButtonShow:  0,
     },
     methods: {
-        show_form: function (event) {
-            console.log("isFormShow",this.isFormShow);
+        showForm: function (event) {
             this.isFormShow = !this.isFormShow;
-        }
+        },
+        hideForm: function (event) {
+            this.isFormShow = false;
+            this.isButtonShow = false;
+        },
+        showList: function (event) {
+            this.isListShow = !this.isListShow;
+        },
+        showButton: function (event) {
+            if (!this.isFormShow) {
+                this.isButtonShow = !this.isButtonShow;
+            } else {
+                this.hideForm();
+            }
+        },
+        choiceText: function (event) {
+            this.isEditorShow = true;
+            this.isSuggestShow = false;
+        },
     }
 });
 

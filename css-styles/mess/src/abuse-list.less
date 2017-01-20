@@ -1,14 +1,51 @@
 
 /* Замечания к анкете */
+.abuse-list__indicator-good {
+    .gray_link;
+}
+.abuse-list__indicator-bad {
+    .gray_link;
+    .red_link;
+}
+
+.abuse-list__add-btn {
+    margin-bottom: 5px;
+    .right;
+    .gray_link;
+}
+
+.abuse-list__list {
+    padding: 0px 0 0;  
+    border-top: 1px solid @white;
+}
+
+
+.abuse-form {
+    background: @yellow-light;
+    border: 1px solid @gray;
+    margin-bottom: 0px;
+    margin-bottom: 5px;
+    padding: @indent-md @indent-md;
+}
+
+.abuse-form__caption {
+    font-size: 14px; 
+    margin-bottom: @indent-sm;
+}
+
+.abuse-form__input {
+    display: block;
+    padding: 9px 5px 9px;
+    margin-bottom: @indent-sm;    
+    height: 40px;
+    min-height: 40px;
+}
+
 #abuse_list_none {
 	color: @gray-dark;
 	cursor: pointer;
 	margin-bottom: 5px;
 	text-align: right;
-}
-#abuse_list_show_link {
-	cursor: pointer;
-	margin-bottom: 5px;
 }
 .abuse_info {
 	background-image: url(/img/icon/info.png);
@@ -18,9 +55,6 @@
 	margin-left: 3px;
 	vertical-align: middle;
 	width: 12px;
-}
-.right {
-	text-align: right;
 }
 #abuse_button_show_link {
 	cursor: pointer;
@@ -53,10 +87,4 @@
 	position: relative;
 	vertical-align: middle;
 	width: @width5;
-}
-#abuse_text_val {
-	height: @height6;
-	margin-bottom: 5px;
-	min-height: @height6;
-	width: 395px;
 }

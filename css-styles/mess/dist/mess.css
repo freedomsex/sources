@@ -1,3 +1,145 @@
+.hide {
+  display: none;
+}
+.bg_wht {
+  background: #ffffff;
+}
+.bg_red {
+  background: #FFE0CC;
+}
+.bg_grn {
+  background: #CBE6B3;
+}
+.bg_mgn {
+  background: #F2D9F2;
+}
+.bg_yel {
+  background: #f9ecbf;
+}
+.bg_gra {
+  background: #f2f2f2;
+}
+.bg_blu {
+  background: #CCCCFF;
+}
+.bg_bla {
+  border-color: #333333;
+}
+.bg_ored {
+  background: #FFE0CC;
+}
+.bg_ogrn {
+  background: #fff2e5;
+}
+.bg_omgn {
+  background: #fff2e5;
+}
+.bg_oyel {
+  background: #fff5cc;
+}
+.bg_ogra {
+  background: #f2f2f2;
+}
+.bg_oblu {
+  background: #CCCCFF;
+}
+.br_red {
+  border-color: #ff9966;
+}
+.br_grn {
+  border-color: #84bf3b;
+}
+.br_mgn {
+  border-color: #ddbbdd;
+}
+.br_yel {
+  border-color: #ffcc66;
+}
+.br_blu {
+  border-color: #9999ff;
+}
+.br_gra {
+  border-color: #cccccc;
+}
+.br_ogra {
+  border-color: #e5e5e5;
+}
+.br_bla {
+  border-color: #999999;
+}
+.bg_dblu {
+  background: #6F92D8;
+}
+.bg_dgrn {
+  background: #84bf3b;
+}
+.bg_dgra {
+  background: #cccccc;
+}
+.bg_dred {
+  background: #ff9966;
+}
+.bg_dyel {
+  background: #ffcc66;
+}
+.bg_dbla {
+  background: #666666;
+}
+.cl_red {
+  color: #ff9999;
+}
+.cl_grn {
+  color: #84bf3b;
+}
+.cl_mgn {
+  color: #ddbbdd;
+}
+.cl_yel {
+  color: #ffcc66;
+}
+.cl_blu {
+  color: #9999ff;
+}
+.cl_gra {
+  color: #cccccc;
+}
+.color_gray {
+  color: #999999;
+}
+.link {
+  cursor: pointer;
+  text-decoration: none;
+}
+.link_simple {
+  color: #0066cc;
+  cursor: pointer;
+  text-decoration: none;
+}
+.link_dashed {
+  border-bottom: 1px dashed #0066cc;
+  color: #0066cc;
+  cursor: pointer;
+  text-decoration: none;
+}
+.link_underline {
+  text-decoration: underline;
+  color: #0066cc;
+  cursor: pointer;
+  text-decoration: none;
+}
+.gray_link {
+  color: #999999;
+  cursor: pointer;
+  text-decoration: none;
+}
+.red_link {
+  color: red;
+  cursor: pointer;
+  text-decoration: none;
+}
+.right {
+  text-align: right;
+}
 #cent {
   float: left;
   font-size: 12px;
@@ -413,10 +555,10 @@ div.alert_block_mess b {
   text-decoration: underline;
 }
 #block_mail_setting {
+  background: #fff5cc;
   background-image: url(/img/icon/nastroika_big.png);
   background-position: 100% 0%;
   background-repeat: no-repeat;
-  background: #ffffcc;
   border-width: 1px 0 1px;
   border: 1px solid #e5e5e5;
   margin-top: 7px;
@@ -480,7 +622,7 @@ div.alert_block_mess b {
   padding-top: 5px;
 }
 #mess_shab_text_caption {
-  background: #ffffcc;
+  background: #fff5cc;
   border-bottom: 0px solid #cccccc;
   border: 1px solid #cccccc;
   font-size: 14px;
@@ -543,14 +685,6 @@ div.alert_block_mess b {
 }
 .anketa_collaps_down {
   background-position: -16px 0px;
-}
-#mail_abuse_public_block {
-  background: #ffffcc;
-  border: 1px solid #cccccc;
-  display: none;
-  margin-bottom: 0px;
-  margin-bottom: 5px;
-  padding: 10px 15px;
 }
 #mail_messages_block {
   padding-top: 5px;
@@ -637,15 +771,51 @@ div.alert_block_mess b {
   width: 120px;
 }
 /* Замечания к анкете */
+.abuse-list__indicator-good {
+  color: #999999;
+  cursor: pointer;
+  text-decoration: none;
+}
+.abuse-list__indicator-bad {
+  color: #999999;
+  color: red;
+  cursor: pointer;
+  text-decoration: none;
+}
+.abuse-list__add-btn {
+  margin-bottom: 5px;
+  text-align: right;
+  color: #999999;
+  cursor: pointer;
+  text-decoration: none;
+}
+.abuse-list__list {
+  padding: 0px 0 0;
+  border-top: 1px solid #ffffff;
+}
+.abuse-form {
+  background: #fff5cc;
+  border: 1px solid #cccccc;
+  margin-bottom: 0px;
+  margin-bottom: 5px;
+  padding: 15px 15px;
+}
+.abuse-form__caption {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+.abuse-form__input {
+  display: block;
+  padding: 9px 5px 9px;
+  margin-bottom: 10px;
+  height: 40px;
+  min-height: 40px;
+}
 #abuse_list_none {
   color: #999999;
   cursor: pointer;
   margin-bottom: 5px;
   text-align: right;
-}
-#abuse_list_show_link {
-  cursor: pointer;
-  margin-bottom: 5px;
 }
 .abuse_info {
   background-image: url(/img/icon/info.png);
@@ -655,9 +825,6 @@ div.alert_block_mess b {
   margin-left: 3px;
   vertical-align: middle;
   width: 12px;
-}
-.right {
-  text-align: right;
 }
 #abuse_button_show_link {
   cursor: pointer;
@@ -674,7 +841,7 @@ div.alert_block_mess b {
   background: #f5f5f5;
 }
 .abuse_list_hint {
-  background: #ffffcc;
+  background: #fff5cc;
   border-width: 1px 0;
   border: 1px solid #cccccc;
   font-size: 10px;
@@ -690,12 +857,6 @@ div.alert_block_mess b {
   position: relative;
   vertical-align: middle;
   width: 16px;
-}
-#abuse_text_val {
-  height: 40px;
-  margin-bottom: 5px;
-  min-height: 40px;
-  width: 395px;
 }
 /* Обратная связь */
 .report_gray {
