@@ -57,7 +57,6 @@ var profile_last = new Vue({
     },
     computed: {
         old: function () {
-            return 86500 *0.005;
             return this.$el.attributes['data-old'].value;
         },
     }
