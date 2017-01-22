@@ -221,6 +221,7 @@ var idea_list = {
 
 
 
+
 var profile_old = new Vue({
     el: '#profile-caption__old',
     data: {
