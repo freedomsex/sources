@@ -26,40 +26,43 @@
   border-color: #333333;
 }
 .bg_ored {
-  background: #FFE0CC;
+  background: #FFE0CC !important;
 }
 .bg_ogrn {
-  background: #fff2e5;
+  background: #CBE6B3 !important;
 }
 .bg_omgn {
-  background: #fff2e5;
+  background: #fff2e5 !important;
 }
 .bg_oyel {
-  background: #fff5cc;
+  background: #fff5cc !important;
 }
 .bg_ogra {
-  background: #f2f2f2;
+  background: #f2f2f2 !important;
 }
 .bg_oblu {
-  background: #CCCCFF;
+  background: #CCCCFF !important;
 }
 .br_red {
-  border-color: #ff9966;
+  border-color: #ff9966 !important;
 }
 .br_grn {
-  border-color: #84bf3b;
+  border-color: #84bf3b !important;
 }
 .br_mgn {
-  border-color: #ddbbdd;
+  border-color: #ddbbdd !important;
 }
 .br_yel {
-  border-color: #ffcc66;
+  border-color: #ffcc66 !important;
 }
 .br_blu {
-  border-color: #9999ff;
+  border-color: #9999ff !important;
 }
 .br_gra {
-  border-color: #cccccc;
+  border-color: #cccccc !important;
+}
+.br_drk {
+  border-color: #333333 !important;
 }
 .br_ogra {
   border-color: #e5e5e5;
@@ -192,10 +195,7 @@ table.users {
   width: 100%;
 }
 .br_red {
-  border-color: #ff9966;
-}
-.br_grn {
-  border-color: #ACE600;
+  border-color: #ff9966 !important;
 }
 .br_mgn {
   border-color: #DDBBDD;
@@ -580,4 +580,98 @@ table.users {
 }
 .git-promo-link:hover {
   color: #666666;
+}
+#profile-caption {
+  font-size: 18px;
+  color: #333333;
+  margin-bottom: 15px;
+}
+#profile-info__old {
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
+  color: #666666;
+  font-size: 14px;
+  background: #f2f2f2;
+  padding-left: 10px;
+  border-top-right-radius: 35px;
+  border-bottom-right-radius: 35px;
+}
+.profile-info__old-text {
+  display: inline-block;
+  position: relative;
+  top: 1px;
+}
+.profile-info__main {
+  vertical-align: middle;
+  position: relative;
+}
+#profile-caption__old {
+  color: #666666;
+  font-size: 16px;
+  margin-left: 10px;
+  padding: 0 2px 2px;
+  border-style: solid;
+  border-color: #e5e5e5;
+  border-width: 0 0 3px 0;
+  vertical-align: top;
+  display: inline-block;
+  position: relative;
+  top: 8px;
+}
+.profile-user__icon {
+  width: 32px;
+  height: 32px;
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+  margin-left: 5px;
+  right: -2px;
+  background-color: #ffffff;
+  background-size: cover;
+  border-radius: 35px;
+  opacity: 0.9;
+}
+.profile-user__icon-human {
+  width: 32px;
+  height: 32px;
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+  margin-left: 5px;
+  right: -2px;
+  background-color: #ffffff;
+  background-size: cover;
+  border-radius: 35px;
+  opacity: 0.9;
+  background-image: url("/static/img/icon/human-icon.png");
+}
+.profile-user__icon-women {
+  width: 32px;
+  height: 32px;
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+  margin-left: 5px;
+  right: -2px;
+  background-color: #ffffff;
+  background-size: cover;
+  border-radius: 35px;
+  opacity: 0.9;
+  background-image: url("/static/img/icon/women-icon.png");
+}
+.profile-info__gender {
+  display: inline-block;
+  position: relative;
+  background-color: #ffffff;
+  vertical-align: middle;
+}
+.profile-info__age {
+  font-size: 16px;
+  font-weight: bold;
+  display: inline-block;
+  position: relative;
+  top: 1px;
+  margin-right: 10px;
+  vertical-align: middle;
 }

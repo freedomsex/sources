@@ -43,6 +43,19 @@ module.exports = function (grunt) {
                 }
             }
         },
+        image_resize: {
+            resize: {
+                options: {
+                    width:  32,
+                    height: 32,
+                    overwrite: true
+                },
+                files: {
+                    'images/dist/human-icon.png': 'images/src/human-icon.png',
+                    'images/dist/women-icon.png': 'images/src/women-icon.png',
+                },
+            },
+        },
         // Наблюдение за изменениями в файлах исходниках
         watch: {
             options: {
@@ -99,10 +112,12 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-image-resize');
     grunt.loadNpmTasks('grunt-processhtml');
 
     // Эти задания будут выполнятся сразу же когда вы в консоли напечатание grunt, и нажмете Enter
     grunt.registerTask('default', ['concat', 'less', 'processhtml']);
     grunt.registerTask('w',       ['default', 'watch']);
+    grunt.registerTask('g',       ['image_resize']);
 };
 

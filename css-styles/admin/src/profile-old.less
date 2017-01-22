@@ -1,0 +1,87 @@
+#profile-caption {
+    font-size: @font-lg;
+    color: @dark;
+    margin-bottom: @indent-md;
+    //border-bottom: 1px solid @light;
+    //padding: 0 0 @indent-md 0;
+}
+
+#profile-info__old {
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+    color: @dark-light;
+    font-size: 14px;
+    //margin-left: @indent-sm;
+    background: @light;
+    padding-left: @indent-sm;
+    border-top-right-radius: 35px;
+    border-bottom-right-radius: 35px;
+}
+.profile-info__old-text {
+    display: inline-block;
+    position: relative;
+    top: 1px;
+}
+
+
+.profile-info__main {
+    vertical-align: middle;
+    position: relative;
+}
+
+#profile-caption__old {
+    color: @dark-light;
+    font-size: @font-md;
+    margin-left: @indent-sm;
+    padding: 0 2px 2px;
+    border-style: solid;
+    border-color: @gray-light;
+    border-width: 0 0 3px 0;
+    vertical-align: top;
+    display: inline-block;
+    position: relative;
+    top: 8px;
+}
+
+.profile-user__icon {
+    width: 32px;
+    height: 32px;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    margin-left: @indent-xs;
+    right: -2px;
+    background-color: @white;
+    background-size: cover;
+    border-radius: 35px;
+    opacity: 0.9;
+}
+
+.profile-user__icon-human {
+    .profile-user__icon;
+    background-image: url("/static/img/icon/human-icon.png");
+}
+
+.profile-user__icon-women {
+    .profile-user__icon;
+    background-image: url("/static/img/icon/women-icon.png");
+}
+
+.profile-info__gender {
+    display: inline-block;
+    position: relative;
+    background-color: @white;
+    vertical-align: middle;
+}
+
+.profile-info__age {
+    font-size: @font-md;
+    font-weight: bold;
+    display: inline-block;
+    position: relative;
+    top: 1px;
+    //padding-top: @indent-xs;
+    margin-right: @indent-sm;
+    vertical-align: middle;
+}
