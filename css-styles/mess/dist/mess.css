@@ -143,6 +143,9 @@
 .right {
   text-align: right;
 }
+.radius {
+  border-radius: 3px;
+}
 #cent {
   float: left;
   font-size: 12px;

@@ -5,7 +5,6 @@ $( document ).ready(function()
     revs_list.init();  
      
     quick_word.init();
-    comment_profile.init();
     extra_button.init();
     
 });

@@ -114,10 +114,11 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-image-resize');
     grunt.loadNpmTasks('grunt-processhtml');
+    grunt.loadNpmTasks('grunt-newer');
 
     // Эти задания будут выполнятся сразу же когда вы в консоли напечатание grunt, и нажмете Enter
-    grunt.registerTask('default', ['concat', 'less', 'processhtml']);
+    grunt.registerTask('default', ['newer:concat', 'less', 'newer:processhtml']);
     grunt.registerTask('w',       ['default', 'watch']);
-    grunt.registerTask('g',       ['image_resize']);
+    grunt.registerTask('g',       ['newer:image_resize:resize']);
 };
 

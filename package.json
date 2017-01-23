@@ -11,6 +11,7 @@
     "grunt-contrib-uglify": "^2.0.0",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-image-resize": "^1.0.0",
+    "grunt-newer": "^1.2.0",
     "grunt-processhtml": "^0.4.1",
     "grunt-responsive-images": "^1.10.1"
   },

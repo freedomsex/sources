@@ -143,6 +143,9 @@
 .right {
   text-align: right;
 }
+.radius {
+  border-radius: 3px;
+}
 html {
   height: 100%;
   width: 100%;

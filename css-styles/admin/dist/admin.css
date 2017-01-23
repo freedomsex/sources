@@ -143,6 +143,9 @@
 .right {
   text-align: right;
 }
+.radius {
+  border-radius: 3px;
+}
 html {
   background: #ffffff;
   font-size: 13px;
@@ -683,4 +686,28 @@ table.users {
   vertical-align: top;
   position: relative;
   top: 10px;
+}
+.profile-status__present {
+  background: #f2f2f2;
+  padding: 15px 15px 0;
+  position: relative;
+  border-radius: 3px;
+}
+#profile-status__text {
+  font-size: 14px;
+  padding-bottom: 0px;
+  position: relative;
+  top: 1px;
+}
+.profile-status__suggest-item {
+  font-size: 12px;
+  cursor: pointer;
+}
+.profile-status__suggest-item:hover {
+  opacity: 0.9;
+}
+.profile-status__button {
+  display: inline-block;
+  position: relative;
+  top: 15px;
 }
