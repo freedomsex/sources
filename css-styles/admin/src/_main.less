@@ -1,5 +1,6 @@
 
 @import "_imports.less";
+@import "override-bootstrap.less";
 
 // Width variables (appears count calculates by raw css)
 @width2: 21px; // Appears 3 times
@@ -131,6 +132,11 @@ table.users {
     text-align: center;
     text-decoration: none;
     vertical-align: top;
+    &:hover {
+      text-decoration: none;
+      color: @white;
+      opacity: 0.8;
+    }
 }
 #page_cont {
     background: @white;
@@ -450,5 +456,4 @@ table.users {
 }
 @import "profile-old.less";
 @import "profile-status.less";
-@import "profile-comment.less"; 
-
+@import "profile-comment.less";

@@ -146,6 +146,63 @@
 .radius {
   border-radius: 3px;
 }
+.btn-virt {
+  color: #ffffff;
+  background-color: #9999ff;
+  border-color: #6F92D8;
+}
+.btn-virt:focus,
+.btn-virt.focus {
+  color: #ffffff;
+  background-color: #6666ff;
+  border-color: #2b519d;
+}
+.btn-virt:hover {
+  color: #ffffff;
+  background-color: #6666ff;
+  border-color: #3f6ecb;
+}
+.btn-virt:active,
+.btn-virt.active,
+.open > .dropdown-toggle.btn-virt {
+  color: #ffffff;
+  background-color: #6666ff;
+  border-color: #3f6ecb;
+}
+.btn-virt:active:hover,
+.btn-virt.active:hover,
+.open > .dropdown-toggle.btn-virt:hover,
+.btn-virt:active:focus,
+.btn-virt.active:focus,
+.open > .dropdown-toggle.btn-virt:focus,
+.btn-virt:active.focus,
+.btn-virt.active.focus,
+.open > .dropdown-toggle.btn-virt.focus {
+  color: #ffffff;
+  background-color: #4242ff;
+  border-color: #2b519d;
+}
+.btn-virt:active,
+.btn-virt.active,
+.open > .dropdown-toggle.btn-virt {
+  background-image: none;
+}
+.btn-virt.disabled:hover,
+.btn-virt[disabled]:hover,
+fieldset[disabled] .btn-virt:hover,
+.btn-virt.disabled:focus,
+.btn-virt[disabled]:focus,
+fieldset[disabled] .btn-virt:focus,
+.btn-virt.disabled.focus,
+.btn-virt[disabled].focus,
+fieldset[disabled] .btn-virt.focus {
+  background-color: #9999ff;
+  border-color: #6F92D8;
+}
+.btn-virt .badge {
+  color: #9999ff;
+  background-color: #ffffff;
+}
 html {
   background: #ffffff;
   font-size: 13px;
@@ -268,6 +325,11 @@ table.users {
   text-align: center;
   text-decoration: none;
   vertical-align: top;
+}
+.btn_menu:hover {
+  text-decoration: none;
+  color: #ffffff;
+  opacity: 0.8;
 }
 #page_cont {
   background: #ffffff;
