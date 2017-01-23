@@ -12,13 +12,16 @@ var profile_status = new Vue({
             {text: 'Пишет всем подряд, игнорирует анкетные данные, гей пишет натуралам, рассылки', style: 'bg_oyel'},
             {text: 'Ложно, отклоненные жалобы, причина не ясна, ссора, выяснение отношений', style: 'bg_ogrn'},
         ],
-        text:  '',
+        text:  'Статус не установлен',
         style: '',
         user:  '',
     },
     created: function () {
         this.user  = $('#profile-status__text').data('user');
-        this.text  = $('#profile-status__text').text().trim();
+        var text = $('#profile-status__text').text().trim();
+        if (text) {
+            this.text  = text;
+        }
     },
     mounted: function () {
         this.set_style();
