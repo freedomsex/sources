@@ -378,19 +378,18 @@ li.menu_user_link_ear {
   width: 320px;
 }
 #giper_reply {
+  display: none;
   background: #f2f2f2;
   border-width: 0px 0px 1px;
   border: 1px solid #cccccc;
-  display: none;
   margin-bottom: 7px;
-  max-width: 280px;
+  max-width: 300px;
   padding: 7px 10px 7px;
 }
 #giper_reply textarea {
   display: none;
   margin-bottom: 5px;
   min-height: 30px;
-  width: 274px;
 }
 @media (max-width: 1200px) {
   #earlap {
