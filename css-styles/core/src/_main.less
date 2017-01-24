@@ -54,6 +54,12 @@ textarea {
     resize: vertical;
     width: @width14;
 }
+input[type=file] {
+    display: inline-block;
+}
+label {
+    font-weight: normal;
+}
 
 .elem_online {
     background: @white;
@@ -156,7 +162,6 @@ textarea {
 }
 #earlap {
     border: 0px solid blue;
-    margin: 0 auto;
     width: @width0;
 }
 #giper_chat {
@@ -182,18 +187,18 @@ textarea {
 }
 
 
-@media (max-width: 1100px) {  
-    #earlap {        
-        width: 728px;   
-    } 
-    #giper_chat {     
+@media (max-width: 1200px) {
+    #earlap {
+        width: 728px;
+    }
+    #giper_chat {
         display: none;
     }
     div.menu_user_inner {
         width: 728px;
     }
     li.menu_user_link_ear {
-        width: 0px; 
+        width: 0px;
     }
 
 }
@@ -296,19 +301,12 @@ a.name {
     height: @height10;
     margin-right: 5px;
     width: @width17;
-    
+
 }
 .list_user_new {
     background: @green-light;
 }
-#flov_message {
-    bottom: 20px;
-    display: block;
-    left: 10px;
-    position:fixed;
-    text-align: left;
-    z-index: 1001;
-}
+
 .new_message {
     textarea {
         display: none;

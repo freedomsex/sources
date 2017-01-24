@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<head>
   <title>%%PAGE_TITLE%%</title>
  
  <META http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -19,7 +20,6 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
 <link rel="stylesheet" type="text/css" href="%%CSS_FILE%%">
-<link rel="stylesheet" type="text/css" href="%%CSS_MESS%%">
      
 
   <script type="text/javascript">  
@@ -39,11 +39,19 @@
 <!-- Put this script tag to the <head> of your page -->
 <script type="text/javascript" src="http://userapi.com/js/api/openapi.js?49"></script>
 </head>
+<link rel="stylesheet" type="text/css" href="%%CSS_MESS%%">
+</head>
 <body>
 %%USER_MENUE_BLOCK%%
 %%JS_USER_VARS%%
-<div id="earlap">
-<div id="index_cent">
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-1 hidden-xs hidden-sm">
+    </div>
+    <div class="col-md-11 col-xs-12 col-sm-12">
+      <div id="earlap">
+      <div id="index_cent">
 %%ALERT_BLOCK_TOP_GEN%%
 <div style="border-bottom: 1px solid #E5E5E5;">
 <iframe style="position: relative; background-color: transparent; border: none; overflow: hidden; height: 90px;width: 728px;" src="//data.freedomsex.me/din_new6.php?code=c1b2082d1105d784218299f23aa44f93&bid=35225&w=728&h=90&linkdest=model&modelnick=&clickurl=&refresh=1&meffect=random&einterval=none&logo=black&bbgcolor=none&bg_none=none&btextcolor=222222&mbordercolor=000000&mhovercolor=F7941D&mbordertype=solid&shad=0&bfontfamily=Arial&mtextalign=right&id=28644&server=runetki.com&langs=ru&campaign=655683&size=728x90&header=1&modelname=1&modelicon=1&modelinfo=1&geoflag=1&geoheader=1&selgeoheader=0&mediagroup=0&mediatype=2&skins=def&no_ab=1&no_ab_sub_data=1&no_ab_sub_media=2&category=all&srv=0&no_ab=1&no_ab_sub_data=1&no_ab_sub_media=2&no_ab_domain=freedomsex.me"></iframe>
@@ -53,46 +61,46 @@
 
  <div id="cent">
 
-    %%MAIL_TIPS_BLOCK_UP%%  
-       
-    %%MAIL_CONFIRM_BLOCK_UP%%       
-                                  
+    %%MAIL_TIPS_BLOCK_UP%%
+
+    %%MAIL_CONFIRM_BLOCK_UP%%
+
    <div id="anketa_master_info"></div>
-   <div id="human_cent_block"> 
-     <div id="anketa_first_info" style="margin-bottom: 5px;">  
-       <div id="human_labe_block"> 
-           %%DATING_LABEL_BUTTON%% 
-           %%VIDEO_CHAT_BUTTON%%  
+   <div id="human_cent_block">
+     <div id="anketa_first_info" style="margin-bottom: 5px;">
+       <div id="human_labe_block">
+           %%DATING_LABEL_BUTTON%%
+           %%VIDEO_CHAT_BUTTON%%
        </div>
-        
+
        <div id="human_data_block">
           <div id="human_data_print">
-            <span id="human_print_name" class="human_name %%HUMAN_STATUS%%">%%HUMAN_NAME%%</span>  
+            <span id="human_print_name" class="human_name %%HUMAN_STATUS%%">%%HUMAN_NAME%%</span>
             <a href="%%HUMAN_ORIGIN%%" style="text-decoration: none;" target="_blank">
               <img id="human_photo_min" src="%%HUMAN_PHOTO%%">
-            </a>                                           
+            </a>
             <span id="human_print_age">%%HUMAN_AGE%%</span> %%HUMAN_AGE_SAY%%
             <img id="edit_cont_btn" src="/img/edit_icon.png" alt="">
-          </div>   
-       </div>  
-     </div>  
-     
-     <div id="anketa_second_info" style="margin-bottom: 15px;">  
+          </div>
+       </div>
+     </div>
+
+     <div id="anketa_second_info" style="margin-bottom: 15px;">
        <script>
-           var anketa_collaps = 0;                                                 
+           var anketa_collaps = 0;
            try {
                var result = localStorage.getItem('visitor_list');
-               if (result.indexOf(tid) >= 0) {  
+               if (result.indexOf(tid) >= 0) {
                    document.getElementById('anketa_second_info').style.display = 'none';
-                   anketa_collaps = 1; 
-               } 
-           } catch (e) { }  
-         
+                   anketa_collaps = 1;
+               }
+           } catch (e) { }
+
        </script>
-      
-       
-       <span id="human_print_city" style="color: #aaa;">%%HUMAN_CITY%%</span>   
-                                        
+
+
+       <span id="human_print_city" style="color: #aaa;">%%HUMAN_CITY%%</span>
+
        <div id="human_search_block" style="padding: 15px 0 5px;">
            <a href="%%HUMAN_SEARCH_LINK%%" target="_blank"
              style="color: #333;
@@ -103,9 +111,9 @@
             %%HUMAN_SEARCH_TEXT%%
              <img src="/img/link_2.gif" width="10" height="10" alt="" border="0" style="vertical-align: middle; margin-left: 5px;"
               title="Показать результаты поиска">
-           </a>  
+           </a>
        </div>
-  
+
        <div id="human_status_block">
            <span class="%%TIME_STYLE%%" title="%%TIME_SAY%%">%%HUMAN_TIME%%</span>
            <span id="lock_user_link" class="link_simple" style="display: none;"
@@ -116,39 +124,39 @@
              <img src="/img/ajax_loader_gray.gif" style="vertical-align: middle;">
            </span>
        </div>
-                 
-       <div id="human_anketa_block"> 
+
+       <div id="human_anketa_block">
            <div id="anketa_text" >
-            %%HUMAN_ANKETA%%           
-           </div>  
-           %%ADDITIONAL_CONTACT%% 
-           %%DESIRE_TAG%%   
+            %%HUMAN_ANKETA%%
+           </div>
+           %%ADDITIONAL_CONTACT%%
+           %%DESIRE_TAG%%
        </div>
-  
-         
+
+
         <div id="lock_inform_block" class="mail_confirm_block" style="display: none;">
            Контакт заблокирован и удалён из списка.<br><br>
-           
+
            Пожалуйста, кликните "Удалить и наказать" у сообщения, послужившего причиной жалобы, можно несколько.
-           Наказание начинает действовать сразу. 
-           
+           Наказание начинает действовать сразу.
+
            <span id="link_lock_abuse" class="link_simple">Опубликовать замечание</span>
-        
+
         </div>
         <div id="unlock_inform_block" class="mail_confirm_block" style="display: none;">
-           Просто напишите сообщение заблокированному пользователю, он будет автоматически 
-           разблокирован и добавлен в ваш список контактов. В случае чего, его всегда можно найти в поиске. 
+           Просто напишите сообщение заблокированному пользователю, он будет автоматически
+           разблокирован и добавлен в ваш список контактов. В случае чего, его всегда можно найти в поиске.
         </div>
-     </div>  
-     
+     </div>
 
-  %%MAIL_FORM_MESSAGE_POST%% 
-  <script>                                              
-      if (anketa_collaps) {  
-          document.getElementById('anketa_collaps_link').innerHTML = "Развернуть анкету"; 
-      }   
+
+  %%MAIL_FORM_MESSAGE_POST%%
+  <script>
+      if (anketa_collaps) {
+          document.getElementById('anketa_collaps_link').innerHTML = "Развернуть анкету";
+      }
   </script>
-  
+
 
 <div id="abuse-list-component">
   <div class="abuse-indicator">
@@ -202,88 +210,88 @@
     </div>
   </div>
 </template>
-        
-     
-%%MAIL_CONFIRM_BLOCK_DN%% 
+
+
+%%MAIL_CONFIRM_BLOCK_DN%%
 <div id="confirm_block_dn" class="mail_confirm_block" style="display: none;" ></div>
-     
-      
-     
-     <div id="mess_shab_text_block" style="display: none;"> 
-     
+
+
+
+     <div id="mess_shab_text_block" style="display: none;">
+
       <div class="message_list_title_date">
        <span>Здесь будет история вашей переписки</span>
       </div>  <br />
-      
-      
+
+
       <div id="mess_shab_text_caption">
         Быстрые сообщения. Выберите чтобы отправить
       </div>
-     
+
       <div id="mess_shab_text_link">
-        <span id="mess_shab_wrap"></span> 
+        <span id="mess_shab_wrap"></span>
         <span id="mess_shab_more" class="link_simple">Ещё..</span>
       </div>
-                          
+
       <div id="">
         <span id="quick_tab_public" class="quick_mess_tab" data-tab="public">Познакомиться</span>
         <span id="quick_tab_offer" class="quick_mess_tab" data-tab="offer">Реал секс</span>
         <span id="quick_tab_virt" class="quick_mess_tab" data-tab="virt">Вирт секс</span>
-      </div>   
-     
+      </div>
+
      </div>
- 
-      
-     
+
+
+
      <div id="mail_messages_block" style="display: none;"></div>
-     
+
      <div id="message_block_ex" class="_____message_list_block" style="display: none;">
       <div class="message_list_title unread">
-        <span class="user_name"></span> 
+        <span class="user_name"></span>
         <span class="message_list_save bunned_mess" data-number="8973758"
          style="margin-left: 3px; vertical-align: bottom; ">Удалить и наказать</span>
         <div class="message_list_time unread">
          <span class="message_list_save remove_mess" data-number="8973758">Удалить</span>
-         <span class="mess_time"></span> 
+         <span class="mess_time"></span>
         </div>
       </div>
-      <div class="message_list_body"></div> 
+      <div class="message_list_body"></div>
       <div style="clear: both;"></div>
      </div>
-     
-     
-     
-     
+
+
+
+
      <div id="mail_bad_text_alert" style="display: none;">
-      <span class="text"></span> 
-      <div style="margin-top: 5px;"> 
-       <input type="button" value="Посмотреть сообщения" style="font-size: 11px;">  &nbsp; 
+      <span class="text"></span>
+      <div style="margin-top: 5px;">
+       <input type="button" value="Посмотреть сообщения" style="font-size: 11px;">  &nbsp;
        <span class="link_underline">Игнорировать и удалить</span>
       </div>
-    
-     </div>  
-                       
+
+     </div>
+
 
   <div id="mess_loader" class="message_list_title_date">
     <span><img src="/ajax/mess_loader.gif" style="display: none;"> Загружаем</span>
-  </div>   
-  
+  </div>
+
   <div id="no_js" style="padding: 15px 0; font-size: 15px; ">
     Для работы сайта необходимо включить JavaScript в вашем браузере.
     Иногда нарушить работу могут блокировщики рекламы и скриптов или антивирус. <br><br>
     <b>support@freedomsex.net</b> - служба поддержки.
   </div>
   <script> document.getElementById('no_js').style.display = 'none'; </script>
-               
-     
-      <div id="mail_pages" style="display: none;">  
-       <span id="mail_pages_next" class="link_underline">следующие »</span> 
+
+
+      <div id="mail_pages" style="display: none;">
+       <span id="mail_pages_next" class="link_underline">следующие »</span>
        <div class="save_notice">
          Ненужные сообщения удаляются автоматически.
          <a href="/блог/сохраняйте-только-важное">Подробнее...</a>
-       </div> 
+       </div>
       </div>
-         
+
      <div id="mess_option_hint" style="display: none;">
       <div style="display: inline-block; padding: 5px 0px 1px 0px; color: #888;
        font-size: 9px;">
@@ -292,13 +300,13 @@
 
 
     <div id="recover_mess_block_ex" class="mail_confirm_block" style="display: none;">
-     Сообщение удалено. 
+     Сообщение удалено.
      <span class="link_underline">Восстановить</span>
     </div>
-    <!--// ----------- float: right;  ------------//-->
+    <!-- float: right; ===================================================== -->
 
-    
-   </div>  
+
+   </div>
 
 
 
@@ -619,7 +627,18 @@ border-radius: 3px;">Сохранено</span>
      <div id="giper_stock">  
      </div> 
    </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+
+   <script type="text/javascript">
+      var addthis_config = {"data_track_addressbar":false};
+       addthis_config.data_track_addressbar = false;
+       addthis_config.data_track_clickback = false;</script>
+   <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4fb88f475e8b2e81"></script>
+
 
 
 <div>
@@ -654,27 +673,19 @@ border-radius: 3px;">Сохранено</span>
 </div>
 
 <!-- Редактирование контактов, элемент -->
-<div id="edit_cont_elem">
+<div id="edit_cont_elem" style="display: none;">
   <input id="edit_human_name" type="text" placeholder="Имя" style="width: 150px;">
   <input id="edit_human_btn"  type="submit" value=" Сохранить ">
 </div>
 
-   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-   <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-   <script src="https://unpkg.com/json3@3.3.2"></script>
-  <script src="http://underscorejs.org/underscore-min.js"></script>
-  <script src="https://unpkg.com/vue@2.1.10/dist/vue.js"></script>
-  <script src="https://unpkg.com/vue-resource@1.0.3/dist/vue-resource.js"></script>
+ <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+ <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+ <script src="https://unpkg.com/json3@3.3.2"></script>
+<script src="http://underscorejs.org/underscore-min.js"></script>
+<script src="https://unpkg.com/vue@2.1.10/dist/vue.js"></script>
+<script src="https://unpkg.com/vue-resource@1.0.3/dist/vue-resource.js"></script>
 
-  <script type="text/javascript" src="%%JS_FILE%%"></script>
-  <script type="text/javascript" src="%%JS_MESS%%"></script>
-
-
-   <script type="text/javascript">
-      var addthis_config = {"data_track_addressbar":false};
-       addthis_config.data_track_addressbar = false;
-       addthis_config.data_track_clickback = false;</script>
-   <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4fb88f475e8b2e81"></script>
-
+<script type="text/javascript" src="%%JS_FILE%%"></script>
+<script type="text/javascript" src="%%JS_MESS%%"></script>
 </body>
 </html>

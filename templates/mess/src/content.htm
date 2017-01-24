@@ -1,46 +1,46 @@
 
  <div id="cent">
 
-    %%MAIL_TIPS_BLOCK_UP%%  
-       
-    %%MAIL_CONFIRM_BLOCK_UP%%       
-                                  
+    %%MAIL_TIPS_BLOCK_UP%%
+
+    %%MAIL_CONFIRM_BLOCK_UP%%
+
    <div id="anketa_master_info"></div>
-   <div id="human_cent_block"> 
-     <div id="anketa_first_info" style="margin-bottom: 5px;">  
-       <div id="human_labe_block"> 
-           %%DATING_LABEL_BUTTON%% 
-           %%VIDEO_CHAT_BUTTON%%  
+   <div id="human_cent_block">
+     <div id="anketa_first_info" style="margin-bottom: 5px;">
+       <div id="human_labe_block">
+           %%DATING_LABEL_BUTTON%%
+           %%VIDEO_CHAT_BUTTON%%
        </div>
-        
+
        <div id="human_data_block">
           <div id="human_data_print">
-            <span id="human_print_name" class="human_name %%HUMAN_STATUS%%">%%HUMAN_NAME%%</span>  
+            <span id="human_print_name" class="human_name %%HUMAN_STATUS%%">%%HUMAN_NAME%%</span>
             <a href="%%HUMAN_ORIGIN%%" style="text-decoration: none;" target="_blank">
               <img id="human_photo_min" src="%%HUMAN_PHOTO%%">
-            </a>                                           
+            </a>
             <span id="human_print_age">%%HUMAN_AGE%%</span> %%HUMAN_AGE_SAY%%
             <img id="edit_cont_btn" src="/img/edit_icon.png" alt="">
-          </div>   
-       </div>  
-     </div>  
-     
-     <div id="anketa_second_info" style="margin-bottom: 15px;">  
+          </div>
+       </div>
+     </div>
+
+     <div id="anketa_second_info" style="margin-bottom: 15px;">
        <script>
-           var anketa_collaps = 0;                                                 
+           var anketa_collaps = 0;
            try {
                var result = localStorage.getItem('visitor_list');
-               if (result.indexOf(tid) >= 0) {  
+               if (result.indexOf(tid) >= 0) {
                    document.getElementById('anketa_second_info').style.display = 'none';
-                   anketa_collaps = 1; 
-               } 
-           } catch (e) { }  
-         
+                   anketa_collaps = 1;
+               }
+           } catch (e) { }
+
        </script>
-      
-       
-       <span id="human_print_city" style="color: #aaa;">%%HUMAN_CITY%%</span>   
-                                        
+
+
+       <span id="human_print_city" style="color: #aaa;">%%HUMAN_CITY%%</span>
+
        <div id="human_search_block" style="padding: 15px 0 5px;">
            <a href="%%HUMAN_SEARCH_LINK%%" target="_blank"
              style="color: #333;
@@ -51,9 +51,9 @@
             %%HUMAN_SEARCH_TEXT%%
              <img src="/img/link_2.gif" width="10" height="10" alt="" border="0" style="vertical-align: middle; margin-left: 5px;"
               title="Показать результаты поиска">
-           </a>  
+           </a>
        </div>
-  
+
        <div id="human_status_block">
            <span class="%%TIME_STYLE%%" title="%%TIME_SAY%%">%%HUMAN_TIME%%</span>
            <span id="lock_user_link" class="link_simple" style="display: none;"
@@ -64,124 +64,124 @@
              <img src="/img/ajax_loader_gray.gif" style="vertical-align: middle;">
            </span>
        </div>
-                 
-       <div id="human_anketa_block"> 
+
+       <div id="human_anketa_block">
            <div id="anketa_text" >
-            %%HUMAN_ANKETA%%           
-           </div>  
-           %%ADDITIONAL_CONTACT%% 
-           %%DESIRE_TAG%%   
+            %%HUMAN_ANKETA%%
+           </div>
+           %%ADDITIONAL_CONTACT%%
+           %%DESIRE_TAG%%
        </div>
-  
-         
+
+
         <div id="lock_inform_block" class="mail_confirm_block" style="display: none;">
            Контакт заблокирован и удалён из списка.<br><br>
-           
+
            Пожалуйста, кликните "Удалить и наказать" у сообщения, послужившего причиной жалобы, можно несколько.
-           Наказание начинает действовать сразу. 
-           
+           Наказание начинает действовать сразу.
+
            <span id="link_lock_abuse" class="link_simple">Опубликовать замечание</span>
-        
+
         </div>
         <div id="unlock_inform_block" class="mail_confirm_block" style="display: none;">
-           Просто напишите сообщение заблокированному пользователю, он будет автоматически 
-           разблокирован и добавлен в ваш список контактов. В случае чего, его всегда можно найти в поиске. 
+           Просто напишите сообщение заблокированному пользователю, он будет автоматически
+           разблокирован и добавлен в ваш список контактов. В случае чего, его всегда можно найти в поиске.
         </div>
-     </div>  
-     
+     </div>
 
-  %%MAIL_FORM_MESSAGE_POST%% 
-  <script>                                              
-      if (anketa_collaps) {  
-          document.getElementById('anketa_collaps_link').innerHTML = "Развернуть анкету"; 
-      }   
+
+  %%MAIL_FORM_MESSAGE_POST%%
+  <script>
+      if (anketa_collaps) {
+          document.getElementById('anketa_collaps_link').innerHTML = "Развернуть анкету";
+      }
   </script>
-  
-<!-- build:include abuse-list.htm --> 
+
+<!-- build:include abuse-list.htm -->
 Замечания к анкете
 <!-- /build -->
-        
-     
-%%MAIL_CONFIRM_BLOCK_DN%% 
+
+
+%%MAIL_CONFIRM_BLOCK_DN%%
 <div id="confirm_block_dn" class="mail_confirm_block" style="display: none;" ></div>
-     
-      
-     
-     <div id="mess_shab_text_block" style="display: none;"> 
-     
+
+
+
+     <div id="mess_shab_text_block" style="display: none;">
+
       <div class="message_list_title_date">
        <span>Здесь будет история вашей переписки</span>
       </div>  <br />
-      
-      
+
+
       <div id="mess_shab_text_caption">
         Быстрые сообщения. Выберите чтобы отправить
       </div>
-     
+
       <div id="mess_shab_text_link">
-        <span id="mess_shab_wrap"></span> 
+        <span id="mess_shab_wrap"></span>
         <span id="mess_shab_more" class="link_simple">Ещё..</span>
       </div>
-                          
+
       <div id="">
         <span id="quick_tab_public" class="quick_mess_tab" data-tab="public">Познакомиться</span>
         <span id="quick_tab_offer" class="quick_mess_tab" data-tab="offer">Реал секс</span>
         <span id="quick_tab_virt" class="quick_mess_tab" data-tab="virt">Вирт секс</span>
-      </div>   
-     
+      </div>
+
      </div>
- 
-      
-     
+
+
+
      <div id="mail_messages_block" style="display: none;"></div>
-     
+
      <div id="message_block_ex" class="_____message_list_block" style="display: none;">
       <div class="message_list_title unread">
-        <span class="user_name"></span> 
+        <span class="user_name"></span>
         <span class="message_list_save bunned_mess" data-number="8973758"
          style="margin-left: 3px; vertical-align: bottom; ">Удалить и наказать</span>
         <div class="message_list_time unread">
          <span class="message_list_save remove_mess" data-number="8973758">Удалить</span>
-         <span class="mess_time"></span> 
+         <span class="mess_time"></span>
         </div>
       </div>
-      <div class="message_list_body"></div> 
+      <div class="message_list_body"></div>
       <div style="clear: both;"></div>
      </div>
-     
-     
-     
-     
+
+
+
+
      <div id="mail_bad_text_alert" style="display: none;">
-      <span class="text"></span> 
-      <div style="margin-top: 5px;"> 
-       <input type="button" value="Посмотреть сообщения" style="font-size: 11px;">  &nbsp; 
+      <span class="text"></span>
+      <div style="margin-top: 5px;">
+       <input type="button" value="Посмотреть сообщения" style="font-size: 11px;">  &nbsp;
        <span class="link_underline">Игнорировать и удалить</span>
       </div>
-    
-     </div>  
-                       
+
+     </div>
+
 
   <div id="mess_loader" class="message_list_title_date">
     <span><img src="/ajax/mess_loader.gif" style="display: none;"> Загружаем</span>
-  </div>   
-  
+  </div>
+
   <div id="no_js" style="padding: 15px 0; font-size: 15px; ">
     Для работы сайта необходимо включить JavaScript в вашем браузере.
     Иногда нарушить работу могут блокировщики рекламы и скриптов или антивирус. <br><br>
     <b>support@freedomsex.net</b> - служба поддержки.
   </div>
   <script> document.getElementById('no_js').style.display = 'none'; </script>
-               
-     
-      <div id="mail_pages" style="display: none;">  
-       <span id="mail_pages_next" class="link_underline">следующие »</span> 
+
+
+      <div id="mail_pages" style="display: none;">
+       <span id="mail_pages_next" class="link_underline">следующие »</span>
        <div class="save_notice">
          Ненужные сообщения удаляются автоматически.
          <a href="/блог/сохраняйте-только-важное">Подробнее...</a>
-       </div> 
+       </div>
       </div>
-         
+
      <div id="mess_option_hint" style="display: none;">
       <div style="display: inline-block; padding: 5px 0px 1px 0px; color: #888;
        font-size: 9px;">
@@ -190,13 +190,13 @@
 
 
     <div id="recover_mess_block_ex" class="mail_confirm_block" style="display: none;">
-     Сообщение удалено. 
+     Сообщение удалено.
      <span class="link_underline">Восстановить</span>
     </div>
-    <!--// ----------- float: right;  ------------//-->
+    <!-- float: right; ===================================================== -->
 
-    
-   </div>  
+
+   </div>
 
 
 

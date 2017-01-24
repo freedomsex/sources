@@ -39,7 +39,9 @@ module.exports = function (grunt) {
             },
             dist: {
                 files: {
-                    'templates/mess/dist/mess.htm': ['templates/mess/src/_main.htm']
+                    'templates/mess/dist/mess.htm':   ['templates/mess/src/_main.htm'],
+                    'templates/index/dist/index.htm': ['templates/index/src/_main.htm'],
+                    'templates/profile/dist/profile.htm': ['templates/profile/src/_main.htm']
                 }
             }
         },
@@ -87,9 +89,10 @@ module.exports = function (grunt) {
             },
             templates: {
                 files: [
-                    'templates/core/src/*.htm',
+                    'templates/index/src/*.htm',
                     'templates/mess/src/*.htm',
-                    'templates/admin/src/*.htm',
+                    'templates/profile/src/*.htm',
+                    'templates/_common/*.htm',
                 ],
                 tasks: ['default'],
                 options: {
@@ -114,10 +117,9 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-image-resize');
     grunt.loadNpmTasks('grunt-processhtml');
-    grunt.loadNpmTasks('grunt-newer');
 
     // Эти задания будут выполнятся сразу же когда вы в консоли напечатание grunt, и нажмете Enter
-    grunt.registerTask('default', ['newer:concat', 'less', 'processhtml']);
+    grunt.registerTask('default', ['concat', 'less', 'processhtml']);
     grunt.registerTask('w',       ['default', 'watch']);
     grunt.registerTask('g',       ['newer:image_resize:resize']);
 };

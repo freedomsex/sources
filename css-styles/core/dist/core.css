@@ -179,6 +179,12 @@ textarea {
   resize: vertical;
   width: 100%;
 }
+input[type=file] {
+  display: inline-block;
+}
+label {
+  font-weight: normal;
+}
 .elem_online {
   background: #ffffff;
   border-radius: 3px;
@@ -257,7 +263,6 @@ div.menu_user_outer {
   background: #3A5795;
   height: 55px;
   margin: 0 0 0 0;
-  min-width: 728px;
   padding: 0;
   text-align: center;
 }
@@ -269,7 +274,6 @@ div.menu_user_outer a:hover {
   color: #ffffff;
 }
 div.menu_user_inner {
-  margin: 0px auto;
   overflow: hidden;
   padding: 0;
   text-align: left;
@@ -364,7 +368,6 @@ li.menu_user_link_ear {
 }
 #earlap {
   border: 0px solid blue;
-  margin: 0 auto;
   width: 1067px;
 }
 #giper_chat {
@@ -388,7 +391,7 @@ li.menu_user_link_ear {
   min-height: 30px;
   width: 274px;
 }
-@media (max-width: 1100px) {
+@media (max-width: 1200px) {
   #earlap {
     width: 728px;
   }
@@ -497,14 +500,6 @@ a.name:hover {
 }
 .list_user_new {
   background: #CBE6B3;
-}
-#flov_message {
-  bottom: 20px;
-  display: block;
-  left: 10px;
-  position: fixed;
-  text-align: left;
-  z-index: 1001;
 }
 .new_message textarea {
   display: none;
