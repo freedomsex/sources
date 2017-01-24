@@ -95,46 +95,23 @@ label {
 .left_vision {
     float: right;
 }
-.search {
-    color: @dark-light;
-    font-size: 12px;
-    margin-left: 10px;
-    text-decoration: none;
-    &:hover {
-        color: @dark;
+
+
+.next_link {
+    border-bottom: 1px solid @light;
+    color: @dark;
+    display: block;
+    font-size: 14px;
+    margin: 0px 10px;
+    padding: 12px 7px;
+    position: relative;
+    text-align: left;
+    a.mail_link {
+        text-decoration: none;
     }
 }
-.social_lab {
-    display: inline-block;
-    height: @height7;
-    margin-right: 5px;
-    position: relative;
-    text-decoration: none;
-    vertical-align: middle;
-    width: @width13;
-}
-.vk {
-    background: url(/img/icon/ct_vk.png) no-repeat left center;
-}
-.sk {
-    background: url(/img/icon/ct_sk.png) no-repeat left center;
-}
-.ok {
-    background: url(/img/icon/ct_ok.png) no-repeat left center;
-}
-.fb {
-    background: url(/img/icon/ct_fb.png) no-repeat left center;
-}
-.ph {
-    background: url(/img/icon/ct_ph.png) no-repeat left center;
-}
-.em {
-    background: url(/img/icon/ct_em.png) no-repeat left center;
-}
-.go {
-    background: url(/img/icon/ct_go.png) no-repeat left center;
-}
 
+@import "user-list.less";
 @import "menu-user.less";
 
 #block_static_tip {
@@ -213,97 +190,6 @@ label {
         height: 0;
         overflow: hidden;
     }
-}
-.user {
-    border-bottom: 1px solid @light;
-    color: @dark;
-    display: block;
-    font-size: 14px;
-    margin: 0px 10px;
-    padding: 12px 7px;
-    position: relative;
-    text-align: left;
-    a.mail_link {
-        text-decoration: none;
-    }
-}
-.user.visited {
-    background: @light;
-}
-.user.gray {
-    color: @gray;
-}
-span.name {
-    color: @dark;
-    text-decoration: none;
-}
-span.age {
-    color: @red-dark;
-    text-decoration: none;
-}
-span.town {
-    border-bottom: 0px dashed @link-color;
-    color: @link-color;
-    text-decoration: none;
-}
-.gray {
-    span.name {
-        color: @gray-dark;
-        text-decoration: none;
-    }
-    span.age {
-        color: @gray;
-        text-decoration: none;
-    }
-    span.town {
-        border-bottom: 0px dashed @link-color;
-        color: @gray;
-        text-decoration: none;
-    }
-}
-a.name {
-    color: @dark;
-    text-decoration: none;
-    &:hover {
-        color: @black;
-    }
-}
-.inti_lab {
-    color: @pink-dark;
-    font-size: 11px;
-    margin-right: 5px;
-    text-decoration: none;
-}
-.virt_lab {
-    color: @green;
-    font-size: 11px;
-    margin-right: 5px;
-    text-decoration: none;
-}
-.feti_lab {
-    color: @pink;
-    font-size: 11px;
-    margin-right: 5px;
-    text-decoration: none;
-}
-.bdsm_lab {
-    color: @gray-dark;
-    font-size: 11px;
-    margin-right: 5px;
-    text-decoration: none;
-}
-.list_user_new,
-.marker {
-    background: White;
-    border-radius: 5px;
-    display: inline-block;
-    height: @height10;
-    margin-right: 5px;
-    width: @width17;
-
-}
-.list_user_new {
-    background: @green-light;
 }
 
 .new_message {
