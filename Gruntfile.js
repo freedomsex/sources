@@ -6,7 +6,7 @@ module.exports = function (grunt) {
             },
             core: {
                 src: ['javascript/core/src/*.js'],
-                dest: 'javascript/core/dist/core.js',
+                dest: 'javascript/core/dist/core.es6',
             },
             mess: {
                 src: ['javascript/mess/src/*.js'],
@@ -16,6 +16,17 @@ module.exports = function (grunt) {
                 src: ['javascript/admin/src/*.js'],
                 dest: 'javascript/admin/dist/admin.js',
             },
+        },
+        babel: {
+            options: {
+                sourceMap: false,
+                presets: ['es2015']
+            },
+            dist: {
+                files: {
+                    'javascript/core/dist/core.js': 'javascript/core/dist/core.es6'
+                }
+            }
         },
         // Сборка исходников LESS в файлы css-style
         less: {
@@ -117,9 +128,10 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-image-resize');
     grunt.loadNpmTasks('grunt-processhtml');
+    grunt.loadNpmTasks('grunt-babel');
 
     // Эти задания будут выполнятся сразу же когда вы в консоли напечатание grunt, и нажмете Enter
-    grunt.registerTask('default', ['concat', 'less', 'processhtml']);
+    grunt.registerTask('default', ['concat', 'babel', 'less', 'processhtml']);
     grunt.registerTask('w',       ['default', 'watch']);
     grunt.registerTask('g',       ['newer:image_resize:resize']);
 };
