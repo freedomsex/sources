@@ -367,6 +367,47 @@ table.users {
   font-size: 14px;
   margin-bottom: 15px;
 }
+#review-list {
+  margin-bottom: 30px;
+  position: relative;
+}
+.review-item {
+  margin-bottom: 5px;
+  padding-top: 10px;
+  color: #333333;
+}
+.review-item table {
+  width: 100%;
+}
+.review-item__voting {
+  width: 40px;
+  padding-right: 5px;
+  text-align: center;
+  vertical-align: top;
+}
+.review-item__voting button {
+  min-width: 35px;
+}
+.review-item__content {
+  vertical-align: top;
+  background: #f2f2f2;
+}
+.review__text {
+  border-bottom: 1px solid #ffffff;
+  color: #333333;
+  font-size: 14px;
+  padding: 15px 15px 10px;
+}
+.review__info {
+  color: #666666;
+  padding: 5px 20px 15px;
+  font-size: 12px;
+}
+.review__summary {
+  color: #666666;
+  padding: 5px 20px 15px;
+  font-size: 11px;
+}
 .btn_rating {
   text-align: center;
 }
@@ -377,24 +418,24 @@ table.users {
   height: 12px;
   width: 22px;
 }
-.revs_up {
-  background-position: 0 -24px;
-}
-.revs_up:hover {
-  background-position: 0 0px;
-}
+/*.revs_up {
+    background-position: 0 -24px;
+    &:hover {
+        background-position: 0 0px;
+    }
+}*/
 .rating_up {
   background-position: 0 -24px;
 }
 .rating_up:hover {
   background-position: 0 0px;
 }
-.revs_down {
-  background-position: 0 -36px;
-}
-.revs_down:hover {
-  background-position: 0 -12px;
-}
+/*.revs_down {
+    background-position: 0 -36px;
+    &:hover {
+        background-position: 0 -12px;
+    }
+}*/
 .rating_down {
   background-position: 0 -36px;
 }
@@ -429,19 +470,19 @@ table.users {
 .comm_down:hover {
   background-position: 0 -57px;
 }
-.idea {
-  background: #fff5cc;
-  border-top: 1px solid #cccccc;
-  color: #333333;
-  font-size: 14px;
-  margin-bottom: 10px;
-  padding: 10px 10px 12px;
-}
 .review {
   background: #f2f2f2;
   border-top: 1px solid #cccccc;
   color: #333333;
   font-size: 13px;
+  margin-bottom: 10px;
+  padding: 10px 10px 12px;
+}
+.idea {
+  background: #fff5cc;
+  border-top: 1px solid #cccccc;
+  color: #333333;
+  font-size: 14px;
   margin-bottom: 10px;
   padding: 10px 10px 12px;
 }
