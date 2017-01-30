@@ -396,6 +396,7 @@ table.users {
   border-bottom: 1px solid #ffffff;
   color: #333333;
   font-size: 14px;
+  font-style: italic;
   padding: 15px 15px 10px;
 }
 .review__info {
