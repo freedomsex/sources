@@ -1,36 +1,31 @@
 
 // -- Список отзывов ---
-var revs_list = {
+var help_list = {
 
     init: function ()
     {
-        $('#review-list .revs_up').on('click',revs_list.ajax.up);
-        $('#review-list .revs_down').on('click',revs_list.ajax.down);
-        $('#review-all-bad').on('click',revs_list.actions.allBad);
+        $('#help-list .revs_up').on('click', help_list.ajax.up);
+        $('#help-list .revs_down').on('click', help_list.ajax.down);
+        $('#help-all-bad').on('click', help_list.actions.allBad);
     } ,
-
     ajax: {
-
-        up: function ()
-        {
+        send: function (id, mod) {
+            $.post( '/security/sethelp/', { id: id, mod: mod } );
+            help_list.actions.mod(id, mod);
+        },
+        up: function () {
             var id  = $(this).data('num');
             $(this).off('click');
-            $.post( '/security/modrevs/', { id: id, mod: 1 } );
-            revs_list.actions.mod(id,1);
-            revs_list.actions.toggleUp(id);
-        } ,
-
-        down: function ()
-        {
+            help_list.ajax.send(id, 1);
+            help_list.actions.toggleUp(id);
+        },
+        down: function (){
             var id  = $(this).data('num');
             $(this).off('click');
-            $.post( '/security/modrevs/', { id: id, mod: -1 } );
-            revs_list.actions.mod(id,-1);
-            revs_list.actions.toggleDown(id);
+            help_list.ajax.send(id, -1);
+            help_list.actions.toggleDown(id);
         }
-
-    } ,
-
+    },
     actions: {
         mod: function (id,mod) {
             var rank = $('#revs_rank_'+id).text() * 1 + mod;
@@ -53,7 +48,6 @@ var revs_list = {
             $('.revs_up').filter(function () {return $(this).data('num') == id;}).toggleClass('btn-primary btn-default');
             $('.revs_down').filter(function () {return $(this).data('num') == id;}).toggleClass('btn-default btn-danger disabled');
         },
-
     }
 }
 

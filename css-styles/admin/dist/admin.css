@@ -367,7 +367,7 @@ table.users {
   font-size: 14px;
   margin-bottom: 15px;
 }
-#review-list {
+.review-list {
   margin-bottom: 30px;
   position: relative;
 }
