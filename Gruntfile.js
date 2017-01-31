@@ -122,5 +122,8 @@ module.exports = function (grunt) {
     grunt.registerTask('default', ['concat', 'less', 'processhtml']);
     grunt.registerTask('w',       ['default', 'watch']);
     grunt.registerTask('g',       ['newer:image_resize:resize']);
+    grunt.registerTask('t',       ['processhtml']);
+    grunt.registerTask('j',       ['concat']);
+    grunt.registerTask('l',       ['less']);
 };
 
