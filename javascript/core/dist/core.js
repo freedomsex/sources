@@ -158,81 +158,81 @@ function set_cookie ( name, val, time ) {
 } 
  
 
-  
-var desire_clip = { 
- 
+
+var desire_clip = {
+
     sync_taglist: 0,
-  
-    init: function () {                      
-        desire_clip.action.set();            
-        desire_clip.ajax.sync();                          
-    },    
-    ajax: {     
-        sync: function () {                     
-            $.get('/sync/taglist/', desire_clip.ajax.parse);                  
-        },   
-        parse: function (data) {                          
-            data = json.parse(data);                           
-            if (data.id != undefined) { 
+
+    init: function () {
+        desire_clip.action.set();
+        desire_clip.ajax.sync();
+    },
+    ajax: {
+        sync: function () {
+            $.get('/sync/taglist/', desire_clip.ajax.parse);
+        },
+        parse: function (data) {
+            data = json.parse(data);
+            if (data) {
                 if (data.id && user_tag.sync != data.id) {
-                    user_tag.sync = data.id;  
-                    user_tag.action.store();   
-                    desire_clip.ajax.load();  
-                } 
-            }          
-        },     
-        load: function () {                     
-            $.get('/tag/user/', desire_clip.ajax.on_load);                  
-        },   
-        on_load: function (data) {                    // alert(data)       
-            data = json.parse(data);                               
-            if (data.tags != undefined) {          
-                user_tag.list = data.tags;      
-                user_tag.option.set_count();
-                user_tag.action.store();      
-            }                    
-            if (data.tags.length > 0) {             
-                desire_clip.action.set();    
+                    user_tag.sync = data.id;
+                    user_tag.action.store();
+                    desire_clip.ajax.load();
+                }
             }
-        },  
-        add: function (tag) {                             
-            $.post('/tag/add/', { tag: tag });                   
-        }           
-    },        
-    action: {   
-        set: function () { 
-            user_tag.action.ids();      
-            $('.desire_clip').each(function (i,elem) {  
-                $(elem).off('click'); 
-                $(elem).removeClass('desire_user');      
-                if (user_tag.idls.indexOf($(elem).data('id')) >= 0) {   
-                    $(elem).addClass('desire_user');  
-                } else                        
-                    $(elem).on('click',desire_clip.action.add);        
-            }); 
-            user_tag.option.set_count();  
-        },  
-        add: function () {  
-            desire_clip.ajax.add($(this).data('tag'));  
-            desire_clip.option.toggle(this);    
-            //$(this).on('click',desire_clip.action.del);          
-            var data = {"tag":$(this).data('tag'),"id":$(this).data('id')}; 
-            user_tag.list.push(data);          
-        },  
-        del: function () {                              
-            option_tag.ajax.del($(this).data('id'));   
-            desire_clip.option.toggle(this);      
-            user_tag.list.splice($(this).data('num'),1);
-            $(this).on('click',desire_clip.action.add);             
-        }                                      
-    },        
-    option: { 
-        toggle: function (elem) {   
-            $(elem).off('click');   
-            $(elem).toggleClass('desire_user');              
+        },
+        load: function () {
+            $.get('/tag/user/', desire_clip.ajax.on_load);
+        },
+        on_load: function (data) {                    // alert(data)
+            data = json.parse(data);
+            if (data.tags != undefined) {
+                user_tag.list = data.tags;
+                user_tag.option.set_count();
+                user_tag.action.store();
+            }
+            if (data.tags.length > 0) {
+                desire_clip.action.set();
+            }
+        },
+        add: function (tag) {
+            $.post('/tag/add/', { tag: tag });
         }
-    }     
-}          
+    },
+    action: {
+        set: function () {
+            user_tag.action.ids();
+            $('.desire_clip').each(function (i,elem) {
+                $(elem).off('click');
+                $(elem).removeClass('desire_user');
+                if (user_tag.idls.indexOf($(elem).data('id')) >= 0) {
+                    $(elem).addClass('desire_user');
+                } else
+                    $(elem).on('click',desire_clip.action.add);
+            });
+            user_tag.option.set_count();
+        },
+        add: function () {
+            desire_clip.ajax.add($(this).data('tag'));
+            desire_clip.option.toggle(this);
+            //$(this).on('click',desire_clip.action.del);
+            var data = {"tag":$(this).data('tag'),"id":$(this).data('id')};
+            user_tag.list.push(data);
+        },
+        del: function () {
+            option_tag.ajax.del($(this).data('id'));
+            desire_clip.option.toggle(this);
+            user_tag.list.splice($(this).data('num'),1);
+            $(this).on('click',desire_clip.action.add);
+        }
+    },
+    option: {
+        toggle: function (elem) {
+            $(elem).off('click');
+            $(elem).toggleClass('desire_user');
+        }
+    }
+}
 
 
 
@@ -1361,45 +1361,45 @@ var option_contact = {
 }          
 
 
- 
-var option_email = { 
-  
-    init: function () {                               
-        $('.option_email_button').off('click'); 
+
+var option_email = {
+
+    init: function () {
+        $('.option_email_button').off('click');
         $('.option_email_button').on('click',option_email.action.send_email);
-        if (userinfo.data.email) 
-            $('.option_email_value').val(userinfo.data.email); 
-        option_email.ajax.load();                
-    } ,    
-    ajax: {    
-        load: function () {                                
-            $.post('/sync/email/', option_email.ajax.on_load);                     
-        },   
-        post: function (email) {                                
-            $.post('/option/email/', { email: email }, option_email.ajax.on_save);      
-            userinfo.data.email = data.email;  
-            userinfo.action.set_email();                         
-            option_static.action.close();                      
-        },   
-        on_save: function (data) {           
-            profile_alert.option.show(json.parse(data));  
-        },   
-        on_load: function (data) {                  
+        if (userinfo.data.email)
+            $('.option_email_value').val(userinfo.data.email);
+        option_email.ajax.load();
+    } ,
+    ajax: {
+        load: function () {
+            $.post('/sync/email/', option_email.ajax.on_load);
+        },
+        post: function (email) {
+            $.post('/option/email/', { email: email }, option_email.ajax.on_save);
+            userinfo.data.email = data.email;
+            userinfo.action.set_email();
+            option_static.action.close();
+        },
+        on_save: function (data) {
+            profile_alert.option.show(json.parse(data));
+        },
+        on_load: function (data) {
             data = json.parse(data);
-            if (data.email != undefined) {  
-                if (data.email != '') {              
-                    userinfo.data.email = data.email;   
-                    userinfo.action.set_email(); 
-                }     
-            }  
-        }              
-    } ,  
-    action: {                               
-        send_email: function () {          
-            option_email.ajax.post($('.option_email_value').val());                  
-        }                                   
-    }    
-}       
+            if (data) {
+                if (data.email != '') {
+                    userinfo.data.email = data.email;
+                    userinfo.action.set_email();
+                }
+            }
+        }
+    } ,
+    action: {
+        send_email: function () {
+            option_email.ajax.post($('.option_email_value').val());
+        }
+    }
+}
 
 
       
