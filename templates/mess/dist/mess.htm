@@ -176,8 +176,7 @@
 
 
 
-
-<template id="abuse-form">
+<script type="text/x-template" id="abuse-form">
   <div id="abuse-form" style="display: none;" v-show="show">
     <div class="abuse-form__caption">
       Отправьте замечание  &nbsp;
@@ -207,7 +206,7 @@
       <a class="list-group-item abuse-form__suggest-item" v-for="item in suggest" @click="choiceText">{{ item }}</a>
     </div>
   </div>
-</template>
+</script>
 
 
 %%MAIL_CONFIRM_BLOCK_DN%%
