@@ -147,7 +147,20 @@
         </div>
      </div>
 
+  <div id="incoming-photo">
+  <div class="incoming-photo__list" v-show="photos.length" style="display: none;">
+    <img class="incoming-photo__item-photo" :src="item._links.thumb.href" v-for="(item, index) in photos" @click="show(index)">
+  </div>
+  <div class="incoming-photo__placeholder" v-show="!photos.length">
+    Фотографии которые вам отправят будут здесь
+  </div>
+</div>
 
+<script type="text/x-template" id="option-content__photo-view">
+  <div>
+    <img :src="photo">
+  </div>
+</script>
   %%MAIL_FORM_MESSAGE_POST%%
   <script>
       if (anketa_collaps) {
@@ -612,16 +625,16 @@ border-radius: 3px;">Сохранено</span>
 </div>
 </div>
 
-           
+
 <!-- Статические опции, absolute -->
- <div id="option_static_block">
-   <div id="option_static_cover"> 
-     <div id="static_loader"></div>
+ <div id="option-static">
+   <div id="option-static__cover">
+     <div id="option-static__loader"></div>
    </div>
-   <div id="option_static_wrapper">        
-     <div id="option_static_container"></div>  
-     <div id="option_static_close">Закрыть</div> 
-   </div> 
+   <div id="option-static__wrapper">
+     <div id="option-static__container"></div>
+     <div id="option-static__close">Закрыть</div>
+   </div>
  </div>
 </div>
    <div id="giper_chat">                  

@@ -423,70 +423,9 @@ div.alert_block_mess {
         }
     }
 }
-#block_mail_setting {
-    background: @yellow-light;
-    background-image: url(/img/icon/nastroika_big.png);
-    background-position: 100% 0%;
-    background-repeat: no-repeat;
-    border-width: 1px 0 1px;
-    border: 1px solid @gray-light;
-    margin-top: 7px;
-    margin: 0px;
-    padding: 10px 0 10px 15px;
-    position: relative;
-    label {
-        font-weight: normal;
-        margin-bottom: 0px;
-    }
-}
-#mail_setting_caption {
-    border-bottom: 0px solid @dark-light;
-    display: inline-block;
-    font-size: 16px;
-    font-weight: normal;
-    margin: 5px 5px 5px 0px;
-}
-#form_mail_setting {
-    padding-top: 5px;
-}
-#mail_setting_show {
-    display: none;
-}
-#mail_setting_hide {
-    background-image: url(/img/icon/minus.gif);
-    background-position: 0% 1px;
-    background-repeat: no-repeat;
-    color: @dark-light;
-    padding-left: 20px;
-    text-decoration: none;
-}
-#mail_setting_help {
-    background-image: url(/img/icon/info.png);
-    background-position: 100% 3px;
-    background-repeat: no-repeat;
-    display: inline-block;
-    padding-right: 19px;
-}
-#mail_setting_added {
-    border-bottom: 1px dashed @link-color;
-    text-decoration: none;
-}
-#saved_setting {
-    background: @green-light;
-    border-radius: 3px;
-    bottom: 5px;
-    display: none;
-    margin-left:5px;
-    padding: 5px 10px;
-    position: absolute;
-    right: 5px;
-}
-#opt_up {
-    width: @width6;
-}
-#opt_to {
-    width: @width6;
-}
+
+@import "mail-setting.less";
+
 #mess_shab_text_block {
     padding-top: 5px;
 }
@@ -611,100 +550,10 @@ div.alert_block_mess {
     border: 1px solid @red-dark;
     color: @white;
 }
-#added_info_block {
-    margin: 15px 1px 5px;
-}
-#added_info_btn {
-    background: url(/img/sprite-plus.png) no-repeat;
-    cursor: pointer;
-    display: none;
-    min-height: @height5;
-    padding-left: 19px;
-    span {
-        border-bottom: 0px dashed @gray-dark;
-        color: @link-color;
-    }
-}
-#added_info {
-    color: @dark-light;
-    display: none;
-}
-#added_age {
-    margin-right: 5px;
-    width: @width0;
-}
-#added_name {
-    margin-right: 5px;
-    width: @width0;
-}
-#added_city {
-    margin-right: 5px;
-    width: @width0;
-}
-
+@import "added-info.less";
 @import "abuse-list.less";
-
-/* Обратная связь */
-.report_gray {
-    background: @gray;
-    border-width: 1px 0 1px 1px;
-    border: 1px solid @gray-dark;
-    color: @white;
-    display: inline-block;
-    font-size: 12px;
-    padding: 4px 15px;
-    position: relative;
-    text-align: center;
-    text-decoration: none;
-}
-.report_blue {
-    background: @purpur-dark;
-    border-top-left-radius: 10px;
-    border-width: 1px 0 1px 1px;
-    border: 1px solid @purpur;
-    color: @white;
-    display: inline-block;
-    font-size: 12px;
-    padding: 4px 15px;
-    position: relative;
-    text-align: center;
-    text-decoration: none;
-}
-.report_orange {
-    background: @orange-light;
-    border-top-right-radius: 10px;
-    border-width: 1px 0 1px 1px;
-    border: 1px solid @orange;
-    color: @white;
-    display: inline-block;
-    font-size: 12px;
-    padding: 4px 15px;
-    position: relative;
-    text-align: center;
-    text-decoration: none;
-}
-.quick_mess_tab {
-    background: @white;
-    border-bottom-left-radius: 7px;
-    border-bottom-right-radius: 7px;
-    border-top-width: 0px;
-    border: 1px solid @gray;
-    color: @dark-light;
-    cursor: pointer;
-    display: inline-block;
-    padding: 0px 12px 0px;
-}
-#quick_tab_public {
-    background: @green-light;
-}
-#quick_tab_offer {
-    background: @pink-light;
-}
-#quick_tab_virt {
-    background: @purpur-light;
-}
-
-
+@import "report-tabs.less";
+@import "quick-mess.less";
 
 #moder_button {
     margin-top: 15px;
@@ -731,3 +580,4 @@ div.alert_block_mess {
   margin-left: -356px;
 }
 
+@import "incoming-photo.less";

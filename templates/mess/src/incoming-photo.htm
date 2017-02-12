@@ -1,0 +1,14 @@
+<div id="incoming-photo">
+  <div class="incoming-photo__list" v-show="photos.length" style="display: none;">
+    <img class="incoming-photo__item-photo" :src="item._links.thumb.href" v-for="(item, index) in photos" @click="show(index)">
+  </div>
+  <div class="incoming-photo__placeholder" v-show="!photos.length">
+    Фотографии которые вам отправят будут здесь
+  </div>
+</div>
+
+<script type="text/x-template" id="option-content__photo-view">
+  <div>
+    <img :src="photo">
+  </div>
+</script>
