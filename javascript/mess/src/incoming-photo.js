@@ -1,6 +1,3 @@
-Vue.component('photo-view', {
-  template: '<div>Пользовательский компонент!</div>'
-})
 
 
 var incoming_photo = new Vue({
@@ -27,8 +24,15 @@ var incoming_photo = new Vue({
 
             }
         },
-        show: function (event) {
-            this.user = false;
+        show: function (index) {
+            let links = this.photos[index]._links;
+            if (links.origin.href) {
+                OptionStaticViewer.photoView.show = true;
+                OptionStaticViewer.photoView.thumb = links.thumb.href;
+                OptionStaticViewer.photoView.photo = links.origin.href;
+                OptionStaticViewer.photoView.height= this.photos[index].height;
+            }
+            //console.log(this.photos[index].height);
         },
     }
 });

@@ -57,8 +57,30 @@
  </div>
  
 
+<div id="option-static__viewer">
+  <upload-view :config="upload"></upload-view>
+  <photo-view :config="photoView"></photo-view>
+</div>
+
+<script type="text/x-template" id="option-static__dialog-window">
+  <div class="option-dialog" v-if="config.show" :config="config">
+    <div class="option-dialog__cover">
+      <div class="option-dialog__loader"></div>
+    </div>
+    <div class="option-dialog__wrapper" @click="close()">
+      <div class="option-dialog__container" @click.stop>
+        <slot></slot>
+      </div>
+      <div class="option-dialog__close" @click="close()">
+        Закрыть
+        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+      </div>
+    </div>
+  </div>
+</script>
+
 <!-- Статические опции, absolute -->
- <div id="option-static">
+ <div id="option-static" style="display: none;">
    <div id="option-static__cover">
      <div id="option-static__loader"></div>
    </div>

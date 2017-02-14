@@ -972,3 +972,40 @@ div.alert_block_mess b {
   height: 48px;
   margin: 0 1px 1px 0;
 }
+.photo-view {
+  text-align: center;
+  margin-top: 15px;
+  background: #f2f2f2;
+  background-size: cover;
+  background-position: center;
+  padding: 0 20px;
+}
+#galery-photo {
+  margin-bottom: 10px;
+}
+.galery-photo__placeholder {
+  color: #999999;
+  background: #f2f2f2;
+  padding: 15px 15px;
+}
+.galery-photo__list {
+  padding: 1px 1px 0;
+}
+.galery-photo__item-photo {
+  width: 100px;
+  height: 100px;
+  margin: 0 10px 10px 0;
+  position: relative;
+}
+.upload_photo__add {
+  margin-bottom: 20px;
+}
+.upload_photo__rules {
+  color: #5C5C5C;
+  font-size: 12px;
+  max-width: 500px;
+}
+.upload_photo__rules p {
+  padding: 0;
+  margin: 4px 0;
+}

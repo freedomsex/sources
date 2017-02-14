@@ -883,7 +883,14 @@ a.name:hover {
 }
 #option-static {
   bottom: 0px;
-  display: none;
+  left: 0px;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  z-index: 100;
+}
+.option-dialog {
+  bottom: 0px;
   left: 0px;
   position: absolute;
   right: 0px;
@@ -891,6 +898,15 @@ a.name:hover {
   z-index: 100;
 }
 #option-static__cover {
+  background: #cccccc;
+  bottom: 0px;
+  left: 0px;
+  opacity: 0.5;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+}
+.option-dialog__cover {
   background: #cccccc;
   bottom: 0px;
   left: 0px;
@@ -908,6 +924,15 @@ a.name:hover {
   right: 0px;
   top: 0px;
 }
+.option-dialog__loader {
+  background: url(/static/img/icon/loader_static96.png) center center no-repeat;
+  bottom: 0px;
+  display: none;
+  left: 0px;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+}
 #option-static__wrapper {
   bottom: 0px;
   left: 0px;
@@ -916,7 +941,19 @@ a.name:hover {
   right: 0px;
   top: 0px;
 }
+.option-dialog__wrapper {
+  bottom: 0px;
+  left: 0px;
+  padding: 10px 10px;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+}
 #option-static__container {
+  background: #ffffff;
+  padding: 20px 10px 25px;
+}
+.option-dialog__container {
   background: #ffffff;
   padding: 20px 10px 25px;
 }
@@ -929,6 +966,20 @@ a.name:hover {
   position: absolute;
   right: 10px;
   top: 10px;
+}
+.option-dialog__close {
+  background: #ffffff;
+  color: #999999;
+  cursor: pointer;
+  font-size: 15px;
+  padding: 5px 10px;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+.option-dialog__close .glyphicon {
+  margin: 0 2px;
+  top: 3px;
 }
 .tab_right {
   color: #666666;

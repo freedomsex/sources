@@ -1,19 +1,76 @@
-var vue_option_static = new Vue({
-    el: '#option-static',
-    data: {
-        photos: [],
-        show:   false,
-        jwt:    '',
+///
+// Модальное окно настроек OptionDialog - контейнер
+///
+var OptionDialog = Vue.extend({
+    template: '#option-static__dialog-window',
+    props: {
+        config: { }
     },
     methods: {
-        open: function (event) {
-            this.show = true;
+        open: function() {
+            this.config.show = true;
         },
-        close: function (event) {
-            this.show = false;
-        },
+        close: function() {
+            this.config.show = false;
+        }
+    },
+    created: function() {
+        // Close the modal when the `escape` key is pressed.
+        var self = this;
+        document.addEventListener('keydown', function() {
+            if (self.config.show && event.keyCode === 27) {
+                self.close();
+            }
+        });
     }
 });
+
+
+var PhotoView = Vue.extend({
+    props: ['config'],
+    components: {
+        optionDialog: OptionDialog,
+    },
+    template: '#option-content__photo-view'
+})
+
+var UploadView = Vue.extend({
+    props: ['config'],
+    components: {
+        optionDialog: OptionDialog,
+        uploadPhoto:  UploadPhoto,
+    },
+    template: '#option-content__upload-photo'
+})
+
+
+
+var OptionStaticViewer = new Vue({
+    el: '#option-static__viewer',
+    data: {
+        photoView: {
+            show: false,
+            photo: null
+        },
+        upload: {
+            show: false,
+        },
+    },
+    components: {
+        photoView:   PhotoView,
+        uploadView: UploadView,
+    },
+});
+
+
+
+
+
+
+
+
+
+
 
 
 // -- Статический блок опций ---

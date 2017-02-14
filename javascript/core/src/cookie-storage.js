@@ -19,17 +19,16 @@ var cookie_storage = {
      
     del_cookie: function (name) 
     {              
-        expires = new Date(); // получаем текущую дату 
+        let expires = new Date(); // получаем текущую дату 
         expires.setTime( expires.getTime() - 1000 ); 
          document.cookie = name + "=; expires=" + expires.toGMTString() +  "; path=/";  
     } ,    
     
-    set_cookie: function (name,val,time) 
+    set_cookie: function (name, val, time) 
     {      
-        expires = new Date(); 
+        let expires = new Date(); 
         expires.setTime( expires.getTime() + (1000 * 60 * time ) ); // минут
-         document.cookie = name + "="+ val +"; expires=" + expires.toGMTString() +  "; path=/";
-
+        document.cookie = name + "="+ val +"; expires=" + expires.toGMTString() +  "; path=/";
     } ,  
     
     get_data: function (name) 

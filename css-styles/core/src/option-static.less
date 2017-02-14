@@ -1,13 +1,16 @@
 
 #option-static {
     bottom: 0px;
-    display: none;
     left: 0px;
     position: absolute;
     right: 0px;
     top: 0px;
     z-index: 100;
 }
+.option-dialog {
+    #option-static;
+}
+
 #option-static__cover {
     background: @gray;
     bottom: 0px;
@@ -17,6 +20,10 @@
     right: 0px;
     top: 0px;
 }
+.option-dialog__cover {
+    #option-static__cover;
+}
+
 #option-static__loader {
     background: url(/static/img/icon/loader_static96.png) center center no-repeat;
     bottom: 0px;
@@ -26,6 +33,10 @@
     right: 0px;
     top: 0px;
 }
+.option-dialog__loader {
+    #option-static__loader;
+}
+
 #option-static__wrapper {
     bottom: 0px;
     left: 0px;
@@ -34,10 +45,18 @@
     right: 0px;
     top: 0px;
 }
+.option-dialog__wrapper {
+    #option-static__wrapper;
+}
+
 #option-static__container {
     background: @white;
     padding: 20px 10px 25px;
 }
+.option-dialog__container {
+    #option-static__container;
+}
+
 #option-static__close {
     background: @white;
     color: @gray-dark;
@@ -48,3 +67,11 @@
     right: 10px;
     top: 10px;
 }
+.option-dialog__close {
+    #option-static__close;
+    .glyphicon {
+        margin: 0 2px;
+        top: 3px;
+    }
+}
+

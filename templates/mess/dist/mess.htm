@@ -157,8 +157,63 @@
 </div>
 
 <script type="text/x-template" id="option-content__photo-view">
-  <div>
-    <img :src="photo">
+  <option-dialog :config="config">
+    <div class="photo-view" :style="{backgroundImage: `url(${config.thumb})`, minHeight: config.height + 'px'}">
+      <img :src="config.photo">
+    </div>
+  </option-dialog>
+</script>
+
+<script type="text/x-template" id="option-content__upload-photo">
+  <option-dialog :config="config">
+    <div class="option_tab">
+      <div align="left" class="option_cap">
+        <b>Выберите фотографию</b><a href="/блог/как-отправить-фотографию/" class="cap_link">Подробнее...</a>
+      </div>
+      <div class="tab_context">
+       Загрузив фотографию из компьютера или флэшки
+       один раз, её можно безгранично отправлять кому угодно и сколько угодно.
+      </div>
+      <upload-photo></upload-photo>
+    </div>
+  </option-dialog>
+</script>
+
+<script type="text/x-template" id="upload-photo">
+  <div id="upload_photo">
+    <div id="hint" style="padding: 5px 0px 5px ; color: #ccc; font-size: 11px;">
+      Размер фотографии не должен превышать 8Mb
+    </div>
+    <div class="upload_photo__add">
+      <button class="btn btn-primary" @click="upload()">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        Добавить фотографию
+      </button>
+      <input id="fileupload" type="file" name="file" data-form-data='{"script": "true"}' style="display: none;">
+    </div>
+
+    <div class="galery-photo__list" v-show="photos.length" style="display: none;">
+      <img class="galery-photo__item-photo" :src="item._links.galery.href" v-for="(item, index) in photos" @click="show(index)">
+    </div>
+    <div class="galery-photo__placeholder" v-show="!photos.length">
+      Фотографии которые вы загрузите будут здесь
+    </div>
+    <div class="upload_photo__rules" v-show="photos.length < 5" style="display: none;">
+      <p>- Вы можете загружать и отправлять любые фотографии, в том числе и эротические фото. Премодерации фотографий нет, в
+      содержании фотографий вы контролируете себя сами</p>
+      <p>- Интимные или эротические фотографии отправлять можно, если ваш собеседник
+      согласился получить такую фотографию, и в данный момент ждёт её от вас</p>
+      <p>- Рассылать интимные фотографии всем подряд, или отправлять их, когда вас об этом не просят,
+      запрещено. Поступит много жалоб, и это грозит блокировкой</p>
+      <p>
+      <a href="/блог/не-настоящие-фотографии/" target="_blank">
+        Избегайте использования чужих интим фото, скаченных из интернета (!) Это очень легко проверить. Ваш собеседник оставит публичное замечание к вашей анкете, обнаружив обман.</a>
+      </p>
+      <p style="padding: 3px 17px 3px; margin: 10px 0; background: url(/img/icon/burn_photo.png) no-repeat left top;">
+        Фотографии, которые долго не использовались, удалятся автоматически.
+        <a href="/блог/сгорание-фотографий/" target="_blank">Подробнее...</a>
+      </p>
+    </div>
   </div>
 </script>
   %%MAIL_FORM_MESSAGE_POST%%
@@ -626,8 +681,30 @@ border-radius: 3px;">Сохранено</span>
 </div>
 
 
+<div id="option-static__viewer">
+  <upload-view :config="upload"></upload-view>
+  <photo-view :config="photoView"></photo-view>
+</div>
+
+<script type="text/x-template" id="option-static__dialog-window">
+  <div class="option-dialog" v-if="config.show" :config="config">
+    <div class="option-dialog__cover">
+      <div class="option-dialog__loader"></div>
+    </div>
+    <div class="option-dialog__wrapper" @click="close()">
+      <div class="option-dialog__container" @click.stop>
+        <slot></slot>
+      </div>
+      <div class="option-dialog__close" @click="close()">
+        Закрыть
+        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+      </div>
+    </div>
+  </div>
+</script>
+
 <!-- Статические опции, absolute -->
- <div id="option-static">
+ <div id="option-static" style="display: none;">
    <div id="option-static__cover">
      <div id="option-static__loader"></div>
    </div>
