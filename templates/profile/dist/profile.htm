@@ -58,20 +58,20 @@
  
 
 <div id="option-static__viewer">
-  <upload-view :config="upload"></upload-view>
-  <photo-view :config="photoView"></photo-view>
+  <upload-dialog></upload-dialog>
+  <photo-dialog></photo-dialog>
 </div>
 
 <script type="text/x-template" id="option-static__dialog-window">
-  <div class="option-dialog" v-if="config.show" :config="config">
+  <div class="option-dialog" v-if="show">
     <div class="option-dialog__cover">
       <div class="option-dialog__loader"></div>
     </div>
-    <div class="option-dialog__wrapper" @click="close()">
+    <div class="option-dialog__wrapper" @click="close">
       <div class="option-dialog__container" @click.stop>
         <slot></slot>
       </div>
-      <div class="option-dialog__close" @click="close()">
+      <div class="option-dialog__close" @click.stop="close">
         Закрыть
         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
       </div>
@@ -144,9 +144,13 @@
 
  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
- <script src="https://unpkg.com/json3@3.3.2"></script>
+
+<script src="https://unpkg.com/json3@3.3.2"></script>
 <script src="http://underscorejs.org/underscore-min.js"></script>
+
 <script src="https://unpkg.com/vue@2.1.10/dist/vue.js"></script>
+<script src="https://unpkg.com/vuex@2.0.0/dist/vuex.js"></script>
+<script src="https://unpkg.com/axios@0.15.3/dist/axios.min.js"></script>
 <script src="https://unpkg.com/vue-resource@1.0.3/dist/vue-resource.js"></script>
 
 <script type="text/javascript" src="%%JS_FILE%%"></script>

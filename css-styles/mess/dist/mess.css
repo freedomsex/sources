@@ -17,7 +17,7 @@
   background: #f9ecbf;
 }
 .bg_gra {
-  background: #f2f2f2;
+  background: #f7f7f7;
 }
 .bg_blu {
   background: #CCCCFF;
@@ -38,7 +38,7 @@
   background: #fff5cc !important;
 }
 .bg_ogra {
-  background: #f2f2f2 !important;
+  background: #f7f7f7 !important;
 }
 .bg_oblu {
   background: #CCCCFF !important;
@@ -155,6 +155,61 @@
 #human_cent_block {
   margin-bottom: 20px;
   position: relative;
+}
+.messages {
+  overflow: hidden;
+  padding-top: 5px;
+}
+.message-item {
+  display: block;
+  margin-bottom: 5px;
+}
+.message-item__sent {
+  text-align: right;
+}
+.message-item__sent .message-item__balloon {
+  display: inline-block;
+  overflow: hidden;
+  padding: 10px 10px;
+  margin-bottom: 8px;
+  max-width: 80%;
+  word-wrap: break-word;
+  font-size: 14px;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  color: #333333;
+  background: #D9E6F6;
+}
+.message-item__received .message-item__balloon {
+  display: inline-block;
+  overflow: hidden;
+  padding: 10px 10px;
+  margin-bottom: 8px;
+  max-width: 80%;
+  word-wrap: break-word;
+  font-size: 14px;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  color: #333333;
+  background: white;
+}
+.message-item__subtime {
+  color: #999999;
+  float: right;
+  font-size: 11px;
+  margin-left: 7px;
+  margin-top: 5px;
+}
+.message-item__date {
+  height: 14px;
+  text-align: center;
+  margin: 0px auto 5px;
+}
+.message-item__date span {
+  background-color: #ffffff;
+  font-size: 14px;
+  position: relative;
+  color: #999999;
 }
 .message_list_title_date {
   border-top: 1px dotted #999999;
@@ -492,7 +547,7 @@ div.alert_block_mess b {
   width: 80px;
 }
 .save_notice {
-  background: #f2f2f2;
+  background: #f7f7f7;
   border: 1px solid #cccccc;
   color: #666666;
   margin: 10px 0 0;
@@ -719,7 +774,7 @@ div.alert_block_mess b {
   width: 24px;
 }
 #notepad_on {
-  background: #f2f2f2;
+  background: #f7f7f7;
   border: 1px solid #cccccc;
   color: #666666;
   cursor: pointer;
@@ -961,7 +1016,7 @@ div.alert_block_mess b {
 }
 .incoming-photo__placeholder {
   color: #999999;
-  background: #f2f2f2;
+  background: #f7f7f7;
   padding: 15px 15px;
 }
 .incoming-photo__list {
@@ -975,17 +1030,16 @@ div.alert_block_mess b {
 .photo-view {
   text-align: center;
   margin-top: 15px;
-  background: #f2f2f2;
+  background: #f7f7f7;
   background-size: cover;
   background-position: center;
-  padding: 0 20px;
 }
 #galery-photo {
   margin-bottom: 10px;
 }
 .galery-photo__placeholder {
   color: #999999;
-  background: #f2f2f2;
+  background: #f7f7f7;
   padding: 15px 15px;
 }
 .galery-photo__list {
@@ -1004,8 +1058,14 @@ div.alert_block_mess b {
   color: #5C5C5C;
   font-size: 12px;
   max-width: 500px;
+  margin-top: 20px;
 }
 .upload_photo__rules p {
   padding: 0;
   margin: 4px 0;
+}
+.form-message__buttons {
+  margin: 20px 0 10px;
+  padding: 0;
+  color: #888;
 }

@@ -1,17 +1,26 @@
+
+
+Vue.component('photo-view', {
+    props: [
+        'photo',
+        'thumb',
+        'width',
+        'height'
+    ],
+    template: '#photo-view'
+});
+
 ///
 // Модальное окно настроек OptionDialog - контейнер
 ///
 var OptionDialog = Vue.extend({
     template: '#option-static__dialog-window',
     props: {
-        config: { }
+        show: false
     },
     methods: {
-        open: function() {
-            this.config.show = true;
-        },
-        close: function() {
-            this.config.show = false;
+        close() {
+            this.$emit('close');
         }
     },
     created: function() {
@@ -25,21 +34,34 @@ var OptionDialog = Vue.extend({
     }
 });
 
-
-var PhotoView = Vue.extend({
-    props: ['config'],
-    components: {
-        optionDialog: OptionDialog,
+var PhotoViewDialog = Vue.extend({
+    methods: {
+        close() {
+            store.commit('viewPhoto', { photo: null });
+        }
     },
+    components: {
+        optionDialog: OptionDialog
+    },
+    computed: Vuex.mapState({
+        config: state => state.photoView
+    }),
     template: '#option-content__photo-view'
 })
 
-var UploadView = Vue.extend({
-    props: ['config'],
+var UploadDialog = Vue.extend({
+    methods: {
+        close() {
+            store.commit('viewUpload', false);
+        }
+    },
     components: {
         optionDialog: OptionDialog,
         uploadPhoto:  UploadPhoto,
     },
+    computed: Vuex.mapState({
+        config: state => state.uploadView
+    }),
     template: '#option-content__upload-photo'
 })
 
@@ -47,19 +69,11 @@ var UploadView = Vue.extend({
 
 var OptionStaticViewer = new Vue({
     el: '#option-static__viewer',
-    data: {
-        photoView: {
-            show: false,
-            photo: null
-        },
-        upload: {
-            show: false,
-        },
-    },
+    store,
     components: {
-        photoView:   PhotoView,
-        uploadView: UploadView,
-    },
+        photoDialog: PhotoViewDialog,
+        uploadDialog: UploadDialog,
+    }
 });
 
 

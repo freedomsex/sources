@@ -16,7 +16,7 @@ var UploadPhoto = Vue.extend({
     methods: {
         loadPhoto() {
             Vue.http.headers.common['Authorization'] = 'Bearer ' + get_cookie('jwt');
-            this.$http.get('http://'+api_photo+'/api/v1/users/10336/photos?hash='+hash).then(function (response) {
+            this.$http.get('http://'+api_photo+'/api/v1/users/'+uid+'/photos?hash='+hash).then(function (response) {
                 console.log(response.body);
                 if (response.body.photos) {
                     this.photos = response.body.photos;
@@ -30,28 +30,39 @@ var UploadPhoto = Vue.extend({
             $('#fileupload').click();
         },
         show: function (index) {
-            let links = this.photos[index]._links;
-            if (links.origin.href) {
-                OptionStaticViewer.photoView.show = true;
-                OptionStaticViewer.photoView.thumb = links.thumb.href;
-                OptionStaticViewer.photoView.photo = links.origin.href;
-                OptionStaticViewer.photoView.height= this.photos[index].height;
-            }
-            //console.log(photo);
+            this.preview(this.photos[index]);
         },
+        preview(photo) {
+            let links = photo._links;
+            if (links.origin.href) {
+                let data = {
+                    photo: links.origin.href,
+                    thumb: links.thumb.href,
+                    alias:  photo.alias,
+                    height: photo.height,
+                    width:  photo.width,
+                }
+                store.commit('sendPhoto', data);
+                console.log('sendPhoto');
+                console.log(data);
+            }
+            this.close();
+        },
+        close() {
+            this.$emit('close');
+        }
     },
     mounted() {
         console.log('fileupload');
+        var self = this;
         $('#fileupload').fileupload({
             dataType: 'json',
             add(e, data) {
-                data.url = 'http://'+api_photo+'/api/v1/users/10336/photos?jwt=' + get_cookie('jwt');
+                data.url = 'http://'+api_photo+'/api/v1/users/'+uid+'/photos?jwt=' + get_cookie('jwt');
                 data.submit();
             },
             done(e, data) {
-                // $.each(data.result.files, function (index, file) {
-                //   $('<p/>').text(file.name).appendTo(document.body);
-                // });
+                self.preview(data.result.photo);
             }
         });
         this.loadPhoto();

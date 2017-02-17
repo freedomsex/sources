@@ -2,36 +2,97 @@
     var api_photo = '192.168.122.252';
     var api_photo = '127.0.0.1:8888';
 
-$(document).ready(function() 
-{    
-        
+$(document).ready(function()
+{
+
     userinfo.init();
     slider.init();
     storage.init();
     giper_chat.init();
     notepad.init();
-               
-    mailsett.init(); 
-    report.init(); 
+
+    mailsett.init();
+    report.init();
     navigate.init();
-  
-    name_suggest.init(); 
-    city_suggest.init(); 
-    
-    option_static.init(); 
-    option_sex.init(); 
+
+    name_suggest.init();
+    city_suggest.init();
+
+    option_static.init();
+    option_sex.init();
     option_email.init();
     profile_alert.init();
     profile_option.init();
-    
+
     user_tag.init();
-    desire_clip.init();   
-     
-    result_list.init();  
+    desire_clip.init();
+
+    result_list.init();
     visited.init();
-    
-}); 
-      
+
+});
+
+
+var ls = storage;
+
+const store = new Vuex.Store({
+    state: {
+        count: 0,
+        photoView: {
+            thumb:  null,
+            photo:  null,
+            height: null,
+        },
+        uploadView: {
+            show: false
+        },
+        formMess: {
+            sendTo: null,
+            sendPhoto: {
+                thumb:  null,
+                photo:  null,
+                height: null,
+                width:  null,
+            }
+        }
+    },
+    actions: {
+        // LOAD_USER_DATA({ commit }) {
+        //     console.log('load');
+        //     store.commit('setUserData', lscache.get('user'));
+        //     axios.get('/users/10336.json').then((response) => {
+        //         //this.response(data.body);
+        //         store.commit('setUserData', response.data.user);
+        //         //console.log(response.data.user);
+        //     }).catch((response) => {
+        //         console.log('error user data');
+        //     });
+        // }
+    },
+    mutations: {
+        // setUserData (state, data) {
+        //     if (data) {
+        //         Object.assign(state.user.data, data);
+        //         lscache.set('user', data, 23456);
+        //     }
+        //     //ls.set('auth', 2);
+        // },
+        viewPhoto(state, data) {
+            Object.assign(state.photoView, data);
+        },
+        viewUpload(state, data) {
+            state.uploadView.show = (data === true);
+        },
+        sendPhoto(state, data) {
+            Object.assign(state.formMess.sendPhoto, data);
+        },
+    },
+    getters: {
+
+    }
+});
+
+//store.dispatch('LOAD_USER_DATA');
 
 
 // -- Получить новый хэш ---
@@ -67,7 +128,7 @@ var UploadPhoto = Vue.extend({
     methods: {
         loadPhoto() {
             Vue.http.headers.common['Authorization'] = 'Bearer ' + get_cookie('jwt');
-            this.$http.get('http://'+api_photo+'/api/v1/users/10336/photos?hash='+hash).then(function (response) {
+            this.$http.get('http://'+api_photo+'/api/v1/users/'+uid+'/photos?hash='+hash).then(function (response) {
                 console.log(response.body);
                 if (response.body.photos) {
                     this.photos = response.body.photos;
@@ -81,28 +142,39 @@ var UploadPhoto = Vue.extend({
             $('#fileupload').click();
         },
         show: function (index) {
-            let links = this.photos[index]._links;
-            if (links.origin.href) {
-                OptionStaticViewer.photoView.show = true;
-                OptionStaticViewer.photoView.thumb = links.thumb.href;
-                OptionStaticViewer.photoView.photo = links.origin.href;
-                OptionStaticViewer.photoView.height= this.photos[index].height;
-            }
-            //console.log(photo);
+            this.preview(this.photos[index]);
         },
+        preview(photo) {
+            let links = photo._links;
+            if (links.origin.href) {
+                let data = {
+                    photo: links.origin.href,
+                    thumb: links.thumb.href,
+                    alias:  photo.alias,
+                    height: photo.height,
+                    width:  photo.width,
+                }
+                store.commit('sendPhoto', data);
+                console.log('sendPhoto');
+                console.log(data);
+            }
+            this.close();
+        },
+        close() {
+            this.$emit('close');
+        }
     },
     mounted() {
         console.log('fileupload');
+        var self = this;
         $('#fileupload').fileupload({
             dataType: 'json',
             add(e, data) {
-                data.url = 'http://'+api_photo+'/api/v1/users/10336/photos?jwt=' + get_cookie('jwt');
+                data.url = 'http://'+api_photo+'/api/v1/users/'+uid+'/photos?jwt=' + get_cookie('jwt');
                 data.submit();
             },
             done(e, data) {
-                // $.each(data.result.files, function (index, file) {
-                //   $('<p/>').text(file.name).appendTo(document.body);
-                // });
+                self.preview(data.result.photo);
             }
         });
         this.loadPhoto();
@@ -3449,20 +3521,29 @@ var option_sex = {
 }          
 
 
+
+
+Vue.component('photo-view', {
+    props: [
+        'photo',
+        'thumb',
+        'width',
+        'height'
+    ],
+    template: '#photo-view'
+});
+
 ///
 // Модальное окно настроек OptionDialog - контейнер
 ///
 var OptionDialog = Vue.extend({
     template: '#option-static__dialog-window',
     props: {
-        config: { }
+        show: false
     },
     methods: {
-        open: function() {
-            this.config.show = true;
-        },
-        close: function() {
-            this.config.show = false;
+        close() {
+            this.$emit('close');
         }
     },
     created: function() {
@@ -3476,21 +3557,34 @@ var OptionDialog = Vue.extend({
     }
 });
 
-
-var PhotoView = Vue.extend({
-    props: ['config'],
-    components: {
-        optionDialog: OptionDialog,
+var PhotoViewDialog = Vue.extend({
+    methods: {
+        close() {
+            store.commit('viewPhoto', { photo: null });
+        }
     },
+    components: {
+        optionDialog: OptionDialog
+    },
+    computed: Vuex.mapState({
+        config: state => state.photoView
+    }),
     template: '#option-content__photo-view'
 })
 
-var UploadView = Vue.extend({
-    props: ['config'],
+var UploadDialog = Vue.extend({
+    methods: {
+        close() {
+            store.commit('viewUpload', false);
+        }
+    },
     components: {
         optionDialog: OptionDialog,
         uploadPhoto:  UploadPhoto,
     },
+    computed: Vuex.mapState({
+        config: state => state.uploadView
+    }),
     template: '#option-content__upload-photo'
 })
 
@@ -3498,19 +3592,11 @@ var UploadView = Vue.extend({
 
 var OptionStaticViewer = new Vue({
     el: '#option-static__viewer',
-    data: {
-        photoView: {
-            show: false,
-            photo: null
-        },
-        upload: {
-            show: false,
-        },
-    },
+    store,
     components: {
-        photoView:   PhotoView,
-        uploadView: UploadView,
-    },
+        photoDialog: PhotoViewDialog,
+        uploadDialog: UploadDialog,
+    }
 });
 
 

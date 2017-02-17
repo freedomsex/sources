@@ -17,7 +17,7 @@
   background: #f9ecbf;
 }
 .bg_gra {
-  background: #f2f2f2;
+  background: #f7f7f7;
 }
 .bg_blu {
   background: #CCCCFF;
@@ -38,7 +38,7 @@
   background: #fff5cc !important;
 }
 .bg_ogra {
-  background: #f2f2f2 !important;
+  background: #f7f7f7 !important;
 }
 .bg_oblu {
   background: #CCCCFF !important;
@@ -390,7 +390,7 @@ table.users {
 }
 .review-item__content {
   vertical-align: top;
-  background: #f2f2f2;
+  background: #f7f7f7;
 }
 .review__text {
   border-bottom: 1px solid #ffffff;
@@ -586,7 +586,7 @@ table.users {
   background: #e5e5e5;
 }
 .extra_button {
-  background: #f2f2f2;
+  background: #f7f7f7;
   border: 1px solid #e5e5e5;
   color: #cccccc;
   display: block;
@@ -699,7 +699,7 @@ table.users {
   vertical-align: middle;
   color: #666666;
   font-size: 14px;
-  background: #f2f2f2;
+  background: #f7f7f7;
   padding-left: 10px;
   border-top-right-radius: 35px;
   border-bottom-right-radius: 35px;
@@ -792,7 +792,7 @@ table.users {
   top: 10px;
 }
 .profile-status__present {
-  background: #f2f2f2;
+  background: #f7f7f7;
   padding: 15px 15px 0;
   position: relative;
   border-radius: 3px;

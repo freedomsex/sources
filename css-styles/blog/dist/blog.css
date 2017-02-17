@@ -15,7 +15,7 @@
   text-decoration: none;
 }
 .left_line:hover {
-  background: #f2f2f2;
+  background: #f7f7f7;
   text-decoration: none;
 }
 .inner {
@@ -24,7 +24,7 @@
   padding: 7px 0px 7px 20px;
 }
 .active {
-  background: #f2f2f2;
+  background: #f7f7f7;
 }
 p {
   background: #fff5cc;

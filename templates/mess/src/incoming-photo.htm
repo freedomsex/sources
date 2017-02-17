@@ -3,20 +3,24 @@
     <img class="incoming-photo__item-photo" :src="item._links.thumb.href" v-for="(item, index) in photos" @click="show(index)">
   </div>
   <div class="incoming-photo__placeholder" v-show="!photos.length">
-    Фотографии которые вам отправят будут здесь
+    Присланные фотографии будут здесь
   </div>
 </div>
 
 <script type="text/x-template" id="option-content__photo-view">
-  <option-dialog :config="config">
-    <div class="photo-view" :style="{backgroundImage: `url(${config.thumb})`, minHeight: config.height + 'px'}">
-      <img :src="config.photo">
-    </div>
+  <option-dialog :show="config.photo" @close="close">
+    <photo-view :photo="config.photo" :thumb="config.thumb" :height="config.height" :width="1000"/>
   </option-dialog>
 </script>
 
+<script type="text/x-template" id="photo-view">
+  <div class="photo-view" :style="{ backgroundImage: `url(${thumb})`, minHeight: height + 'px'}">
+    <img :src="photo" :style="{ maxWidth: width +'px' }">
+  </div>
+</script>
+
 <script type="text/x-template" id="option-content__upload-photo">
-  <option-dialog :config="config">
+  <option-dialog :show="config.show" @close="close">
     <div class="option_tab">
       <div align="left" class="option_cap">
         <b>Выберите фотографию</b><a href="/блог/как-отправить-фотографию/" class="cap_link">Подробнее...</a>
@@ -25,7 +29,7 @@
        Загрузив фотографию из компьютера или флэшки
        один раз, её можно безгранично отправлять кому угодно и сколько угодно.
       </div>
-      <upload-photo></upload-photo>
+      <upload-photo @close="close"></upload-photo>
     </div>
   </option-dialog>
 </script>

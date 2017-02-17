@@ -1,4 +1,83 @@
 
+Date.prototype.getMonthChar = function () {
+    let month = ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
+    return month[this.getUTCMonth()];
+}
+
+Date.prototype.getDayMonth = function () {
+    let date = this.getUTCDay() +' '+ this.getMonthChar();
+    return date;
+}
+
+var fdate = null;
+
+Vue.component('message-item', {
+    props: ['item', 'uid', "first_date"],
+    template: '#messages-item',
+    computed: {
+        sent() {
+            return (uid == this.item.from) ? 1 : 0;
+        },
+        time() {
+            let date = new Date(this.item.date);
+            return date.getUTCHours() +':'+ date.getUTCMinutes();
+        },
+        date() {
+            let first_date = fdate;
+            fdate = new Date(this.item.date).getDayMonth();
+            let date = (fdate == first_date) ? '' : fdate;
+            let today = new Date().getDayMonth();
+            date = (date == today) ? 'Сегодня' : date;
+            return date;
+        }
+    }
+});
+
+
+var MessList = new Vue({
+    el: '#mail_messages_block',
+    data: {
+        messages: [],
+        error: 0,
+        uid: null,
+        tid: null,
+        date: null
+    },
+    mounted: function () {
+        this.uid = uid;
+        this.tid = tid;
+        this.load(tid);
+        this.jwt = get_cookie('jwt');
+    },
+    methods: {
+        load(tid) {
+            console.log('load MessList data');
+            let config = {
+                headers: {'Authorization': 'Bearer ' + this.jwt},
+                params: {id: tid, hash: hash}
+            };
+            axios.get('/ajax/messages_load.php', config).then((response) => {
+                this.messages = response.data.messages;
+            }).catch((error) => {
+                this.error = 10;
+                console.log('error');
+            });
+        },
+        setDate(date) {
+            //this.date = new Date(this.item.date).getDayMonth();
+        }
+    },
+    computed: {
+    }
+});
+
+
+
+
+
+
+
+
 // -- Список сообщений ---
 var mess_list = {
 
@@ -44,6 +123,7 @@ var mess_list = {
 
     ajax_load: function (user)
     {
+        return null;
         $.get
         (
             '/ajax/messages_load.php',
@@ -70,7 +150,7 @@ var mess_list = {
 
         mess_list.hide_loader();
 
-        if (data.indexOf('div') > 0)
+        if (1)
         {
             //if( reload )
             //    $('#mail_messages_block').empty();

@@ -616,12 +616,36 @@ var edit_cont = {
 
 var FormMess = new Vue({
     el: '#message_post_form',
+    store: store,
     data: {
         show: true
     },
+    computed: Vuex.mapState({
+        config: function config(state) {
+            return state.formMess;
+        },
+        photo: function photo(state) {
+            return state.formMess.sendPhoto;
+        }
+    }),
     methods: {
         upload: function upload() {
-            OptionStaticViewer.upload.show = true;
+            store.commit('viewUpload', true);
+        },
+        cancelPhoto: function cancelPhoto() {
+            store.commit('sendPhoto', { photo: null });
+        },
+        sendPhoto: function sendPhoto() {
+            // TODO: почти готово, ждем сообщений
+            Vue.http.headers.common['Authorization'] = 'Bearer ' + get_cookie('jwt');
+            // let data = {
+            // 	alias: this.photo.alias
+            // };
+            // this.$http.post('http://'+api_photo+'/api/v1/users/'+tid+'/sends', data).then(function (response) {
+            //     //console.log(response.body);
+            // });
+            this.cancelPhoto();
+            // window.location.reload();
         }
     }
 });
@@ -653,7 +677,7 @@ var incoming_photo = new Vue({
         loadPhoto: function loadPhoto() {
 
             Vue.http.headers.common['Authorization'] = 'Bearer ' + this.jwt;
-            this.$http.get('http://' + api_photo + '/api/v1/users/10336/photos?hash=' + hash).then(function (response) {
+            this.$http.get('http://' + api_photo + '/api/v1/users/' + tid + '/sends?hash=' + hash).then(function (response) {
                 console.log(response.body);
                 if (response.body.photos) {
                     this.photos = response.body.photos;
@@ -662,12 +686,17 @@ var incoming_photo = new Vue({
             if (this.user) {}
         },
         show: function show(index) {
-            var links = this.photos[index]._links;
+            var photo = this.photos[index];
+            var links = photo._links;
             if (links.origin.href) {
-                OptionStaticViewer.photoView.show = true;
-                OptionStaticViewer.photoView.thumb = links.thumb.href;
-                OptionStaticViewer.photoView.photo = links.origin.href;
-                OptionStaticViewer.photoView.height = this.photos[index].height;
+                var data = {
+                    thumb: links.thumb.href,
+                    photo: links.origin.href,
+                    alias: photo.alias,
+                    height: photo.height,
+                    width: photo.width
+                };
+                store.commit('viewPhoto', data);
             }
             //console.log(this.photos[index].height);
         }
@@ -762,6 +791,78 @@ var lock_user = {
 
 };
 
+Date.prototype.getMonthChar = function () {
+    var month = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
+    return month[this.getUTCMonth()];
+};
+
+Date.prototype.getDayMonth = function () {
+    var date = this.getUTCDay() + ' ' + this.getMonthChar();
+    return date;
+};
+
+var fdate = null;
+
+Vue.component('message-item', {
+    props: ['item', 'uid', "first_date"],
+    template: '#messages-item',
+    computed: {
+        sent: function sent() {
+            return uid == this.item.from ? 1 : 0;
+        },
+        time: function time() {
+            var date = new Date(this.item.date);
+            return date.getUTCHours() + ':' + date.getUTCMinutes();
+        },
+        date: function date() {
+            var first_date = fdate;
+            fdate = new Date(this.item.date).getDayMonth();
+            var date = fdate == first_date ? '' : fdate;
+            var today = new Date().getDayMonth();
+            date = date == today ? 'Сегодня' : date;
+            return date;
+        }
+    }
+});
+
+var MessList = new Vue({
+    el: '#mail_messages_block',
+    data: {
+        messages: [],
+        error: 0,
+        uid: null,
+        tid: null,
+        date: null
+    },
+    mounted: function mounted() {
+        this.uid = uid;
+        this.tid = tid;
+        this.load(tid);
+        this.jwt = get_cookie('jwt');
+    },
+    methods: {
+        load: function load(tid) {
+            var _this = this;
+
+            console.log('load MessList data');
+            var config = {
+                headers: { 'Authorization': 'Bearer ' + this.jwt },
+                params: { id: tid, hash: hash }
+            };
+            axios.get('/ajax/messages_load.php', config).then(function (response) {
+                _this.messages = response.data.messages;
+            }).catch(function (error) {
+                _this.error = 10;
+                console.log('error');
+            });
+        },
+        setDate: function setDate(date) {
+            //this.date = new Date(this.item.date).getDayMonth();
+        }
+    },
+    computed: {}
+});
+
 // -- Список сообщений ---
 var mess_list = {
 
@@ -798,6 +899,7 @@ var mess_list = {
     },
 
     ajax_load: function ajax_load(user) {
+        return null;
         $.get('/ajax/messages_load.php', {
             id: user,
             next: mess_list.mail_pages,
@@ -815,7 +917,7 @@ var mess_list = {
 
         mess_list.hide_loader();
 
-        if (data.indexOf('div') > 0) {
+        if (1) {
             //if( reload )
             //    $('#mail_messages_block').empty();
 

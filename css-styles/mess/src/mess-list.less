@@ -1,0 +1,134 @@
+.messages {
+    overflow: hidden;
+    padding-top: 5px;
+}
+
+.message-balloon() {
+    display: inline-block;
+    overflow: hidden;
+    padding: @indent-sm @indent-sm;
+    margin-bottom: 8px;
+    max-width: 80%;
+    word-wrap: break-word;
+    font-size: 14px;
+    border: 1px solid @gray-light;
+    border-radius: 4px;
+    color: @dark;
+}
+
+.message-item {
+  display:block;
+  margin-bottom: 5px;
+  &__sent {
+    text-align: right;
+    .message-item__balloon {
+      .message-balloon;
+      background: #D9E6F6;
+    }
+  }
+
+  &__received {
+    .message-item__balloon {
+      .message-balloon;
+      background: white;
+    }
+  }
+}
+
+
+.message-item__subtime {
+  color: @gray-dark;
+  float: right;
+  font-size: 11px;
+  margin-left: 7px;
+  margin-top: 5px;
+}
+
+.message-item__date {
+    height: 14px;
+    text-align: center;
+    margin: 0px auto 5px;
+    span {
+        background-color: @white;
+        font-size: 14px;
+        position: relative;
+        color: @gray-dark;
+    }
+}
+
+// ----------------------------------------
+
+.message_list_title_date {
+    border-top: 1px dotted @gray-dark;
+    height: 10px;
+    text-align: center;
+    span {
+        background-color: @white;
+        font-size: 11px;
+        margin: 0px auto 5px;
+        position: relative;
+        top: -8px;
+    }
+}
+.message_list_block {
+    border: 0px solid @gray-light;
+    margin: 0px auto 0px;
+    padding: 0px 0px 20px;
+}
+.message_list_body {
+    border: 0px solid red;
+    color: @dark;
+    padding-right: 30px;
+    word-wrap: break-word;
+    a {
+        text-decoration: none;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+    a.link {
+        text-decoration: none;
+    }
+}
+.message_list_title {
+    color: @menu-color;
+    margin-bottom: 5px;
+    position: relative;
+}
+.message_list_time {
+    border: 0px solid green;
+    color: @dark-light;
+    font-size: 11px;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+.unread {
+    color: @orange;
+}
+.message_list_save {
+    -moz-transition: color 0.2s ease;
+    -o-transition: color 0.2s ease;
+    -webkit-transition: color 0.2s ease;
+    color: @gray-dark;
+    cursor: pointer;
+    display: none;
+    font-size: 11px;
+    margin-right: 0px;
+    text-decoration: none;
+    transition: color 0.2s ease;
+    vertical-align: top;
+}
+.remove_mess {
+    padding-right: 5px;
+}
+.bunned_mess {
+    margin-left: 3px;
+    vertical-align: bottom;
+}
+#mess_option_hint {
+    border-top: 1px dotted @gray;
+    margin-top: 5px;
+}
+
+

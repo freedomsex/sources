@@ -14,7 +14,7 @@ var incoming_photo = new Vue({
         loadPhoto: function () {
 
             Vue.http.headers.common['Authorization'] = 'Bearer ' + this.jwt;
-            this.$http.get('http://'+api_photo+'/api/v1/users/10336/photos?hash='+hash).then(function (response) {
+            this.$http.get('http://'+api_photo+'/api/v1/users/'+tid+'/sends?hash='+hash).then(function (response) {
                 console.log(response.body);
                 if (response.body.photos) {
                     this.photos = response.body.photos;
@@ -25,12 +25,17 @@ var incoming_photo = new Vue({
             }
         },
         show: function (index) {
-            let links = this.photos[index]._links;
+            let photo = this.photos[index];
+            let links = photo._links;
             if (links.origin.href) {
-                OptionStaticViewer.photoView.show = true;
-                OptionStaticViewer.photoView.thumb = links.thumb.href;
-                OptionStaticViewer.photoView.photo = links.origin.href;
-                OptionStaticViewer.photoView.height= this.photos[index].height;
+                let data = {
+                    thumb: links.thumb.href,
+                    photo: links.origin.href,
+                    alias:  photo.alias,
+                    height: photo.height,
+                    width:  photo.width,
+                }
+                store.commit('viewPhoto', data);
             }
             //console.log(this.photos[index].height);
         },

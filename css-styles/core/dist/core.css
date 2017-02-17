@@ -17,7 +17,7 @@
   background: #f9ecbf;
 }
 .bg_gra {
-  background: #f2f2f2;
+  background: #f7f7f7;
 }
 .bg_blu {
   background: #CCCCFF;
@@ -38,7 +38,7 @@
   background: #fff5cc !important;
 }
 .bg_ogra {
-  background: #f2f2f2 !important;
+  background: #f7f7f7 !important;
 }
 .bg_oblu {
   background: #CCCCFF !important;
@@ -151,7 +151,7 @@ html {
   width: 100%;
 }
 body {
-  background: #f2f2f2;
+  background: #f7f7f7;
   color: #333333;
   font-family: Arial, Tahoma, Verdana, sans-serif;
   font-size: 12px;
@@ -268,7 +268,7 @@ div.menu_user_outer {
   text-align: center;
 }
 div.menu_user_outer a {
-  color: #f2f2f2;
+  color: #f7f7f7;
   text-decoration: none;
 }
 div.menu_user_outer a:hover {
@@ -379,7 +379,7 @@ li.menu_user_link_ear {
 }
 #giper_reply {
   display: none;
-  background: #f2f2f2;
+  background: #f7f7f7;
   border-width: 0px 0px 1px;
   border: 1px solid #cccccc;
   margin-bottom: 7px;
@@ -414,7 +414,7 @@ li.menu_user_link_ear {
   overflow: hidden;
 }
 .user {
-  border-bottom: 1px solid #f2f2f2;
+  border-bottom: 1px solid #f7f7f7;
   color: #333333;
   display: block;
   font-size: 14px;
@@ -427,7 +427,7 @@ li.menu_user_link_ear {
   text-decoration: none;
 }
 .user.visited {
-  background: #f2f2f2;
+  background: #f7f7f7;
 }
 .user.gray {
   color: #cccccc;
@@ -537,7 +537,7 @@ a.name:hover {
 .new_message .bunn {
   background: #ff9900;
   border-radius: 3px;
-  border: 1px solid #f2f2f2;
+  border: 1px solid #f7f7f7;
   color: white;
   cursor: pointer;
   font-size: 10px;
@@ -619,7 +619,7 @@ a.name:hover {
   background: GhostWhite;
 }
 .line_on {
-  background: #f2f2f2;
+  background: #f7f7f7;
 }
 .new_client {
   border: 1px solid #3A5795;
@@ -1014,7 +1014,7 @@ a.name:hover {
   padding: 10px 0px;
 }
 .hint_context {
-  background: #f2f2f2;
+  background: #f7f7f7;
   border: 1px solid #e5e5e5;
   color: #666666;
   font-size: 12px;
@@ -1049,7 +1049,7 @@ a.name:hover {
 }
 .desire_onload {
   background: #ffffff;
-  border-color: #f2f2f2;
+  border-color: #f7f7f7;
   color: #999999;
 }
 .desire_user {
@@ -1165,7 +1165,7 @@ a.name:hover {
   color: #333333;
 }
 #form_search {
-  background: #f2f2f2;
+  background: #f7f7f7;
   border-width: 1px 0px;
   border: 0px solid #eeeeee;
   margin: 0px auto 1px;
@@ -1240,7 +1240,7 @@ a.name:hover {
   color: #ffffff;
 }
 #tip_general.name a {
-  color: #f2f2f2;
+  color: #f7f7f7;
 }
 #tip_general.name a:hover {
   color: #ffffff;

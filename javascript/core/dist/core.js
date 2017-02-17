@@ -33,6 +33,66 @@ $(document).ready(function () {
     visited.init();
 });
 
+var ls = storage;
+
+var store = new Vuex.Store({
+    state: {
+        count: 0,
+        photoView: {
+            thumb: null,
+            photo: null,
+            height: null
+        },
+        uploadView: {
+            show: false
+        },
+        formMess: {
+            sendTo: null,
+            sendPhoto: {
+                thumb: null,
+                photo: null,
+                height: null,
+                width: null
+            }
+        }
+    },
+    actions: {
+        // LOAD_USER_DATA({ commit }) {
+        //     console.log('load');
+        //     store.commit('setUserData', lscache.get('user'));
+        //     axios.get('/users/10336.json').then((response) => {
+        //         //this.response(data.body);
+        //         store.commit('setUserData', response.data.user);
+        //         //console.log(response.data.user);
+        //     }).catch((response) => {
+        //         console.log('error user data');
+        //     });
+        // }
+    },
+    mutations: {
+        // setUserData (state, data) {
+        //     if (data) {
+        //         Object.assign(state.user.data, data);
+        //         lscache.set('user', data, 23456);
+        //     }
+        //     //ls.set('auth', 2);
+        // },
+        viewPhoto: function viewPhoto(state, data) {
+            Object.assign(state.photoView, data);
+        },
+        viewUpload: function viewUpload(state, data) {
+            state.uploadView.show = data === true;
+        },
+        sendPhoto: function sendPhoto(state, data) {
+            Object.assign(state.formMess.sendPhoto, data);
+        }
+    },
+    getters: {}
+});
+
+//store.dispatch('LOAD_USER_DATA');
+
+
 // -- Получить новый хэш ---
 var hash;
 function simple_hash() {
@@ -65,7 +125,7 @@ var UploadPhoto = Vue.extend({
     methods: {
         loadPhoto: function loadPhoto() {
             Vue.http.headers.common['Authorization'] = 'Bearer ' + get_cookie('jwt');
-            this.$http.get('http://' + api_photo + '/api/v1/users/10336/photos?hash=' + hash).then(function (response) {
+            this.$http.get('http://' + api_photo + '/api/v1/users/' + uid + '/photos?hash=' + hash).then(function (response) {
                 console.log(response.body);
                 if (response.body.photos) {
                     this.photos = response.body.photos;
@@ -78,28 +138,39 @@ var UploadPhoto = Vue.extend({
         },
 
         show: function show(index) {
-            var links = this.photos[index]._links;
+            this.preview(this.photos[index]);
+        },
+        preview: function preview(photo) {
+            var links = photo._links;
             if (links.origin.href) {
-                OptionStaticViewer.photoView.show = true;
-                OptionStaticViewer.photoView.thumb = links.thumb.href;
-                OptionStaticViewer.photoView.photo = links.origin.href;
-                OptionStaticViewer.photoView.height = this.photos[index].height;
+                var _data = {
+                    photo: links.origin.href,
+                    thumb: links.thumb.href,
+                    alias: photo.alias,
+                    height: photo.height,
+                    width: photo.width
+                };
+                store.commit('sendPhoto', _data);
+                console.log('sendPhoto');
+                console.log(_data);
             }
-            //console.log(photo);
+            this.close();
+        },
+        close: function close() {
+            this.$emit('close');
         }
     },
     mounted: function mounted() {
         console.log('fileupload');
+        var self = this;
         $('#fileupload').fileupload({
             dataType: 'json',
             add: function add(e, data) {
-                data.url = 'http://' + api_photo + '/api/v1/users/10336/photos?jwt=' + get_cookie('jwt');
+                data.url = 'http://' + api_photo + '/api/v1/users/' + uid + '/photos?jwt=' + get_cookie('jwt');
                 data.submit();
             },
             done: function done(e, data) {
-                // $.each(data.result.files, function (index, file) {
-                //   $('<p/>').text(file.name).appendTo(document.body);
-                // });
+                self.preview(data.result.photo);
             }
         });
         this.loadPhoto();
@@ -3069,20 +3140,22 @@ var option_sex = {
     }
 };
 
+Vue.component('photo-view', {
+    props: ['photo', 'thumb', 'width', 'height'],
+    template: '#photo-view'
+});
+
 ///
 // Модальное окно настроек OptionDialog - контейнер
 ///
 var OptionDialog = Vue.extend({
     template: '#option-static__dialog-window',
     props: {
-        config: {}
+        show: false
     },
     methods: {
-        open: function open() {
-            this.config.show = true;
-        },
         close: function close() {
-            this.config.show = false;
+            this.$emit('close');
         }
     },
     created: function created() {
@@ -3096,37 +3169,47 @@ var OptionDialog = Vue.extend({
     }
 });
 
-var PhotoView = Vue.extend({
-    props: ['config'],
+var PhotoViewDialog = Vue.extend({
+    methods: {
+        close: function close() {
+            store.commit('viewPhoto', { photo: null });
+        }
+    },
     components: {
         optionDialog: OptionDialog
     },
+    computed: Vuex.mapState({
+        config: function config(state) {
+            return state.photoView;
+        }
+    }),
     template: '#option-content__photo-view'
 });
 
-var UploadView = Vue.extend({
-    props: ['config'],
+var UploadDialog = Vue.extend({
+    methods: {
+        close: function close() {
+            store.commit('viewUpload', false);
+        }
+    },
     components: {
         optionDialog: OptionDialog,
         uploadPhoto: UploadPhoto
     },
+    computed: Vuex.mapState({
+        config: function config(state) {
+            return state.uploadView;
+        }
+    }),
     template: '#option-content__upload-photo'
 });
 
 var OptionStaticViewer = new Vue({
     el: '#option-static__viewer',
-    data: {
-        photoView: {
-            show: false,
-            photo: null
-        },
-        upload: {
-            show: false
-        }
-    },
+    store: store,
     components: {
-        photoView: PhotoView,
-        uploadView: UploadView
+        photoDialog: PhotoViewDialog,
+        uploadDialog: UploadDialog
     }
 });
 

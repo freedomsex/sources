@@ -1,19 +1,19 @@
 
 <div id="option-static__viewer">
-  <upload-view :config="upload"></upload-view>
-  <photo-view :config="photoView"></photo-view>
+  <upload-dialog></upload-dialog>
+  <photo-dialog></photo-dialog>
 </div>
 
 <script type="text/x-template" id="option-static__dialog-window">
-  <div class="option-dialog" v-if="config.show" :config="config">
+  <div class="option-dialog" v-if="show">
     <div class="option-dialog__cover">
       <div class="option-dialog__loader"></div>
     </div>
-    <div class="option-dialog__wrapper" @click="close()">
+    <div class="option-dialog__wrapper" @click="close">
       <div class="option-dialog__container" @click.stop>
         <slot></slot>
       </div>
-      <div class="option-dialog__close" @click="close()">
+      <div class="option-dialog__close" @click.stop="close">
         Закрыть
         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
       </div>

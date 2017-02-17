@@ -152,20 +152,24 @@
     <img class="incoming-photo__item-photo" :src="item._links.thumb.href" v-for="(item, index) in photos" @click="show(index)">
   </div>
   <div class="incoming-photo__placeholder" v-show="!photos.length">
-    Фотографии которые вам отправят будут здесь
+    Присланные фотографии будут здесь
   </div>
 </div>
 
 <script type="text/x-template" id="option-content__photo-view">
-  <option-dialog :config="config">
-    <div class="photo-view" :style="{backgroundImage: `url(${config.thumb})`, minHeight: config.height + 'px'}">
-      <img :src="config.photo">
-    </div>
+  <option-dialog :show="config.photo" @close="close">
+    <photo-view :photo="config.photo" :thumb="config.thumb" :height="config.height" :width="1000"/>
   </option-dialog>
 </script>
 
+<script type="text/x-template" id="photo-view">
+  <div class="photo-view" :style="{ backgroundImage: `url(${thumb})`, minHeight: height + 'px'}">
+    <img :src="photo" :style="{ maxWidth: width +'px' }">
+  </div>
+</script>
+
 <script type="text/x-template" id="option-content__upload-photo">
-  <option-dialog :config="config">
+  <option-dialog :show="config.show" @close="close">
     <div class="option_tab">
       <div align="left" class="option_cap">
         <b>Выберите фотографию</b><a href="/блог/как-отправить-фотографию/" class="cap_link">Подробнее...</a>
@@ -174,7 +178,7 @@
        Загрузив фотографию из компьютера или флэшки
        один раз, её можно безгранично отправлять кому угодно и сколько угодно.
       </div>
-      <upload-photo></upload-photo>
+      <upload-photo @close="close"></upload-photo>
     </div>
   </option-dialog>
 </script>
@@ -308,21 +312,54 @@
 
 
 
-     <div id="mail_messages_block" style="display: none;"></div>
+<div id="mail_messages_block" style="display: none;" v-show="!error">
+  <div id="mess_loader" class="message_list_title_date" v-show="!error && !messages">
+    <span>
+      <img src="/ajax/mess_loader.gif"> Загружаем
+    </span>
+  </div>
+  <div class="messages">
+    <message-item v-for="(item, index) in messages" :item="item" :uid="uid"></message-item>
+  </div>
+  {{messages}}
+</div>
 
-     <div id="message_block_ex" class="_____message_list_block" style="display: none;">
-      <div class="message_list_title unread">
-        <span class="user_name"></span>
-        <span class="message_list_save bunned_mess" data-number="8973758"
-         style="margin-left: 3px; vertical-align: bottom; ">Удалить и наказать</span>
-        <div class="message_list_time unread">
-         <span class="message_list_save remove_mess" data-number="8973758">Удалить</span>
-         <span class="mess_time"></span>
-        </div>
+<script type="text/x-template" id="messages-item">
+<div class="messages-item">
+  <div class="message-item__date" v-if="date">
+    <span>{{date}}</span>
+  </div>
+  <div :class="[sent ? 'message-item__sent' : 'message-item__received']">
+    <div class="message-item__balloon">
+        {{item.mess}}
+        <span class="message-item__subtime">{{time}}</span>
+    </div>
+    <div style="clear: both;"></div>
+  </div>
+</div>
+</script>
+
+
+<!--
+
+    <div class="message_list_title unread">
+      <span class="user_name">{{item.from}}</span>
+      <span class="message_list_save bunned_mess"
+        style="margin-left: 3px; vertical-align: bottom; ">Удалить и наказать</span>
+      <div class="message_list_time unread">
+        <span class="message_list_save remove_mess">Удалить</span>
+        <span class="mess_time"></span>
       </div>
-      <div class="message_list_body"></div>
-      <div style="clear: both;"></div>
-     </div>
+    </div>
+ -->
+
+
+
+
+
+
+
+
 
 
 
@@ -336,17 +373,6 @@
 
      </div>
 
-
-  <div id="mess_loader" class="message_list_title_date">
-    <span><img src="/ajax/mess_loader.gif" style="display: none;"> Загружаем</span>
-  </div>
-
-  <div id="no_js" style="padding: 15px 0; font-size: 15px; ">
-    Для работы сайта необходимо включить JavaScript в вашем браузере.
-    Иногда нарушить работу могут блокировщики рекламы и скриптов или антивирус. <br><br>
-    <b>support@freedomsex.net</b> - служба поддержки.
-  </div>
-  <script> document.getElementById('no_js').style.display = 'none'; </script>
 
 
       <div id="mail_pages" style="display: none;">
@@ -368,13 +394,22 @@
      Сообщение удалено.
      <span class="link_underline">Восстановить</span>
     </div>
-    <!-- float: right; ===================================================== -->
+
+
+
+
+  <div id="no-js" style="padding: 15px 0; font-size: 15px; ">
+    Для работы сайта необходимо включить JavaScript в вашем браузере.
+    Иногда нарушить работу могут блокировщики рекламы и скриптов или антивирус. <br><br>
+    <b>support@freedomsex.net</b> - служба поддержки.
+  </div>
+  <script> document.getElementById('no-js').style.display = 'none'; </script>
+
+
+<!-- float: right; ===================================================== -->
 
 
    </div>
-
-
-
  </div>
  <!-- Cent -->
 
@@ -682,20 +717,20 @@ border-radius: 3px;">Сохранено</span>
 
 
 <div id="option-static__viewer">
-  <upload-view :config="upload"></upload-view>
-  <photo-view :config="photoView"></photo-view>
+  <upload-dialog></upload-dialog>
+  <photo-dialog></photo-dialog>
 </div>
 
 <script type="text/x-template" id="option-static__dialog-window">
-  <div class="option-dialog" v-if="config.show" :config="config">
+  <div class="option-dialog" v-if="show">
     <div class="option-dialog__cover">
       <div class="option-dialog__loader"></div>
     </div>
-    <div class="option-dialog__wrapper" @click="close()">
+    <div class="option-dialog__wrapper" @click="close">
       <div class="option-dialog__container" @click.stop>
         <slot></slot>
       </div>
-      <div class="option-dialog__close" @click="close()">
+      <div class="option-dialog__close" @click.stop="close">
         Закрыть
         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
       </div>
@@ -776,9 +811,13 @@ border-radius: 3px;">Сохранено</span>
 
  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
- <script src="https://unpkg.com/json3@3.3.2"></script>
+
+<script src="https://unpkg.com/json3@3.3.2"></script>
 <script src="http://underscorejs.org/underscore-min.js"></script>
+
 <script src="https://unpkg.com/vue@2.1.10/dist/vue.js"></script>
+<script src="https://unpkg.com/vuex@2.0.0/dist/vuex.js"></script>
+<script src="https://unpkg.com/axios@0.15.3/dist/axios.min.js"></script>
 <script src="https://unpkg.com/vue-resource@1.0.3/dist/vue-resource.js"></script>
 
 <script type="text/javascript" src="%%JS_FILE%%"></script>
