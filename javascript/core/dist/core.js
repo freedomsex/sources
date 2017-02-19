@@ -37,6 +37,8 @@ var ls = storage;
 
 var store = new Vuex.Store({
     state: {
+        apiToken: '',
+        photoServer: '127.0.0.1:8888',
         count: 0,
         photoView: {
             thumb: null,
@@ -57,26 +59,19 @@ var store = new Vuex.Store({
         }
     },
     actions: {
-        // LOAD_USER_DATA({ commit }) {
-        //     console.log('load');
-        //     store.commit('setUserData', lscache.get('user'));
-        //     axios.get('/users/10336.json').then((response) => {
-        //         //this.response(data.body);
-        //         store.commit('setUserData', response.data.user);
-        //         //console.log(response.data.user);
-        //     }).catch((response) => {
-        //         console.log('error user data');
-        //     });
-        // }
+        LOAD_API_TOKEN: function LOAD_API_TOKEN(_ref) {
+            var commit = _ref.commit;
+
+            store.commit('setApiToken', { apiToken: get_cookie('jwt') });
+        }
     },
     mutations: {
-        // setUserData (state, data) {
-        //     if (data) {
-        //         Object.assign(state.user.data, data);
-        //         lscache.set('user', data, 23456);
-        //     }
-        //     //ls.set('auth', 2);
-        // },
+        setApiToken: function setApiToken(state, data) {
+            if (data) {
+                Object.assign(state, data);
+            }
+            console.log(state);
+        },
         viewPhoto: function viewPhoto(state, data) {
             Object.assign(state.photoView, data);
         },
@@ -90,8 +85,7 @@ var store = new Vuex.Store({
     getters: {}
 });
 
-//store.dispatch('LOAD_USER_DATA');
-
+store.dispatch('LOAD_API_TOKEN');
 
 // -- Получить новый хэш ---
 var hash;
@@ -270,12 +264,12 @@ function get_cookie(cookie_name) {
 }
 
 function del_cookie(name) {
-    expires = new Date(); // получаем текущую дату 
+    var expires = new Date(); // получаем текущую дату
     expires.setTime(expires.getTime() - 1000);
     document.cookie = name + "=; expires=" + expires.toGMTString() + "; path=/";
 }
 function set_cookie(name, val, time) {
-    expires = new Date();
+    var expires = new Date();
     expires.setTime(expires.getTime() + 1000 * 60 * time); // минут
     document.cookie = name + "=" + val + "; expires=" + expires.toGMTString() + "; path=/";
 }
@@ -3166,6 +3160,11 @@ var OptionDialog = Vue.extend({
                 self.close();
             }
         });
+    },
+    updated: function updated() {
+        if (this.show) {
+            $("html, body").animate({ scrollTop: 0 }, "slow");
+        }
     }
 });
 

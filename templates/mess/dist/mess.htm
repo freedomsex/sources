@@ -74,9 +74,6 @@
        <div id="human_data_block">
           <div id="human_data_print">
             <span id="human_print_name" class="human_name %%HUMAN_STATUS%%">%%HUMAN_NAME%%</span>
-            <a href="%%HUMAN_ORIGIN%%" style="text-decoration: none;" target="_blank">
-              <img id="human_photo_min" src="%%HUMAN_PHOTO%%">
-            </a>
             <span id="human_print_age">%%HUMAN_AGE%%</span> %%HUMAN_AGE_SAY%%
             <img id="edit_cont_btn" src="/img/edit_icon.png" alt="">
           </div>
@@ -242,7 +239,6 @@
     <span>Опубликовать замечание</span>
     <a href="/блог/анонимное-замечание-к-анкете/" class="abuse_info" target="_blank"></a>
   </div>
-  <div style=" padding-bottom: 10px;"></div>
 </div>
 
 
@@ -312,52 +308,96 @@
 
 
 
-<div id="mail_messages_block" style="display: none;" v-show="!error">
+
+
+<div id="user-dialog" style="display: none;" v-show="!error">
   <div id="mess_loader" class="message_list_title_date" v-show="!error && !messages">
     <span>
       <img src="/ajax/mess_loader.gif"> Загружаем
     </span>
   </div>
   <div class="messages">
-    <message-item v-for="(item, index) in messages" :item="item" :uid="uid"></message-item>
+    <message-item v-for="(item, index) in messages"
+     :item="item"
+     :index="index"
+     :count="messages.length"
+     :uid="uid"></message-item>
   </div>
-  {{messages}}
 </div>
 
 <script type="text/x-template" id="messages-item">
-<div class="messages-item">
+<div class="message-item" @mouseleave="showOption = false">
   <div class="message-item__date" v-if="date">
     <span>{{date}}</span>
   </div>
+  <div class="message-item__spliter" v-show="!previous"></div>
   <div :class="[sent ? 'message-item__sent' : 'message-item__received']">
-    <div class="message-item__balloon">
-        {{item.mess}}
+    <div class="message-item__balloon" @mouseover="showOption = true" @click="fix">
+      <div v-if="image" class="message-image" :style="{ backgroundImage: `url(${image})` }" @click="play">
+        <div class="message-image__play">
+          <img src="/static/img/icon/play.png">
+        </div>
+      </div>
+      <span v-else>{{item.mess}}</span>
+
         <span class="message-item__subtime">{{time}}</span>
     </div>
-    <div style="clear: both;"></div>
+    <span class="message-item__bunn" v-show="!sent && option" @click="showDialog = sent ? 'some' : 'must'">
+      <span aria-hidden="true" class="glyphicon glyphicon-thumbs-down"></span>
+    </span>
+    <span class="message-item__remove" v-show="option" @click="showDialog = sent ? 'some' : 'must'">
+      <span aria-hidden="true" class="glyphicon glyphicon-remove"></span>
+    </span>
   </div>
+  <remove-confirm :show="showDialog" :data="item" @close="cancel"></remove-confirm>
 </div>
 </script>
 
-
-<!--
-
-    <div class="message_list_title unread">
-      <span class="user_name">{{item.from}}</span>
-      <span class="message_list_save bunned_mess"
-        style="margin-left: 3px; vertical-align: bottom; ">Удалить и наказать</span>
-      <div class="message_list_time unread">
-        <span class="message_list_save remove_mess">Удалить</span>
-        <span class="mess_time"></span>
-      </div>
+<script type="text/x-template" id="modal-dialog">
+  <div class="modal-dialog__mask" :show="show" :data="data" v-if="show" transition="modal" @click="close">
+    <div class="modal-dialog__container" @click.stop>
+      <slot></slot>
     </div>
- -->
+  </div>
+</script>
+
+<script type="text/x-template" id="remove-confirm">
+  <modal-dialog :show="show" :data="data" @close="close">
+    <div class="modal-dialog__caption">
+      {{caption}}
+    </div>
+    <div class="modal-dialog__body">
+      {{text}}
+    </div>
+    <div class="modal-dialog__footer">
+      <button class="btn btn-primary" @click="save()">{{action}}</button>
+      <button class="btn btn-default" @click="close()">Отмена</button>
+    </div>
+  </modal-dialog>
+</script>
 
 
 
 
 
 
+
+
+
+
+     <div id="message_block_ex" class="_____message_list_block" style="display: none;">
+      <div class="message_list_title unread">
+        <span class="user_name"></span>
+        <span class="message_list_save bunned_mess" data-number="8973758"
+         style="margin-left: 3px; vertical-align: bottom; ">Удалить и наказать</span>
+        <div class="message_list_time unread">
+         <span class="message_list_save remove_mess" data-number="8973758">Удалить</span>
+         <span class="mess_time"></span>
+        </div>
+      </div>
+      <div class="message_list_body"></div>
+      <div style="clear: both;"></div>
+     </div>
 
 
 
@@ -814,6 +854,7 @@ border-radius: 3px;">Сохранено</span>
 
 <script src="https://unpkg.com/json3@3.3.2"></script>
 <script src="http://underscorejs.org/underscore-min.js"></script>
+<script src="https://unpkg.com/moment@2.17.1/min/moment.min.js"></script>
 
 <script src="https://unpkg.com/vue@2.1.10/dist/vue.js"></script>
 <script src="https://unpkg.com/vuex@2.0.0/dist/vuex.js"></script>

@@ -8,7 +8,6 @@ $(document).ready(function () {
     };
 
     cont_list.init();
-    mess_list.init();
 
     lock_user.init();
     confirm_block_dn.init();
@@ -677,7 +676,7 @@ var incoming_photo = new Vue({
         loadPhoto: function loadPhoto() {
 
             Vue.http.headers.common['Authorization'] = 'Bearer ' + this.jwt;
-            this.$http.get('http://' + api_photo + '/api/v1/users/' + tid + '/sends?hash=' + hash).then(function (response) {
+            this.$http.get('http://' + api_photo + '/api/v1/users/' + uid + '/sends?tid=' + tid + '&hash=' + hash).then(function (response) {
                 console.log(response.body);
                 if (response.body.photos) {
                     this.photos = response.body.photos;
@@ -791,6 +790,79 @@ var lock_user = {
 
 };
 
+var ModalDialog = Vue.component('modal-dialog', {
+    props: ['show', 'data'],
+    methods: {
+        close: function close() {
+            this.$emit('close');
+        }
+    },
+    mounted: function mounted() {
+        // Close the modal when the escape key is pressed.
+        var self = this;
+        document.addEventListener('keydown', function () {
+            if (self.show && event.keyCode === 27) {
+                self.close();
+            }
+        });
+    },
+
+    template: '#modal-dialog'
+});
+
+var RemoveConfirm = Vue.component('remove-confirm', {
+    props: ['show', 'data'],
+    components: {
+        modal: ModalDialog
+    },
+    data: function data() {
+        return {
+            content: {
+                doit: {
+                    caption: 'Накажите как следует',
+                    text: '\u0417\u0430 \u0440\u0435\u0437\u043A\u0438\u0435 \u0441\u043B\u043E\u0432\u0430, \u0437\u0430 \u043E\u0441\u043A\u043E\u0440\u0431\u043B\u0435\u043D\u0438\u044F \u0438\u043B\u0438 \u0445\u0430\u043C\u0441\u0442\u0432\u043E,\n                    \u0437\u0430 \u0444\u043E\u0442\u043E\u0433\u0440\u0430\u0444\u0438\u0438 \u043D\u0435 \u0432 \u0442\u0435\u043C\u0443 \u0438\u043B\u0438 \u0431\u0435\u0441\u0441\u043C\u044B\u0441\u043B\u0435\u043D\u043D\u044B\u0435 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u044F, \u043D\u0430\u043A\u0430\u0437\u044B\u0432\u0430\u0439\u0442\u0435 \u0432\u0441\u0435\u0445, \u043A\u043E\u0433\u043E\n                    \u0441\u0447\u0438\u0442\u0430\u0435\u0442\u0435 \u043D\u0443\u0436\u043D\u044B\u043C. \u041D\u0430\u043A\u0430\u0437\u0430\u043D\u0438\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u0435\u0442 \u0441\u0440\u0430\u0437\u0443.',
+                    action: 'Наказать и удалить'
+                },
+                must: {
+                    caption: 'Может стоит наказать?',
+                    text: '\u041D\u0430\u0436\u043C\u0438\u0442\u0435 "\u041D\u0430\u043A\u0430\u0437\u0430\u0442\u044C \u0438 \u0443\u0434\u0430\u043B\u0438\u0442\u044C" \u0443 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u044F, \u043A\u043E\u0442\u043E\u0440\u043E\u0435 \u0432\u044B\u0437\u0432\u0430\u043B\u043E \u043D\u0435\u0433\u0430\u0442\u0438\u0432\u043D\u044B\u0435 \u044D\u043C\u043E\u0446\u0438\u0438.\n                    \u0414\u0435\u0439\u0441\u0442\u0432\u0443\u0435\u0442 \u0441\u0440\u0430\u0437\u0443 \u0436\u0435, \u0438 \u044F\u0432\u043B\u044F\u0435\u0442\u0441\u044F \u0441\u043F\u043E\u0441\u043E\u0431\u043E\u043C \u0441\u043E\u043E\u0431\u0449\u0438\u0442\u044C \u043D\u0430\u043C \u043E \u043D\u0430\u0440\u0443\u0448\u0435\u043D\u0438\u044F\u0445 \u0441\u043E \u0441\u0442\u043E\u0440\u043E\u043D\u044B \u0441\u043E\u0431\u0435\u0441\u0435\u0434\u043D\u0438\u043A\u0430.\n                    \u041C\u044B \u043D\u0438\u043A\u043E\u0433\u0434\u0430 \u043D\u0435 \u0443\u0437\u043D\u0430\u0435\u043C \u043E \u043D\u0430\u0440\u0443\u0448\u0435\u043D\u0438\u0438, \u0435\u0441\u043B\u0438 \u0443\u0434\u0430\u043B\u0438\u0442\u044C \u0435\u0433\u043E \u0431\u0435\u0437 \u043D\u0430\u043A\u0430\u0437\u0430\u043D\u0438\u044F.',
+                    action: 'Удалить и забыть'
+                },
+                some: {
+                    caption: 'Удалить везде и навсегда',
+                    text: '\u0412\u0430\u0448\u0435 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435 \u0431\u0443\u0434\u0435\u0442 \u0443\u0434\u0430\u043B\u0435\u043D\u043E \u043E\u0442\u043E\u0432\u0441\u044E\u0434\u0443, \u0431\u0435\u0437 \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0441\u0442\u0438 \u0432\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C. \u0421\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435\n                    \u043F\u0440\u043E\u043F\u0430\u0434\u0435\u0442 \u043A\u0430\u043A \u0438\u0437 \u0432\u0430\u0448\u0435\u0439 \u0438\u0441\u0442\u043E\u0440\u0438\u0438 \u043F\u0435\u0440\u0435\u043F\u0438\u0441\u043A\u0438, \u0442\u0430\u043A \u0438 \u0438\u0437 \u043F\u0435\u0440\u0435\u043F\u0438\u0441\u043A\u0438 \u0432\u0430\u0448\u0435\u0433\u043E \u0441\u043E\u0431\u0435\u0441\u0435\u0434\u043D\u0438\u043A\u0430.',
+                    action: 'Удалить навсегда'
+                }
+            }
+        };
+    },
+
+    computed: {
+        variant: function variant() {
+            return this.show ? this.show : 'some';
+        },
+        caption: function caption() {
+            return this.content[this.variant].caption;
+        },
+        text: function text() {
+            return this.content[this.variant].text;
+        },
+        action: function action() {
+            return this.content[this.variant].action;
+        }
+    },
+    methods: {
+        close: function close() {
+            this.$emit('close');
+        },
+        save: function save() {
+            // TODO: implement the form logic.
+            this.close();
+        }
+    },
+    template: '#remove-confirm'
+});
+
 Date.prototype.getMonthChar = function () {
     var month = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
     return month[this.getUTCMonth()];
@@ -802,31 +874,139 @@ Date.prototype.getDayMonth = function () {
 };
 
 var fdate = null;
+var prev = null;
 
 Vue.component('message-item', {
-    props: ['item', 'uid', "first_date"],
+    props: ['item', 'index', 'count', 'uid', 'first_date'],
     template: '#messages-item',
+    data: function data() {
+        return {
+            showOption: false,
+            fixOption: false,
+            alertOption: false,
+            showDialog: false
+        };
+    },
+
+    methods: {
+        fix: function fix() {
+            this.showOption = true;
+            this.alertOption = false;
+            this.fixOption = !this.fixOption;
+        },
+        bun: function bun() {
+            var config = {
+                headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken }
+            };
+            var data = {
+                id: this.item.id,
+                tid: this.item.from
+            };
+            axios.post('/mess/bun5/', data, config).then(function (response) {
+                // if OK
+            }).catch(function (error) {
+                console.log('error');
+            });
+        },
+        cancel: function cancel() {
+            this.showDialog = false;
+            console.log('cancel');
+        },
+        play: function play() {
+            var _this = this;
+
+            var config = {
+                headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
+                params: { tid: tid }
+            };
+            var url = 'http://' + api_photo + '/api/v1/users/' + uid + '/sends/' + this.alias + '.jpg';
+            axios.get(url, config).then(function (response) {
+                _this.photo(response.data.photo);
+            }).catch(function (error) {
+                console.log('error');
+            });
+        },
+        photo: function photo(_photo) {
+            console.log(_photo);
+            var links = _photo._links;
+            if (links.origin.href) {
+                var data = {
+                    thumb: links.thumb.href,
+                    photo: links.origin.href,
+                    alias: _photo.alias,
+                    height: _photo.height,
+                    width: _photo.width
+                };
+                store.commit('viewPhoto', data);
+            }
+        }
+    },
+    mounted: function mounted() {
+        if (!this.index && this.count < 5) {
+            this.fix();
+            this.alertOption = true;
+        }
+    },
+
     computed: {
+        option: function option() {
+            return this.showOption || this.fixOption ? 1 : 0;
+        },
         sent: function sent() {
             return uid == this.item.from ? 1 : 0;
         },
         time: function time() {
             var date = new Date(this.item.date);
-            return date.getUTCHours() + ':' + date.getUTCMinutes();
+            date = new Date(date);
+            var hour = date.getHours();
+            hour = hour < 10 ? '0' + hour : hour;
+            var minute = date.getMinutes();
+            minute = minute < 10 ? '0' + minute : minute;
+            return hour + ':' + minute;
+        },
+        yesterday: function yesterday() {
+            var date = new Date();
+            date.setDate(date.getDate() - 1);
+            return date;
         },
         date: function date() {
             var first_date = fdate;
             fdate = new Date(this.item.date).getDayMonth();
             var date = fdate == first_date ? '' : fdate;
             var today = new Date().getDayMonth();
+            var yestd = this.yesterday.getDayMonth();
             date = date == today ? 'Сегодня' : date;
+            date = date == yestd ? 'Вчера' : date;
             return date;
+        },
+        alias: function alias() {
+            var result = false;
+            var text = this.item.mess;
+            var old = /.+images.intim?.(.{32})\.(jpg)/i;
+            var now = /\[\[IMG:(.{32})\]\]/i;
+            result = old.test(text) ? old.exec(text) : false;
+            result = !result && now.test(text) ? now.exec(text) : result;
+            if (result) {
+                result = result[1];
+            }
+            return result;
+        },
+        image: function image() {
+            var server = this.$store.state.photoServer;
+            var image = this.alias;
+            return image ? 'http://' + server + '/res/photo/preview/' + image + '.png' : false;
+        },
+        previous: function previous() {
+            var p = prev;
+            prev = this.item.from;
+            return !p || p == prev ? true : false;
         }
     }
 });
 
 var MessList = new Vue({
-    el: '#mail_messages_block',
+    el: '#user-dialog',
+    store: store,
     data: {
         messages: [],
         error: 0,
@@ -838,21 +1018,20 @@ var MessList = new Vue({
         this.uid = uid;
         this.tid = tid;
         this.load(tid);
-        this.jwt = get_cookie('jwt');
     },
     methods: {
         load: function load(tid) {
-            var _this = this;
+            var _this2 = this;
 
             console.log('load MessList data');
             var config = {
-                headers: { 'Authorization': 'Bearer ' + this.jwt },
+                headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
                 params: { id: tid, hash: hash }
             };
             axios.get('/ajax/messages_load.php', config).then(function (response) {
-                _this.messages = response.data.messages;
+                _this2.messages = response.data.messages;
             }).catch(function (error) {
-                _this.error = 10;
+                _this2.error = 10;
                 console.log('error');
             });
         },
@@ -870,42 +1049,6 @@ var mess_list = {
 
     mail_pages: 0,
     view_confirm: 0,
-
-    init: function init() {
-        mess_list.ajax_load(tid);
-        $('#mail_pages_next').click(function () {
-            mess_list.ajax_load(tid);
-        });
-    },
-
-    list_init: function list_init() {
-        $('.message_list_block').hover(function () {
-            mess_list.option.show($('.bunned_mess', this).data('number'));
-            mess_list.option.enable = false;
-        }, function () {
-            if (mess_list.option.frize) return false;
-
-            mess_list.option.hide($('.bunned_mess', this).data('number'));
-            mess_list.option.enable = true;
-        });
-
-        $('.message_list_block').click(function () {
-            if (mess_list.option.enable && !mess_list.option.frize) mess_list.option.togg($('.bunned_mess', this).data('number'));
-        });
-
-        mess_list.option.pages_show();
-        $('.message_list_save.red_link').show(); // Показать опции первого сообщения                            //////////////////////////////////
-
-    },
-
-    ajax_load: function ajax_load(user) {
-        return null;
-        $.get('/ajax/messages_load.php', {
-            id: user,
-            next: mess_list.mail_pages,
-            confirm_view: mess_list.view_confirm
-        }, mess_list.on_load).fail(mess_list.on_error);
-    },
 
     on_load: function on_load(data) {
         mess_list.view_confirm = 0;

@@ -1,3 +1,82 @@
+const ModalDialog = Vue.component('modal-dialog', {
+    props: ['show', 'data'],
+    methods: {
+        close() {
+            this.$emit('close');
+        },
+    },
+    mounted() {
+        // Close the modal when the escape key is pressed.
+        var self = this;
+        document.addEventListener('keydown', function() {
+            if (self.show && event.keyCode === 27) {
+                self.close();
+            }
+        });
+    },
+    template: '#modal-dialog',
+})
+
+
+const RemoveConfirm = Vue.component('remove-confirm', {
+    props: ['show', 'data'],
+    components: {
+        modal: ModalDialog,
+    },
+    data() {
+        return {
+            content: {
+                doit: {
+                    caption: 'Накажите как следует',
+                    text: `За резкие слова, за оскорбления или хамство,
+                    за фотографии не в тему или бессмысленные сообщения, наказывайте всех, кого
+                    считаете нужным. Наказание действует сразу.`,
+                    action: 'Наказать и удалить'
+                },
+                must: {
+                    caption: 'Может стоит наказать?',
+                    text: `Нажмите "Наказать и удалить" у сообщения, которое вызвало негативные эмоции.
+                    Действует сразу же, и является способом сообщить нам о нарушениях со стороны собеседника.
+                    Мы никогда не узнаем о нарушении, если удалить его без наказания.`,
+                    action: 'Удалить и забыть'
+                },
+                some: {
+                    caption: 'Удалить везде и навсегда',
+                    text: `Ваше сообщение будет удалено отовсюду, без возможности восстановить. Сообщение
+                    пропадет как из вашей истории переписки, так и из переписки вашего собеседника.`,
+                    action: 'Удалить навсегда'
+                }
+            }
+        }
+    },
+    computed: {
+        variant() {
+            return this.show ? this.show : 'some';
+        },
+        caption() {
+            return this.content[this.variant].caption;
+        },
+        text() {
+            return this.content[this.variant].text;
+        },
+        action() {
+            return this.content[this.variant].action;
+        },
+    },
+    methods: {
+        close: function() {
+            this.$emit('close');
+        },
+        save: function() {
+        // TODO: implement the form logic.
+        this.close()
+        },
+    },
+    template: '#remove-confirm',
+})
+
+
+
 
 Date.prototype.getMonthChar = function () {
     let month = ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
@@ -10,32 +89,142 @@ Date.prototype.getDayMonth = function () {
 }
 
 var fdate = null;
+var prev  = null;
 
 Vue.component('message-item', {
-    props: ['item', 'uid', "first_date"],
+    props: [
+      'item',
+      'index',
+      'count',
+      'uid',
+      'first_date'
+    ],
     template: '#messages-item',
+    data() {
+        return {
+            showOption:  false,
+            fixOption:   false,
+            alertOption: false,
+            showDialog: false,
+        }
+    },
+    methods: {
+        fix() {
+            this.showOption = true;
+            this.alertOption = false;
+            this.fixOption = !this.fixOption;
+        },
+        bun() {
+            let config = {
+                headers: {'Authorization': 'Bearer ' + this.$store.state.apiToken}
+            };
+            let data = {
+                id:  this.item.id,
+                tid: this.item.from
+            };
+            axios.post('/mess/bun5/', data, config).then((response) => {
+                // if OK
+            }).catch((error) => {
+                console.log('error');
+            });
+        },
+        cancel() {
+            this.showDialog = false;
+            console.log('cancel');
+        },
+        play() {
+            let config = {
+                headers: {'Authorization': 'Bearer ' + this.$store.state.apiToken},
+                params: {tid}
+            };
+            let url = 'http://'+api_photo+'/api/v1/users/'+uid+'/sends/'+this.alias+'.jpg';
+            axios.get(url, config).then((response) => {
+                this.photo(response.data.photo)
+            }).catch((error) => {
+                console.log('error');
+            });
+        },
+        photo(photo) {
+            console.log(photo);
+            let links = photo._links;
+            if (links.origin.href) {
+                let data = {
+                    thumb: links.thumb.href,
+                    photo: links.origin.href,
+                    alias:  photo.alias,
+                    height: photo.height,
+                    width:  photo.width,
+                }
+                store.commit('viewPhoto', data);
+            }
+        }
+    },
+    mounted() {
+        if (!this.index && this.count < 5) {
+            this.fix();
+            this.alertOption = true;
+        }
+    },
     computed: {
+        option() {
+            return (this.showOption || this.fixOption) ? 1 : 0;
+        },
         sent() {
             return (uid == this.item.from) ? 1 : 0;
         },
         time() {
             let date = new Date(this.item.date);
-            return date.getUTCHours() +':'+ date.getUTCMinutes();
+                date = new Date(date);
+            let hour = date.getHours();
+                hour = (hour < 10) ? '0'+ hour : hour;
+            let minute = date.getMinutes();
+                minute = (minute < 10) ? '0'+ minute : minute;
+            return hour +':'+ minute;
+        },
+        yesterday() {
+            let date = new Date();
+            date.setDate(date.getDate() - 1);
+            return date;
         },
         date() {
             let first_date = fdate;
             fdate = new Date(this.item.date).getDayMonth();
             let date = (fdate == first_date) ? '' : fdate;
             let today = new Date().getDayMonth();
+            let yestd = this.yesterday.getDayMonth();
             date = (date == today) ? 'Сегодня' : date;
+            date = (date == yestd) ? 'Вчера' : date;
             return date;
+        },
+        alias() {
+            let result = false;
+            let text = this.item.mess;
+            let old = /.+images.intim?.(.{32})\.(jpg)/i;
+            let now = /\[\[IMG:(.{32})\]\]/i;
+            result = old.test(text) ? old.exec(text) : false;
+            result = (!result && now.test(text)) ? now.exec(text) : result;
+            if (result) {
+                result = result[1];
+            }
+            return result;
+        },
+        image() {
+            let server = this.$store.state.photoServer;
+            let image = this.alias;
+            return image ? `http://${server}/res/photo/preview/${image}.png` : false;
+        },
+        previous() {
+            let p = prev;
+            prev = this.item.from;
+            return (!p || p == prev) ? true : false;
         }
     }
 });
 
 
 var MessList = new Vue({
-    el: '#mail_messages_block',
+    el: '#user-dialog',
+    store,
     data: {
         messages: [],
         error: 0,
@@ -47,13 +236,12 @@ var MessList = new Vue({
         this.uid = uid;
         this.tid = tid;
         this.load(tid);
-        this.jwt = get_cookie('jwt');
     },
     methods: {
         load(tid) {
             console.log('load MessList data');
             let config = {
-                headers: {'Authorization': 'Bearer ' + this.jwt},
+                headers: {'Authorization': 'Bearer ' + this.$store.state.apiToken},
                 params: {id: tid, hash: hash}
             };
             axios.get('/ajax/messages_load.php', config).then((response) => {
@@ -87,56 +275,6 @@ var mess_list = {
     mail_pages: 0,
     view_confirm: 0,
 
-    init: function ()
-    {
-        mess_list.ajax_load(tid);
-        $('#mail_pages_next').click( function (){ mess_list.ajax_load(tid); } );
-    } ,
-
-    list_init: function ()
-    {
-        $('.message_list_block').hover(
-            function () {
-              mess_list.option.show($('.bunned_mess',this).data('number')) ;
-              mess_list.option.enable = false;
-            },
-            function () {
-              if (mess_list.option.frize)
-                  return false;
-
-              mess_list.option.hide($('.bunned_mess',this).data('number')) ;
-              mess_list.option.enable = true;
-            }
-        );
-
-        $('.message_list_block').click(function() {
-            if (mess_list.option.enable && !mess_list.option.frize)
-                mess_list.option.togg($('.bunned_mess',this).data('number')) ;
-
-        });
-
-        mess_list.option.pages_show();
-        $('.message_list_save.red_link').show(); // Показать опции первого сообщения                            //////////////////////////////////
-
-
-    } ,
-
-    ajax_load: function (user)
-    {
-        return null;
-        $.get
-        (
-            '/ajax/messages_load.php',
-            {
-                id: user,
-                next: mess_list.mail_pages,
-                confirm_view: mess_list.view_confirm
-            } ,
-            mess_list.on_load
-        )
-        .fail(mess_list.on_error);
-
-    } ,
 
 
     on_load: function (data)

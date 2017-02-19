@@ -53,33 +53,9 @@ div.alert_block {
     right: 0;
     top: 7px;
 }
-div.alert_block_mess {
-    background: @yellow;
-    border-bottom-left-radius: 0px;
-    border-bottom-right-radius: 0px;
-    color: @gray-dark;
-    font-size: 13px;
-    margin: 0px 0px 0px 0px;
-    padding: 10px 0px 10px 15px;
-    text-align: left;
-    a {
-        color: @gray-dark;
-        text-decoration: none;
-        &:hover {
-            text-decoration: underline;
-        }
-    }
-    b {
-        color: @dark-light;
-    }
-}
-.mail_confirm_block {
-    background: @alert-sand;
-    border: 1px solid LightGrey;
-    color: DimGray;
-    margin-bottom: 15px;
-    padding: 10px 15px;
-}
+
+@import "info-dialog.less";
+
 #edit_cont_btn {
     cursor: pointer;
     height: @height5;

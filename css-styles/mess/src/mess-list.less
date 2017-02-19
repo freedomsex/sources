@@ -1,29 +1,62 @@
+
+
+.btn-circle {
+  .link;
+  color: @white;
+  padding: 7px;
+  display: inline-block;
+  background-color: @gray-light;
+  border-radius: 50px;
+}
+
+
+
+#user-dialog {
+    overflow: hidden;
+    padding-top: 0px;
+    position: relative;
+}
+
 .messages {
     overflow: hidden;
-    padding-top: 5px;
+    padding-top: 0px;
 }
 
 .message-balloon() {
     display: inline-block;
     overflow: hidden;
     padding: @indent-sm @indent-sm;
-    margin-bottom: 8px;
     max-width: 80%;
     word-wrap: break-word;
     font-size: 14px;
     border: 1px solid @gray-light;
     border-radius: 4px;
     color: @dark;
+    float: left;
+}
+
+.clear-fix {
+  content: '';
+  display: block;
+  clear: both;
+}
+
+.message-item__info {
+  padding: @indent-sm @indent-sm;
 }
 
 .message-item {
   display:block;
-  margin-bottom: 5px;
+  margin: 2px 0;
   &__sent {
     text-align: right;
     .message-item__balloon {
       .message-balloon;
       background: #D9E6F6;
+      float: right;
+    }
+    &:after {
+      .clear-fix;
     }
   }
 
@@ -32,9 +65,34 @@
       .message-balloon;
       background: white;
     }
+    &:after {
+      .clear-fix;
+    }
   }
 }
 
+.message-image {
+  .link;
+   background-size: cover;
+   width: 200px;
+   height: 150px;
+    text-align: center;
+}
+.message-image__play {
+  .btn-circle;
+  display: inline-block;
+  margin-top: 42px;
+  border-color: transparent;
+  background-color: rgba(0, 0, 0, .3);
+  img {
+   width:  48px;
+   height: 48px;
+   opacity: 0.7;
+   &:hover {
+    opacity: 0.9;
+   }
+  }
+}
 
 .message-item__subtime {
   color: @gray-dark;
@@ -47,13 +105,45 @@
 .message-item__date {
     height: 14px;
     text-align: center;
-    margin: 0px auto 5px;
+    margin: 0 auto @indent-sm;
     span {
         background-color: @white;
         font-size: 14px;
+        font-weight: normal;
         position: relative;
         color: @gray-dark;
     }
+}
+
+.message-item__options {
+  min-height: @indent-lg + 2;
+}
+
+.message-item__spliter {
+  min-height: @indent-sm;
+}
+
+.message-item__bunn {
+  .btn-circle;
+  background: #337ab7;
+  margin: @indent-xs @indent-sm;
+  margin-right: 1px;
+}
+
+.message-item__remove {
+  .btn-circle;
+  margin: @indent-xs @indent-sm;
+  margin-left: 1px;
+}
+
+.message-item__delete {
+  padding: @indent-xs @indent-sm + 1;
+  display: inline-block;
+  font-size: @font-sm;
+    transition: color 0.2s ease;
+    -moz-transition: color 0.2s ease;
+    -o-transition: color 0.2s ease;
+    -webkit-transition: color 0.2s ease;
 }
 
 // ----------------------------------------

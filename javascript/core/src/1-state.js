@@ -2,6 +2,8 @@ var ls = storage;
 
 const store = new Vuex.Store({
     state: {
+        apiToken: '',
+        photoServer: '127.0.0.1:8888',
         count: 0,
         photoView: {
             thumb:  null,
@@ -22,26 +24,17 @@ const store = new Vuex.Store({
         }
     },
     actions: {
-        // LOAD_USER_DATA({ commit }) {
-        //     console.log('load');
-        //     store.commit('setUserData', lscache.get('user'));
-        //     axios.get('/users/10336.json').then((response) => {
-        //         //this.response(data.body);
-        //         store.commit('setUserData', response.data.user);
-        //         //console.log(response.data.user);
-        //     }).catch((response) => {
-        //         console.log('error user data');
-        //     });
-        // }
+        LOAD_API_TOKEN({ commit }) {
+            store.commit('setApiToken', { apiToken: get_cookie('jwt') });
+        }
     },
     mutations: {
-        // setUserData (state, data) {
-        //     if (data) {
-        //         Object.assign(state.user.data, data);
-        //         lscache.set('user', data, 23456);
-        //     }
-        //     //ls.set('auth', 2);
-        // },
+        setApiToken (state, data) {
+            if (data) {
+                Object.assign(state, data);
+            }
+            console.log(state)
+        },
         viewPhoto(state, data) {
             Object.assign(state.photoView, data);
         },
@@ -57,4 +50,4 @@ const store = new Vuex.Store({
     }
 });
 
-//store.dispatch('LOAD_USER_DATA');
+store.dispatch('LOAD_API_TOKEN');

@@ -69,6 +69,16 @@ module.exports = function (grunt) {
                     'images/dist/women-icon.png': 'images/src/women-icon.png',
                 },
             },
+            play_btn: {
+                options: {
+                    width:  64,
+                    height: 64,
+                    overwrite: true
+                },
+                files: {
+                    'images/dist/play.png': 'images/src/play.png',
+                },
+            },
         },
         // Наблюдение за изменениями в файлах исходниках
         watch: {
@@ -134,6 +144,6 @@ module.exports = function (grunt) {
     // Эти задания будут выполнятся сразу же когда вы в консоли напечатание grunt, и нажмете Enter
     grunt.registerTask('default', ['concat', 'babel', 'less', 'processhtml']);
     grunt.registerTask('w',       ['default', 'watch']);
-    grunt.registerTask('g',       ['newer:image_resize:resize']);
+    grunt.registerTask('g',       ['image_resize']);
 };
 

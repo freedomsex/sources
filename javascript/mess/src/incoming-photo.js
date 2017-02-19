@@ -14,7 +14,7 @@ var incoming_photo = new Vue({
         loadPhoto: function () {
 
             Vue.http.headers.common['Authorization'] = 'Bearer ' + this.jwt;
-            this.$http.get('http://'+api_photo+'/api/v1/users/'+tid+'/sends?hash='+hash).then(function (response) {
+            this.$http.get('http://'+api_photo+'/api/v1/users/'+uid+'/sends?tid='+tid+'&hash='+hash).then(function (response) {
                 console.log(response.body);
                 if (response.body.photos) {
                     this.photos = response.body.photos;

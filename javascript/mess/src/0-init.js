@@ -8,7 +8,6 @@ $( document ).ready(function()
     }
 
     cont_list.init();
-    mess_list.init();
 
     lock_user.init();
     confirm_block_dn.init();

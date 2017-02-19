@@ -31,6 +31,11 @@ var OptionDialog = Vue.extend({
                 self.close();
             }
         });
+    },
+    updated() {
+        if (this.show) {
+            $("html, body").animate({ scrollTop: 0 }, "slow");
+        }
     }
 });
 
