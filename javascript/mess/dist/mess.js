@@ -1574,7 +1574,7 @@ function post_mess( user,text ) {
    return false;
 }             */
 
-// -- Быстрые сообщения, шаблоны ---      
+// -- Быстрые сообщения, шаблоны ---
 var quick_mess = {
 
     tab: 'public',
@@ -1625,7 +1625,7 @@ var quick_mess = {
 
         $('#mess_shab_text_block').show('fade');
 
-        mess_list.hide_loader();
+        //mess_list.hide_loader();
     }
 
 };
