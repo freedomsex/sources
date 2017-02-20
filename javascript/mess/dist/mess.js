@@ -874,11 +874,11 @@ var RemoveConfirm = Vue.component('remove-confirm', {
 
 Date.prototype.getMonthChar = function () {
     var month = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
-    return month[this.getUTCMonth()];
+    return month[this.getMonth()];
 };
 
 Date.prototype.getDayMonth = function () {
-    var date = this.getUTCDay() + ' ' + this.getMonthChar();
+    var date = this.getDay() + ' ' + this.getMonthChar();
     return date;
 };
 
@@ -1005,7 +1005,7 @@ Vue.component('message-item', {
         },
         time: function time() {
             var date = new Date(this.item.date);
-            date = new Date(date);
+            //    date = new Date(date);
             var hour = date.getHours();
             hour = hour < 10 ? '0' + hour : hour;
             var minute = date.getMinutes();

@@ -84,11 +84,11 @@ const RemoveConfirm = Vue.component('remove-confirm', {
 
 Date.prototype.getMonthChar = function () {
     let month = ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
-    return month[this.getUTCMonth()];
+    return month[this.getMonth()];
 }
 
 Date.prototype.getDayMonth = function () {
-    let date = this.getUTCDay() +' '+ this.getMonthChar();
+    let date = this.getDay() +' '+ this.getMonthChar();
     return date;
 }
 
@@ -218,7 +218,7 @@ Vue.component('message-item', {
         },
         time() {
             let date = new Date(this.item.date);
-                date = new Date(date);
+            //    date = new Date(date);
             let hour = date.getHours();
                 hour = (hour < 10) ? '0'+ hour : hour;
             let minute = date.getMinutes();
