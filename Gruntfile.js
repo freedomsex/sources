@@ -80,6 +80,16 @@ module.exports = function (grunt) {
                 },
             },
         },
+        uglify: {
+            core: {
+                src: 'javascript/core/dist/core.js',
+                dest: 'javascript/core/dist/core.min.js'
+            },
+            mess: {
+                src: 'javascript/mess/dist/mess.js',
+                dest: 'javascript/mess/dist/mess.min.js'
+            }
+        },
         // Наблюдение за изменениями в файлах исходниках
         watch: {
             options: {
@@ -140,9 +150,10 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-image-resize');
     grunt.loadNpmTasks('grunt-processhtml');
     grunt.loadNpmTasks('grunt-babel');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
 
     // Эти задания будут выполнятся сразу же когда вы в консоли напечатание grunt, и нажмете Enter
-    grunt.registerTask('default', ['concat', 'babel', 'less', 'processhtml']);
+    grunt.registerTask('default', ['concat', 'babel', 'uglify', 'less', 'processhtml']);
     grunt.registerTask('w',       ['default', 'watch']);
     grunt.registerTask('g',       ['image_resize']);
 };

@@ -31,6 +31,8 @@ $(document).ready(function()
 
 
 
+moment.locale('ru');
+
 var ls = storage;
 
 const store = new Vuex.Store({

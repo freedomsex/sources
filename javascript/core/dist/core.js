@@ -30,6 +30,8 @@ $(document).ready(function () {
     visited.init();
 });
 
+moment.locale('ru');
+
 var ls = storage;
 
 var store = new Vuex.Store({

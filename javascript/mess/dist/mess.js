@@ -872,16 +872,6 @@ var RemoveConfirm = Vue.component('remove-confirm', {
     template: '#remove-confirm'
 });
 
-Date.prototype.getMonthChar = function () {
-    var month = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
-    return month[this.getMonth()];
-};
-
-Date.prototype.getDayMonth = function () {
-    var date = this.getDay() + ' ' + this.getMonthChar();
-    return date;
-};
-
 var fdate = null;
 var prev = null;
 
@@ -1004,25 +994,15 @@ Vue.component('message-item', {
             return uid == this.item.from ? 1 : 0;
         },
         time: function time() {
-            var date = new Date(this.item.date);
-            //    date = new Date(date);
-            var hour = date.getHours();
-            hour = hour < 10 ? '0' + hour : hour;
-            var minute = date.getMinutes();
-            minute = minute < 10 ? '0' + minute : minute;
-            return hour + ':' + minute;
-        },
-        yesterday: function yesterday() {
-            var date = new Date();
-            date.setDate(date.getDate() - 1);
-            return date;
+            return moment(this.item.date).format('HH:mm');
         },
         date: function date() {
+            var date = moment(this.item.date);
             var first_date = fdate;
-            fdate = new Date(this.item.date).getDayMonth();
-            var date = fdate == first_date ? '' : fdate;
-            var today = new Date().getDayMonth();
-            var yestd = this.yesterday.getDayMonth();
+            fdate = date.date() + ' ' + date.format('MMMM').substring(0, 3);
+            date = fdate == first_date ? '' : fdate;
+            var today = moment().date();
+            var yestd = moment().date(-1);
             date = date == today ? 'Сегодня' : date;
             date = date == yestd ? 'Вчера' : date;
             return date;
