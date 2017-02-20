@@ -1640,7 +1640,8 @@ var quick_photo = {
     ajax: {
 
         load: function load() {
-            $.get('/ajax/load_pic.php', quick_photo.ajax.success);
+            // TODO: запустить быстрые фото. ВЫКЛЮЧЕНО !!!
+            //$.get( '/ajax/load_pic.php',quick_photo.ajax.success);
         },
 
         success: function success(data) {
