@@ -2,9 +2,9 @@
 
 
 <div id="user-dialog" style="display: none;" v-show="!error" @admit="admit">
-  <div id="mess_loader" class="message_list_title_date" v-show="!error && !messages">
+  <div class="messages__loader" v-show="!error && !response">
     <span>
-      <img src="/ajax/mess_loader.gif"> Загружаем
+      <img src="/static/img/icon/mess_loader.gif" v-show="toSlow"> Загружаем
     </span>
   </div>
   <div class="messages">
@@ -35,7 +35,7 @@
         <div class="message-image__subtime">{{time}}</div>
       </div>
       <span v-else>
-        {{item.mess}}
+        <span v-html="item.mess"></span>
         <span class="message-item__subtime">{{time}}</span>
       </span>
 

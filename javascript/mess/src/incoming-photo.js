@@ -19,7 +19,7 @@ var incoming_photo = new Vue({
             };
             axios.get(`http://${this.server}/api/v1/users/${uid}/sends`,config).then((response) => {
                 this.photos = response.data.photos;
-                console.log(this.photos);
+                //console.log(this.photos);
             }).catch((error) => {
                 console.log(error);
             });

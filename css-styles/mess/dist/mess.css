@@ -173,6 +173,20 @@
   overflow: hidden;
   padding-top: 0px;
 }
+.messages__loader {
+  border-top: 1px dotted #999999;
+  height: 10px;
+  text-align: center;
+  margin-top: 8px;
+}
+.messages__loader span {
+  padding: 0px 5px;
+  background-color: #ffffff;
+  font-size: 11px;
+  margin: 0px auto 5px;
+  position: relative;
+  top: -8px;
+}
 .clear-fix {
   content: '';
   display: block;
@@ -199,6 +213,7 @@
   border-radius: 4px;
   color: #333333;
   float: left;
+  text-align: left;
   background: #D9E6F6;
   float: right;
 }
@@ -218,6 +233,7 @@
   border-radius: 4px;
   color: #333333;
   float: left;
+  text-align: left;
   background: white;
 }
 .message-item__received:after {

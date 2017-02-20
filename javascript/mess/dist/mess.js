@@ -683,7 +683,7 @@ var incoming_photo = new Vue({
             };
             axios.get('http://' + this.server + '/api/v1/users/' + uid + '/sends', config).then(function (response) {
                 _this.photos = response.data.photos;
-                console.log(_this.photos);
+                //console.log(this.photos);
             }).catch(function (error) {
                 console.log(error);
             });
@@ -826,11 +826,11 @@ var RemoveConfirm = Vue.component('remove-confirm', {
                 doit: {
                     caption: 'Наказывайте как следует',
                     text: '\u0417\u0430 \u0440\u0435\u0437\u043A\u0438\u0435 \u0441\u043B\u043E\u0432\u0430, \u0437\u0430 \u043E\u0441\u043A\u043E\u0440\u0431\u043B\u0435\u043D\u0438\u044F \u0438\u043B\u0438 \u0445\u0430\u043C\u0441\u0442\u0432\u043E,\n                    \u0437\u0430 \u0444\u043E\u0442\u043E\u0433\u0440\u0430\u0444\u0438\u0438 \u043D\u0435 \u0432 \u0442\u0435\u043C\u0443 \u0438\u043B\u0438 \u0431\u0435\u0441\u0441\u043C\u044B\u0441\u043B\u0435\u043D\u043D\u044B\u0435 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u044F, \u043D\u0430\u043A\u0430\u0437\u044B\u0432\u0430\u0439\u0442\u0435 \u0432\u0441\u0435\u0445, \u043A\u043E\u0433\u043E\n                    \u0441\u0447\u0438\u0442\u0430\u0435\u0442\u0435 \u043D\u0443\u0436\u043D\u044B\u043C. \u041D\u0430\u043A\u0430\u0437\u0430\u043D\u0438\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u0435\u0442 \u0441\u0440\u0430\u0437\u0443.',
-                    action: 'Наказать и удалить'
+                    action: 'Удалить и наказать'
                 },
                 must: {
                     caption: 'Может стоит наказать?',
-                    text: '\u041D\u0430\u0436\u043C\u0438\u0442\u0435 "\u041D\u0430\u043A\u0430\u0437\u0430\u0442\u044C \u0438 \u0443\u0434\u0430\u043B\u0438\u0442\u044C" \u0443 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u044F, \u043A\u043E\u0442\u043E\u0440\u043E\u0435 \u0432\u044B\u0437\u0432\u0430\u043B\u043E \u043D\u0435\u0433\u0430\u0442\u0438\u0432\u043D\u044B\u0435 \u044D\u043C\u043E\u0446\u0438\u0438.\n                    \u0414\u0435\u0439\u0441\u0442\u0432\u0443\u0435\u0442 \u0441\u0440\u0430\u0437\u0443 \u0436\u0435, \u0438 \u044F\u0432\u043B\u044F\u0435\u0442\u0441\u044F \u0441\u043F\u043E\u0441\u043E\u0431\u043E\u043C \u0441\u043E\u043E\u0431\u0449\u0438\u0442\u044C \u043D\u0430\u043C \u043E \u043D\u0430\u0440\u0443\u0448\u0435\u043D\u0438\u044F\u0445 \u0441\u043E \u0441\u0442\u043E\u0440\u043E\u043D\u044B \u0441\u043E\u0431\u0435\u0441\u0435\u0434\u043D\u0438\u043A\u0430.\n                    \u041C\u044B \u043D\u0438\u043A\u043E\u0433\u0434\u0430 \u043D\u0435 \u0443\u0437\u043D\u0430\u0435\u043C \u043E \u043D\u0430\u0440\u0443\u0448\u0435\u043D\u0438\u0438, \u0435\u0441\u043B\u0438 \u0443\u0434\u0430\u043B\u0438\u0442\u044C \u0435\u0433\u043E \u0431\u0435\u0437 \u043D\u0430\u043A\u0430\u0437\u0430\u043D\u0438\u044F.',
+                    text: '\u041D\u0430\u0436\u043C\u0438\u0442\u0435 "\u0414\u0438\u0437\u043B\u0430\u0439\u043A" \u0443 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u044F, \u043A\u043E\u0442\u043E\u0440\u043E\u0435 \u0432\u044B\u0437\u0432\u0430\u043B\u043E \u043D\u0435\u0433\u0430\u0442\u0438\u0432\u043D\u044B\u0435 \u044D\u043C\u043E\u0446\u0438\u0438.\n                    \u041D\u0430\u043A\u0430\u0437\u0430\u043D\u0438\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u0435\u0442 \u0441\u0440\u0430\u0437\u0443 \u0436\u0435. \u041C\u044B \u043D\u0438\u043A\u043E\u0433\u0434\u0430 \u043D\u0435 \u0443\u0437\u043D\u0430\u0435\u043C \u043E \u043D\u0430\u0440\u0443\u0448\u0435\u043D\u0438\u044F\u0445\n                    \u0441\u043E\u0431\u0435\u0441\u0435\u0434\u043D\u0438\u043A\u0430, \u0435\u0441\u043B\u0438 \u0443\u0434\u0430\u043B\u0438\u0442\u044C \u0431\u0435\u0437 \u043D\u0430\u043A\u0430\u0437\u0430\u043D\u0438\u044F.',
                     action: 'Удалить и забыть'
                 },
                 some: {
@@ -1057,11 +1057,13 @@ var MessList = new Vue({
     store: store,
     data: {
         messages: [],
+        response: null,
         error: 0,
         attention: false,
         uid: null,
         tid: null,
-        date: null
+        date: null,
+        toSlow: false
     },
     mounted: function mounted() {
         this.uid = uid;
@@ -1073,16 +1075,33 @@ var MessList = new Vue({
             var _this5 = this;
 
             //console.log('load MessList data');
+            setTimeout(function () {
+                return _this5.toSlow = true;
+            }, 7000);
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
                 params: { id: tid, hash: hash }
             };
             axios.get('/ajax/messages_load.php', config).then(function (response) {
-                _this5.messages = response.data.messages;
+                _this5.onLoad(response);
             }).catch(function (error) {
                 _this5.error = 10;
                 console.log(error);
             });
+        },
+        onLoad: function onLoad(response) {
+            this.messages = response.data.messages;
+            console.log(200);
+            this.response = 200;
+            this.toSlow = false;
+            if (!this.messages) {
+                this.noMessages();
+            }
+        },
+        noMessages: function noMessages() {
+            // TODO: Заменить на компоненты, страрые зависимости
+            quick_mess.ajax_load();
+            notice_post.show();
         },
         setDate: function setDate(date) {
             //this.date = new Date(this.item.date).getDayMonth();

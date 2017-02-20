@@ -21,6 +21,22 @@
     padding-top: 0px;
 }
 
+.messages__loader {
+  border-top: 1px dotted @gray-dark;
+  height: 10px;
+  text-align: center;
+  margin-top: 8px;
+  span {
+    padding: 0px 5px;
+    background-color: @white;
+    font-size: 11px;
+    margin: 0px auto 5px;
+    position: relative;
+    top: -8px;
+  }
+}
+
+
 .message-balloon() {
     display: inline-block;
     overflow: hidden;
@@ -32,6 +48,7 @@
     border-radius: 4px;
     color: @dark;
     float: left;
+    text-align: left;
 }
 
 .clear-fix {

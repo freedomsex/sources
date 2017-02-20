@@ -780,7 +780,7 @@ var incoming_photo = new Vue({
             };
             axios.get(`http://${this.server}/api/v1/users/${uid}/sends`,config).then((response) => {
                 this.photos = response.data.photos;
-                console.log(this.photos);
+                //console.log(this.photos);
             }).catch((error) => {
                 console.log(error);
             });
@@ -946,13 +946,13 @@ const RemoveConfirm = Vue.component('remove-confirm', {
                     text: `За резкие слова, за оскорбления или хамство,
                     за фотографии не в тему или бессмысленные сообщения, наказывайте всех, кого
                     считаете нужным. Наказание действует сразу.`,
-                    action: 'Наказать и удалить'
+                    action: 'Удалить и наказать'
                 },
                 must: {
                     caption: 'Может стоит наказать?',
-                    text: `Нажмите "Наказать и удалить" у сообщения, которое вызвало негативные эмоции.
-                    Действует сразу же, и является способом сообщить нам о нарушениях со стороны собеседника.
-                    Мы никогда не узнаем о нарушении, если удалить его без наказания.`,
+                    text: `Нажмите "Дизлайк" у сообщения, которое вызвало негативные эмоции.
+                    Наказание действует сразу же. Мы никогда не узнаем о нарушениях
+                    собеседника, если удалить без наказания.`,
                     action: 'Удалить и забыть'
                 },
                 some: {
@@ -1186,11 +1186,13 @@ var MessList = new Vue({
     store,
     data: {
         messages: [],
+        response: null,
         error: 0,
         attention: false,
         uid: null,
         tid: null,
-        date: null
+        date: null,
+        toSlow: false,
     },
     mounted: function () {
         this.uid = uid;
@@ -1200,16 +1202,31 @@ var MessList = new Vue({
     methods: {
         load(tid) {
             //console.log('load MessList data');
+            setTimeout(() => this.toSlow = true, 7000);
             let config = {
                 headers: {'Authorization': 'Bearer ' + this.$store.state.apiToken},
                 params: {id: tid, hash: hash}
             };
             axios.get('/ajax/messages_load.php', config).then((response) => {
-                this.messages = response.data.messages;
+                this.onLoad(response);
             }).catch((error) => {
                 this.error = 10;
                 console.log(error);
             });
+        },
+        onLoad(response) {
+            this.messages = response.data.messages;
+            console.log(200);
+            this.response = 200;
+            this.toSlow = false;
+            if (!this.messages) {
+                this.noMessages();
+            }
+        },
+        noMessages() {
+            // TODO: Заменить на компоненты, страрые зависимости
+            quick_mess.ajax_load();
+            notice_post.show();
         },
         setDate(date) {
             //this.date = new Date(this.item.date).getDayMonth();
