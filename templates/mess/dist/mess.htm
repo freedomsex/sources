@@ -160,7 +160,7 @@
 </script>
 
 <script type="text/x-template" id="photo-view">
-  <div class="photo-view" :style="{ backgroundImage: `url(${thumb})`, minHeight: height + 'px'}">
+  <div class="photo-view" :style="{ backgroundImage: 'url('+thumb+')', minHeight: height + 'px'}">
     <img :src="photo" :style="{ maxWidth: width +'px' }">
   </div>
 </script>
@@ -337,7 +337,7 @@
   <div class="message-item__spliter" v-show="!previous"></div>
   <div :class="[sent ? 'message-item__sent' : 'message-item__received']">
     <div class="message-item__balloon" @mouseover="showOption = true" @click="fix">
-      <div v-if="image" class="message-image" :style="{ backgroundImage: `url(${image})` }">
+      <div v-if="image" class="message-image" :style="{ backgroundImage: 'url('+image+')' }">
         <div class="message-image__play" @click="play">
           <img src="/static/img/icon/play.png">
         </div>

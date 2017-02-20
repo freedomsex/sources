@@ -14,7 +14,7 @@
 </script>
 
 <script type="text/x-template" id="photo-view">
-  <div class="photo-view" :style="{ backgroundImage: `url(${thumb})`, minHeight: height + 'px'}">
+  <div class="photo-view" :style="{ backgroundImage: 'url('+thumb+')', minHeight: height + 'px'}">
     <img :src="photo" :style="{ maxWidth: width +'px' }">
   </div>
 </script>
