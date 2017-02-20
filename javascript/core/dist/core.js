@@ -66,18 +66,18 @@ var store = new Vuex.Store({
     mutations: {
         setApiToken: function setApiToken(state, data) {
             if (data) {
-                Object.assign(state, data);
+                _.extend(state, data);
             }
             console.log(state);
         },
         viewPhoto: function viewPhoto(state, data) {
-            Object.assign(state.photoView, data);
+            _.extend(state.photoView, data);
         },
         viewUpload: function viewUpload(state, data) {
             state.uploadView.show = data === true;
         },
         sendPhoto: function sendPhoto(state, data) {
-            Object.assign(state.formMess.sendPhoto, data);
+            _.extend(state.formMess.sendPhoto, data);
         }
     },
     getters: {}
