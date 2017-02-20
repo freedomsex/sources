@@ -1,7 +1,4 @@
 
-    var api_photo = '192.168.122.252';
-    var api_photo = '127.0.0.1:8888';
-
 $(document).ready(function()
 {
 

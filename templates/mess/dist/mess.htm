@@ -310,7 +310,7 @@
 
 
 
-<div id="user-dialog" style="display: none;" v-show="!error">
+<div id="user-dialog" style="display: none;" v-show="!error" @admit="admit">
   <div id="mess_loader" class="message_list_title_date" v-show="!error && !messages">
     <span>
       <img src="/ajax/mess_loader.gif"> Загружаем
@@ -318,10 +318,14 @@
   </div>
   <div class="messages">
     <message-item v-for="(item, index) in messages"
-     :item="item"
-     :index="index"
-     :count="messages.length"
-     :uid="uid"></message-item>
+      :item="item"
+      :index="index"
+      :count="messages.length"
+      :alert="attention"
+      :uid="uid"
+      @admit="admit"
+      @remove="remove"
+    ></message-item>
   </div>
 </div>
 
@@ -333,23 +337,34 @@
   <div class="message-item__spliter" v-show="!previous"></div>
   <div :class="[sent ? 'message-item__sent' : 'message-item__received']">
     <div class="message-item__balloon" @mouseover="showOption = true" @click="fix">
-      <div v-if="image" class="message-image" :style="{ backgroundImage: `url(${image})` }" @click="play">
-        <div class="message-image__play">
+      <div v-if="image" class="message-image" :style="{ backgroundImage: `url(${image})` }">
+        <div class="message-image__play" @click="play">
           <img src="/static/img/icon/play.png">
         </div>
+        <div class="message-image__subtime">{{time}}</div>
       </div>
-      <span v-else>{{item.mess}}</span>
-
+      <span v-else>
+        {{item.mess}}
         <span class="message-item__subtime">{{time}}</span>
+      </span>
+
+
     </div>
-    <span class="message-item__bunn" v-show="!sent && option" @click="showDialog = sent ? 'some' : 'must'">
+    <span :class="attention ? 'message-item__bunn-alert' : 'message-item__bunn'"
+      v-show="!sent && option" @click="showDialog = sent ? 'some' : 'doit'">
       <span aria-hidden="true" class="glyphicon glyphicon-thumbs-down"></span>
     </span>
     <span class="message-item__remove" v-show="option" @click="showDialog = sent ? 'some' : 'must'">
       <span aria-hidden="true" class="glyphicon glyphicon-remove"></span>
     </span>
   </div>
-  <remove-confirm :show="showDialog" :data="item" @close="cancel"></remove-confirm>
+  <remove-confirm
+    :show="showDialog"
+    :data="item"
+    @bun="bun"
+    @close="cancel"
+    @remove="remove"
+  ></remove-confirm>
 </div>
 </script>
 
@@ -370,7 +385,8 @@
       {{text}}
     </div>
     <div class="modal-dialog__footer">
-      <button class="btn btn-primary" @click="save()">{{action}}</button>
+      <button class="btn btn-primary" @click="bun()" v-if="show == 'doit'">{{action}}</button>
+      <button class="btn btn-primary" @click="remove()" v-else>{{action}}</button>
       <button class="btn btn-default" @click="close()">Отмена</button>
     </div>
   </modal-dialog>

@@ -2,27 +2,27 @@
 
 var incoming_photo = new Vue({
     el: '#incoming-photo',
+    store,
     data: {
         photos: [],
         user:   0,
-        jwt:    '',
+        server: null,
     },
-    mounted: function () {
-        this.jwt = get_cookie('jwt');
+    created: function () {
+        this.server = this.$store.state.photoServer;
     },
     methods: {
-        loadPhoto: function () {
-
-            Vue.http.headers.common['Authorization'] = 'Bearer ' + this.jwt;
-            this.$http.get('http://'+api_photo+'/api/v1/users/'+uid+'/sends?tid='+tid+'&hash='+hash).then(function (response) {
-                console.log(response.body);
-                if (response.body.photos) {
-                    this.photos = response.body.photos;
-                }
+        loadPhoto() {
+            let config = {
+                headers: {'Authorization': 'Bearer ' + this.$store.state.apiToken},
+                params: {tid, hash}
+            };
+            axios.get(`http://${this.server}/api/v1/users/${uid}/sends`,config).then((response) => {
+                this.photos = response.data.photos;
+                console.log(this.photos);
+            }).catch((error) => {
+                console.log(error);
             });
-            if (this.user) {
-
-            }
         },
         show: function (index) {
             let photo = this.photos[index];

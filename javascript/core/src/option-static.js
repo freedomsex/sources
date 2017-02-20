@@ -27,7 +27,7 @@ var OptionDialog = Vue.extend({
         // Close the modal when the `escape` key is pressed.
         var self = this;
         document.addEventListener('keydown', function() {
-            if (self.config.show && event.keyCode === 27) {
+            if (self.show && event.keyCode === 27) {
                 self.close();
             }
         });

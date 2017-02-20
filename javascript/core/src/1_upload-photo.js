@@ -6,6 +6,7 @@ var UploadPhoto = Vue.extend({
     data() {
         return {
             photos: [],
+            server: null,
         }
         // file: {
         //     data: null,
@@ -13,18 +14,21 @@ var UploadPhoto = Vue.extend({
         //     size: 0
         // }
     },
+    created: function () {
+        this.server = this.$store.state.photoServer;
+    },
     methods: {
         loadPhoto() {
-            Vue.http.headers.common['Authorization'] = 'Bearer ' + get_cookie('jwt');
-            this.$http.get('http://'+api_photo+'/api/v1/users/'+uid+'/photos?hash='+hash).then(function (response) {
-                console.log(response.body);
-                if (response.body.photos) {
-                    this.photos = response.body.photos;
-                }
+            let config = {
+                headers: {'Authorization': 'Bearer ' + this.$store.state.apiToken},
+                params: {hash}
+            };
+            axios.get(`http://${this.server}/api/v1/users/${uid}/photos`, config).then((response) => {
+                this.photos = response.data.photos;
+                console.log(this.photos);
+            }).catch((error) => {
+                console.log(error);
             });
-            if (this.user) {
-
-            }
         },
         upload(e) {
             $('#fileupload').click();
@@ -58,7 +62,7 @@ var UploadPhoto = Vue.extend({
         $('#fileupload').fileupload({
             dataType: 'json',
             add(e, data) {
-                data.url = 'http://'+api_photo+'/api/v1/users/'+uid+'/photos?jwt=' + get_cookie('jwt');
+                data.url = `http://${self.server}/api/v1/users/${uid}/photos?jwt=` + self.$store.state.apiToken;
                 data.submit();
             },
             done(e, data) {

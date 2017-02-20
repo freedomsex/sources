@@ -49,7 +49,7 @@ Vue.component('abuse-form', {
         };
     },
     created: function created() {
-        console.log("abuse_form Created");
+        //console.log("abuse_form Created");
     },
     methods: {
         choiceText: function choiceText(event) {
@@ -664,26 +664,31 @@ var form_mess = {
 
 var incoming_photo = new Vue({
     el: '#incoming-photo',
+    store: store,
     data: {
         photos: [],
         user: 0,
-        jwt: ''
+        server: null
     },
-    mounted: function mounted() {
-        this.jwt = get_cookie('jwt');
+    created: function created() {
+        this.server = this.$store.state.photoServer;
     },
     methods: {
         loadPhoto: function loadPhoto() {
+            var _this = this;
 
-            Vue.http.headers.common['Authorization'] = 'Bearer ' + this.jwt;
-            this.$http.get('http://' + api_photo + '/api/v1/users/' + uid + '/sends?tid=' + tid + '&hash=' + hash).then(function (response) {
-                console.log(response.body);
-                if (response.body.photos) {
-                    this.photos = response.body.photos;
-                }
+            var config = {
+                headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
+                params: { tid: tid, hash: hash }
+            };
+            axios.get('http://' + this.server + '/api/v1/users/' + uid + '/sends', config).then(function (response) {
+                _this.photos = response.data.photos;
+                console.log(_this.photos);
+            }).catch(function (error) {
+                console.log(error);
             });
-            if (this.user) {}
         },
+
         show: function show(index) {
             var photo = this.photos[index];
             var links = photo._links;
@@ -706,7 +711,7 @@ $(document).ready(function () {
     incoming_photo.loadPhoto();
 });
 
-// -- Блокировка пользователя ---  
+// -- Блокировка пользователя ---
 var lock_user = {
 
     init: function init() {
@@ -723,7 +728,7 @@ var lock_user = {
             lock_user.post_lock();
         });
         lock_user.red_link(0);
-        mess_list.option.bunn_all(0);
+        MessList.attention = false;
         lock_user.link_text('Заблокировать');
     },
 
@@ -733,7 +738,7 @@ var lock_user = {
             lock_user.post_unlock();
         });
         lock_user.red_link(1);
-        mess_list.option.bunn_all(1);
+        MessList.attention = true;
         lock_user.link_text('Разблокировать');
     },
 
@@ -819,7 +824,7 @@ var RemoveConfirm = Vue.component('remove-confirm', {
         return {
             content: {
                 doit: {
-                    caption: 'Накажите как следует',
+                    caption: 'Наказывайте как следует',
                     text: '\u0417\u0430 \u0440\u0435\u0437\u043A\u0438\u0435 \u0441\u043B\u043E\u0432\u0430, \u0437\u0430 \u043E\u0441\u043A\u043E\u0440\u0431\u043B\u0435\u043D\u0438\u044F \u0438\u043B\u0438 \u0445\u0430\u043C\u0441\u0442\u0432\u043E,\n                    \u0437\u0430 \u0444\u043E\u0442\u043E\u0433\u0440\u0430\u0444\u0438\u0438 \u043D\u0435 \u0432 \u0442\u0435\u043C\u0443 \u0438\u043B\u0438 \u0431\u0435\u0441\u0441\u043C\u044B\u0441\u043B\u0435\u043D\u043D\u044B\u0435 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u044F, \u043D\u0430\u043A\u0430\u0437\u044B\u0432\u0430\u0439\u0442\u0435 \u0432\u0441\u0435\u0445, \u043A\u043E\u0433\u043E\n                    \u0441\u0447\u0438\u0442\u0430\u0435\u0442\u0435 \u043D\u0443\u0436\u043D\u044B\u043C. \u041D\u0430\u043A\u0430\u0437\u0430\u043D\u0438\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u0435\u0442 \u0441\u0440\u0430\u0437\u0443.',
                     action: 'Наказать и удалить'
                 },
@@ -829,7 +834,7 @@ var RemoveConfirm = Vue.component('remove-confirm', {
                     action: 'Удалить и забыть'
                 },
                 some: {
-                    caption: 'Удалить везде и навсегда',
+                    caption: 'Удалить навсегда',
                     text: '\u0412\u0430\u0448\u0435 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435 \u0431\u0443\u0434\u0435\u0442 \u0443\u0434\u0430\u043B\u0435\u043D\u043E \u043E\u0442\u043E\u0432\u0441\u044E\u0434\u0443, \u0431\u0435\u0437 \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0441\u0442\u0438 \u0432\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C. \u0421\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435\n                    \u043F\u0440\u043E\u043F\u0430\u0434\u0435\u0442 \u043A\u0430\u043A \u0438\u0437 \u0432\u0430\u0448\u0435\u0439 \u0438\u0441\u0442\u043E\u0440\u0438\u0438 \u043F\u0435\u0440\u0435\u043F\u0438\u0441\u043A\u0438, \u0442\u0430\u043A \u0438 \u0438\u0437 \u043F\u0435\u0440\u0435\u043F\u0438\u0441\u043A\u0438 \u0432\u0430\u0448\u0435\u0433\u043E \u0441\u043E\u0431\u0435\u0441\u0435\u0434\u043D\u0438\u043A\u0430.',
                     action: 'Удалить навсегда'
                 }
@@ -855,8 +860,12 @@ var RemoveConfirm = Vue.component('remove-confirm', {
         close: function close() {
             this.$emit('close');
         },
-        save: function save() {
-            // TODO: implement the form logic.
+        bun: function bun() {
+            this.$emit('bun');
+            this.close();
+        },
+        remove: function remove() {
+            this.$emit('remove');
             this.close();
         }
     },
@@ -877,7 +886,7 @@ var fdate = null;
 var prev = null;
 
 Vue.component('message-item', {
-    props: ['item', 'index', 'count', 'uid', 'first_date'],
+    props: ['item', 'index', 'count', 'alert', 'uid', 'first_date'],
     template: '#messages-item',
     data: function data() {
         return {
@@ -892,9 +901,15 @@ Vue.component('message-item', {
         fix: function fix() {
             this.showOption = true;
             this.alertOption = false;
-            this.fixOption = !this.fixOption;
+            if (!this.alert) {
+                this.fixOption = this.alert ? false : !this.fixOption;
+            } else {
+                this.$emit('admit');
+            }
         },
         bun: function bun() {
+            var _this2 = this;
+
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken }
             };
@@ -902,8 +917,8 @@ Vue.component('message-item', {
                 id: this.item.id,
                 tid: this.item.from
             };
-            axios.post('/mess/bun5/', data, config).then(function (response) {
-                // if OK
+            axios.post('/mess/bun/', data, config).then(function (response) {
+                _this2.$emit('remove', _this2.index);
             }).catch(function (error) {
                 console.log('error');
             });
@@ -912,16 +927,33 @@ Vue.component('message-item', {
             this.showDialog = false;
             console.log('cancel');
         },
+        remove: function remove() {
+            var _this3 = this;
+
+            var config = {
+                headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken }
+            };
+            var data = {
+                id: this.item.id
+            };
+            axios.post('/mess/delete/', data, config).then(function (response) {
+                _this3.$emit('remove', _this3.index);
+            }).catch(function (error) {
+                console.log(error);
+            });
+            console.log('remove');
+        },
         play: function play() {
-            var _this = this;
+            var _this4 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
                 params: { tid: tid }
             };
-            var url = 'http://' + api_photo + '/api/v1/users/' + uid + '/sends/' + this.alias + '.jpg';
+            var server = this.$store.state.photoServer;
+            var url = 'http://' + server + '/api/v1/users/' + uid + '/sends/' + this.alias + '.jpg';
             axios.get(url, config).then(function (response) {
-                _this.photo(response.data.photo);
+                _this4.photo(response.data.photo);
             }).catch(function (error) {
                 console.log('error');
             });
@@ -939,6 +971,13 @@ Vue.component('message-item', {
                 };
                 store.commit('viewPhoto', data);
             }
+        },
+        pathName: function pathName(name) {
+            if (!name || name.length < 10) {
+                return null;
+            }
+            var path = [name.substr(0, 2), name.substr(2, 2), name.substr(4, 3)];
+            return path.join('/') + '/' + name;
         }
     },
     mounted: function mounted() {
@@ -947,9 +986,18 @@ Vue.component('message-item', {
             this.alertOption = true;
         }
     },
+    beforeUpdate: function beforeUpdate() {
+        //this.attention();
+    },
 
     computed: {
+        attention: function attention() {
+            return this.alert || this.alertOption ? 1 : 0;
+        },
         option: function option() {
+            if (!this.index && this.alert) {
+                return true;
+            }
             return this.showOption || this.fixOption ? 1 : 0;
         },
         sent: function sent() {
@@ -993,7 +1041,7 @@ Vue.component('message-item', {
         },
         image: function image() {
             var server = this.$store.state.photoServer;
-            var image = this.alias;
+            var image = this.pathName(this.alias);
             return image ? 'http://' + server + '/res/photo/preview/' + image + '.png' : false;
         },
         previous: function previous() {
@@ -1010,6 +1058,7 @@ var MessList = new Vue({
     data: {
         messages: [],
         error: 0,
+        attention: false,
         uid: null,
         tid: null,
         date: null
@@ -1021,249 +1070,298 @@ var MessList = new Vue({
     },
     methods: {
         load: function load(tid) {
-            var _this2 = this;
+            var _this5 = this;
 
-            console.log('load MessList data');
+            //console.log('load MessList data');
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
                 params: { id: tid, hash: hash }
             };
             axios.get('/ajax/messages_load.php', config).then(function (response) {
-                _this2.messages = response.data.messages;
+                _this5.messages = response.data.messages;
             }).catch(function (error) {
-                _this2.error = 10;
-                console.log('error');
+                _this5.error = 10;
+                console.log(error);
             });
         },
         setDate: function setDate(date) {
             //this.date = new Date(this.item.date).getDayMonth();
+        },
+        remove: function remove(index) {
+            console.log('remove(' + index + ')');
+            this.messages.splice(index, 1);
+        },
+        admit: function admit() {
+            console.log('itOk false');
+            this.attention = false;
         }
     },
     computed: {}
 });
 
-// -- Список сообщений ---
-var mess_list = {
+// // -- Список сообщений ---
+// var mess_list = {
 
-    mess_is_load: 0,
+//     mess_is_load: 0,
 
-    mail_pages: 0,
-    view_confirm: 0,
 
-    on_load: function on_load(data) {
-        mess_list.view_confirm = 0;
-        mess_list.mess_is_load = 1;
-        mess_list.mail_pages += 15;
+//     mail_pages: 0,
+//     view_confirm: 0,
 
-        //if( reload )
-        //   mess_list.mail_pages = 0;
 
-        mess_list.hide_loader();
+//     on_load: function (data)
+//     {
+//         mess_list.view_confirm = 0;
+//         mess_list.mess_is_load = 1;
+//         mess_list.mail_pages  += 15;
 
-        if (1) {
-            //if( reload )
-            //    $('#mail_messages_block').empty();
+//         //if( reload )
+//         //   mess_list.mail_pages = 0;
 
-            lock_user.show_link();
-            $('#mail_messages_block').append(data);
+//         mess_list.hide_loader();
 
-            mess_list.list_init();
+//         if (1)
+//         {
+//             //if( reload )
+//             //    $('#mail_messages_block').empty();
 
-            mess_list.option.pages_show();
+//             lock_user.show_link();
+//             $('#mail_messages_block').append( data );
 
-            $('#mail_messages_block').show('blind');
+//             mess_list.list_init();
 
-            var first_mess = $('.message_list_save:first').data('number');
-            var mess_id = $(this).data('number');
+//             mess_list.option.pages_show();
 
-            $('.bunned_mess').on('click', function () {
-                mess_list.action.bun_mess($(this).data('number'));
-            });
-            $('.remove_mess').on('click', function () {
-                mess_list.action.remove_mess($(this).data('number'));
-            });
-            $('.img_reload').on('click', function () {
-                mess_list.action.image_reload($(this).data('number'));
-            });
+//             $('#mail_messages_block').show('blind');
 
-            return 0;
-        }
+//             var first_mess =  $('.message_list_save:first').data('number');
+//             var mess_id = $(this).data('number');
 
-        if (!data) {
-            // alert ( $('.message_list_block').length );
-            if (!$('.message_list_block').length) {
-                quick_mess.ajax_load();
-                notice_post.show();
-            }
-            $('#mail_pages_next').hide('blind');
-            return 0;
-        }
+//             $('.bunned_mess').on('click',function() { mess_list.action.bun_mess($(this).data('number')); });
+//             $('.remove_mess').on('click',function (){ mess_list.action.remove_mess($(this).data('number')); });
+//             $('.img_reload').on('click',function () { mess_list.action.image_reload($(this).data('number')); });
 
-        if (data.indexOf('error') > 0) {
-            var mess = JSON.parse(data);
-            if (mess.error == 'hold') {
-                mess_list.action.show_bad_alert(mess.text);
-                return 0;
-            }
-        }
-    },
+//             return 0;
+//         }
 
-    on_error: function on_error() {
-        setTimeout(function () {
-            mess_list.ajax_load(tid);
-        }, 7000);
-        mess_list.show_loader(1); //////////////////////////////////
-    },
+//         if( !data )
+//         {                          // alert ( $('.message_list_block').length );
+//             if (!$('.message_list_block').length)
+//             {
+//                 quick_mess.ajax_load();
+//                 notice_post.show();
+//             }
+//             $('#mail_pages_next').hide('blind');
+//             return 0;
+//         }
 
-    show_loader: function show_loader(img) {
-        $('#mess_loader').show('blind');
-        if (img) $('#mess_loader img').show('fade');
-    },
+//         if( data.indexOf('error') > 0 )
+//         {
+//             var mess = JSON.parse( data );
+//             if( mess.error == 'hold' )
+//             {
+//                 mess_list.action.show_bad_alert( mess.text );
+//                 return 0;
+//             }
+//         }
 
-    hide_loader: function hide_loader() {
-        $('#mess_loader').hide();
-    },
+//     } ,
 
-    action: {
+//     on_error: function ()
+//     {
+//         setTimeout( function (){ mess_list.ajax_load(tid); },7000 );
+//         mess_list.show_loader(1);                              //////////////////////////////////
+//     } ,
 
-        badshow: function badshow() {
-            // alert(1);
-            mess_list.view_confirm = 1;
-            mess_list.mail_pages = 0;
 
-            mess_list.ajax_load(tid);
+//     show_loader: function (img)
+//     {
+//        $('#mess_loader').show('blind');
+//        if (img)
+//            $('#mess_loader img').show('fade');
+//     } ,
 
-            mess_list.show_loader(1);
-            mess_list.action.badalert_hide();
-        },
+//     hide_loader: function ()
+//     {
+//        $('#mess_loader').hide();
+//     } ,
 
-        show_bad_alert: function show_bad_alert(text) {
-            mess_list.hide_loader();
-            $('#mail_bad_text_alert input').on('click', mess_list.action.badshow);
-            $('#mail_bad_text_alert .link_underline').hide(); //on('click',function(){cont_list.action.delete_user(tid);});
-            $('#mail_bad_text_alert span.text').text(text);
-            $('#mail_bad_text_alert').show('fade');
-        },
+//     action: {
 
-        image_reload: function image_reload(id) {
-            var url = $('#img_' + id).get(0).src.replace("/protect/", "/origin/");
-            $('#img_' + id).get(0).src = url;
-        },
+//         badshow: function ()
+//         {                             // alert(1);
+//             mess_list.view_confirm = 1;
+//             mess_list.mail_pages = 0;
 
-        ajax_recove: function ajax_recove(mess_id) {
-            $.post("/mess/recover/", { tid: tid, id: mess_id });
-        },
+//             mess_list.ajax_load(tid);
 
-        ajax_remove: function ajax_remove(mess_id) {
-            $.post("/mess/delete/", { tid: tid, id: mess_id });
-        },
+//             mess_list.show_loader(1);
+//             mess_list.action.badalert_hide();
+//         } ,
 
-        ajax_bun: function ajax_bun(mess_id) {
-            $.post("/mess/bun/", { tid: tid, id: mess_id });
-        },
 
-        badalert_hide: function badalert_hide() {
-            $('#mail_bad_text_alert').hide('blind');
-        },
+//         show_bad_alert: function (text)
+//         {
+//             mess_list.hide_loader();
+//             $('#mail_bad_text_alert input').on('click',mess_list.action.badshow);
+//             $('#mail_bad_text_alert .link_underline').hide(); //on('click',function(){cont_list.action.delete_user(tid);});
+//             $('#mail_bad_text_alert span.text').text( text );
+//             $('#mail_bad_text_alert').show('fade');
+//         } ,
 
-        mess_hide: function mess_hide(mess_id) {
-            $('#message_block_' + mess_id).hide('blind');
-        },
 
-        mess_show: function mess_show(mess_id) {
-            $('#message_block_' + mess_id).show('blind');
-        },
+//         image_reload: function (id)
+//         {
+//             var url = $( '#img_'+ id ).get(0).src.replace("/protect/","/origin/") ;
+//             $( '#img_'+ id ).get(0).src = url ;
+//         } ,
 
-        remove_mess: function remove_mess(mess_id) {
-            mess_list.action.ajax_remove(mess_id);
-            mess_list.action.removed_show(mess_id);
-            mess_list.action.mess_hide(mess_id);
-        },
+//         ajax_recove: function (mess_id)
+//         {
+//             $.post("/mess/recover/", { tid: tid, id: mess_id });
+//         } ,
 
-        bun_mess: function bun_mess(mess_id) {
-            mess_list.action.ajax_bun(mess_id);
-            mess_list.action.removed_show(mess_id);
-            mess_list.action.mess_hide(mess_id);
-            abuse_list.showButton();
-        },
+//         ajax_remove: function (mess_id)
+//         {
+//             $.post("/mess/delete/", { tid: tid, id: mess_id });
+//         } ,
 
-        recove_mess: function recove_mess(mess_id) {
-            mess_list.action.ajax_recove(mess_id);
-            mess_list.action.removed_hide(mess_id);
-            mess_list.action.mess_show(mess_id);
-        },
+//         ajax_bun: function (mess_id)
+//         {
+//             $.post("/mess/bun/", { tid: tid, id: mess_id } );
+//         } ,
 
-        removed_hide: function removed_hide(mess_id) {
-            $('#remove_message_' + mess_id).hide('blind');
-        },
+//         badalert_hide: function ()
+//         {
+//             $('#mail_bad_text_alert').hide('blind');
+//         } ,
 
-        removed_show: function removed_show(mess_id) {
-            if (!$('div').is('#remove_message_' + mess_id)) {
-                var new_remove = $('#recover_mess_block_ex').clone().attr('id', 'remove_message_' + mess_id).css("display", "none").insertBefore($('#message_block_' + mess_id));
-                $('span', new_remove).on('click', function () {
-                    mess_list.action.recove_mess(mess_id);
-                });
-            }
+//         mess_hide: function (mess_id)
+//         {
+//             $('#message_block_'+mess_id).hide('blind');
+//         } ,
 
-            $('#remove_message_' + mess_id).show('blind');
-        }
+//         mess_show: function (mess_id)
+//         {
+//             $('#message_block_'+mess_id).show('blind');
+//         } ,
 
-    },
+//         remove_mess: function (mess_id)
+//         {
+//             mess_list.action.ajax_remove(mess_id);
+//             mess_list.action.removed_show(mess_id);
+//             mess_list.action.mess_hide(mess_id);
+//         } ,
 
-    option: {
+//         bun_mess: function (mess_id)
+//         {
+//             mess_list.action.ajax_bun(mess_id);
+//             mess_list.action.removed_show(mess_id);
+//             mess_list.action.mess_hide(mess_id);
+//             abuse_list.showButton();
+//         } ,
 
-        enable: true,
-        frize: false,
+//         recove_mess: function (mess_id)
+//         {
+//             mess_list.action.ajax_recove(mess_id);
+//             mess_list.action.removed_hide(mess_id);
+//             mess_list.action.mess_show(mess_id);
+//         } ,
 
-        pages_show: function pages_show() {
-            if ($('.message_list_block').length > 14) {
-                $('#mail_pages').show('blind');
-                mess_list.option.hint(0);
-            } else mess_list.option.hint(1);
-        },
+//         removed_hide: function (mess_id)
+//         {
+//             $('#remove_message_'+mess_id).hide('blind');
+//         } ,
 
-        hint: function hint(show) {
-            if (show) {
-                $('#mess_option_hint').show();
-            } else $('#mess_option_hint').hide();
-        },
+//         removed_show: function (mess_id)
+//         {
+//             if (!$('div').is('#remove_message_'+mess_id))
+//             {
+//                 var new_remove = $('#recover_mess_block_ex').clone()
+//                  .attr( 'id', 'remove_message_'+mess_id ).css("display","none")
+//                  .insertBefore($('#message_block_'+mess_id));
+//                 $('span',new_remove).on('click',function () { mess_list.action.recove_mess(mess_id); });
+//             }
 
-        bunn_all: function bunn_all(lock) {
-            if (lock) {
-                mess_list.option.red_link(lock, 0);
-                mess_list.option.frize = true;
-                mess_list.option.show();
-            } else {
-                mess_list.option.red_link(lock, 0);
-                mess_list.option.frize = false;
-                mess_list.option.hide();
-            }
-        },
+//             $('#remove_message_'+mess_id).show('blind');
+//         }
 
-        red_link: function red_link(lock, num) {
-            var elem = num ? $('.bunned_mess', '#message_block_' + num) : $('.bunned_mess');
+//     } ,
 
-            if (lock) {
-                elem.addClass('red_link');
-            } else elem.removeClass('red_link');
-        },
+//     option:  {
 
-        togg: function togg(num) {
-            $('.message_list_save', '#message_block_' + num).toggle('fade');
-        },
+//         enable: true,
+//         frize: false,
 
-        hide: function hide(num) {
-            var elem = num ? $('.message_list_save', '#message_block_' + num) : $('.message_list_save');
-            elem.hide();
-        },
+//         pages_show: function ()
+//         {
+//              if ($('.message_list_block').length > 14)
+//              {
+//                  $('#mail_pages').show('blind');
+//                  mess_list.option.hint(0);
+//              }
+//              else
+//                  mess_list.option.hint(1);
+//         } ,
 
-        show: function show(num) {
-            var elem = num ? $('.message_list_save', '#message_block_' + num) : $('.message_list_save');
-            elem.show('fade', 100);
-        }
-    }
+//         hint: function (show)
+//         {
+//             if (show)
+//             {
+//                 $('#mess_option_hint').show();
+//             }
+//             else
+//                 $('#mess_option_hint').hide();
+//         } ,
 
-};
+//         bunn_all: function (lock)
+//         {
+//             if (lock)
+//             {
+//                 mess_list.option.red_link(lock,0);
+//                 mess_list.option.frize = true;
+//                 mess_list.option.show();
+//             }
+//             else
+//             {
+//                 mess_list.option.red_link(lock,0);
+//                 mess_list.option.frize = false;
+//                 mess_list.option.hide();
+//             }
+//         } ,
+
+//         red_link: function (lock,num)
+//         {
+//             var elem = num ? $('.bunned_mess','#message_block_'+num) : $('.bunned_mess');
+
+//             if (lock)
+//             {
+//                 elem.addClass('red_link');
+//             }
+//             else
+//                 elem.removeClass('red_link');
+//         } ,
+
+//         togg: function (num)
+//         {
+//             $('.message_list_save','#message_block_'+num).toggle('fade') ;
+//         } ,
+
+//         hide: function (num)
+//         {
+//             var elem = num ? $('.message_list_save','#message_block_'+num) : $('.message_list_save');
+//             elem.hide();
+//         } ,
+
+//         show: function (num)
+//         {
+//             var elem = num ? $('.message_list_save','#message_block_'+num) : $('.message_list_save');
+//             elem.show('fade',100);
+//         }
+//     }
+
+// }
+
 
 // -- Настройки почты, поиска ---  
 var mess_sett = {

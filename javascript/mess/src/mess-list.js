@@ -27,7 +27,7 @@ const RemoveConfirm = Vue.component('remove-confirm', {
         return {
             content: {
                 doit: {
-                    caption: 'Накажите как следует',
+                    caption: 'Наказывайте как следует',
                     text: `За резкие слова, за оскорбления или хамство,
                     за фотографии не в тему или бессмысленные сообщения, наказывайте всех, кого
                     считаете нужным. Наказание действует сразу.`,
@@ -41,7 +41,7 @@ const RemoveConfirm = Vue.component('remove-confirm', {
                     action: 'Удалить и забыть'
                 },
                 some: {
-                    caption: 'Удалить везде и навсегда',
+                    caption: 'Удалить навсегда',
                     text: `Ваше сообщение будет удалено отовсюду, без возможности восстановить. Сообщение
                     пропадет как из вашей истории переписки, так и из переписки вашего собеседника.`,
                     action: 'Удалить навсегда'
@@ -64,12 +64,16 @@ const RemoveConfirm = Vue.component('remove-confirm', {
         },
     },
     methods: {
-        close: function() {
+        close() {
             this.$emit('close');
         },
-        save: function() {
-        // TODO: implement the form logic.
-        this.close()
+        bun() {
+            this.$emit('bun');
+            this.close();
+        },
+        remove() {
+            this.$emit('remove');
+            this.close();
         },
     },
     template: '#remove-confirm',
@@ -96,6 +100,7 @@ Vue.component('message-item', {
       'item',
       'index',
       'count',
+      'alert',
       'uid',
       'first_date'
     ],
@@ -112,7 +117,11 @@ Vue.component('message-item', {
         fix() {
             this.showOption = true;
             this.alertOption = false;
-            this.fixOption = !this.fixOption;
+            if (!this.alert) {
+                this.fixOption = this.alert ? false : !this.fixOption;
+            } else {
+                this.$emit('admit');
+            }
         },
         bun() {
             let config = {
@@ -122,8 +131,8 @@ Vue.component('message-item', {
                 id:  this.item.id,
                 tid: this.item.from
             };
-            axios.post('/mess/bun5/', data, config).then((response) => {
-                // if OK
+            axios.post('/mess/bun/', data, config).then((response) => {
+                this.$emit('remove', this.index);
             }).catch((error) => {
                 console.log('error');
             });
@@ -132,12 +141,27 @@ Vue.component('message-item', {
             this.showDialog = false;
             console.log('cancel');
         },
+        remove() {
+            let config = {
+                headers: {'Authorization': 'Bearer ' + this.$store.state.apiToken}
+            };
+            let data = {
+                id:  this.item.id
+            };
+            axios.post('/mess/delete/', data, config).then((response) => {
+                this.$emit('remove', this.index);
+            }).catch((error) => {
+                console.log(error);
+            });
+            console.log('remove');
+        },
         play() {
             let config = {
                 headers: {'Authorization': 'Bearer ' + this.$store.state.apiToken},
                 params: {tid}
             };
-            let url = 'http://'+api_photo+'/api/v1/users/'+uid+'/sends/'+this.alias+'.jpg';
+            let server = this.$store.state.photoServer;
+            let url = `http://${server}/api/v1/users/${uid}/sends/${this.alias}.jpg`;
             axios.get(url, config).then((response) => {
                 this.photo(response.data.photo)
             }).catch((error) => {
@@ -157,7 +181,18 @@ Vue.component('message-item', {
                 }
                 store.commit('viewPhoto', data);
             }
-        }
+        },
+        pathName(name) {
+            if (!name || name.length < 10) {
+                return null;
+            }
+            let path = [
+                name.substr(0, 2),
+                name.substr(2, 2),
+                name.substr(4, 3),
+            ];
+            return path.join('/')+'/'+name;
+        },
     },
     mounted() {
         if (!this.index && this.count < 5) {
@@ -165,8 +200,17 @@ Vue.component('message-item', {
             this.alertOption = true;
         }
     },
+    beforeUpdate() {
+        //this.attention();
+    },
     computed: {
+        attention() {
+            return (this.alert || this.alertOption) ? 1 : 0;
+        },
         option() {
+            if (!this.index && this.alert) {
+                return true;
+            }
             return (this.showOption || this.fixOption) ? 1 : 0;
         },
         sent() {
@@ -210,7 +254,7 @@ Vue.component('message-item', {
         },
         image() {
             let server = this.$store.state.photoServer;
-            let image = this.alias;
+            let image = this.pathName(this.alias);
             return image ? `http://${server}/res/photo/preview/${image}.png` : false;
         },
         previous() {
@@ -228,6 +272,7 @@ var MessList = new Vue({
     data: {
         messages: [],
         error: 0,
+        attention: false,
         uid: null,
         tid: null,
         date: null
@@ -239,7 +284,7 @@ var MessList = new Vue({
     },
     methods: {
         load(tid) {
-            console.log('load MessList data');
+            //console.log('load MessList data');
             let config = {
                 headers: {'Authorization': 'Bearer ' + this.$store.state.apiToken},
                 params: {id: tid, hash: hash}
@@ -248,11 +293,19 @@ var MessList = new Vue({
                 this.messages = response.data.messages;
             }).catch((error) => {
                 this.error = 10;
-                console.log('error');
+                console.log(error);
             });
         },
         setDate(date) {
             //this.date = new Date(this.item.date).getDayMonth();
+        },
+        remove(index) {
+            console.log('remove('+index+')');
+            this.messages.splice(index, 1);
+        },
+        admit() {
+            console.log('itOk false');
+            this.attention = false;
         }
     },
     computed: {
@@ -266,267 +319,267 @@ var MessList = new Vue({
 
 
 
-// -- Список сообщений ---
-var mess_list = {
+// // -- Список сообщений ---
+// var mess_list = {
 
-    mess_is_load: 0,
-
-
-    mail_pages: 0,
-    view_confirm: 0,
+//     mess_is_load: 0,
 
 
-
-    on_load: function (data)
-    {
-        mess_list.view_confirm = 0;
-        mess_list.mess_is_load = 1;
-        mess_list.mail_pages  += 15;
-
-        //if( reload )
-        //   mess_list.mail_pages = 0;
-
-        mess_list.hide_loader();
-
-        if (1)
-        {
-            //if( reload )
-            //    $('#mail_messages_block').empty();
-
-            lock_user.show_link();
-            $('#mail_messages_block').append( data );
-
-            mess_list.list_init();
-
-            mess_list.option.pages_show();
-
-            $('#mail_messages_block').show('blind');
-
-            var first_mess =  $('.message_list_save:first').data('number');
-            var mess_id = $(this).data('number');
-
-            $('.bunned_mess').on('click',function() { mess_list.action.bun_mess($(this).data('number')); });
-            $('.remove_mess').on('click',function (){ mess_list.action.remove_mess($(this).data('number')); });
-            $('.img_reload').on('click',function () { mess_list.action.image_reload($(this).data('number')); });
-
-            return 0;
-        }
-
-        if( !data )
-        {                          // alert ( $('.message_list_block').length );
-            if (!$('.message_list_block').length)
-            {
-                quick_mess.ajax_load();
-                notice_post.show();
-            }
-            $('#mail_pages_next').hide('blind');
-            return 0;
-        }
-
-        if( data.indexOf('error') > 0 )
-        {
-            var mess = JSON.parse( data );
-            if( mess.error == 'hold' )
-            {
-                mess_list.action.show_bad_alert( mess.text );
-                return 0;
-            }
-        }
-
-    } ,
-
-    on_error: function ()
-    {
-        setTimeout( function (){ mess_list.ajax_load(tid); },7000 );
-        mess_list.show_loader(1);                              //////////////////////////////////
-    } ,
+//     mail_pages: 0,
+//     view_confirm: 0,
 
 
-    show_loader: function (img)
-    {
-       $('#mess_loader').show('blind');
-       if (img)
-           $('#mess_loader img').show('fade');
-    } ,
 
-    hide_loader: function ()
-    {
-       $('#mess_loader').hide();
-    } ,
+//     on_load: function (data)
+//     {
+//         mess_list.view_confirm = 0;
+//         mess_list.mess_is_load = 1;
+//         mess_list.mail_pages  += 15;
 
-    action: {
+//         //if( reload )
+//         //   mess_list.mail_pages = 0;
 
-        badshow: function ()
-        {                             // alert(1);
-            mess_list.view_confirm = 1;
-            mess_list.mail_pages = 0;
+//         mess_list.hide_loader();
 
-            mess_list.ajax_load(tid);
+//         if (1)
+//         {
+//             //if( reload )
+//             //    $('#mail_messages_block').empty();
 
-            mess_list.show_loader(1);
-            mess_list.action.badalert_hide();
-        } ,
+//             lock_user.show_link();
+//             $('#mail_messages_block').append( data );
+
+//             mess_list.list_init();
+
+//             mess_list.option.pages_show();
+
+//             $('#mail_messages_block').show('blind');
+
+//             var first_mess =  $('.message_list_save:first').data('number');
+//             var mess_id = $(this).data('number');
+
+//             $('.bunned_mess').on('click',function() { mess_list.action.bun_mess($(this).data('number')); });
+//             $('.remove_mess').on('click',function (){ mess_list.action.remove_mess($(this).data('number')); });
+//             $('.img_reload').on('click',function () { mess_list.action.image_reload($(this).data('number')); });
+
+//             return 0;
+//         }
+
+//         if( !data )
+//         {                          // alert ( $('.message_list_block').length );
+//             if (!$('.message_list_block').length)
+//             {
+//                 quick_mess.ajax_load();
+//                 notice_post.show();
+//             }
+//             $('#mail_pages_next').hide('blind');
+//             return 0;
+//         }
+
+//         if( data.indexOf('error') > 0 )
+//         {
+//             var mess = JSON.parse( data );
+//             if( mess.error == 'hold' )
+//             {
+//                 mess_list.action.show_bad_alert( mess.text );
+//                 return 0;
+//             }
+//         }
+
+//     } ,
+
+//     on_error: function ()
+//     {
+//         setTimeout( function (){ mess_list.ajax_load(tid); },7000 );
+//         mess_list.show_loader(1);                              //////////////////////////////////
+//     } ,
 
 
-        show_bad_alert: function (text)
-        {
-            mess_list.hide_loader();
-            $('#mail_bad_text_alert input').on('click',mess_list.action.badshow);
-            $('#mail_bad_text_alert .link_underline').hide(); //on('click',function(){cont_list.action.delete_user(tid);});
-            $('#mail_bad_text_alert span.text').text( text );
-            $('#mail_bad_text_alert').show('fade');
-        } ,
+//     show_loader: function (img)
+//     {
+//        $('#mess_loader').show('blind');
+//        if (img)
+//            $('#mess_loader img').show('fade');
+//     } ,
+
+//     hide_loader: function ()
+//     {
+//        $('#mess_loader').hide();
+//     } ,
+
+//     action: {
+
+//         badshow: function ()
+//         {                             // alert(1);
+//             mess_list.view_confirm = 1;
+//             mess_list.mail_pages = 0;
+
+//             mess_list.ajax_load(tid);
+
+//             mess_list.show_loader(1);
+//             mess_list.action.badalert_hide();
+//         } ,
 
 
-        image_reload: function (id)
-        {
-            var url = $( '#img_'+ id ).get(0).src.replace("/protect/","/origin/") ;
-            $( '#img_'+ id ).get(0).src = url ;
-        } ,
+//         show_bad_alert: function (text)
+//         {
+//             mess_list.hide_loader();
+//             $('#mail_bad_text_alert input').on('click',mess_list.action.badshow);
+//             $('#mail_bad_text_alert .link_underline').hide(); //on('click',function(){cont_list.action.delete_user(tid);});
+//             $('#mail_bad_text_alert span.text').text( text );
+//             $('#mail_bad_text_alert').show('fade');
+//         } ,
 
-        ajax_recove: function (mess_id)
-        {
-            $.post("/mess/recover/", { tid: tid, id: mess_id });
-        } ,
 
-        ajax_remove: function (mess_id)
-        {
-            $.post("/mess/delete/", { tid: tid, id: mess_id });
-        } ,
+//         image_reload: function (id)
+//         {
+//             var url = $( '#img_'+ id ).get(0).src.replace("/protect/","/origin/") ;
+//             $( '#img_'+ id ).get(0).src = url ;
+//         } ,
 
-        ajax_bun: function (mess_id)
-        {
-            $.post("/mess/bun/", { tid: tid, id: mess_id } );
-        } ,
+//         ajax_recove: function (mess_id)
+//         {
+//             $.post("/mess/recover/", { tid: tid, id: mess_id });
+//         } ,
 
-        badalert_hide: function ()
-        {
-            $('#mail_bad_text_alert').hide('blind');
-        } ,
+//         ajax_remove: function (mess_id)
+//         {
+//             $.post("/mess/delete/", { tid: tid, id: mess_id });
+//         } ,
 
-        mess_hide: function (mess_id)
-        {
-            $('#message_block_'+mess_id).hide('blind');
-        } ,
+//         ajax_bun: function (mess_id)
+//         {
+//             $.post("/mess/bun/", { tid: tid, id: mess_id } );
+//         } ,
 
-        mess_show: function (mess_id)
-        {
-            $('#message_block_'+mess_id).show('blind');
-        } ,
+//         badalert_hide: function ()
+//         {
+//             $('#mail_bad_text_alert').hide('blind');
+//         } ,
 
-        remove_mess: function (mess_id)
-        {
-            mess_list.action.ajax_remove(mess_id);
-            mess_list.action.removed_show(mess_id);
-            mess_list.action.mess_hide(mess_id);
-        } ,
+//         mess_hide: function (mess_id)
+//         {
+//             $('#message_block_'+mess_id).hide('blind');
+//         } ,
 
-        bun_mess: function (mess_id)
-        {
-            mess_list.action.ajax_bun(mess_id);
-            mess_list.action.removed_show(mess_id);
-            mess_list.action.mess_hide(mess_id);
-            abuse_list.showButton();
-        } ,
+//         mess_show: function (mess_id)
+//         {
+//             $('#message_block_'+mess_id).show('blind');
+//         } ,
 
-        recove_mess: function (mess_id)
-        {
-            mess_list.action.ajax_recove(mess_id);
-            mess_list.action.removed_hide(mess_id);
-            mess_list.action.mess_show(mess_id);
-        } ,
+//         remove_mess: function (mess_id)
+//         {
+//             mess_list.action.ajax_remove(mess_id);
+//             mess_list.action.removed_show(mess_id);
+//             mess_list.action.mess_hide(mess_id);
+//         } ,
 
-        removed_hide: function (mess_id)
-        {
-            $('#remove_message_'+mess_id).hide('blind');
-        } ,
+//         bun_mess: function (mess_id)
+//         {
+//             mess_list.action.ajax_bun(mess_id);
+//             mess_list.action.removed_show(mess_id);
+//             mess_list.action.mess_hide(mess_id);
+//             abuse_list.showButton();
+//         } ,
 
-        removed_show: function (mess_id)
-        {
-            if (!$('div').is('#remove_message_'+mess_id))
-            {
-                var new_remove = $('#recover_mess_block_ex').clone()
-                 .attr( 'id', 'remove_message_'+mess_id ).css("display","none")
-                 .insertBefore($('#message_block_'+mess_id));
-                $('span',new_remove).on('click',function () { mess_list.action.recove_mess(mess_id); });
-            }
+//         recove_mess: function (mess_id)
+//         {
+//             mess_list.action.ajax_recove(mess_id);
+//             mess_list.action.removed_hide(mess_id);
+//             mess_list.action.mess_show(mess_id);
+//         } ,
 
-            $('#remove_message_'+mess_id).show('blind');
-        }
+//         removed_hide: function (mess_id)
+//         {
+//             $('#remove_message_'+mess_id).hide('blind');
+//         } ,
 
-    } ,
+//         removed_show: function (mess_id)
+//         {
+//             if (!$('div').is('#remove_message_'+mess_id))
+//             {
+//                 var new_remove = $('#recover_mess_block_ex').clone()
+//                  .attr( 'id', 'remove_message_'+mess_id ).css("display","none")
+//                  .insertBefore($('#message_block_'+mess_id));
+//                 $('span',new_remove).on('click',function () { mess_list.action.recove_mess(mess_id); });
+//             }
 
-    option:  {
+//             $('#remove_message_'+mess_id).show('blind');
+//         }
 
-        enable: true,
-        frize: false,
+//     } ,
 
-        pages_show: function ()
-        {
-             if ($('.message_list_block').length > 14)
-             {
-                 $('#mail_pages').show('blind');
-                 mess_list.option.hint(0);
-             }
-             else
-                 mess_list.option.hint(1);
-        } ,
+//     option:  {
 
-        hint: function (show)
-        {
-            if (show)
-            {
-                $('#mess_option_hint').show();
-            }
-            else
-                $('#mess_option_hint').hide();
-        } ,
+//         enable: true,
+//         frize: false,
 
-        bunn_all: function (lock)
-        {
-            if (lock)
-            {
-                mess_list.option.red_link(lock,0);
-                mess_list.option.frize = true;
-                mess_list.option.show();
-            }
-            else
-            {
-                mess_list.option.red_link(lock,0);
-                mess_list.option.frize = false;
-                mess_list.option.hide();
-            }
-        } ,
+//         pages_show: function ()
+//         {
+//              if ($('.message_list_block').length > 14)
+//              {
+//                  $('#mail_pages').show('blind');
+//                  mess_list.option.hint(0);
+//              }
+//              else
+//                  mess_list.option.hint(1);
+//         } ,
 
-        red_link: function (lock,num)
-        {
-            var elem = num ? $('.bunned_mess','#message_block_'+num) : $('.bunned_mess');
+//         hint: function (show)
+//         {
+//             if (show)
+//             {
+//                 $('#mess_option_hint').show();
+//             }
+//             else
+//                 $('#mess_option_hint').hide();
+//         } ,
 
-            if (lock)
-            {
-                elem.addClass('red_link');
-            }
-            else
-                elem.removeClass('red_link');
-        } ,
+//         bunn_all: function (lock)
+//         {
+//             if (lock)
+//             {
+//                 mess_list.option.red_link(lock,0);
+//                 mess_list.option.frize = true;
+//                 mess_list.option.show();
+//             }
+//             else
+//             {
+//                 mess_list.option.red_link(lock,0);
+//                 mess_list.option.frize = false;
+//                 mess_list.option.hide();
+//             }
+//         } ,
 
-        togg: function (num)
-        {
-            $('.message_list_save','#message_block_'+num).toggle('fade') ;
-        } ,
+//         red_link: function (lock,num)
+//         {
+//             var elem = num ? $('.bunned_mess','#message_block_'+num) : $('.bunned_mess');
 
-        hide: function (num)
-        {
-            var elem = num ? $('.message_list_save','#message_block_'+num) : $('.message_list_save');
-            elem.hide();
-        } ,
+//             if (lock)
+//             {
+//                 elem.addClass('red_link');
+//             }
+//             else
+//                 elem.removeClass('red_link');
+//         } ,
 
-        show: function (num)
-        {
-            var elem = num ? $('.message_list_save','#message_block_'+num) : $('.message_list_save');
-            elem.show('fade',100);
-        }
-    }
+//         togg: function (num)
+//         {
+//             $('.message_list_save','#message_block_'+num).toggle('fade') ;
+//         } ,
 
-}
+//         hide: function (num)
+//         {
+//             var elem = num ? $('.message_list_save','#message_block_'+num) : $('.message_list_save');
+//             elem.hide();
+//         } ,
+
+//         show: function (num)
+//         {
+//             var elem = num ? $('.message_list_save','#message_block_'+num) : $('.message_list_save');
+//             elem.show('fade',100);
+//         }
+//     }
+
+// }
 

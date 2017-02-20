@@ -24,7 +24,7 @@ Vue.component('abuse-form', {
         }
     },
     created: function () {
-        console.log("abuse_form Created");
+        //console.log("abuse_form Created");
     },
     methods: {
         choiceText: function (event) {

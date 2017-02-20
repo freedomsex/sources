@@ -2,9 +2,6 @@
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-var api_photo = '192.168.122.252';
-var api_photo = '127.0.0.1:8888';
-
 $(document).ready(function () {
 
     userinfo.init();
@@ -38,7 +35,8 @@ var ls = storage;
 var store = new Vuex.Store({
     state: {
         apiToken: '',
-        photoServer: '127.0.0.1:8888',
+        //photoServer: '127.0.0.1:8888',
+        photoServer: '195.154.54.70',
         count: 0,
         photoView: {
             thumb: null,
@@ -107,7 +105,8 @@ var UploadPhoto = Vue.extend({
     template: "#upload-photo",
     data: function data() {
         return {
-            photos: []
+            photos: [],
+            server: null
         };
         // file: {
         //     data: null,
@@ -116,16 +115,23 @@ var UploadPhoto = Vue.extend({
         // }
     },
 
+    created: function created() {
+        this.server = this.$store.state.photoServer;
+    },
     methods: {
         loadPhoto: function loadPhoto() {
-            Vue.http.headers.common['Authorization'] = 'Bearer ' + get_cookie('jwt');
-            this.$http.get('http://' + api_photo + '/api/v1/users/' + uid + '/photos?hash=' + hash).then(function (response) {
-                console.log(response.body);
-                if (response.body.photos) {
-                    this.photos = response.body.photos;
-                }
+            var _this = this;
+
+            var config = {
+                headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
+                params: { hash: hash }
+            };
+            axios.get('http://' + this.server + '/api/v1/users/' + uid + '/photos', config).then(function (response) {
+                _this.photos = response.data.photos;
+                console.log(_this.photos);
+            }).catch(function (error) {
+                console.log(error);
             });
-            if (this.user) {}
         },
         upload: function upload(e) {
             $('#fileupload').click();
@@ -160,7 +166,7 @@ var UploadPhoto = Vue.extend({
         $('#fileupload').fileupload({
             dataType: 'json',
             add: function add(e, data) {
-                data.url = 'http://' + api_photo + '/api/v1/users/' + uid + '/photos?jwt=' + get_cookie('jwt');
+                data.url = 'http://' + self.server + '/api/v1/users/' + uid + '/photos?jwt=' + self.$store.state.apiToken;
                 data.submit();
             },
             done: function done(e, data) {
@@ -511,13 +517,11 @@ var giper_chat = {
     },
 
     new_message: function new_message(val) {
-        //  elem.appendChild();   
-
-
+        //  elem.appendChild();
         giper_chat.open_mess++;
         giper_chat.reply_enable();
 
-        new_block = giper_chat.create_message(val);
+        var new_block = giper_chat.create_message(val);
 
         new_block.prependTo($('#giper_stock'));
 
@@ -529,7 +533,7 @@ var giper_chat = {
 
         giper_chat.idle_round = 0;
         // giper_chat.mess_stock.push(val);
-        // giper_chat.stock.store();           
+        // giper_chat.stock.store();
     },
 
     remind: function remind() {
@@ -565,10 +569,10 @@ var giper_chat = {
 
         //return 0;
 
-        var new_block = $('#new_message_ex').clone().attr('id', val.type + '_' + val.mess_id) //.css("display","none")  
+        var new_block = $('#new_message_ex').clone().attr('id', val.type + '_' + val.mess_id) //.css("display","none")
         .data('number', val.mess_id).data('user', val.user).addClass(val.type);
 
-        $('.mess_text', new_block).html(val.text); // click( function (){ location.href =  }); 
+        $('.mess_text', new_block).html(val.text); // click( function (){ location.href =  });
         $('.close', new_block).click(function () {
             giper_chat.close_message($(new_block));
         });
@@ -620,7 +624,7 @@ var giper_chat = {
 
             $('.sound', new_block).remove();
             // var timer_air = setTimeout( function (){ close_message( $(new_block) ); open_mess--; },30000 );
-            //$('.title',new_block).text( val.reply );  
+            //$('.title',new_block).text( val.reply );
             $('.bunn', new_block).remove();
             $('.user_name', new_block).text(val.name + ',');
             $('.user_name', new_block).text(val.name + ',');
@@ -668,8 +672,8 @@ var giper_chat = {
 
     close_all: function close_all(user) {/*
                                          $('#giper_stock div').
-                                         $('.sound',elem).remove(); 
-                                         elem.hide('blind');       
+                                         $('.sound',elem).remove();
+                                         elem.hide('blind');
                                          giper_chat.open_mess--;
                                          giper_chat.stock.remove(elem.data('number'));
                                          setTimeout( function (){ elem.remove(); },500 ); */
@@ -762,7 +766,7 @@ var giper_chat = {
     },
 
     on_post: function on_post(data) {
-        // alert (data) 
+        // alert (data)
         if (!data) return 0;
         var mess = JSON.parse(data);
 
@@ -788,7 +792,7 @@ var giper_chat = {
 
         if (mess.error == 'reload') {
             giper_chat.idle_round = 0;
-            location.href = '/' + user + '?text=' + text; //alert ('reload')              
+            location.href = '/' + user + '?text=' + text; //alert ('reload')
         }
 
         disabled_with_timeout($('.post', giper_chat.mess_block), 0.05);
@@ -3156,7 +3160,7 @@ var OptionDialog = Vue.extend({
         // Close the modal when the `escape` key is pressed.
         var self = this;
         document.addEventListener('keydown', function () {
-            if (self.config.show && event.keyCode === 27) {
+            if (self.show && event.keyCode === 27) {
                 self.close();
             }
         });
