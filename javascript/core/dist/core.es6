@@ -4110,33 +4110,33 @@ var result_list = {
 } 
 
 
- 
+
 // -- Слайдер, главная ---
-var slider = {  
- 
-    timer: null, 
+var slider = {
+
+    timer: null,
     context: 0,
     next: 0,
-        
-    init: function () 
-    {          
+
+    init: function ()
+    {
         if(!$('div').is('#top_intro_info_block'))
             return null;
-         
+
         $('#top_intro_info_block').on('mouseover',slider.stop);
         $('#top_intro_info_block').on('mouseout',slider.start);
-        
-        // Предзагрузка картинок  
-        setInterval(function()
-        { 
-            var nn = ( slider.next + 1 < 5 ) ? slider.next + 1 : 0; 
-            a1 = new Image; 
-            a1.src = "/img/board/top_intro_info_" + nn + ".jpg";   
-        }, 10000);   
-                        
-    } ,  
 
-    slide: function (num,st) 
+        // Предзагрузка картинок
+        setInterval(function()
+        {
+            var nn = ( slider.next + 1 < 5 ) ? slider.next + 1 : 0;
+            let a1 = new Image;
+            a1.src = "/img/board/top_intro_info_" + nn + ".jpg";
+        }, 10000);
+
+    } ,
+
+    slide: function (num,st)
     {
         var top_intro_caption = []
         var top_intro_context = []
@@ -4150,37 +4150,37 @@ var slider = {
          top_intro_context[3] = 'То что вы хотели спросить, то о чём вы хотели поговорить. Получайте прямо сейчас. Комфортное онлайн общение, интимные беседы, уютная обстановка и приятные собеседники уже ждут вас';
          top_intro_caption[4] = 'Секс знакомства бесплатно';
          top_intro_context[4] = 'Здесь всё бесплатно. Вам доступны все сервисы сайта полностью, уже сейчас. Ваша анкета всегда наверху. Vip аккаунтов нет, открытый доступ ко всем анкетам и безграничные возможности';
- 
+
         if( num > 4 ) num = 0;
-        for (var i = 0; i<5; i++) 
+        for (var i = 0; i<5; i++)
         {
             $('#board_img_'+i).removeClass('show');
             $('#board_img_'+i).attr('src','');
         }
- 
+
         $('#board_img_' + num).addClass('show active');
         $('#board_img_' + num).attr('src','/img/board/top_intro_info_'+num+'.jpg');
 
         if (slider.context)
-        {         
+        {
             $('#top_intro_info_block_caption').text(top_intro_caption[num]);
-            $('#top_intro_info_block_context').text(top_intro_context[num]); 
+            $('#top_intro_info_block_context').text(top_intro_context[num]);
         }
-      
+
         slider.next = num
     } ,
 
-    start: function () 
+    start: function ()
     {
-        slider.timer = setInterval( function(){ slider.slide(++slider.next,0)}, 20000); 
+        slider.timer = setInterval( function(){ slider.slide(++slider.next,0)}, 20000);
     } ,
 
-    stop: function () 
+    stop: function ()
     {
-        clearTimeout(slider.timer); 
+        clearTimeout(slider.timer);
     }
-    
-        
+
+
 }
 
 

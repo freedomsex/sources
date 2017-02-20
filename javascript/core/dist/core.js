@@ -3690,10 +3690,10 @@ var slider = {
         $('#top_intro_info_block').on('mouseover', slider.stop);
         $('#top_intro_info_block').on('mouseout', slider.start);
 
-        // Предзагрузка картинок  
+        // Предзагрузка картинок
         setInterval(function () {
             var nn = slider.next + 1 < 5 ? slider.next + 1 : 0;
-            a1 = new Image();
+            var a1 = new Image();
             a1.src = "/img/board/top_intro_info_" + nn + ".jpg";
         }, 10000);
     },
