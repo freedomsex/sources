@@ -36,6 +36,11 @@
   }
 }
 
+.messages__next {
+  text-align: center;
+  margin-top: @indent-lg;
+}
+
 
 .message-balloon() {
     display: inline-block;
@@ -125,12 +130,27 @@
   }
 }
 
-.message-item__subtime {
-  color: @gray-dark;
+.message-info {
+  font-size: 0;
+  display: inline-block;
+  white-space: nowrap;
   float: right;
-  font-size: 11px;
   margin-left: 7px;
   margin-top: 5px;
+}
+
+.message-info__time {
+  color: @gray-dark;
+  font-size: 11px;
+  margin-left: 5px;
+}
+
+.message-info__status {
+  background-color: @purpur-dark;
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 10px;
 }
 
 .message-item__date {

@@ -70,7 +70,7 @@ var store = new Vuex.Store({
             if (data) {
                 _.extend(state, data);
             }
-            console.log(state);
+            //console.log(state)
         },
         viewPhoto: function viewPhoto(state, data) {
             _.extend(state.photoView, data);

@@ -1039,6 +1039,9 @@ var MessList = new Vue({
         messages: [],
         response: null,
         error: 0,
+        next: 0,
+        batch: 15,
+        received: 0,
         attention: false,
         uid: null,
         tid: null,
@@ -1048,19 +1051,17 @@ var MessList = new Vue({
     mounted: function mounted() {
         this.uid = uid;
         this.tid = tid;
-        this.load(tid);
+        this.load();
     },
     methods: {
-        load: function load(tid) {
+        load: function load() {
             var _this5 = this;
 
             //console.log('load MessList data');
-            setTimeout(function () {
-                return _this5.toSlow = true;
-            }, 7000);
+            this.response = 0;
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
-                params: { id: tid, hash: hash }
+                params: { id: this.tid, next: this.next, hash: hash }
             };
             axios.get('/ajax/messages_load.php', config).then(function (response) {
                 _this5.onLoad(response);
@@ -1068,15 +1069,23 @@ var MessList = new Vue({
                 _this5.error = 10;
                 console.log(error);
             });
+            setTimeout(function () {
+                return _this5.toSlow = true;
+            }, 7000);
         },
         onLoad: function onLoad(response) {
-            this.messages = response.data.messages;
-            console.log(200);
-            this.response = 200;
-            this.toSlow = false;
+            var messages = response.data.messages;
+            this.received = messages.length;
+            this.messages = _.union(this.messages, messages);
             if (!this.messages) {
                 this.noMessages();
+            } else {
+                // TODO: Заменить на компоненты, страрые зависимости
+                lock_user.show_link();
+                this.next += this.batch;
             }
+            this.response = 200;
+            this.toSlow = false;
         },
         noMessages: function noMessages() {
             // TODO: Заменить на компоненты, страрые зависимости
@@ -1095,7 +1104,14 @@ var MessList = new Vue({
             this.attention = false;
         }
     },
-    computed: {}
+    computed: {
+        more: function more() {
+            if (this.received && this.received == this.batch) {
+                return true;
+            }
+            return false;
+        }
+    }
 });
 
 // // -- Список сообщений ---

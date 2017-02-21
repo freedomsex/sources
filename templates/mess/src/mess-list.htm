@@ -2,11 +2,6 @@
 
 
 <div id="user-dialog" style="display: none;" v-show="!error" @admit="admit">
-  <div class="messages__loader" v-show="!error && !response">
-    <span>
-      <img src="/static/img/icon/mess_loader.gif" v-show="toSlow"> Загружаем
-    </span>
-  </div>
   <div class="messages">
     <message-item v-for="(item, index) in messages"
       :item="item"
@@ -17,6 +12,14 @@
       @admit="admit"
       @remove="remove"
     ></message-item>
+  </div>
+  <div class="messages__next" v-on:click="load" v-show="more">
+    <span class="btn btn-default btn-xs">Следующие</span>
+  </div>
+  <div class="messages__loader" v-show="!error && !response">
+    <span>
+      <img src="/static/img/icon/mess_loader.gif" v-show="toSlow"> Загружаем
+    </span>
   </div>
 </div>
 
@@ -36,7 +39,11 @@
       </div>
       <span v-else>
         <span v-html="item.mess"></span>
-        <span class="message-item__subtime">{{time}}</span>
+        <span class="message-info">
+          <span class="message-info__status" v-show="item.read == 0"></span>
+          <span class="message-info__time">{{time}}</span>
+        </span>
+
       </span>
 
 

@@ -253,6 +253,9 @@ var MessList = new Vue({
         messages: [],
         response: null,
         error: 0,
+        next: 0,
+        batch: 15,
+        received: 0,
         attention: false,
         uid: null,
         tid: null,
@@ -262,15 +265,15 @@ var MessList = new Vue({
     mounted: function () {
         this.uid = uid;
         this.tid = tid;
-        this.load(tid);
+        this.load();
     },
     methods: {
-        load(tid) {
+        load() {
             //console.log('load MessList data');
-            setTimeout(() => this.toSlow = true, 7000);
+            this.response = 0;
             let config = {
                 headers: {'Authorization': 'Bearer ' + this.$store.state.apiToken},
-                params: {id: tid, hash: hash}
+                params: {id: this.tid, next: this.next, hash}
             };
             axios.get('/ajax/messages_load.php', config).then((response) => {
                 this.onLoad(response);
@@ -278,15 +281,21 @@ var MessList = new Vue({
                 this.error = 10;
                 console.log(error);
             });
+            setTimeout(() => this.toSlow = true, 7000);
         },
         onLoad(response) {
-            this.messages = response.data.messages;
-            console.log(200);
-            this.response = 200;
-            this.toSlow = false;
+            let messages = response.data.messages;
+            this.received = messages.length;
+            this.messages = _.union(this.messages, messages);
             if (!this.messages) {
                 this.noMessages();
+            } else {
+                // TODO: Заменить на компоненты, страрые зависимости
+                lock_user.show_link();
+                this.next += this.batch;
             }
+            this.response = 200;
+            this.toSlow = false;
         },
         noMessages() {
             // TODO: Заменить на компоненты, страрые зависимости
@@ -306,6 +315,12 @@ var MessList = new Vue({
         }
     },
     computed: {
+        more() {
+            if (this.received && this.received == this.batch) {
+                return true;
+            }
+            return false;
+        }
     }
 });
 
