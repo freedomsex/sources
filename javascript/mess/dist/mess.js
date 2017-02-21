@@ -617,7 +617,15 @@ var FormMess = new Vue({
     el: '#message_post_form',
     store: store,
     data: {
-        show: true
+        message: '',
+        show: true,
+        approve: false,
+        uid: null,
+        tid: null
+    },
+    mounted: function mounted() {
+        this.uid = uid;
+        this.tid = tid;
     },
     computed: Vuex.mapState({
         config: function config(state) {
@@ -645,6 +653,28 @@ var FormMess = new Vue({
             // });
             this.cancelPhoto();
             // window.location.reload();
+        },
+        sendMessage: function sendMessage() {
+            var _this = this;
+
+            var config = {
+                headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken }
+            };
+            var data = {
+                mess: this.message,
+                id: this.tid,
+                re: repl,
+                captcha_code: $('.code', giper_chat.mess_block).val(),
+                hash: hash
+            };
+            axios.post('/mailer/post/', data, config).then(function (response) {
+                _this.$emit('remove', _this.index);
+            }).catch(function (error) {
+                console.log('error');
+            });
+
+            //  disabled_with_timeout( $('.post',giper_chat.mess_block), 5);
+            //  giper_chat.timer_cut();
         }
     }
 });
@@ -675,14 +705,14 @@ var incoming_photo = new Vue({
     },
     methods: {
         loadPhoto: function loadPhoto() {
-            var _this = this;
+            var _this2 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
                 params: { tid: tid, hash: hash }
             };
             axios.get('http://' + this.server + '/api/v1/users/' + uid + '/sends', config).then(function (response) {
-                _this.photos = response.data.photos;
+                _this2.photos = response.data.photos;
                 //console.log(this.photos);
             }).catch(function (error) {
                 console.log(error);
@@ -898,7 +928,7 @@ Vue.component('message-item', {
             }
         },
         bun: function bun() {
-            var _this2 = this;
+            var _this3 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken }
@@ -908,7 +938,7 @@ Vue.component('message-item', {
                 tid: this.item.from
             };
             axios.post('/mess/bun/', data, config).then(function (response) {
-                _this2.$emit('remove', _this2.index);
+                _this3.$emit('remove', _this3.index);
             }).catch(function (error) {
                 console.log('error');
             });
@@ -918,7 +948,7 @@ Vue.component('message-item', {
             console.log('cancel');
         },
         remove: function remove() {
-            var _this3 = this;
+            var _this4 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken }
@@ -927,14 +957,14 @@ Vue.component('message-item', {
                 id: this.item.id
             };
             axios.post('/mess/delete/', data, config).then(function (response) {
-                _this3.$emit('remove', _this3.index);
+                _this4.$emit('remove', _this4.index);
             }).catch(function (error) {
                 console.log(error);
             });
             console.log('remove');
         },
         play: function play() {
-            var _this4 = this;
+            var _this5 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
@@ -943,7 +973,7 @@ Vue.component('message-item', {
             var server = this.$store.state.photoServer;
             var url = 'http://' + server + '/api/v1/users/' + uid + '/sends/' + this.alias + '.jpg';
             axios.get(url, config).then(function (response) {
-                _this4.photo(response.data.photo);
+                _this5.photo(response.data.photo);
             }).catch(function (error) {
                 console.log('error');
             });
@@ -1055,7 +1085,7 @@ var MessList = new Vue({
     },
     methods: {
         load: function load() {
-            var _this5 = this;
+            var _this6 = this;
 
             //console.log('load MessList data');
             this.response = 0;
@@ -1064,13 +1094,13 @@ var MessList = new Vue({
                 params: { id: this.tid, next: this.next, hash: hash }
             };
             axios.get('/ajax/messages_load.php', config).then(function (response) {
-                _this5.onLoad(response);
+                _this6.onLoad(response);
             }).catch(function (error) {
-                _this5.error = 10;
+                _this6.error = 10;
                 console.log(error);
             });
             setTimeout(function () {
-                return _this5.toSlow = true;
+                return _this6.toSlow = true;
             }, 7000);
         },
         onLoad: function onLoad(response) {

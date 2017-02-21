@@ -365,6 +365,10 @@
   -o-transition: color 0.2s ease;
   -webkit-transition: color 0.2s ease;
 }
+.form-message__captcha {
+  padding: 20px 15px;
+  background: #fff2e5;
+}
 .message_list_title_date {
   border-top: 1px dotted #999999;
   height: 10px;
@@ -933,15 +937,6 @@ div.alert_block_mess b {
   top: 11px;
   width: 24px;
 }
-#notepad_on {
-  background: #f7f7f7;
-  border: 1px solid #cccccc;
-  color: #666666;
-  cursor: pointer;
-  display: inline-block;
-  font-size: 10px;
-  padding: 1px 5px;
-}
 #notice_post {
   bottom: 7px;
   display: none;
@@ -1193,6 +1188,23 @@ div.alert_block_mess b {
   background: #f7f7f7;
   background-size: cover;
   background-position: center;
+  border: 1px solid #f7f7f7;
+}
+.photo-view__accept {
+  border: 1px solid #f7f7f7;
+  padding: 20px 20px;
+  max-width: 400px;
+  background-color: #ffffff;
+  text-align: left;
+  margin: 25px auto;
+}
+.photo-view__accept-caption {
+  font-size: 16px;
+  font-weight: bold;
+}
+.photo-view__accept-text {
+  padding: 15px 0 15px;
+  font-size: 14px;
 }
 #galery-photo {
   margin-bottom: 10px;

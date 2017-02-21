@@ -6,8 +6,8 @@ var ls = storage;
 const store = new Vuex.Store({
     state: {
         apiToken: '',
-        //photoServer: '127.0.0.1:8888',
-        photoServer: '195.154.54.70',
+        photoServer: '127.0.0.1:8888',
+        //photoServer: '195.154.54.70',
         count: 0,
         photoView: {
             thumb:  null,
@@ -25,6 +25,9 @@ const store = new Vuex.Store({
                 height: null,
                 width:  null,
             }
+        },
+        accept: {
+            photo: false
         }
     },
     actions: {
@@ -48,6 +51,9 @@ const store = new Vuex.Store({
         sendPhoto(state, data) {
             _.extend(state.formMess.sendPhoto, data);
         },
+        approveViewPhoto(state) {
+            state.accept.photo = true;
+        }
     },
     getters: {
 

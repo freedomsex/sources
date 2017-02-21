@@ -5,8 +5,19 @@ Vue.component('photo-view', {
         'photo',
         'thumb',
         'width',
-        'height'
+        'height',
+        'bypass'
     ],
+    methods: {
+        approve() {
+            store.commit('approveViewPhoto');
+        }
+    },
+    computed: Vuex.mapState({
+        accept(state) {
+            return (state.accept.photo || this.bypass) ? true : false;
+        }
+    }),
     template: '#photo-view'
 });
 

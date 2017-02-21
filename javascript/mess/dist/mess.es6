@@ -716,7 +716,15 @@ var FormMess = new Vue({
     el: '#message_post_form',
     store,
     data: {
+    	message: '',
         show: true,
+        approve: false,
+        uid: null,
+        tid: null,
+    },
+    mounted: function () {
+        this.uid = uid;
+        this.tid = tid;
     },
     computed: Vuex.mapState({
         config: state => state.formMess,
@@ -740,6 +748,27 @@ var FormMess = new Vue({
             // });
             this.cancelPhoto();
             // window.location.reload();
+        },
+        sendMessage() {
+            let config = {
+                headers: {'Authorization': 'Bearer ' + this.$store.state.apiToken}
+            };
+            let data = {
+                mess: this.message,
+                id:   this.tid,
+                re:   repl,
+                captcha_code: $('.code',giper_chat.mess_block).val(),
+                hash: hash
+            };
+            axios.post('/mailer/post/', data, config).then((response) => {
+                this.$emit('remove', this.index);
+            }).catch((error) => {
+                console.log('error');
+            });
+
+	          //  disabled_with_timeout( $('.post',giper_chat.mess_block), 5);
+	          //  giper_chat.timer_cut();
+
         }
     },
 });

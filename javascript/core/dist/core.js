@@ -37,8 +37,8 @@ var ls = storage;
 var store = new Vuex.Store({
     state: {
         apiToken: '',
-        //photoServer: '127.0.0.1:8888',
-        photoServer: '195.154.54.70',
+        photoServer: '127.0.0.1:8888',
+        //photoServer: '195.154.54.70',
         count: 0,
         photoView: {
             thumb: null,
@@ -56,6 +56,9 @@ var store = new Vuex.Store({
                 height: null,
                 width: null
             }
+        },
+        accept: {
+            photo: false
         }
     },
     actions: {
@@ -80,6 +83,9 @@ var store = new Vuex.Store({
         },
         sendPhoto: function sendPhoto(state, data) {
             _.extend(state.formMess.sendPhoto, data);
+        },
+        approveViewPhoto: function approveViewPhoto(state) {
+            state.accept.photo = true;
         }
     },
     getters: {}
@@ -3141,7 +3147,17 @@ var option_sex = {
 };
 
 Vue.component('photo-view', {
-    props: ['photo', 'thumb', 'width', 'height'],
+    props: ['photo', 'thumb', 'width', 'height', 'bypass'],
+    methods: {
+        approve: function approve() {
+            store.commit('approveViewPhoto');
+        }
+    },
+    computed: Vuex.mapState({
+        accept: function accept(state) {
+            return state.accept.photo || this.bypass ? true : false;
+        }
+    }),
     template: '#photo-view'
 });
 
