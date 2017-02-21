@@ -971,7 +971,7 @@ Vue.component('message-item', {
         }
     },
     mounted: function mounted() {
-        if (!this.index && this.count < 5) {
+        if (!this.sent && !this.index && this.count < 5) {
             this.fix();
             this.alertOption = true;
         }
