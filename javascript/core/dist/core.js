@@ -32,13 +32,13 @@ $(document).ready(function () {
 
 moment.locale('ru');
 
-var ls = storage;
+var ls = lscache;
 
 var store = new Vuex.Store({
     state: {
         apiToken: '',
-        photoServer: '127.0.0.1:8888',
-        //photoServer: '195.154.54.70',
+        //photoServer: '127.0.0.1:8888',
+        photoServer: '195.154.54.70',
         count: 0,
         photoView: {
             thumb: null,
@@ -57,7 +57,7 @@ var store = new Vuex.Store({
                 width: null
             }
         },
-        accept: {
+        accepts: {
             photo: false
         }
     },
@@ -65,7 +65,16 @@ var store = new Vuex.Store({
         LOAD_API_TOKEN: function LOAD_API_TOKEN(_ref) {
             var commit = _ref.commit;
 
-            store.commit('setApiToken', { apiToken: get_cookie('jwt') });
+            commit('setApiToken', { apiToken: get_cookie('jwt') });
+        },
+        LOAD_ACCEPTS: function LOAD_ACCEPTS(_ref2) {
+            var commit = _ref2.commit;
+
+            var accepts = ls.get('accepts');
+            if (accepts && accepts.photo) {
+                commit('approveViewPhoto');
+            }
+            //console.log(ls.get('accepts'));
         }
     },
     mutations: {
@@ -85,13 +94,17 @@ var store = new Vuex.Store({
             _.extend(state.formMess.sendPhoto, data);
         },
         approveViewPhoto: function approveViewPhoto(state) {
-            state.accept.photo = true;
+            state.accepts.photo = true;
+            ls.set('accepts', _.extend(state.accepts, { photo: true }));
         }
     },
-    getters: {}
+    getters: {
+        accept: function accept() {}
+    }
 });
 
 store.dispatch('LOAD_API_TOKEN');
+store.dispatch('LOAD_ACCEPTS');
 
 // -- Получить новый хэш ---
 var hash;
@@ -2562,7 +2575,7 @@ var notepad = {
         if (!notepad.disibled) if (force || active_textarea && notepad.last_click != active_textarea) {
             if (notepad.create) {
                 notepad.note_block.show('fade');
-                notepad.last_click = active_textarea; /////////////////////////////  
+                notepad.last_click = active_textarea; /////////////////////////////
             } else notepad.ajax_load();
         }
     },
@@ -2599,7 +2612,16 @@ var notepad = {
             notepad.create = 1;
             $('.notes', notepad.note_block).html(data);
             $('.note_line', notepad.note_block).click(function () {
-                $(active_textarea).val($(this).text());
+                var text = $(this).text();
+                $(active_textarea).val(text).focus();
+                if ($(active_textarea).attr('id') == 'mess_text_val') {
+                    FormMess.message = text;
+                } // TODO: жэсточайшы костыль для блокнота
+
+                //                        // Trigger a DOM 'input' event
+                //                        var evt = document.createEvent('HTMLEvents');
+                //                        evt.initEvent('input', false, true);
+                //                        elt.dispatchEvent(evt);
             });
 
             notepad.remind();
@@ -3155,7 +3177,7 @@ Vue.component('photo-view', {
     },
     computed: Vuex.mapState({
         accept: function accept(state) {
-            return state.accept.photo || this.bypass ? true : false;
+            return state.accepts.photo || this.bypass ? true : false;
         }
     }),
     template: '#photo-view'
@@ -3388,8 +3410,8 @@ var option_tag = {
                 user_tag.action.store();
             }
             $('#option_tag input').prop('disabled', false);
-            //                            
-            //option_static.action.close();     
+            //
+            //option_static.action.close();
         },
         add: function add(tag) {
             $.post('/tag/add/', { tag: tag }, option_tag.ajax.on_save);
@@ -3430,7 +3452,7 @@ var option_tag = {
             $('#option_tag_list').empty();
             for (var i = 0; i < tags.length; i++) {
                 var style = '';
-                block_line = $('<i class="desire_tag">').text(tags[i].tag);
+                var block_line = $('<i class="desire_tag">').text(tags[i].tag);
                 if (!tags[i].id) block_line.addClass('desire_onload');
                 block_line.data('id', tags[i].id);
                 block_line.data('num', i);

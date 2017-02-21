@@ -366,8 +366,12 @@
   -webkit-transition: color 0.2s ease;
 }
 .form-message__captcha {
-  padding: 20px 15px;
+  padding: 15px 15px 20px;
   background: #fff2e5;
+}
+.form-message__captcha .captcha-img__addon {
+  padding: 0 10px;
+  background: #ffffff;
 }
 .message_list_title_date {
   border-top: 1px dotted #999999;

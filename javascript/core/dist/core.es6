@@ -33,13 +33,13 @@ $(document).ready(function()
 
 moment.locale('ru');
 
-var ls = storage;
+var ls = lscache;
 
 const store = new Vuex.Store({
     state: {
         apiToken: '',
-        photoServer: '127.0.0.1:8888',
-        //photoServer: '195.154.54.70',
+        //photoServer: '127.0.0.1:8888',
+        photoServer: '195.154.54.70',
         count: 0,
         photoView: {
             thumb:  null,
@@ -58,13 +58,20 @@ const store = new Vuex.Store({
                 width:  null,
             }
         },
-        accept: {
+        accepts: {
             photo: false
         }
     },
     actions: {
         LOAD_API_TOKEN({ commit }) {
-            store.commit('setApiToken', { apiToken: get_cookie('jwt') });
+            commit('setApiToken', { apiToken: get_cookie('jwt') });
+        },
+        LOAD_ACCEPTS({ commit }) {
+            let accepts = ls.get('accepts');
+            if (accepts && accepts.photo) {
+                commit('approveViewPhoto');
+            }
+            //console.log(ls.get('accepts'));
         }
     },
     mutations: {
@@ -84,15 +91,19 @@ const store = new Vuex.Store({
             _.extend(state.formMess.sendPhoto, data);
         },
         approveViewPhoto(state) {
-            state.accept.photo = true;
+            state.accepts.photo = true;
+            ls.set('accepts', _.extend(state.accepts, {photo: true}));
         }
     },
     getters: {
+        accept() {
 
+        }
     }
 });
 
 store.dispatch('LOAD_API_TOKEN');
+store.dispatch('LOAD_ACCEPTS');
 
 
 // -- Получить новый хэш ---
@@ -2854,20 +2865,20 @@ var navigate = {
 
 
 // -- Блокнот ---
-var notepad = {    
-                    
-    note_block: null, 
+var notepad = {
+
+    note_block: null,
     last_click: null,
     disibled:   0,
-    create:     0,    
-        
-    init: function () 
-    {             
+    create:     0,
+
+    init: function ()
+    {
         if (device.width() < 1000)
-        {           
-            notepad.disibled = 1;                                                            
-        }              
-        
+        {
+            notepad.disibled = 1;
+        }
+
         notepad.disibled = get_cookie ('note_vis')*1 ? 1 : 0;   //////////////////////////
 
         active_textarea = $('#mess_text_val');
@@ -2875,110 +2886,119 @@ var notepad = {
 
 
         $('textarea').click( function ()
-        { 
-            active_textarea = this; 
-            notepad.show();  
-        });  
-        
-        $('#notepad_on').click( function (){ notepad.toggle_disable('on'); notepad.show('force'); });                                                   
-               
-        $('.close',notepad.note_block).click( function (){ notepad.hide(); });                
-        $('.post',notepad.note_block).click( function (){ notepad.toggle_disable('off'); notepad.hide(); }); 
-        $('.bunn',notepad.note_block).click( function (){ notepad.toggle_disable('off'); notepad.hide(); }); 
-                                     
-    } , 
-    
-    hide: function () 
-    {     
+        {
+            active_textarea = this;
+            notepad.show();
+        });
+
+        $('#notepad_on').click( function (){ notepad.toggle_disable('on'); notepad.show('force'); });
+
+        $('.close',notepad.note_block).click( function (){ notepad.hide(); });
+        $('.post',notepad.note_block).click( function (){ notepad.toggle_disable('off'); notepad.hide(); });
+        $('.bunn',notepad.note_block).click( function (){ notepad.toggle_disable('off'); notepad.hide(); });
+
+    } ,
+
+    hide: function ()
+    {
         notepad.note_block.hide('fade');
-    } ,  
-    
-    show: function (force) 
-    {                                
-        if (!notepad.disibled)     
+    } ,
+
+    show: function (force)
+    {
+        if (!notepad.disibled)
         if (force || (active_textarea && notepad.last_click != active_textarea))
         {
-            if (notepad.create) 
-            {                                   
-                notepad.note_block.show('fade');  
-                notepad.last_click = active_textarea;        /////////////////////////////  
+            if (notepad.create)
+            {
+                notepad.note_block.show('fade');
+                notepad.last_click = active_textarea;        /////////////////////////////
             }
             else
-                notepad.ajax_load();   
-        } 
+                notepad.ajax_load();
+        }
     } ,
-    
-    toggle_disable: function (vset) 
-    {                                         
-        if (vset == 'off') notepad.disibled = 1;                       
+
+    toggle_disable: function (vset)
+    {
+        if (vset == 'off') notepad.disibled = 1;
         if (vset == 'on' ) notepad.disibled = 0;
-                                      
-        if (vset) 
-        {                              
+
+        if (vset)
+        {
             set_cookie ('note_vis', notepad.disibled, 259200);   /////////////////////////
-        } 
+        }
     } ,
-    
-    ajax_load: function () 
-    {                              
-         simple_hash(); 
-         $.get( '/ajax/load_notepad.php', { hash: hash }, notepad.on_load); 
-    } , 
-    
-    remind: function () 
-    {      
+
+    ajax_load: function ()
+    {
+         simple_hash();
+         $.get( '/ajax/load_notepad.php', { hash: hash }, notepad.on_load);
+    } ,
+
+    remind: function ()
+    {
         var top  = storage.load('notepad_top');
         var left = storage.load('notepad_left');
-                                       
+
         if (top  && top  < 40) top  = 50;
-        if (left && left < 10) left = 10; 
+        if (left && left < 10) left = 10;
         if (top  > (device.height()-300)) top  = 0;
-        if (left > (device.width()-300))  left = 0; 
-         
-        if (top)  notepad.note_block.css("top",top+'px');  
-        if (left) notepad.note_block.css("left",left+'px');  
-        
-    } ,  
-    
-    on_load: function (data) 
-    {           
-           if( data.indexOf('div') > 0 ) 
-           { 
-               notepad.create = 1; 
+        if (left > (device.width()-300))  left = 0;
+
+        if (top)  notepad.note_block.css("top",top+'px');
+        if (left) notepad.note_block.css("left",left+'px');
+
+    } ,
+
+    on_load: function (data)
+    {
+           if( data.indexOf('div') > 0 )
+           {
+               notepad.create = 1;
                $('.notes',notepad.note_block).html( data );
-               $('.note_line',notepad.note_block).click( 
+               $('.note_line',notepad.note_block).click(
                    function ()
-                   { 
-                       $(active_textarea).val( $(this).text() ); 
+                   {
+                        let text = $(this).text();
+                        $(active_textarea).val(text).focus();
+                        if ($(active_textarea).attr('id') == 'mess_text_val') {
+                            FormMess.message = text;
+                        } // TODO: жэсточайшы костыль для блокнота
+
+//                        // Trigger a DOM 'input' event
+//                        var evt = document.createEvent('HTMLEvents');
+//                        evt.initEvent('input', false, true);
+//                        elt.dispatchEvent(evt);
                    }
                );
 
                notepad.remind();
-                                  
+
                notepad.note_block.draggable
-               ( 
-                   { 
+               (
+                   {
                        handle:'.title',
-                       stop: function(event, ui) 
-                       {  
+                       stop: function(event, ui)
+                       {
                            var topOff = $(this).offset().top - $(window).scrollTop();
-                           notepad.note_block.css("top",topOff); 
+                           notepad.note_block.css("top",topOff);
                            storage.save('notepad_top',topOff);
                            storage.save('notepad_left',$(this).offset().left);
-                       } 
+                       }
                    }
-               );  
-                
-               notepad.show();  
-           }  
- 
+               );
+
+               notepad.show();
+           }
+
     }
-    
-     
 
 
 
-     
+
+
+
 }
 
 
@@ -3540,7 +3560,7 @@ Vue.component('photo-view', {
     },
     computed: Vuex.mapState({
         accept(state) {
-            return (state.accept.photo || this.bypass) ? true : false;
+            return (state.accepts.photo || this.bypass) ? true : false;
         }
     }),
     template: '#photo-view'
@@ -3763,116 +3783,116 @@ var option_static = {
 }
 
 
-          
-var option_tag = { 
-   
-    loaded:   0,  
-        
-    init: function () {   
+
+var option_tag = {
+
+    loaded:   0,
+
+    init: function () {
         $('#option_tag input').prop('disabled',true);
-        $('#option_tag_button').on('click',option_tag.action.send);      
-        option_tag.action.remind();    
-        option_tag.ajax.load();                 
-    } ,    
-    ajax: {    
-        load: function () {                     
-            $.get('/tag/user/', option_tag.ajax.on_load);                  
-        },   
-        on_load: function (data) {                          
-            data = json.parse(data);                           
-            if (data.tags.length > 0) {  
-                option_tag.action.print(data.tags); 
+        $('#option_tag_button').on('click',option_tag.action.send);
+        option_tag.action.remind();
+        option_tag.ajax.load();
+    } ,
+    ajax: {
+        load: function () {
+            $.get('/tag/user/', option_tag.ajax.on_load);
+        },
+        on_load: function (data) {
+            data = json.parse(data);
+            if (data.tags.length > 0) {
+                option_tag.action.print(data.tags);
                 user_tag.list = data.tags;
                 user_tag.action.store();
-            }  
-            $('#option_tag input').prop('disabled',false); 
-            //                            
-            //option_static.action.close();     
-        },    
-        add: function (tag) {                             
-            $.post('/tag/add/', { tag: tag }, option_tag.ajax.on_save);                   
-        },   
-        on_save: function (data) {                          
-            data = json.parse(data);                           
-            if (data.id) {       
-                user_tag.list[user_tag.list.length-1].id = data.id;  
-                user_tag.option.set_count();  
+            }
+            $('#option_tag input').prop('disabled',false);
+            //
+            //option_static.action.close();
+        },
+        add: function (tag) {
+            $.post('/tag/add/', { tag: tag }, option_tag.ajax.on_save);
+        },
+        on_save: function (data) {
+            data = json.parse(data);
+            if (data.id) {
+                user_tag.list[user_tag.list.length-1].id = data.id;
+                user_tag.option.set_count();
                 option_tag.action.remind();
-            } else { 
+            } else {
                 option_tag.option.error(option_tag.loaded);
             }
             $('#option_tag_value').val('');
-            user_tag.action.store();  
-        },    
-        del: function (id) {                             
-            $.post('/tag/del/', { id: id });                   
-        }             
-    } ,        
-    action: {  
-        remind: function () {                             
+            user_tag.action.store();
+        },
+        del: function (id) {
+            $.post('/tag/del/', { id: id });
+        }
+    } ,
+    action: {
+        remind: function () {
             if (user_tag.list.length > 0) {
                 option_tag.action.print(user_tag.list);
-            }                 
-        },    
-        send: function () {                           
-            var tag = $('#option_tag_value').val();    
+            }
+        },
+        send: function () {
+            var tag = $('#option_tag_value').val();
             var data = {"tag":tag,"id":0};
-            user_tag.list.push(data);   
-            option_tag.action.remind();     
-            option_tag.ajax.add(tag);   
-        },    
-        set: function () {     
-            userinfo.data.contact[$(this).data('val')] = $(this).prop('checked')*1;                     
-        } ,   
-        print: function (tags) {            
+            user_tag.list.push(data);
+            option_tag.action.remind();
+            option_tag.ajax.add(tag);
+        },
+        set: function () {
+            userinfo.data.contact[$(this).data('val')] = $(this).prop('checked')*1;
+        } ,
+        print: function (tags) {
             $('#option_tag_list').empty();
             for (var i = 0; i < tags.length; i++) {
                 var style = '';
-                block_line = $('<i class="desire_tag">').text(tags[i].tag);
-                if (!tags[i].id) 
+                let block_line = $('<i class="desire_tag">').text(tags[i].tag);
+                if (!tags[i].id)
                     block_line.addClass('desire_onload');
-                block_line.data('id',tags[i].id); 
-                block_line.data('num',i); 
-                block_line.data('tag',tags[i].tag);  
-                block_line.attr('id','utag'+i);  
-                block_line.on('click',option_tag.action.del); 
-                $('#option_tag_list').append(block_line); 
-            } 
-        }, 
-        add: function () {  
+                block_line.data('id',tags[i].id);
+                block_line.data('num',i);
+                block_line.data('tag',tags[i].tag);
+                block_line.attr('id','utag'+i);
+                block_line.on('click',option_tag.action.del);
+                $('#option_tag_list').append(block_line);
+            }
+        },
+        add: function () {
             option_tag.ajax.add($(this).data('tag'));
-            option_tag.option.toggle(this); 
-            $(this).on('click',option_tag.action.del);          
-            var data = {"tag":$(this).data('tag'),"id":$(this).data('id')}; 
-            user_tag.list.splice($(this).data('num'),0,data);       
-        }, 
-        del: function () {  
+            option_tag.option.toggle(this);
+            $(this).on('click',option_tag.action.del);
+            var data = {"tag":$(this).data('tag'),"id":$(this).data('id')};
+            user_tag.list.splice($(this).data('num'),0,data);
+        },
+        del: function () {
             option_tag.ajax.del($(this).data('id'));
-            option_tag.option.toggle(this);  
-            user_tag.list.splice($(this).data('num'),1);   
+            option_tag.option.toggle(this);
+            user_tag.list.splice($(this).data('num'),1);
             user_tag.option.set_count();
-            $(this).on('click',option_tag.action.add);                 
-        }, 
-        ids: function () {    
+            $(this).on('click',option_tag.action.add);
+        },
+        ids: function () {
             user_tag.idls = [];
             for (var i=0; i<user_tag.list; i++) {
                 if (user_tag.list[i].id)
                     user_tag.idls.push(user_tag.list[i].id);
-            }  
-            return user_tag.idls;              
-        }                                      
-    },        
-    option: { 
-        toggle: function (elem) {   
-            $(elem).off('click');   
-            $(elem).toggleClass('deleted_tag');              
+            }
+            return user_tag.idls;
+        }
+    },
+    option: {
+        toggle: function (elem) {
+            $(elem).off('click');
+            $(elem).toggleClass('deleted_tag');
         },
-        error: function (i) {   
-            $('#utag'+[i]).off('click');   
-            $('#utag'+[i]).toggleClass('error_tag');              
-        } 
-    }     
-}          
+        error: function (i) {
+            $('#utag'+[i]).off('click');
+            $('#utag'+[i]).toggleClass('error_tag');
+        }
+    }
+}
 
 
       

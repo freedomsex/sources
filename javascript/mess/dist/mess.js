@@ -618,8 +618,11 @@ var FormMess = new Vue({
     store: store,
     data: {
         message: '',
+        reply: '',
+        code: '',
         show: true,
-        approve: false,
+        process: false,
+        approve: true,
         uid: null,
         tid: null
     },
@@ -636,6 +639,13 @@ var FormMess = new Vue({
         }
     }),
     methods: {
+        reset: function reset() {
+            this.show = true;
+            this.process = false;
+            this.approve = true;
+            this.message = '';
+        },
+
         upload: function upload() {
             store.commit('viewUpload', true);
         },
@@ -663,18 +673,28 @@ var FormMess = new Vue({
             var data = {
                 mess: this.message,
                 id: this.tid,
-                re: repl,
-                captcha_code: $('.code', giper_chat.mess_block).val(),
-                hash: hash
+                re: this.reply,
+                captcha_code: this.code
             };
             axios.post('/mailer/post/', data, config).then(function (response) {
-                _this.$emit('remove', _this.index);
+                _this.handler(response.data);
             }).catch(function (error) {
-                console.log('error');
+                console.log(error);
             });
-
-            //  disabled_with_timeout( $('.post',giper_chat.mess_block), 5);
-            //  giper_chat.timer_cut();
+            this.process = true;
+        },
+        handler: function handler(response) {
+            if (response.error) {
+                if (response.error == 'captcha') {
+                    this.approve = false;
+                }
+            } else {
+                MessList.messages.unshift(response.message);
+                // TODO: старая зависимость
+                giper_chat.timer_cut();
+                this.reset();
+            }
+            this.process = false;
         }
     }
 });
@@ -979,7 +999,7 @@ Vue.component('message-item', {
             });
         },
         photo: function photo(_photo) {
-            console.log(_photo);
+            //console.log(photo);
             var links = _photo._links;
             if (links.origin.href) {
                 var data = {

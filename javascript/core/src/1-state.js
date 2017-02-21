@@ -1,13 +1,13 @@
 
 moment.locale('ru');
 
-var ls = storage;
+var ls = lscache;
 
 const store = new Vuex.Store({
     state: {
         apiToken: '',
-        photoServer: '127.0.0.1:8888',
-        //photoServer: '195.154.54.70',
+        //photoServer: '127.0.0.1:8888',
+        photoServer: '195.154.54.70',
         count: 0,
         photoView: {
             thumb:  null,
@@ -26,13 +26,20 @@ const store = new Vuex.Store({
                 width:  null,
             }
         },
-        accept: {
+        accepts: {
             photo: false
         }
     },
     actions: {
         LOAD_API_TOKEN({ commit }) {
-            store.commit('setApiToken', { apiToken: get_cookie('jwt') });
+            commit('setApiToken', { apiToken: get_cookie('jwt') });
+        },
+        LOAD_ACCEPTS({ commit }) {
+            let accepts = ls.get('accepts');
+            if (accepts && accepts.photo) {
+                commit('approveViewPhoto');
+            }
+            //console.log(ls.get('accepts'));
         }
     },
     mutations: {
@@ -52,12 +59,16 @@ const store = new Vuex.Store({
             _.extend(state.formMess.sendPhoto, data);
         },
         approveViewPhoto(state) {
-            state.accept.photo = true;
+            state.accepts.photo = true;
+            ls.set('accepts', _.extend(state.accepts, {photo: true}));
         }
     },
     getters: {
+        accept() {
 
+        }
     }
 });
 
 store.dispatch('LOAD_API_TOKEN');
+store.dispatch('LOAD_ACCEPTS');

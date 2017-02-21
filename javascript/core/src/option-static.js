@@ -15,7 +15,7 @@ Vue.component('photo-view', {
     },
     computed: Vuex.mapState({
         accept(state) {
-            return (state.accept.photo || this.bypass) ? true : false;
+            return (state.accepts.photo || this.bypass) ? true : false;
         }
     }),
     template: '#photo-view'

@@ -159,7 +159,7 @@ Vue.component('message-item', {
             });
         },
         photo(photo) {
-            console.log(photo);
+            //console.log(photo);
             let links = photo._links;
             if (links.origin.href) {
                 let data = {
