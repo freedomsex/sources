@@ -1125,7 +1125,7 @@ var MessList = new Vue({
         },
         onLoad: function onLoad(response) {
             var messages = response.data.messages;
-            this.received = messages.length;
+            this.received = messages ? messages.length : 0;
             this.messages = _.union(this.messages, messages);
             if (!this.messages) {
                 this.noMessages();
