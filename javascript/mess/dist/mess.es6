@@ -724,14 +724,17 @@ var FormMess = new Vue({
         approve: true,
         uid: null,
         tid: null,
+        sex: null,
     },
     mounted: function () {
         this.uid = uid;
         this.tid = tid;
+        this.sex = user_sex;
     },
     computed: Vuex.mapState({
         config: state => state.formMess,
-        photo:  state => state.formMess.sendPhoto
+        photo:  state => state.formMess.sendPhoto,
+        intimate: state => state.formMess.intimate,
     }),
     methods: {
     	reset() {
@@ -747,8 +750,24 @@ var FormMess = new Vue({
         	store.commit('sendPhoto', {photo: null});
         },
         sendPhoto() {
+            let config = {
+                headers: {'Authorization': 'Bearer ' + this.$store.state.apiToken}
+            };
+            let data = {
+                photo: this.photo.alias,
+                id: this.tid,
+                captcha_code: this.code
+            };
+            axios.post('/mailer/post/', data, config).then((response) => {
+                this.handler(response.data);
+            }).catch((error) => {
+                console.log(error);
+            });
+            this.process = true;
+
+
         	// TODO: почти готово, ждем сообщений
-            Vue.http.headers.common['Authorization'] = 'Bearer ' + get_cookie('jwt');
+            //Vue.http.headers.common['Authorization'] = 'Bearer ' + get_cookie('jwt');
             // let data = {
             // 	alias: this.photo.alias
             // };
@@ -775,16 +794,36 @@ var FormMess = new Vue({
             });
             this.process = true;
         },
+        sendSex(sex) {
+        	// TODO: перекинуть на общее хранилище и внешний компонент
+            let config = {
+                headers: {'Authorization': 'Bearer ' + this.$store.state.apiToken}
+            };
+            axios.post('/option/sex/', { sex }, config).then((response) => {
+            	if (response.data.sex) {
+            		this.sex = response.data.sex;
+            		user_sex = this.sex;
+            		this.sendMessage();
+            	}
+            	this.process = false;
+            }).catch((error) => {
+                console.log(error);
+            });
+            this.process = true;
+        },
         handler(response) {
-        	if (response.error) {
-        		if (response.error == 'captcha') {
+        	if (!response.saved && response.error) {
+        		if (response.error == 'need_captcha') {
+                    $('.form-message__captcha-img').get(0).src = '/secret_pic.php?hash='+hash;
         			this.approve = false;
         		}
         	} else {
                 MessList.messages.unshift(response.message);
                 // TODO: старая зависимость
+                $('#mess_shab_text_block').hide();
                 giper_chat.timer_cut();
             	this.reset();
+                console.log(response);
         	}
             this.process = false;
         }
@@ -1248,13 +1287,16 @@ var MessList = new Vue({
         onLoad(response) {
             let messages = response.data.messages;
             this.received = messages ? messages.length : 0;
-            this.messages = _.union(this.messages, messages);
-            if (!this.messages) {
+            if (!messages && !this.messages.length) {
                 this.noMessages();
             } else {
+                if (this.received) {
+                    this.messages = _.union(this.messages, messages);
+                }
                 // TODO: Заменить на компоненты, страрые зависимости
                 lock_user.show_link();
                 this.next += this.batch;
+                store.commit('intimated', true);
             }
             this.response = 200;
             this.toSlow = false;

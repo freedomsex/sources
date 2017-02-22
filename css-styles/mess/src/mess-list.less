@@ -209,8 +209,13 @@
 
 
 
+.form-message__buttons {
+    margin: @indent-sm 0 @indent-lg;
+    padding: 0;
+    color: #888;
+}
 
-.form-message__captcha {
+.form-message__alert {
   padding: @indent-md @indent-md @indent-lg;
   background: @alert-sand;
   .captcha-img__addon {
@@ -219,7 +224,27 @@
   }
 }
 
-
+.form-message__notice() {
+    font-size: 12px;
+    margin: 0px 0px 5px;
+    padding: @indent-xs @indent-sm;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border: 1px solid @gray;
+    border-width: 0 1px 1px;
+}
+.form-message__notice {
+  &-regular {
+    .form-message__notice;
+    background: @light;
+    color: @dark-light;
+  }
+  &-alert {
+    .form-message__notice;
+    background: @pink-dark;
+    color: @white;
+  }
+}
 
 
 

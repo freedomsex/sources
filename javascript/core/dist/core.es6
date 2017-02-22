@@ -56,11 +56,12 @@ const store = new Vuex.Store({
                 photo:  null,
                 height: null,
                 width:  null,
+                intimate: false,
             }
         },
         accepts: {
             photo: false
-        }
+        },
     },
     actions: {
         LOAD_API_TOKEN({ commit }) {
@@ -93,7 +94,10 @@ const store = new Vuex.Store({
         approveViewPhoto(state) {
             state.accepts.photo = true;
             ls.set('accepts', _.extend(state.accepts, {photo: true}));
-        }
+        },
+        intimated(state, data) {
+            state.formMess.intimate = (data === true);
+        },
     },
     getters: {
         accept() {

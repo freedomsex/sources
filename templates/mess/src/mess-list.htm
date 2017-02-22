@@ -1,7 +1,7 @@
 
 
 
-<div id="user-dialog" style="display: none;" v-show="!error" @admit="admit">
+<div id="user-dialog" v-show="!error" @admit="admit">
   <div class="messages">
     <message-item v-for="(item, index) in messages"
       :item="item"
@@ -13,12 +13,13 @@
       @remove="remove"
     ></message-item>
   </div>
-  <div class="messages__next" v-on:click="load" v-show="more">
+  <div class="messages__next" v-on:click="load" v-show="more" style="display: none;">
     <span class="btn btn-default btn-xs">Следующие</span>
   </div>
   <div class="messages__loader" v-show="!error && !response">
     <span>
-      <img src="/static/img/icon/mess_loader.gif" v-show="toSlow"> Загружаем
+      <img src="/static/img/icon/mess_loader.gif" v-show="toSlow" style="display: none;">
+      Загружаем
     </span>
   </div>
 </div>

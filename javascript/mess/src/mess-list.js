@@ -286,13 +286,16 @@ var MessList = new Vue({
         onLoad(response) {
             let messages = response.data.messages;
             this.received = messages ? messages.length : 0;
-            this.messages = _.union(this.messages, messages);
-            if (!this.messages) {
+            if (!messages && !this.messages.length) {
                 this.noMessages();
             } else {
+                if (this.received) {
+                    this.messages = _.union(this.messages, messages);
+                }
                 // TODO: Заменить на компоненты, страрые зависимости
                 lock_user.show_link();
                 this.next += this.batch;
+                store.commit('intimated', true);
             }
             this.response = 200;
             this.toSlow = false;

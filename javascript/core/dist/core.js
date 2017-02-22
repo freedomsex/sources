@@ -54,7 +54,8 @@ var store = new Vuex.Store({
                 thumb: null,
                 photo: null,
                 height: null,
-                width: null
+                width: null,
+                intimate: false
             }
         },
         accepts: {
@@ -96,6 +97,9 @@ var store = new Vuex.Store({
         approveViewPhoto: function approveViewPhoto(state) {
             state.accepts.photo = true;
             ls.set('accepts', _.extend(state.accepts, { photo: true }));
+        },
+        intimated: function intimated(state, data) {
+            state.formMess.intimate = data === true;
         }
     },
     getters: {
