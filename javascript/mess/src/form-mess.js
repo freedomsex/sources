@@ -65,6 +65,7 @@ var FormMess = new Vue({
             // window.location.reload();
         },
         sendMessage() {
+            console.log(this.intimate);
             let config = {
                 headers: {'Authorization': 'Bearer ' + this.$store.state.apiToken}
             };

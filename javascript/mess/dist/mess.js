@@ -689,6 +689,7 @@ var FormMess = new Vue({
         sendMessage: function sendMessage() {
             var _this2 = this;
 
+            console.log(this.intimate);
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken }
             };
@@ -1179,7 +1180,6 @@ var MessList = new Vue({
                 // TODO: Заменить на компоненты, страрые зависимости
                 lock_user.show_link();
                 this.next += this.batch;
-                store.commit('intimated', true);
             }
             this.response = 200;
             this.toSlow = false;
@@ -1188,6 +1188,7 @@ var MessList = new Vue({
             // TODO: Заменить на компоненты, страрые зависимости
             quick_mess.ajax_load();
             notice_post.show();
+            store.commit('intimated', false);
         },
         setDate: function setDate(date) {
             //this.date = new Date(this.item.date).getDayMonth();

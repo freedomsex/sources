@@ -54,9 +54,9 @@ var store = new Vuex.Store({
                 thumb: null,
                 photo: null,
                 height: null,
-                width: null,
-                intimate: false
-            }
+                width: null
+            },
+            intimate: true
         },
         accepts: {
             photo: false
