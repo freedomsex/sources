@@ -778,6 +778,7 @@ var FormMess = new Vue({
             // window.location.reload();
         },
         sendMessage() {
+            // TODO: убрать из формы старое говно
             console.log(this.intimate);
             let config = {
                 headers: {'Authorization': 'Bearer ' + this.$store.state.apiToken}
