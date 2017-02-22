@@ -38,8 +38,8 @@ var ls = lscache;
 const store = new Vuex.Store({
     state: {
         apiToken: '',
-        //photoServer: '127.0.0.1:8888',
-        photoServer: '195.154.54.70',
+        photoServer: '127.0.0.1:8888',
+        //photoServer: '195.154.54.70',
         count: 0,
         photoView: {
             thumb:  null,
@@ -151,7 +151,10 @@ var UploadPhoto = Vue.extend({
                 params: {hash}
             };
             axios.get(`http://${this.server}/api/v1/users/${uid}/photos`, config).then((response) => {
-                this.photos = response.data.photos;
+                let result = response.data.photos;
+                if (result && result.length) {
+                    this.photos = response.data.photos;
+                }
                 console.log(this.photos);
             }).catch((error) => {
                 console.log(error);

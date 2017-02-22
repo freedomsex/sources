@@ -61,21 +61,30 @@ var FormMess = new Vue({
             // this.$http.post('http://'+api_photo+'/api/v1/users/'+tid+'/sends', data).then(function (response) {
             //     //console.log(response.body);
             // });
-            this.cancelPhoto();
             // window.location.reload();
         },
         sendMessage() {
             // TODO: убрать из формы старое говно
-            console.log(this.intimate);
+            console.log(this.photo.alias);
             let config = {
                 headers: {'Authorization': 'Bearer ' + this.$store.state.apiToken}
             };
-            let data = {
-                mess: this.message,
-                id: this.tid,
-                re: this.reply,
-                captcha_code: this.code
-            };
+            let data;
+            if (this.photo.alias) {
+                data = {
+                    photo: this.photo.alias,
+                    id: this.tid,
+                    captcha_code: this.code
+                };
+            } else {
+                data = {
+                    mess: this.message,
+                    id: this.tid,
+                    re: this.reply,
+                    captcha_code: this.code
+                };
+            }
+
             axios.post('/mailer/post/', data, config).then((response) => {
             	this.handler(response.data);
             }).catch((error) => {
@@ -113,6 +122,7 @@ var FormMess = new Vue({
                 giper_chat.timer_cut();
             	this.reset();
                 console.log(response);
+                this.cancelPhoto();
         	}
             this.process = false;
         }
