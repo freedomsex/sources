@@ -37,8 +37,8 @@ var ls = lscache;
 var store = new Vuex.Store({
     state: {
         apiToken: '',
-        photoServer: '127.0.0.1:8888',
-        //photoServer: '195.154.54.70',
+        //photoServer: '127.0.0.1:8888',
+        photoServer: '195.154.54.70',
         count: 0,
         photoView: {
             thumb: null,
