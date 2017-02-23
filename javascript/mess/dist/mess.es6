@@ -730,6 +730,13 @@ var FormMess = new Vue({
         this.uid = uid;
         this.tid = tid;
         this.sex = user_sex;
+
+        $('#mess-text-area').on('keypress', (event, el) => {
+            if((event.ctrlKey) && ((event.keyCode == 10) || (event.keyCode == 13))) {
+                this.sendMessage();
+            }
+        });
+
     },
     computed: Vuex.mapState({
         config: state => state.formMess,
@@ -738,6 +745,7 @@ var FormMess = new Vue({
     }),
     methods: {
     	reset() {
+            this.cancelPhoto();
     		this.show = true;
     		this.process = false;
             this.approve = true;
@@ -747,7 +755,10 @@ var FormMess = new Vue({
             store.commit('viewUpload', true);
         },
         cancelPhoto() {
-        	store.commit('sendPhoto', {photo: null});
+        	store.commit('sendPhoto', {photo: null, alias: null});
+        },
+        send() {
+            this.photo.alias ? sendPhoto() : sendMessage();
         },
         sendPhoto() {
             let config = {
@@ -1223,14 +1234,19 @@ Vue.component('message-item', {
             return moment(this.item.date).format('HH:mm');
         },
         date() {
-            let date = moment(this.item.date);
+            let mdate = moment(this.item.date);
+            let date = mdate.date();
             let first_date = fdate;
-            fdate = date.date() + ' ' + date.format('MMMM').substring(0,3);
+            fdate = date;
             date = (fdate == first_date) ? '' : fdate;
             let today = moment().date();
-            let yestd = moment().date(-1);
+            let yestd = today - 1;
+
             date = (date == today) ? 'Сегодня' : date;
             date = (date == yestd) ? 'Вчера' : date;
+
+            mdate = mdate.date() + ' ' + mdate.format('MMMM').substring(0,3);
+            date = (Number.isInteger(date)) ? mdate : date;
             return date;
         },
         alias() {
@@ -1897,7 +1913,9 @@ var quick_mess = {
 
     print: function ()
     {
-        $('#mess_text_val').val( $(this).text().trim() );
+        let text = $(this).text().trim();
+        $('#mess-text-area').val(text);
+        FormMess.message = text;
     } ,
 
     on_load:  function (data)

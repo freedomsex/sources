@@ -97,7 +97,7 @@ var notepad = {
                    {
                         let text = $(this).text();
                         $(active_textarea).val(text).focus();
-                        if ($(active_textarea).attr('id') == 'mess_text_val') {
+                        if ($(active_textarea).attr('id') == 'mess-text-area') {
                             FormMess.message = text;
                         } // TODO: жэсточайшы костыль для блокнота
 

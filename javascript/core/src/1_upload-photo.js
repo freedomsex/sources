@@ -28,7 +28,7 @@ var UploadPhoto = Vue.extend({
                 if (result && result.length) {
                     this.photos = response.data.photos;
                 }
-                console.log(this.photos);
+                //console.log(this.photos);
             }).catch((error) => {
                 console.log(error);
             });
@@ -50,8 +50,8 @@ var UploadPhoto = Vue.extend({
                     width:  photo.width,
                 }
                 store.commit('sendPhoto', data);
-                console.log('sendPhoto');
-                console.log(data);
+                //console.log('sendPhoto');
+                //console.log(data);
             }
             this.close();
         },

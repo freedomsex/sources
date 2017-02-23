@@ -46,7 +46,9 @@ var quick_mess = {
 
     print: function ()
     {
-        $('#mess_text_val').val( $(this).text().trim() );
+        let text = $(this).text().trim();
+        $('#mess-text-area').val(text);
+        FormMess.message = text;
     } ,
 
     on_load:  function (data)

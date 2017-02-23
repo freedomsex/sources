@@ -38,8 +38,8 @@ var ls = lscache;
 const store = new Vuex.Store({
     state: {
         apiToken: '',
-        //photoServer: '127.0.0.1:8888',
-        photoServer: '195.154.54.70',
+        photoServer: '127.0.0.1:8888',
+        //photoServer: '195.154.54.70',
         count: 0,
         photoView: {
             thumb:  null,
@@ -155,7 +155,7 @@ var UploadPhoto = Vue.extend({
                 if (result && result.length) {
                     this.photos = response.data.photos;
                 }
-                console.log(this.photos);
+                //console.log(this.photos);
             }).catch((error) => {
                 console.log(error);
             });
@@ -177,8 +177,8 @@ var UploadPhoto = Vue.extend({
                     width:  photo.width,
                 }
                 store.commit('sendPhoto', data);
-                console.log('sendPhoto');
-                console.log(data);
+                //console.log('sendPhoto');
+                //console.log(data);
             }
             this.close();
         },
@@ -2805,43 +2805,36 @@ var master_info = {
 }
 
 
- 
-// Навигация с помошью клавиатуры 
-var navigate = {    
-        
-    enable:  0,   
-        
-    init: function () 
-    {                           
-        $('#form_post_mess').on('keypress', function()
-        {
-            navigate.post_form(event,this);    
+
+// Навигация с помошью клавиатуры
+var navigate = {
+
+    enable:  0,
+
+    init: function ()
+    {
+        $(document).on('keydown', function() {
+            navigate.through(event);
         });
-                                     
-        $(document).on('keydown', function()
-        {                                 
-            navigate.through(event);    
-        });
-                                     
-    } , 
+
+    } ,
 
     // Отправка сообщения по CTRL + Enter
-    post_form: function (event, formElem) 
-    {    
-        if((event.ctrlKey) && ((event.keyCode == 10)||(event.keyCode == 13))) 
-        {
-            formElem.submit();    
+    post_form: function (event, formElem)
+    {
+        if((event.ctrlKey) && ((event.keyCode == 10)||(event.keyCode == 13))) {
+            formElem.submit();
         }
     } ,
-          
+
     // Навигация с помошью стрелок + CTRL
-    through: function (event) 
-    {  
+    through: function (event)
+    {
         if (window.event)
             event = window.event;
 
         if (event.ctrlKey)
-        {                           
+        {
             var link = null;
             var href = null;
             switch (event.keyCode ? event.keyCode : event.which ? event.which : null)
@@ -2861,14 +2854,14 @@ var navigate = {
                 case 0x24:
                     link = '#home_page';
                     break;
-            }                
+            }
             if($('a').is(link))  // alert($(link).attr('href')); return false;
                 document.location = $(link).attr('href');
         }
-    }  
+    }
 
 }
- 
+
 
 
 // -- Блокнот ---
@@ -2969,7 +2962,7 @@ var notepad = {
                    {
                         let text = $(this).text();
                         $(active_textarea).val(text).focus();
-                        if ($(active_textarea).attr('id') == 'mess_text_val') {
+                        if ($(active_textarea).attr('id') == 'mess-text-area') {
                             FormMess.message = text;
                         } // TODO: жэсточайшы костыль для блокнота
 

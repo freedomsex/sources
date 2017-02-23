@@ -210,14 +210,19 @@ Vue.component('message-item', {
             return moment(this.item.date).format('HH:mm');
         },
         date() {
-            let date = moment(this.item.date);
+            let mdate = moment(this.item.date);
+            let date = mdate.date();
             let first_date = fdate;
-            fdate = date.date() + ' ' + date.format('MMMM').substring(0,3);
+            fdate = date;
             date = (fdate == first_date) ? '' : fdate;
             let today = moment().date();
-            let yestd = moment().date(-1);
+            let yestd = today - 1;
+
             date = (date == today) ? 'Сегодня' : date;
             date = (date == yestd) ? 'Вчера' : date;
+
+            mdate = mdate.date() + ' ' + mdate.format('MMMM').substring(0,3);
+            date = (Number.isInteger(date)) ? mdate : date;
             return date;
         },
         alias() {

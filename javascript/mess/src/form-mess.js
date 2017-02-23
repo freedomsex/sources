@@ -17,6 +17,13 @@ var FormMess = new Vue({
         this.uid = uid;
         this.tid = tid;
         this.sex = user_sex;
+
+        $('#mess-text-area').on('keypress', (event, el) => {
+            if((event.ctrlKey) && ((event.keyCode == 10) || (event.keyCode == 13))) {
+                this.sendMessage();
+            }
+        });
+
     },
     computed: Vuex.mapState({
         config: state => state.formMess,
@@ -25,6 +32,7 @@ var FormMess = new Vue({
     }),
     methods: {
     	reset() {
+            this.cancelPhoto();
     		this.show = true;
     		this.process = false;
             this.approve = true;
@@ -34,7 +42,10 @@ var FormMess = new Vue({
             store.commit('viewUpload', true);
         },
         cancelPhoto() {
-        	store.commit('sendPhoto', {photo: null});
+        	store.commit('sendPhoto', {photo: null, alias: null});
+        },
+        send() {
+            this.photo.alias ? sendPhoto() : sendMessage();
         },
         sendPhoto() {
             let config = {

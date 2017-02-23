@@ -628,9 +628,17 @@ var FormMess = new Vue({
         sex: null
     },
     mounted: function mounted() {
+        var _this = this;
+
         this.uid = uid;
         this.tid = tid;
         this.sex = user_sex;
+
+        $('#mess-text-area').on('keypress', function (event, el) {
+            if (event.ctrlKey && (event.keyCode == 10 || event.keyCode == 13)) {
+                _this.sendMessage();
+            }
+        });
     },
     computed: Vuex.mapState({
         config: function config(state) {
@@ -645,6 +653,7 @@ var FormMess = new Vue({
     }),
     methods: {
         reset: function reset() {
+            this.cancelPhoto();
             this.show = true;
             this.process = false;
             this.approve = true;
@@ -655,10 +664,13 @@ var FormMess = new Vue({
             store.commit('viewUpload', true);
         },
         cancelPhoto: function cancelPhoto() {
-            store.commit('sendPhoto', { photo: null });
+            store.commit('sendPhoto', { photo: null, alias: null });
+        },
+        send: function send() {
+            this.photo.alias ? sendPhoto() : sendMessage();
         },
         sendPhoto: function sendPhoto() {
-            var _this = this;
+            var _this2 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken }
@@ -669,7 +681,7 @@ var FormMess = new Vue({
                 captcha_code: this.code
             };
             axios.post('/mailer/post/', data, config).then(function (response) {
-                _this.handler(response.data);
+                _this2.handler(response.data);
             }).catch(function (error) {
                 console.log(error);
             });
@@ -686,7 +698,7 @@ var FormMess = new Vue({
             // window.location.reload();
         },
         sendMessage: function sendMessage() {
-            var _this2 = this;
+            var _this3 = this;
 
             // TODO: убрать из формы старое говно
             console.log(this.photo.alias);
@@ -710,14 +722,14 @@ var FormMess = new Vue({
             }
 
             axios.post('/mailer/post/', data, config).then(function (response) {
-                _this2.handler(response.data);
+                _this3.handler(response.data);
             }).catch(function (error) {
                 console.log(error);
             });
             this.process = true;
         },
         sendSex: function sendSex(sex) {
-            var _this3 = this;
+            var _this4 = this;
 
             // TODO: перекинуть на общее хранилище и внешний компонент
             var config = {
@@ -725,11 +737,11 @@ var FormMess = new Vue({
             };
             axios.post('/option/sex/', { sex: sex }, config).then(function (response) {
                 if (response.data.sex) {
-                    _this3.sex = response.data.sex;
-                    user_sex = _this3.sex;
-                    _this3.sendMessage();
+                    _this4.sex = response.data.sex;
+                    user_sex = _this4.sex;
+                    _this4.sendMessage();
                 }
-                _this3.process = false;
+                _this4.process = false;
             }).catch(function (error) {
                 console.log(error);
             });
@@ -781,14 +793,14 @@ var incoming_photo = new Vue({
     },
     methods: {
         loadPhoto: function loadPhoto() {
-            var _this4 = this;
+            var _this5 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
                 params: { tid: tid, hash: hash }
             };
             axios.get('http://' + this.server + '/api/v1/users/' + uid + '/sends', config).then(function (response) {
-                _this4.photos = response.data.photos;
+                _this5.photos = response.data.photos;
                 //console.log(this.photos);
             }).catch(function (error) {
                 console.log(error);
@@ -1004,7 +1016,7 @@ Vue.component('message-item', {
             }
         },
         bun: function bun() {
-            var _this5 = this;
+            var _this6 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken }
@@ -1014,7 +1026,7 @@ Vue.component('message-item', {
                 tid: this.item.from
             };
             axios.post('/mess/bun/', data, config).then(function (response) {
-                _this5.$emit('remove', _this5.index);
+                _this6.$emit('remove', _this6.index);
             }).catch(function (error) {
                 console.log('error');
             });
@@ -1024,7 +1036,7 @@ Vue.component('message-item', {
             console.log('cancel');
         },
         remove: function remove() {
-            var _this6 = this;
+            var _this7 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken }
@@ -1033,14 +1045,14 @@ Vue.component('message-item', {
                 id: this.item.id
             };
             axios.post('/mess/delete/', data, config).then(function (response) {
-                _this6.$emit('remove', _this6.index);
+                _this7.$emit('remove', _this7.index);
             }).catch(function (error) {
                 console.log(error);
             });
             console.log('remove');
         },
         play: function play() {
-            var _this7 = this;
+            var _this8 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
@@ -1049,7 +1061,7 @@ Vue.component('message-item', {
             var server = this.$store.state.photoServer;
             var url = 'http://' + server + '/api/v1/users/' + uid + '/sends/' + this.alias + '.jpg';
             axios.get(url, config).then(function (response) {
-                _this7.photo(response.data.photo);
+                _this8.photo(response.data.photo);
             }).catch(function (error) {
                 console.log('error');
             });
@@ -1103,14 +1115,19 @@ Vue.component('message-item', {
             return moment(this.item.date).format('HH:mm');
         },
         date: function date() {
-            var date = moment(this.item.date);
+            var mdate = moment(this.item.date);
+            var date = mdate.date();
             var first_date = fdate;
-            fdate = date.date() + ' ' + date.format('MMMM').substring(0, 3);
+            fdate = date;
             date = fdate == first_date ? '' : fdate;
             var today = moment().date();
-            var yestd = moment().date(-1);
+            var yestd = today - 1;
+
             date = date == today ? 'Сегодня' : date;
             date = date == yestd ? 'Вчера' : date;
+
+            mdate = mdate.date() + ' ' + mdate.format('MMMM').substring(0, 3);
+            date = Number.isInteger(date) ? mdate : date;
             return date;
         },
         alias: function alias() {
@@ -1161,7 +1178,7 @@ var MessList = new Vue({
     },
     methods: {
         load: function load() {
-            var _this8 = this;
+            var _this9 = this;
 
             //console.log('load MessList data');
             this.response = 0;
@@ -1170,13 +1187,13 @@ var MessList = new Vue({
                 params: { id: this.tid, next: this.next, hash: hash }
             };
             axios.get('/ajax/messages_load.php', config).then(function (response) {
-                _this8.onLoad(response);
+                _this9.onLoad(response);
             }).catch(function (error) {
-                _this8.error = 10;
+                _this9.error = 10;
                 console.log(error);
             });
             setTimeout(function () {
-                return _this8.toSlow = true;
+                return _this9.toSlow = true;
             }, 7000);
         },
         onLoad: function onLoad(response) {
@@ -1720,7 +1737,9 @@ var quick_mess = {
     },
 
     print: function print() {
-        $('#mess_text_val').val($(this).text().trim());
+        var text = $(this).text().trim();
+        $('#mess-text-area').val(text);
+        FormMess.message = text;
     },
 
     on_load: function on_load(data) {

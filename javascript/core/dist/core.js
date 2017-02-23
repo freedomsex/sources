@@ -37,8 +37,8 @@ var ls = lscache;
 var store = new Vuex.Store({
     state: {
         apiToken: '',
-        //photoServer: '127.0.0.1:8888',
-        photoServer: '195.154.54.70',
+        photoServer: '127.0.0.1:8888',
+        //photoServer: '195.154.54.70',
         count: 0,
         photoView: {
             thumb: null,
@@ -156,7 +156,7 @@ var UploadPhoto = Vue.extend({
                 if (result && result.length) {
                     _this.photos = response.data.photos;
                 }
-                console.log(_this.photos);
+                //console.log(this.photos);
             }).catch(function (error) {
                 console.log(error);
             });
@@ -179,8 +179,8 @@ var UploadPhoto = Vue.extend({
                     width: photo.width
                 };
                 store.commit('sendPhoto', _data);
-                console.log('sendPhoto');
-                console.log(_data);
+                //console.log('sendPhoto');
+                //console.log(data);
             }
             this.close();
         },
@@ -2483,16 +2483,12 @@ var master_info = {
 
 };
 
-// Навигация с помошью клавиатуры 
+// Навигация с помошью клавиатуры
 var navigate = {
 
     enable: 0,
 
     init: function init() {
-        $('#form_post_mess').on('keypress', function () {
-            navigate.post_form(event, this);
-        });
-
         $(document).on('keydown', function () {
             navigate.through(event);
         });
@@ -2621,7 +2617,7 @@ var notepad = {
             $('.note_line', notepad.note_block).click(function () {
                 var text = $(this).text();
                 $(active_textarea).val(text).focus();
-                if ($(active_textarea).attr('id') == 'mess_text_val') {
+                if ($(active_textarea).attr('id') == 'mess-text-area') {
                     FormMess.message = text;
                 } // TODO: жэсточайшы костыль для блокнота
 

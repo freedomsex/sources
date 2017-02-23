@@ -255,16 +255,28 @@
   height: 150px;
   text-align: center;
 }
-.message-image__subtime {
+.message-image__info {
+  font-size: 0;
   position: absolute;
   bottom: 0;
   right: 0;
   left: 0;
-  color: #ffffff;
-  font-size: 11px;
   padding: 20px 5px 5px 5px;
   text-align: right;
   background: linear-gradient(to bottom right, transparent 70%, rgba(0, 0, 0, 0.3));
+}
+.message-image__time {
+  color: #ffffff;
+  font-size: 11px;
+  margin-left: 5px;
+}
+.message-image__status {
+  background-color: #6F92D8;
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 10px;
+  background-color: #ffffff;
 }
 .message-image__play {
   cursor: pointer;

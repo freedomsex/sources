@@ -36,7 +36,10 @@
         <div class="message-image__play" @click="play">
           <img src="/static/img/icon/play.png">
         </div>
-        <div class="message-image__subtime">{{time}}</div>
+        <span class="message-image__info">
+          <span class="message-image__status" v-show="item.read == 0"></span>
+          <span class="message-image__time">{{time}}</span>
+        </span>
       </div>
       <span v-else>
         <span v-html="item.mess"></span>
