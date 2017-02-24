@@ -1308,6 +1308,7 @@ var MessList = new Vue({
     methods: {
         reload() {
             this.next = 0;
+            this.newCount = 0;
             this.messages = [];
             this.load();
         },
