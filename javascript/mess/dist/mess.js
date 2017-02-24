@@ -1095,7 +1095,7 @@ Vue.component('message-item', {
             this.fix();
             this.alertOption = true;
         }
-        if (!this.sent && !this.read) {
+        if (!this.sent && !this.item.read) {
             this.$emit('set-new');
         }
     },
