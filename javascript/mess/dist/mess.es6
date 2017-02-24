@@ -1246,7 +1246,7 @@ Vue.component('message-item', {
             date = (date == yestd) ? 'Вчера' : date;
 
             mdate = mdate.date() + ' ' + mdate.format('MMMM').substring(0,3);
-            date = (Number.isInteger(date)) ? mdate : date;
+            date = (date === parseInt(date, 10)) ? mdate : date;
             return date;
         },
         alias() {
