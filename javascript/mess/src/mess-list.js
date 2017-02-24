@@ -189,7 +189,7 @@ Vue.component('message-item', {
             this.fix();
             this.alertOption = true;
         }
-        if (!this.sent && !this.item.read) {
+        if (!this.sent && !this.read) {
             this.$emit('set-new');
         }
     },
@@ -208,6 +208,9 @@ Vue.component('message-item', {
         },
         sent() {
             return (uid == this.item.from) ? 1 : 0;
+        },
+        read() {
+            return (this.item.read == 0) ? false : true;
         },
         time() {
             return moment(this.item.date).format('HH:mm');
@@ -312,6 +315,7 @@ var MessList = new Vue({
             }
             this.response = 200;
             this.toSlow = false;
+            //console.log(response);
         },
         noMessages() {
             // TODO: Заменить на компоненты, страрые зависимости
