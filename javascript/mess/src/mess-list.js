@@ -285,6 +285,9 @@ var MessList = new Vue({
             this.newCount = 0;
             this.messages = [];
             this.load();
+            fdate = null;
+            prev  = null;
+            //TODO: переписать глобальную зависимость
         },
         load() {
             //console.log('load MessList data');

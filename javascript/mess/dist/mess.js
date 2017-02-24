@@ -1191,6 +1191,9 @@ var MessList = new Vue({
             this.newCount = 0;
             this.messages = [];
             this.load();
+            fdate = null;
+            prev = null;
+            //TODO: переписать глобальную зависимость
         },
         load: function load() {
             var _this9 = this;
