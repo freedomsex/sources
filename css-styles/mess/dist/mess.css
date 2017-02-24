@@ -191,6 +191,16 @@
   text-align: center;
   margin-top: 20px;
 }
+.messages__new {
+  text-align: center;
+}
+.messages__new-lamp {
+  padding: 3px 10px;
+  background-color: #ff9900;
+  color: #ffffff;
+  display: inline-block;
+  border-radius: 10px;
+}
 .clear-fix {
   content: '';
   display: block;
@@ -1229,6 +1239,10 @@ div.alert_block_mess b {
 .photo-view__accept-text {
   padding: 15px 0 15px;
   font-size: 14px;
+}
+.fileupload {
+  position: absolute;
+  left: -99999px;
 }
 #galery-photo {
   margin-bottom: 10px;

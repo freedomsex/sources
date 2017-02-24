@@ -58,11 +58,11 @@
       Размер фотографии не должен превышать 8Mb
     </div>
     <div class="upload_photo__add">
-      <button class="btn btn-primary" @click="upload()">
+      <button class="btn btn-primary" @click="upload">
         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
         Добавить фотографию
       </button>
-      <input id="fileupload" type="file" name="file" data-form-data='{"script": "true"}' style="display: none;">
+      <input id="fileupload" type="file" name="file" data-form-data='{"script": "true"}'>
     </div>
 
     <div class="galery-photo__list" v-show="photos.length" style="display: none;">

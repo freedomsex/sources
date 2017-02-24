@@ -127,7 +127,8 @@ var FormMess = new Vue({
         			this.approve = false;
         		}
         	} else {
-                MessList.messages.unshift(response.message);
+                //MessList.messages.unshift(response.message);
+                MessList.reload();
                 // TODO: старая зависимость
                 $('#mess_shab_text_block').hide();
                 giper_chat.timer_cut();

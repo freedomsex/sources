@@ -1,7 +1,12 @@
 
 
 
-<div id="user-dialog" v-show="!error" @admit="admit">
+<div id="user-dialog" v-show="!error">
+  <div class="messages__new" v-on:click="load">
+    <span class="messages__new-lamp" v-show="newCount" style="display: none;">Новые
+    +<b>{{newCount}}</b>
+    </span>
+  </div>
   <div class="messages">
     <message-item v-for="(item, index) in messages"
       :item="item"
@@ -11,6 +16,7 @@
       :uid="uid"
       @admit="admit"
       @remove="remove"
+      @set-new="setNew"
     ></message-item>
   </div>
   <div class="messages__next" v-on:click="load" v-show="more" style="display: none;">

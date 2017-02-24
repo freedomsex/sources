@@ -189,6 +189,9 @@ Vue.component('message-item', {
             this.fix();
             this.alertOption = true;
         }
+        if (!this.sent && !this.read) {
+            this.$emit('set-new');
+        }
     },
     beforeUpdate() {
         //this.attention();
@@ -259,6 +262,7 @@ var MessList = new Vue({
         response: null,
         error: 0,
         next: 0,
+        newCount: 0,
         batch: 15,
         received: 0,
         attention: false,
@@ -273,6 +277,11 @@ var MessList = new Vue({
         this.load();
     },
     methods: {
+        reload() {
+            this.next = 0;
+            this.messages = [];
+            this.load();
+        },
         load() {
             //console.log('load MessList data');
             this.response = 0;
@@ -320,6 +329,10 @@ var MessList = new Vue({
         admit() {
             console.log('itOk false');
             this.attention = false;
+        },
+        setNew() {
+            console.log('new');
+            this.newCount += 1;
         }
     },
     computed: {

@@ -204,11 +204,11 @@
       Размер фотографии не должен превышать 8Mb
     </div>
     <div class="upload_photo__add">
-      <button class="btn btn-primary" @click="upload()">
+      <button class="btn btn-primary" @click="upload">
         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
         Добавить фотографию
       </button>
-      <input id="fileupload" type="file" name="file" data-form-data='{"script": "true"}' style="display: none;">
+      <input id="fileupload" type="file" name="file" data-form-data='{"script": "true"}'>
     </div>
 
     <div class="galery-photo__list" v-show="photos.length" style="display: none;">
@@ -328,7 +328,12 @@
 
 
 
-<div id="user-dialog" v-show="!error" @admit="admit">
+<div id="user-dialog" v-show="!error">
+  <div class="messages__new" v-on:click="load">
+    <span class="messages__new-lamp" v-show="newCount" style="display: none;">Новые
+    +<b>{{newCount}}</b>
+    </span>
+  </div>
   <div class="messages">
     <message-item v-for="(item, index) in messages"
       :item="item"
@@ -338,6 +343,7 @@
       :uid="uid"
       @admit="admit"
       @remove="remove"
+      @set-new="setNew"
     ></message-item>
   </div>
   <div class="messages__next" v-on:click="load" v-show="more" style="display: none;">

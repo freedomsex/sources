@@ -160,53 +160,54 @@ var add_contact = {
 }          
 
 
-        
+
 // -- Подстановка дополнительной информации в отправку сообщения ---
-var added_info = {    
-        
-    init: function () 
-    {     
+var added_info = {
+
+    init: function ()
+    {
         if (user_sex && (!user_name || !user_age || !user_city))
-        {   
-            $('#form_post_mess').append('<div id="added_info_block"></div>');//{ hash: 15234 }, 
-            $('#added_info_block').load('/static/htm/added_info.html #added_load', added_info.onload); 
-        } 
-                                             
-    } , 
-    
-    onload: function () 
-    {              
-        var post_form = $('#form_post_mess');                  
-        $('#added_info_btn').click( function (){ added_info.show(); }); 
-        
-        added_info.generate(); 
-        added_info.visible(); 
+        {
+            //TODO: реализовать до информацию 
+            //$('#form_post_mess').append('<div id="added_info_block"></div>');//{ hash: 15234 },
+            //$('#added_info_block').load('/static/htm/added_info.html #added_load', added_info.onload);
+        }
+
+    } ,
+
+    onload: function ()
+    {
+        var post_form = $('#form_post_mess');
+        $('#added_info_btn').click( function (){ added_info.show(); });
+
+        added_info.generate();
+        added_info.visible();
         name_suggest.init();   // [!!!]
-    } ,  
-    
-    generate: function () 
-    {                                
+    } ,
+
+    generate: function ()
+    {
         var print_age  = user_age  ? user_age  : auto_gen.age(human_age);
         var print_name = user_name ? user_name : auto_gen.name(user_sex);
-        var print_city = user_city ? user_city : human_city;   
-                          
+        var print_city = user_city ? user_city : human_city;
+
         $('#added_name').val(print_name);
         $('#added_city').val(print_city);
-        $('#added_age').val(print_age);  
-    } ,  
-    
-    visible: function () 
-    {                                                  
-        added_info.generate();  
+        $('#added_age').val(print_age);
+    } ,
+
+    visible: function ()
+    {
+        added_info.generate();
         $('#added_info_btn').show();
     } ,
-     
-    show: function () 
-    {                                                      
-        $('#added_info_btn').hide('blind');                  
-        $('#added_info').show('blind'); 
-        
-    }  
+
+    show: function ()
+    {
+        $('#added_info_btn').hide('blind');
+        $('#added_info').show('blind');
+
+    }
 
 }
 
@@ -840,7 +841,8 @@ var FormMess = new Vue({
         			this.approve = false;
         		}
         	} else {
-                MessList.messages.unshift(response.message);
+                //MessList.messages.unshift(response.message);
+                MessList.reload();
                 // TODO: старая зависимость
                 $('#mess_shab_text_block').hide();
                 giper_chat.timer_cut();
@@ -1213,6 +1215,9 @@ Vue.component('message-item', {
             this.fix();
             this.alertOption = true;
         }
+        if (!this.sent && !this.read) {
+            this.$emit('set-new');
+        }
     },
     beforeUpdate() {
         //this.attention();
@@ -1283,6 +1288,7 @@ var MessList = new Vue({
         response: null,
         error: 0,
         next: 0,
+        newCount: 0,
         batch: 15,
         received: 0,
         attention: false,
@@ -1297,6 +1303,11 @@ var MessList = new Vue({
         this.load();
     },
     methods: {
+        reload() {
+            this.next = 0;
+            this.messages = [];
+            this.load();
+        },
         load() {
             //console.log('load MessList data');
             this.response = 0;
@@ -1344,6 +1355,10 @@ var MessList = new Vue({
         admit() {
             console.log('itOk false');
             this.attention = false;
+        },
+        setNew() {
+            console.log('new');
+            this.newCount += 1;
         }
     },
     computed: {

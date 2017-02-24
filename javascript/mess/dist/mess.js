@@ -155,8 +155,9 @@ var added_info = {
 
     init: function init() {
         if (user_sex && (!user_name || !user_age || !user_city)) {
-            $('#form_post_mess').append('<div id="added_info_block"></div>'); //{ hash: 15234 }, 
-            $('#added_info_block').load('/static/htm/added_info.html #added_load', added_info.onload);
+            //TODO: реализовать до информацию 
+            //$('#form_post_mess').append('<div id="added_info_block"></div>');//{ hash: 15234 },
+            //$('#added_info_block').load('/static/htm/added_info.html #added_load', added_info.onload);
         }
     },
 
@@ -754,7 +755,8 @@ var FormMess = new Vue({
                     this.approve = false;
                 }
             } else {
-                MessList.messages.unshift(response.message);
+                //MessList.messages.unshift(response.message);
+                MessList.reload();
                 // TODO: старая зависимость
                 $('#mess_shab_text_block').hide();
                 giper_chat.timer_cut();
@@ -1093,6 +1095,9 @@ Vue.component('message-item', {
             this.fix();
             this.alertOption = true;
         }
+        if (!this.sent && !this.read) {
+            this.$emit('set-new');
+        }
     },
     beforeUpdate: function beforeUpdate() {
         //this.attention();
@@ -1163,6 +1168,7 @@ var MessList = new Vue({
         response: null,
         error: 0,
         next: 0,
+        newCount: 0,
         batch: 15,
         received: 0,
         attention: false,
@@ -1177,6 +1183,11 @@ var MessList = new Vue({
         this.load();
     },
     methods: {
+        reload: function reload() {
+            this.next = 0;
+            this.messages = [];
+            this.load();
+        },
         load: function load() {
             var _this9 = this;
 
@@ -1228,6 +1239,10 @@ var MessList = new Vue({
         admit: function admit() {
             console.log('itOk false');
             this.attention = false;
+        },
+        setNew: function setNew() {
+            console.log('new');
+            this.newCount += 1;
         }
     },
     computed: {
