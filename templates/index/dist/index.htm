@@ -82,12 +82,14 @@
 
 
 <div id="option-static__viewer">
-  <upload-dialog></upload-dialog>
-  <photo-dialog></photo-dialog>
+  <upload-dialog  @close="close" v-if="view == 'upload'"></upload-dialog>
+  <photo-dialog   @close="close" v-if="view == 'photo'"></photo-dialog>
+  <sends-dialog   @close="close" v-if="view == 'sends'"></sends-dialog>
+  <initial-dialog @close="close" v-if="view == 'initial'"></initial-dialog>
 </div>
 
 <script type="text/x-template" id="option-static__dialog-window">
-  <div class="option-dialog" v-if="show">
+  <div class="option-dialog">
     <div class="option-dialog__cover">
       <div class="option-dialog__loader"></div>
     </div>

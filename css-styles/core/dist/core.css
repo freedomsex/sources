@@ -17,7 +17,7 @@
   background: #f9ecbf;
 }
 .bg_gra {
-  background: #f7f7f7;
+  background: #f5f5f5;
 }
 .bg_blu {
   background: #CCCCFF;
@@ -38,7 +38,7 @@
   background: #fff5cc !important;
 }
 .bg_ogra {
-  background: #f7f7f7 !important;
+  background: #f5f5f5 !important;
 }
 .bg_oblu {
   background: #CCCCFF !important;
@@ -151,7 +151,7 @@ html {
   width: 100%;
 }
 body {
-  background: #f7f7f7;
+  background: #f5f5f5;
   color: #333333;
   font-family: Arial, Tahoma, Verdana, sans-serif;
   font-size: 12px;
@@ -268,7 +268,7 @@ div.menu_user_outer {
   text-align: center;
 }
 div.menu_user_outer a {
-  color: #f7f7f7;
+  color: #f5f5f5;
   text-decoration: none;
 }
 div.menu_user_outer a:hover {
@@ -379,7 +379,7 @@ li.menu_user_link_ear {
 }
 #giper_reply {
   display: none;
-  background: #f7f7f7;
+  background: #f5f5f5;
   border-width: 0px 0px 1px;
   border: 1px solid #cccccc;
   margin-bottom: 7px;
@@ -414,7 +414,7 @@ li.menu_user_link_ear {
   overflow: hidden;
 }
 .user {
-  border-bottom: 1px solid #f7f7f7;
+  border-bottom: 1px solid #f5f5f5;
   color: #333333;
   display: block;
   font-size: 14px;
@@ -427,7 +427,7 @@ li.menu_user_link_ear {
   text-decoration: none;
 }
 .user.visited {
-  background: #f7f7f7;
+  background: #f5f5f5;
 }
 .user.gray {
   color: #cccccc;
@@ -537,7 +537,7 @@ a.name:hover {
 .new_message .bunn {
   background: #ff9900;
   border-radius: 3px;
-  border: 1px solid #f7f7f7;
+  border: 1px solid #f5f5f5;
   color: white;
   cursor: pointer;
   font-size: 10px;
@@ -619,7 +619,7 @@ a.name:hover {
   background: GhostWhite;
 }
 .line_on {
-  background: #f7f7f7;
+  background: #f5f5f5;
 }
 .new_client {
   border: 1px solid #3A5795;
@@ -978,6 +978,34 @@ a.name:hover {
   margin: 0 2px;
   top: 3px;
 }
+.option_tab {
+  font-size: 13px;
+  padding: 0 25px 10px;
+  text-align: left;
+}
+.tab_context {
+  font-size: 14px;
+  max-width: 500px;
+  padding: 10px 0px;
+}
+.hint_context {
+  background: #f5f5f5;
+  border: 1px solid #e5e5e5;
+  color: #666666;
+  font-size: 12px;
+  margin-bottom: 10px;
+  padding: 10px 15px;
+}
+.tab_input {
+  font-size: 14px;
+  padding: 5px 0px;
+}
+.option_loader {
+  text-align: center;
+  padding: 10px;
+  margin-top: 10px;
+  color: #cccccc;
+}
 .tab_right {
   color: #666666;
   padding: 5px 10px 5px 5px;
@@ -999,28 +1027,6 @@ a.name:hover {
 .cap_link {
   font-size: 13px;
   margin-left: 10px;
-}
-.option_tab {
-  font-size: 13px;
-  padding: 0 25px 10px;
-  text-align: left;
-}
-.tab_context {
-  font-size: 14px;
-  max-width: 500px;
-  padding: 10px 0px;
-}
-.hint_context {
-  background: #f7f7f7;
-  border: 1px solid #e5e5e5;
-  color: #666666;
-  font-size: 12px;
-  margin-bottom: 10px;
-  padding: 10px 15px;
-}
-.tab_input {
-  font-size: 14px;
-  padding: 5px 0px;
 }
 .desire_caption {
   color: #333333;
@@ -1046,7 +1052,7 @@ a.name:hover {
 }
 .desire_onload {
   background: #ffffff;
-  border-color: #f7f7f7;
+  border-color: #f5f5f5;
   color: #999999;
 }
 .desire_user {
@@ -1162,7 +1168,7 @@ a.name:hover {
   color: #333333;
 }
 #form_search {
-  background: #f7f7f7;
+  background: #f5f5f5;
   border-width: 1px 0px;
   border: 0px solid #eeeeee;
   margin: 0px auto 1px;
@@ -1237,7 +1243,7 @@ a.name:hover {
   color: #ffffff;
 }
 #tip_general.name a {
-  color: #f7f7f7;
+  color: #f5f5f5;
 }
 #tip_general.name a:hover {
   color: #ffffff;
@@ -1303,11 +1309,11 @@ a.name:hover {
 .modal-dialog__container {
   min-width: 200px;
   max-width: 400px;
-  padding: 25px 20px 20px;
   background: #ffffff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all .3s ease;
   overflow: auto;
+  border-radius: 4px;
 }
 .modal-dialog__caption {
   font-size: 18px;

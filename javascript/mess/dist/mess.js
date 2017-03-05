@@ -525,6 +525,132 @@ var cont_list = {
     }
 };
 
+// var ContactViewDialog = Vue.extend({
+//     methods: {
+//         close() {
+//             store.commit('viewPhoto', { photo: null });
+//         }
+//     },
+//     computed: Vuex.mapState({
+//         config: state => state.photoView
+//     }),
+//     template: '#option-content__photo-view'
+// })
+Vue.component('contact-item', {
+    props: ['item', 'index'],
+    data: function data() {
+        return {
+            detail: false
+        };
+    },
+
+    computed: {},
+    methods: {
+        show: function show() {
+            this.detail = true;
+            console.log('show');
+        },
+        close: function close() {
+            this.detail = false;
+            console.log('close');
+        }
+    },
+    template: '#contact-item'
+});
+
+Vue.component('human-dialog', {
+    props: ['show', 'data'],
+    data: function data() {
+        return {
+            message: 'eeeee',
+            captcha: false,
+            process: false,
+            code: null
+        };
+    },
+
+    computed: {
+        desire: function desire() {
+            var d = this.data.desire;
+            return d && d.length > 1 ? true : false;
+        }
+    },
+    methods: {
+        close: function close() {
+            this.$emit('close');
+        },
+        cancel: function cancel() {
+            this.captcha = false;
+        },
+        send: function send() {
+            var data = {
+                id: tid,
+                mess: this.message,
+                captcha_code: this.code
+            };
+            //apiMessages.send(data, this.handler, null);
+            this.process = true;
+            console.log('send');
+        },
+        setCode: function setCode(code) {
+            this.code = code;
+            this.send();
+        },
+        handler: function handler(response) {
+            if (!response.saved && response.error) {
+                if (response.error == 'need_captcha') {
+                    this.captcha();
+                }
+                this.error();
+            } else {
+                this.sended(response);
+            }
+            this.process = false;
+        },
+        sended: function sended(response) {},
+        captcha: function captcha() {
+            this.captcha = true;
+        },
+        error: function error() {
+            this.process = false;
+        }
+    },
+    template: '#human-dialog'
+});
+
+var ContactSection = new Vue({
+    el: '#contact-section',
+    store: store,
+    data: {},
+    methods: {
+        openSends: function openSends() {
+            store.commit('optionDialog', 'sends');
+        },
+        openInit: function openInit() {
+            store.commit('optionDialog', 'initial');
+        }
+    }
+});
+
+Vue.component('captcha-dialog', {
+    props: ['show', 'data'],
+    data: function data() {
+        return {
+            code: ''
+        };
+    },
+
+    methods: {
+        close: function close() {
+            this.$emit('cancel');
+        },
+        send: function send() {
+            this.$emit('code', this.code);
+        }
+    },
+    template: '#captcha-dialog'
+});
+
 // -- Время свиданий ---
 var dating_time = {
 
@@ -624,22 +750,24 @@ var FormMess = new Vue({
         show: true,
         process: false,
         approve: true,
-        uid: null,
-        tid: null,
-        sex: null
+        dirt: false,
+        tid: null
     },
     mounted: function mounted() {
         var _this = this;
 
-        this.uid = uid;
         this.tid = tid;
-        this.sex = user_sex;
 
         $('#mess-text-area').on('keypress', function (event, el) {
             if (event.ctrlKey && (event.keyCode == 10 || event.keyCode == 13)) {
                 _this.sendMessage();
             }
         });
+    },
+    watch: {
+        message: function message() {
+            this.isDirt();
+        }
     },
     computed: Vuex.mapState({
         config: function config(state) {
@@ -650,6 +778,9 @@ var FormMess = new Vue({
         },
         intimate: function intimate(state) {
             return state.formMess.intimate;
+        },
+        user: function user(state) {
+            return state.user;
         }
     }),
     methods: {
@@ -661,8 +792,13 @@ var FormMess = new Vue({
             this.message = '';
         },
 
+        isDirt: _.debounce(function () {
+            var word = /\w{0,5}[хx]([хx\s\!@#\$%\^&*+-\|\/]{0,6})[уy]([уy\s\!@#\$%\^&*+-\|\/]{0,6})[ёiлeеюийя]\w{0,7}|\w{0,6}[пp]([пp\s\!@#\$%\^&*+-\|\/]{0,6})[iие]([iие\s\!@#\$%\^&*+-\|\/]{0,6})[3зс]([3зс\s\!@#\$%\^&*+-\|\/]{0,6})[дd]\w{0,10}|[сcs][уy]([уy\!@#\$%\^&*+-\|\/]{0,6})[4чkк]\w{1,3}|\w{0,4}[bб]([bб\s\!@#\$%\^&*+-\|\/]{0,6})[lл]([lл\s\!@#\$%\^&*+-\|\/]{0,6})[yя]\w{0,10}|\w{0,8}[её][bб][лске@eыиаa][наи@йвл]\w{0,8}|\w{0,4}[еe]([еe\s\!@#\$%\^&*+-\|\/]{0,6})[бb]([бb\s\!@#\$%\^&*+-\|\/]{0,6})[uу]([uу\s\!@#\$%\^&*+-\|\/]{0,6})[н4ч]\w{0,4}|\w{0,4}[еeё]([еeё\s\!@#\$%\^&*+-\|\/]{0,6})[бb]([бb\s\!@#\$%\^&*+-\|\/]{0,6})[нn]([нn\s\!@#\$%\^&*+-\|\/]{0,6})[уy]\w{0,4}|\w{0,4}[еe]([еe\s\!@#\$%\^&*+-\|\/]{0,6})[бb]([бb\s\!@#\$%\^&*+-\|\/]{0,6})[оoаa@]([оoаa@\s\!@#\$%\^&*+-\|\/]{0,6})[тnнt]\w{0,4}|\w{0,10}[ё]([ё\!@#\$%\^&*+-\|\/]{0,6})[б]\w{0,6}|\w{0,4}[pп]([pп\s\!@#\$%\^&*+-\|\/]{0,6})[иeеi]([иeеi\s\!@#\$%\^&*+-\|\/]{0,6})[дd]([дd\s\!@#\$%\^&*+-\|\/]{0,6})[oоаa@еeиi]([oоаa@еeиi\s\!@#\$%\^&*+-\|\/]{0,6})[рr]\w{0,12}/i;
+            this.dirt = word.test(this.message) ? true : false;
+            return this.dirt;
+        }, 700),
         upload: function upload() {
-            store.commit('viewUpload', true);
+            store.commit('optionDialog', 'upload');
         },
         cancelPhoto: function cancelPhoto() {
             store.commit('sendPhoto', { photo: null, alias: null });
@@ -671,23 +807,6 @@ var FormMess = new Vue({
             this.photo.alias ? sendPhoto() : sendMessage();
         },
         sendPhoto: function sendPhoto() {
-            var _this2 = this;
-
-            var config = {
-                headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken }
-            };
-            var data = {
-                photo: this.photo.alias,
-                id: this.tid,
-                captcha_code: this.code
-            };
-            axios.post('/mailer/post/', data, config).then(function (response) {
-                _this2.handler(response.data);
-            }).catch(function (error) {
-                console.log(error);
-            });
-            this.process = true;
-
             // TODO: почти готово, ждем сообщений
             //Vue.http.headers.common['Authorization'] = 'Bearer ' + get_cookie('jwt');
             // let data = {
@@ -699,71 +818,50 @@ var FormMess = new Vue({
             // window.location.reload();
         },
         sendMessage: function sendMessage() {
-            var _this3 = this;
-
             // TODO: убрать из формы старое говно
-            console.log(this.photo.alias);
-            var config = {
-                headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken }
+            var data = {
+                id: this.tid,
+                captcha_code: this.code
             };
-            var data = void 0;
             if (this.photo.alias) {
-                data = {
-                    photo: this.photo.alias,
-                    id: this.tid,
-                    captcha_code: this.code
-                };
+                data['photo'] = this.photo.alias;
             } else {
-                data = {
-                    mess: this.message,
-                    id: this.tid,
-                    re: this.reply,
-                    captcha_code: this.code
-                };
+                data['mess'] = this.message;
+                data['re'] = this.reply;
             }
-
-            axios.post('/mailer/post/', data, config).then(function (response) {
-                _this3.handler(response.data);
-            }).catch(function (error) {
-                console.log(error);
-            });
+            apiMessages.send(data, this.handler, null);
             this.process = true;
         },
         sendSex: function sendSex(sex) {
-            var _this4 = this;
-
-            // TODO: перекинуть на общее хранилище и внешний компонент
-            var config = {
-                headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken }
-            };
-            axios.post('/option/sex/', { sex: sex }, config).then(function (response) {
-                if (response.data.sex) {
-                    _this4.sex = response.data.sex;
-                    user_sex = _this4.sex;
-                    _this4.sendMessage();
-                }
-                _this4.process = false;
-            }).catch(function (error) {
-                console.log(error);
-            });
+            apiUser.saveSex({ sex: sex }, this.sendMessage, this.error);
             this.process = true;
         },
         handler: function handler(response) {
             if (!response.saved && response.error) {
                 if (response.error == 'need_captcha') {
-                    $('.form-message__captcha-img').get(0).src = '/secret_pic.php?hash=' + hash;
-                    this.approve = false;
+                    this.captcha();
                 }
+                this.error();
             } else {
-                //MessList.messages.unshift(response.message);
-                MessList.reload();
-                // TODO: старая зависимость
-                $('#mess_shab_text_block').hide();
-                giper_chat.timer_cut();
-                this.reset();
-                console.log(response);
-                this.cancelPhoto();
+                this.sended(response);
             }
+            this.process = false;
+        },
+        sended: function sended(response) {
+            //MessList.messages.unshift(response.message);
+            MessList.reload();
+            // TODO: старая зависимость
+            $('#mess_shab_text_block').hide();
+            giper_chat.timer_cut();
+            this.reset();
+            //console.log(response);
+            this.cancelPhoto();
+        },
+        captcha: function captcha() {
+            $('.form-message__captcha-img').get(0).src = '/secret_pic.php?hash=' + hash;
+            this.approve = false;
+        },
+        error: function error() {
             this.process = false;
         }
     }
@@ -795,14 +893,14 @@ var incoming_photo = new Vue({
     },
     methods: {
         loadPhoto: function loadPhoto() {
-            var _this5 = this;
+            var _this2 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
                 params: { tid: tid, hash: hash }
             };
             axios.get('http://' + this.server + '/api/v1/users/' + uid + '/sends', config).then(function (response) {
-                _this5.photos = response.data.photos;
+                _this2.photos = response.data.photos;
                 //console.log(this.photos);
             }).catch(function (error) {
                 console.log(error);
@@ -1018,7 +1116,7 @@ Vue.component('message-item', {
             }
         },
         bun: function bun() {
-            var _this6 = this;
+            var _this3 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken }
@@ -1028,7 +1126,7 @@ Vue.component('message-item', {
                 tid: this.item.from
             };
             axios.post('/mess/bun/', data, config).then(function (response) {
-                _this6.$emit('remove', _this6.index);
+                _this3.$emit('remove', _this3.index);
             }).catch(function (error) {
                 console.log('error');
             });
@@ -1038,7 +1136,7 @@ Vue.component('message-item', {
             console.log('cancel');
         },
         remove: function remove() {
-            var _this7 = this;
+            var _this4 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken }
@@ -1047,14 +1145,14 @@ Vue.component('message-item', {
                 id: this.item.id
             };
             axios.post('/mess/delete/', data, config).then(function (response) {
-                _this7.$emit('remove', _this7.index);
+                _this4.$emit('remove', _this4.index);
             }).catch(function (error) {
                 console.log(error);
             });
             console.log('remove');
         },
         play: function play() {
-            var _this8 = this;
+            var _this5 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
@@ -1063,7 +1161,7 @@ Vue.component('message-item', {
             var server = this.$store.state.photoServer;
             var url = 'http://' + server + '/api/v1/users/' + uid + '/sends/' + this.alias + '.jpg';
             axios.get(url, config).then(function (response) {
-                _this8.photo(response.data.photo);
+                _this5.photo(response.data.photo);
             }).catch(function (error) {
                 console.log('error');
             });
@@ -1129,13 +1227,13 @@ Vue.component('message-item', {
             fdate = date;
             date = fdate == first_date ? '' : fdate;
             var today = moment().date();
-            var yestd = today - 1;
+            var yestd = moment().subtract(1, 'day').date();
 
-            date = date == today ? 'Сегодня' : date;
-            date = date == yestd ? 'Вчера' : date;
+            date = date === today ? 'Сегодня' : date;
+            date = date === yestd ? 'Вчера' : date;
 
             mdate = mdate.date() + ' ' + mdate.format('MMMM').substring(0, 3);
-            date = date === parseInt(date, 10) ? mdate : date;
+            date = _.isString(date) ? date : mdate;
             return date;
         },
         alias: function alias() {
@@ -1196,7 +1294,7 @@ var MessList = new Vue({
             //TODO: переписать глобальную зависимость
         },
         load: function load() {
-            var _this9 = this;
+            var _this6 = this;
 
             //console.log('load MessList data');
             this.response = 0;
@@ -1205,13 +1303,13 @@ var MessList = new Vue({
                 params: { id: this.tid, next: this.next, hash: hash }
             };
             axios.get('/ajax/messages_load.php', config).then(function (response) {
-                _this9.onLoad(response);
+                _this6.onLoad(response);
             }).catch(function (error) {
-                _this9.error = 10;
+                _this6.error = 10;
                 console.log(error);
             });
             setTimeout(function () {
-                return _this9.toSlow = true;
+                return _this6.toSlow = true;
             }, 7000);
         },
         onLoad: function onLoad(response) {

@@ -1,4 +1,85 @@
 
+Vue.component('initial-dialog', {
+    data() {
+        return {
+            contacts: [],
+            response: null,
+            slow: false,
+            next: 0,
+            batch: 10,
+            received: 0,
+        }
+    },
+    methods: {
+        close() {
+            this.$emit('close');
+        },
+        load() {
+            let config = {
+                headers: {'Authorization': 'Bearer ' + this.$store.state.apiToken},
+                params: {hash}
+            };
+            axios.get(`/contact/list/initial/`, config).then((response) => {
+                let result = response.data;
+                this.received = result ? result.length : 0;
+                if (this.received) {
+                    this.contacts = _.union(this.contacts, result);
+                }
+                this.next += this.batch;
+                this.response = 200;
+                this.slow = false;
+            }).catch((error) => {
+                console.log(error);
+            });
+            setTimeout(() => this.slow = true, 3000);
+        },
+    },
+    mounted() {
+        this.load();
+    },
+    template: '#contact-dialog'
+});
+
+Vue.component('sends-dialog', {
+    data() {
+        return {
+            contacts: [],
+            response: null,
+            slow: false,
+            next: 0,
+            batch: 10,
+            received: 0,
+        }
+    },
+    methods: {
+        close() {
+            this.$emit('close');
+        },
+        load() {
+            let config = {
+                headers: {'Authorization': 'Bearer ' + this.$store.state.apiToken},
+                params: {hash}
+            };
+            axios.get(`/contact/list/sends/`, config).then((response) => {
+                let result = response.data;
+                this.received = result ? result.length : 0;
+                if (this.received) {
+                    this.contacts = _.union(this.contacts, result);
+                }
+                this.next += this.batch;
+                this.response = 200;
+                this.slow = false;
+            }).catch((error) => {
+                console.log(error);
+            });
+            setTimeout(() => this.slow = true, 3000);
+        },
+    },
+    mounted() {
+        this.load();
+    },
+    template: '#contact-dialog'
+});
 
 Vue.component('photo-view', {
     props: [
@@ -21,14 +102,101 @@ Vue.component('photo-view', {
     template: '#photo-view'
 });
 
+Vue.component('photo-dialog', {
+    methods: {
+        close() {
+            this.$emit('close');
+            store.commit('viewPhoto', { photo: null });
+        }
+    },
+    computed: Vuex.mapState({
+        config: state => state.photoView
+    }),
+    template: '#photo-dialog'
+})
+
+Vue.component('upload-dialog', {
+    template: '#upload-dialog',
+    data() {
+        return {
+            photos: [],
+            server: null,
+        }
+        // file: {
+        //     data: null,
+        //     name: '',
+        //     size: 0
+        // }
+    },
+    created: function () {
+        this.server = this.$store.state.photoServer;
+    },
+    methods: {
+        loadPhoto() {
+            let config = {
+                headers: {'Authorization': 'Bearer ' + this.$store.state.apiToken},
+                params: {hash}
+            };
+            axios.get(`http://${this.server}/api/v1/users/${uid}/photos`, config).then((response) => {
+                let result = response.data.photos;
+                if (result && result.length) {
+                    this.photos = response.data.photos;
+                }
+                //console.log(this.photos);
+            }).catch((error) => {
+                console.log(error);
+            });
+        },
+        upload(e) {
+            $('#fileupload').click();
+        },
+        show: function (index) {
+            this.preview(this.photos[index]);
+        },
+        preview(photo) {
+            let links = photo._links;
+            if (links.origin.href) {
+                let data = {
+                    photo: links.origin.href,
+                    thumb: links.thumb.href,
+                    alias:  photo.alias,
+                    height: photo.height,
+                    width:  photo.width,
+                }
+                store.commit('sendPhoto', data);
+                //console.log('sendPhoto');
+                //console.log(data);
+            }
+            this.close();
+        },
+        close() {
+            this.$emit('close');
+        }
+    },
+    mounted() {
+        console.log('fileupload');
+        var self = this;
+        $('#fileupload').fileupload({
+            dataType: 'json',
+            add(e, data) {
+                data.url = `http://${self.server}/api/v1/users/${uid}/photos?jwt=` + self.$store.state.apiToken;
+                data.submit();
+            },
+            done(e, data) {
+                self.preview(data.result.photo);
+            }
+        });
+        this.loadPhoto();
+    }
+})
+
+
+
 ///
 // Модальное окно настроек OptionDialog - контейнер
 ///
-var OptionDialog = Vue.extend({
+Vue.component('option-dialog', {
     template: '#option-static__dialog-window',
-    props: {
-        show: false
-    },
     methods: {
         close() {
             this.$emit('close');
@@ -50,45 +218,16 @@ var OptionDialog = Vue.extend({
     }
 });
 
-var PhotoViewDialog = Vue.extend({
-    methods: {
-        close() {
-            store.commit('viewPhoto', { photo: null });
-        }
-    },
-    components: {
-        optionDialog: OptionDialog
-    },
-    computed: Vuex.mapState({
-        config: state => state.photoView
-    }),
-    template: '#option-content__photo-view'
-})
-
-var UploadDialog = Vue.extend({
-    methods: {
-        close() {
-            store.commit('viewUpload', false);
-        }
-    },
-    components: {
-        optionDialog: OptionDialog,
-        uploadPhoto:  UploadPhoto,
-    },
-    computed: Vuex.mapState({
-        config: state => state.uploadView
-    }),
-    template: '#option-content__upload-photo'
-})
-
-
-
 var OptionStaticViewer = new Vue({
     el: '#option-static__viewer',
     store,
-    components: {
-        photoDialog: PhotoViewDialog,
-        uploadDialog: UploadDialog,
+    computed: Vuex.mapState({
+        view: state => state.optionStatic.view
+    }),
+    methods: {
+        close() {
+            store.commit('optionDialog', false);
+        }
     }
 });
 

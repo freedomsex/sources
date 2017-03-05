@@ -1,0 +1,153 @@
+#contact-section {
+  border-top: 1px solid @gray;
+}
+
+.contact-section {
+  &__item {
+    .link_simple;
+    padding: @indent-sm @indent-sm;
+    font-size: 14px;
+  }
+}
+
+.contact-list__item {
+  border-top: 1px solid @gray;
+  position: relative;
+  background: @white;
+  overflow: hidden;
+    font-size: 14px;
+  &-info {
+    margin-right: @indent-xs;
+    .user-list__name {
+      color: @link-color;
+    }
+    .user-list__age {
+      color: @red;
+    }
+  }
+  &-content {
+    .link;
+    padding: @indent-md @indent-xs;
+    white-space: nowrap;
+  }
+  &-message {
+    overflow: hidden;
+    font-style: italic;
+    white-space: nowrap;
+  }
+  &-option {
+    position: absolute;
+    right: 0;
+    top: 2px;
+    bottom: 0;
+    text-align: right;
+    width: 100px;
+    background: linear-gradient(to right, transparent, @white 15%);
+  }
+    &:after {
+      .clear-fix;
+    }
+}
+
+
+#human-dialog {
+  max-width: 400px;
+}
+
+.human-dialog__caption {
+  background: @menu-color;
+  color: @white;
+  font-weight: bold;
+  font-size: 16px;
+  padding: @indent-sm @indent-md;
+
+}
+
+.human-dialog__option {
+    float: right;
+    &-remove {
+      margin-left: @indent-sm;
+    }
+}
+
+
+.human-dialog__input {
+  border-width: 0px;
+}
+.human-dialog__body {
+  padding: @indent-md @indent-md 0;
+}
+.human-dialog__desire {
+  margin-bottom: @indent-md;
+  font-size: 14px;
+}
+.human-dialog__message {
+  padding: @indent-sm @indent-sm;
+  background: @gray-light;
+  margin-bottom: @indent-sm;
+}
+
+.human-dialog__form {
+  position: relative;
+  padding-bottom: @indent-sm;
+  &-send {
+    .btn-circle;
+    background: @menu-color;
+    position: absolute;
+    padding: @indent-sm;
+    right: @indent-sm;
+    bottom: @indent-sm;
+    .glyphicon {
+      position: relative;
+      left: -2px;
+    }
+  }
+  &-anketa {
+    width: 40px;
+    position: absolute;
+    left: @indent-sm;
+    bottom: @indent-sm;
+  }
+  &-input {
+    margin: 0 55px 0 45px;
+    padding: @indent-sm @indent-sm;
+    &:empty:not(:focus):before {
+      color: @gray-dark;
+      content: attr(placeholder);
+      display: block;
+    }
+  }
+}
+
+
+
+#captcha-dialog {
+  max-width: 400px;
+}
+
+.captcha-dialog__caption {
+  background: @orange;
+  color: @white;
+  font-weight: bold;
+  font-size: 16px;
+  padding: @indent-sm @indent-md;
+  .glyphicon {
+    float: right;
+    color: @white;
+  }
+}
+
+.captcha-dialog__body {
+  padding: @indent-md @indent-md 0;
+}
+
+.captcha-dialog__option {
+  padding: @indent-md @indent-md 0;
+  text-align: right;
+}
+
+.captcha-dialog__addon {
+    padding: 2px @indent-md;
+    background: @white;
+}
+

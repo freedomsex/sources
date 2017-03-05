@@ -153,8 +153,8 @@
   </div>
 </div>
 
-<script type="text/x-template" id="option-content__photo-view">
-  <option-dialog :show="config.photo" @close="close">
+<script type="text/x-template" id="photo-dialog">
+  <option-dialog @close="close">
     <photo-view :photo="config.photo" :thumb="config.thumb" :height="config.height" :width="1000"/>
   </option-dialog>
 </script>
@@ -183,8 +183,8 @@
   </div>
 </script>
 
-<script type="text/x-template" id="option-content__upload-photo">
-  <option-dialog :show="config.show" @close="close">
+<script type="text/x-template" id="upload-dialog">
+  <option-dialog @close="close">
     <div class="option_tab">
       <div align="left" class="option_cap">
         <b>Выберите фотографию</b><a href="/блог/как-отправить-фотографию/" class="cap_link">Подробнее...</a>
@@ -193,47 +193,43 @@
        Загрузив фотографию из компьютера или флэшки
        один раз, её можно безгранично отправлять кому угодно и сколько угодно.
       </div>
-      <upload-photo @close="close"></upload-photo>
+      <div id="upload_photo">
+        <div id="hint" style="padding: 5px 0px 5px ; color: #ccc; font-size: 11px;">
+          Размер фотографии не должен превышать 8Mb
+        </div>
+        <div class="upload_photo__add">
+          <button class="btn btn-primary" @click="upload">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            Добавить фотографию
+          </button>
+          <input id="fileupload" type="file" name="file" data-form-data='{"script": "true"}'>
+        </div>
+
+        <div class="galery-photo__list" v-show="photos.length" style="display: none;">
+          <img class="galery-photo__item-photo" :src="item._links.galery.href" v-for="(item, index) in photos" @click="show(index)">
+        </div>
+        <div class="galery-photo__placeholder" v-show="!photos.length">
+          Фотографии которые вы загрузите будут здесь
+        </div>
+        <div class="upload_photo__rules" v-show="photos.length < 5" style="display: none;">
+          <p>- Вы можете загружать и отправлять любые фотографии, в том числе и эротические фото. Премодерации фотографий нет, в
+          содержании фотографий вы контролируете себя сами</p>
+          <p>- Интимные или эротические фотографии отправлять можно, если ваш собеседник
+          согласился получить такую фотографию, и в данный момент ждёт её от вас</p>
+          <p>- Рассылать интимные фотографии всем подряд, или отправлять их, когда вас об этом не просят,
+          запрещено. Поступит много жалоб, и это грозит блокировкой</p>
+          <p>
+          <a href="/блог/не-настоящие-фотографии/" target="_blank">
+            Избегайте использования чужих интим фото, скаченных из интернета (!) Это очень легко проверить. Ваш собеседник оставит публичное замечание к вашей анкете, обнаружив обман.</a>
+          </p>
+          <p style="padding: 3px 17px 3px; margin: 10px 0; background: url(/img/icon/burn_photo.png) no-repeat left top;">
+            Фотографии, которые долго не использовались, удалятся автоматически.
+            <a href="/блог/сгорание-фотографий/" target="_blank">Подробнее...</a>
+          </p>
+        </div>
+      </div>
     </div>
   </option-dialog>
-</script>
-
-<script type="text/x-template" id="upload-photo">
-  <div id="upload_photo">
-    <div id="hint" style="padding: 5px 0px 5px ; color: #ccc; font-size: 11px;">
-      Размер фотографии не должен превышать 8Mb
-    </div>
-    <div class="upload_photo__add">
-      <button class="btn btn-primary" @click="upload">
-        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-        Добавить фотографию
-      </button>
-      <input id="fileupload" type="file" name="file" data-form-data='{"script": "true"}'>
-    </div>
-
-    <div class="galery-photo__list" v-show="photos.length" style="display: none;">
-      <img class="galery-photo__item-photo" :src="item._links.galery.href" v-for="(item, index) in photos" @click="show(index)">
-    </div>
-    <div class="galery-photo__placeholder" v-show="!photos.length">
-      Фотографии которые вы загрузите будут здесь
-    </div>
-    <div class="upload_photo__rules" v-show="photos.length < 5" style="display: none;">
-      <p>- Вы можете загружать и отправлять любые фотографии, в том числе и эротические фото. Премодерации фотографий нет, в
-      содержании фотографий вы контролируете себя сами</p>
-      <p>- Интимные или эротические фотографии отправлять можно, если ваш собеседник
-      согласился получить такую фотографию, и в данный момент ждёт её от вас</p>
-      <p>- Рассылать интимные фотографии всем подряд, или отправлять их, когда вас об этом не просят,
-      запрещено. Поступит много жалоб, и это грозит блокировкой</p>
-      <p>
-      <a href="/блог/не-настоящие-фотографии/" target="_blank">
-        Избегайте использования чужих интим фото, скаченных из интернета (!) Это очень легко проверить. Ваш собеседник оставит публичное замечание к вашей анкете, обнаружив обман.</a>
-      </p>
-      <p style="padding: 3px 17px 3px; margin: 10px 0; background: url(/img/icon/burn_photo.png) no-repeat left top;">
-        Фотографии, которые долго не использовались, удалятся автоматически.
-        <a href="/блог/сгорание-фотографий/" target="_blank">Подробнее...</a>
-      </p>
-    </div>
-  </div>
 </script>
   %%MAIL_FORM_MESSAGE_POST%%
   <script>
@@ -413,16 +409,18 @@
 
 <script type="text/x-template" id="remove-confirm">
   <modal-dialog :show="show" :data="data" @close="close">
-    <div class="modal-dialog__caption">
-      {{caption}}
-    </div>
-    <div class="modal-dialog__body">
-      {{text}}
-    </div>
-    <div class="modal-dialog__footer">
-      <button class="btn btn-primary" @click="bun()" v-if="show == 'doit'">{{action}}</button>
-      <button class="btn btn-primary" @click="remove()" v-else>{{action}}</button>
-      <button class="btn btn-default" @click="close()">Отмена</button>
+    <div class="remove-dialog">
+      <div class="modal-dialog__caption">
+        {{caption}}
+      </div>
+      <div class="modal-dialog__body">
+        {{text}}
+      </div>
+      <div class="modal-dialog__footer">
+        <button class="btn btn-primary" @click="bun()" v-if="show == 'doit'">{{action}}</button>
+        <button class="btn btn-primary" @click="remove()" v-else>{{action}}</button>
+        <button class="btn btn-default" @click="close()">Отмена</button>
+      </div>
     </div>
   </modal-dialog>
 </script>
@@ -627,6 +625,148 @@ border-radius: 3px;">Сохранено</span>
 
       </script>
 
+
+
+
+<div id="contact-section">
+  <div class="contact-section__item" @click="openInit">
+    <span aria-hidden="true" class="glyphicon glyphicon-heart-empty"></span>
+    Знакомства
+  </div>
+  <div class="contact-section__item" @click="openSends">
+    <span aria-hidden="true" class="glyphicon glyphicon-hourglass"></span>
+    Предложения
+  </div>
+</div>
+
+
+
+<script type="text/x-template" id="contact-dialog">
+  <option-dialog @close="close">
+    <div class="contact-dialog">
+      <div class="option_tab">
+        <div align="left" class="option_cap">
+          <b>Предложения знакомства</b>
+        </div>
+        <div class="tab_context">
+          Когда вы отправляете самое первое сообщение для знакомства, это считается предложением знакомства.
+        </div>
+        <div class="option_loader" v-show="slow && !response">
+          Загружаем
+        </div>
+        <div class="" v-if="response && contacts.length">
+          <contact-item v-for="(item, index) in contacts"
+            :item="item"
+            :index="index"></contact-item>
+        </div>
+        <div class="hint_context" v-else-if="response && contacts < 1">
+          Здесь будет список отправленных вами предложений знакомства.
+        </div>
+      </div>
+    </div>
+  </option-dialog>
+</script>
+
+<script type="text/x-template" id="contact-item">
+  <div class="contact-list__item">
+    <div class="contact-list__item-content" @click.stop="show">
+      <span class="contact-list__item-info">
+        <span class="user-list__name">{{item.name}}</span>,
+        <span class="user-list__age">{{item.age}}</span>
+      </span>
+      <span class="contact-list__item-message">{{item.message}}</span>
+    </div>
+    <div class="contact-list__item-option">
+      <span :class="0 ? 'message-item__bunn-alert' : 'message-item__bunn'"
+        v-show="1" @click="1 ? 'some' : 'doit'">
+        <span aria-hidden="true" class="glyphicon glyphicon-thumbs-down"></span>
+      </span>
+      <span class="message-item__remove" v-show="1" @click="1 ? 'some' : 'must'">
+        <span aria-hidden="true" class="glyphicon glyphicon-remove"></span>
+      </span>
+    </div>
+
+    <human-dialog @close="close"
+      :show="detail"
+      :data="item"
+    ></human-dialog>
+  </div>
+</script>
+
+
+
+<script type="text/x-template" id="human-dialog">
+  <modal-dialog :show="show" :data="data" @close="close">
+    <div class="human-dialog__caption">
+      Быстрый ответ
+      <div class="human-dialog__option">
+        <span aria-hidden="true" class="glyphicon glyphicon-thumbs-down"></span>
+        <span aria-hidden="true" class="human-dialog__option-remove glyphicon glyphicon-trash"></span>
+      </div>
+    </div>
+    <div class="human-dialog__body">
+      <div class="human-dialog__desire" v-show="desire">
+        <span class="link_simple" v-for="(tag, index) in data.desire">{{tag}} &#8226; </span>
+      </div>
+      <div class="human-dialog__message">
+        {{data.message}}
+      </div>
+    </div>
+    <div class="human-dialog__form">
+          <a :href="'/' + data.cont_id" class="human-dialog__form-anketa btn btn-link">
+            <span aria-hidden="true" class="glyphicon glyphicon-user"></span>
+          </a>
+      <div class="human-dialog__form-input" placeholder="Введите текст" contenteditable>
+
+      </div>
+          <div class="human-dialog__form-send" @click="send">
+            <span aria-hidden="true" class="glyphicon glyphicon-send"></span>
+          </div>
+
+    </div>
+
+    <captcha-dialog @close="close" @cancel="cancel" @code="setCode"
+      :show="captcha"
+      :data="data" ></captcha-dialog>
+  </modal-dialog>
+</script>
+
+<script type="text/x-template" id="captcha-dialog">
+  <modal-dialog :show="show" :data="data" @close="close">
+    <div class="captcha-dialog__caption">
+      Подтвердите
+      <a href="/блог/простые-проверки/" target="_blank" aria-hidden="true" class="glyphicon glyphicon-info-sign"></a>
+    </div>
+    <div class="captcha-dialog__body">
+      <div class="human-dialog__desire">
+        Введите код с картинки
+      </div>
+      <div class="input-group" style="max-width: 300px;">
+        <span class="captcha-dialog__addon input-group-addon captcha-img__addon">
+          <span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span>
+        </span>
+        <span class="captcha-dialog__addon input-group-addon captcha-img__addon">
+          <img class="form-message__captcha-img" src="/secret_pic.php" width="48" height="20">
+        </span>
+        <input class="form-control" type="text" autocomplete="off" v-model="code">
+      </div>
+    </div>
+
+    <div class="captcha-dialog__option">
+      <button class="btn btn-default" @click="close">
+        Вернуться
+      </button>
+      <button class="btn btn-warning" @click="send">
+        Отправить
+      </button>
+    </div>
+
+    <div class="human-dialog__form">
+
+    </div>
+  </modal-dialog>
+</script>
+
       <!--// Настнойки почты под списком контактов //-->
 
       <div id="block_mail_setting">
@@ -808,12 +948,14 @@ border-radius: 3px;">Сохранено</span>
 
 
 <div id="option-static__viewer">
-  <upload-dialog></upload-dialog>
-  <photo-dialog></photo-dialog>
+  <upload-dialog  @close="close" v-if="view == 'upload'"></upload-dialog>
+  <photo-dialog   @close="close" v-if="view == 'photo'"></photo-dialog>
+  <sends-dialog   @close="close" v-if="view == 'sends'"></sends-dialog>
+  <initial-dialog @close="close" v-if="view == 'initial'"></initial-dialog>
 </div>
 
 <script type="text/x-template" id="option-static__dialog-window">
-  <div class="option-dialog" v-if="show">
+  <div class="option-dialog">
     <div class="option-dialog__cover">
       <div class="option-dialog__loader"></div>
     </div>

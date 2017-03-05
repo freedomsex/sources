@@ -1,0 +1,140 @@
+
+
+<div id="contact-section">
+  <div class="contact-section__item" @click="openInit">
+    <span aria-hidden="true" class="glyphicon glyphicon-heart-empty"></span>
+    Знакомства
+  </div>
+  <div class="contact-section__item" @click="openSends">
+    <span aria-hidden="true" class="glyphicon glyphicon-hourglass"></span>
+    Предложения
+  </div>
+</div>
+
+
+
+<script type="text/x-template" id="contact-dialog">
+  <option-dialog @close="close">
+    <div class="contact-dialog">
+      <div class="option_tab">
+        <div align="left" class="option_cap">
+          <b>Предложения знакомства</b>
+        </div>
+        <div class="tab_context">
+          Когда вы отправляете самое первое сообщение для знакомства, это считается предложением знакомства.
+        </div>
+        <div class="option_loader" v-show="slow && !response">
+          Загружаем
+        </div>
+        <div class="" v-if="response && contacts.length">
+          <contact-item v-for="(item, index) in contacts"
+            :item="item"
+            :index="index"></contact-item>
+        </div>
+        <div class="hint_context" v-else-if="response && contacts < 1">
+          Здесь будет список отправленных вами предложений знакомства.
+        </div>
+      </div>
+    </div>
+  </option-dialog>
+</script>
+
+<script type="text/x-template" id="contact-item">
+  <div class="contact-list__item">
+    <div class="contact-list__item-content" @click.stop="show">
+      <span class="contact-list__item-info">
+        <span class="user-list__name">{{item.name}}</span>,
+        <span class="user-list__age">{{item.age}}</span>
+      </span>
+      <span class="contact-list__item-message">{{item.message}}</span>
+    </div>
+    <div class="contact-list__item-option">
+      <span :class="0 ? 'message-item__bunn-alert' : 'message-item__bunn'"
+        v-show="1" @click="1 ? 'some' : 'doit'">
+        <span aria-hidden="true" class="glyphicon glyphicon-thumbs-down"></span>
+      </span>
+      <span class="message-item__remove" v-show="1" @click="1 ? 'some' : 'must'">
+        <span aria-hidden="true" class="glyphicon glyphicon-remove"></span>
+      </span>
+    </div>
+
+    <human-dialog @close="close"
+      :show="detail"
+      :data="item"
+    ></human-dialog>
+  </div>
+</script>
+
+
+
+<script type="text/x-template" id="human-dialog">
+  <modal-dialog :show="show" :data="data" @close="close">
+    <div class="human-dialog__caption">
+      Быстрый ответ
+      <div class="human-dialog__option">
+        <span aria-hidden="true" class="glyphicon glyphicon-thumbs-down"></span>
+        <span aria-hidden="true" class="human-dialog__option-remove glyphicon glyphicon-trash"></span>
+      </div>
+    </div>
+    <div class="human-dialog__body">
+      <div class="human-dialog__desire" v-show="desire">
+        <span class="link_simple" v-for="(tag, index) in data.desire">{{tag}} &#8226; </span>
+      </div>
+      <div class="human-dialog__message">
+        {{data.message}}
+      </div>
+    </div>
+    <div class="human-dialog__form">
+          <a :href="'/' + data.cont_id" class="human-dialog__form-anketa btn btn-link">
+            <span aria-hidden="true" class="glyphicon glyphicon-user"></span>
+          </a>
+      <div class="human-dialog__form-input" placeholder="Введите текст" contenteditable>
+
+      </div>
+          <div class="human-dialog__form-send" @click="send">
+            <span aria-hidden="true" class="glyphicon glyphicon-send"></span>
+          </div>
+
+    </div>
+
+    <captcha-dialog @close="close" @cancel="cancel" @code="setCode"
+      :show="captcha"
+      :data="data" ></captcha-dialog>
+  </modal-dialog>
+</script>
+
+<script type="text/x-template" id="captcha-dialog">
+  <modal-dialog :show="show" :data="data" @close="close">
+    <div class="captcha-dialog__caption">
+      Подтвердите
+      <a href="/блог/простые-проверки/" target="_blank" aria-hidden="true" class="glyphicon glyphicon-info-sign"></a>
+    </div>
+    <div class="captcha-dialog__body">
+      <div class="human-dialog__desire">
+        Введите код с картинки
+      </div>
+      <div class="input-group" style="max-width: 300px;">
+        <span class="captcha-dialog__addon input-group-addon captcha-img__addon">
+          <span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span>
+        </span>
+        <span class="captcha-dialog__addon input-group-addon captcha-img__addon">
+          <img class="form-message__captcha-img" src="/secret_pic.php" width="48" height="20">
+        </span>
+        <input class="form-control" type="text" autocomplete="off" v-model="code">
+      </div>
+    </div>
+
+    <div class="captcha-dialog__option">
+      <button class="btn btn-default" @click="close">
+        Вернуться
+      </button>
+      <button class="btn btn-warning" @click="send">
+        Отправить
+      </button>
+    </div>
+
+    <div class="human-dialog__form">
+
+    </div>
+  </modal-dialog>
+</script>

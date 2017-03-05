@@ -17,7 +17,7 @@
   background: #f9ecbf;
 }
 .bg_gra {
-  background: #f7f7f7;
+  background: #f5f5f5;
 }
 .bg_blu {
   background: #CCCCFF;
@@ -38,7 +38,7 @@
   background: #fff5cc !important;
 }
 .bg_ogra {
-  background: #f7f7f7 !important;
+  background: #f5f5f5 !important;
 }
 .bg_oblu {
   background: #CCCCFF !important;
@@ -408,7 +408,7 @@
   border-bottom-left-radius: 5px;
   border: 1px solid #cccccc;
   border-width: 0 1px 1px;
-  background: #f7f7f7;
+  background: #f5f5f5;
   color: #666666;
 }
 .form-message__notice-alert {
@@ -421,6 +421,12 @@
   border-width: 0 1px 1px;
   background: #ff6666;
   color: #ffffff;
+}
+.form-message__notice-alert .glyphicon {
+  margin-right: 3px;
+}
+#remove-dialog {
+  padding: 25px 20px 20px;
 }
 .message_list_title_date {
   border-top: 1px dotted #999999;
@@ -764,7 +770,7 @@ div.alert_block_mess b {
   width: 80px;
 }
 .save_notice {
-  background: #f7f7f7;
+  background: #f5f5f5;
   border: 1px solid #cccccc;
   color: #666666;
   margin: 10px 0 0;
@@ -1205,7 +1211,7 @@ div.alert_block_mess b {
 }
 .incoming-photo__placeholder {
   color: #999999;
-  background: #f7f7f7;
+  background: #f5f5f5;
   padding: 15px 15px;
 }
 .incoming-photo__list {
@@ -1219,13 +1225,13 @@ div.alert_block_mess b {
 .photo-view {
   text-align: center;
   margin-top: 15px;
-  background: #f7f7f7;
+  background: #f5f5f5;
   background-size: cover;
   background-position: center;
-  border: 1px solid #f7f7f7;
+  border: 1px solid #f5f5f5;
 }
 .photo-view__accept {
-  border: 1px solid #f7f7f7;
+  border: 1px solid #f5f5f5;
   padding: 20px 20px;
   max-width: 400px;
   background-color: #ffffff;
@@ -1249,7 +1255,7 @@ div.alert_block_mess b {
 }
 .galery-photo__placeholder {
   color: #999999;
-  background: #f7f7f7;
+  background: #f5f5f5;
   padding: 15px 15px;
 }
 .galery-photo__list {
@@ -1273,4 +1279,147 @@ div.alert_block_mess b {
 .upload_photo__rules p {
   padding: 0;
   margin: 4px 0;
+}
+#contact-section {
+  border-top: 1px solid #cccccc;
+}
+.contact-section__item {
+  color: #0066cc;
+  cursor: pointer;
+  text-decoration: none;
+  padding: 10px 10px;
+  font-size: 14px;
+}
+.contact-list__item {
+  border-top: 1px solid #cccccc;
+  position: relative;
+  background: #ffffff;
+  overflow: hidden;
+  font-size: 14px;
+}
+.contact-list__item-info {
+  margin-right: 5px;
+}
+.contact-list__item-info .user-list__name {
+  color: #0066cc;
+}
+.contact-list__item-info .user-list__age {
+  color: #ff9966;
+}
+.contact-list__item-content {
+  cursor: pointer;
+  text-decoration: none;
+  padding: 15px 5px;
+  white-space: nowrap;
+}
+.contact-list__item-message {
+  overflow: hidden;
+  font-style: italic;
+  white-space: nowrap;
+}
+.contact-list__item-option {
+  position: absolute;
+  right: 0;
+  top: 2px;
+  bottom: 0;
+  text-align: right;
+  width: 100px;
+  background: linear-gradient(to right, transparent, #ffffff 15%);
+}
+.contact-list__item:after {
+  content: '';
+  display: block;
+  clear: both;
+}
+#human-dialog {
+  max-width: 400px;
+}
+.human-dialog__caption {
+  background: #3A5795;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 16px;
+  padding: 10px 15px;
+}
+.human-dialog__option {
+  float: right;
+}
+.human-dialog__option-remove {
+  margin-left: 10px;
+}
+.human-dialog__input {
+  border-width: 0px;
+}
+.human-dialog__body {
+  padding: 15px 15px 0;
+}
+.human-dialog__desire {
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+.human-dialog__message {
+  padding: 10px 10px;
+  background: #e5e5e5;
+  margin-bottom: 10px;
+}
+.human-dialog__form {
+  position: relative;
+  padding-bottom: 10px;
+}
+.human-dialog__form-send {
+  cursor: pointer;
+  text-decoration: none;
+  color: #ffffff;
+  padding: 7px;
+  display: inline-block;
+  border-radius: 50px;
+  background: #3A5795;
+  position: absolute;
+  padding: 10px;
+  right: 10px;
+  bottom: 10px;
+}
+.human-dialog__form-send .glyphicon {
+  position: relative;
+  left: -2px;
+}
+.human-dialog__form-anketa {
+  width: 40px;
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+}
+.human-dialog__form-input {
+  margin: 0 55px 0 45px;
+  padding: 10px 10px;
+}
+.human-dialog__form-input:empty:not(:focus):before {
+  color: #999999;
+  content: attr(placeholder);
+  display: block;
+}
+#captcha-dialog {
+  max-width: 400px;
+}
+.captcha-dialog__caption {
+  background: #ff9900;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 16px;
+  padding: 10px 15px;
+}
+.captcha-dialog__caption .glyphicon {
+  float: right;
+  color: #ffffff;
+}
+.captcha-dialog__body {
+  padding: 15px 15px 0;
+}
+.captcha-dialog__option {
+  padding: 15px 15px 0;
+  text-align: right;
+}
+.captcha-dialog__addon {
+  padding: 2px 15px;
+  background: #ffffff;
 }

@@ -2,6 +2,14 @@
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 $(document).ready(function () {
 
     userinfo.init();
@@ -34,18 +42,103 @@ moment.locale('ru');
 
 var ls = lscache;
 
+var Api = function Api(host, key) {
+    _classCallCheck(this, Api);
+
+    this.root = host + '/';
+    this.key = key;
+    this.config = {
+        baseURL: this.root,
+        headers: { 'Authorization': 'Bearer ' + key }
+    };
+};
+
+;
+
+var ApiMessages = function (_Api) {
+    _inherits(ApiMessages, _Api);
+
+    function ApiMessages() {
+        _classCallCheck(this, ApiMessages);
+
+        return _possibleConstructorReturn(this, (ApiMessages.__proto__ || Object.getPrototypeOf(ApiMessages)).apply(this, arguments));
+    }
+
+    _createClass(ApiMessages, [{
+        key: 'send',
+        value: function send(data, handler, error) {
+            console.log(this);
+            axios.post('mailer/post/', data, this.config).then(function (response) {
+                handler(response.data);
+            }).catch(function (error) {
+                console.log(error);
+            });
+            console.log('ApiMessages send !!!');
+        }
+    }]);
+
+    return ApiMessages;
+}(Api);
+
+;
+
+var ApiUser = function (_Api2) {
+    _inherits(ApiUser, _Api2);
+
+    function ApiUser() {
+        _classCallCheck(this, ApiUser);
+
+        return _possibleConstructorReturn(this, (ApiUser.__proto__ || Object.getPrototypeOf(ApiUser)).apply(this, arguments));
+    }
+
+    _createClass(ApiUser, [{
+        key: 'saveSex',
+        value: function saveSex(data, handler, error) {
+            axios.post('/option/sex/', data, this.config).then(function (response) {
+                if (response.data.sex) {
+                    store.commit('loadUser', { sex: response.data.sex });
+                    handler();
+                }
+            }).catch(function (e) {
+                console.log(e);
+                error();
+            });
+        }
+    }]);
+
+    return ApiUser;
+}(Api);
+
+;
+
+var apiMessages = new ApiMessages('', 1234);
+var apiUser = new ApiUser('', 1234);
+//  = _.create(Api.prototype, {
+//     host: '/',
+//     jwt: '1234',
+// });
+
+
+//ApiMessages.send();
+
 var store = new Vuex.Store({
     state: {
         apiToken: '',
         //photoServer: '127.0.0.1:8888',
         photoServer: '195.154.54.70',
         count: 0,
+        optionStatic: {
+            view: null
+        },
         photoView: {
             thumb: null,
             photo: null,
             height: null
         },
         uploadView: {
+            show: false
+        },
+        contactView: {
             show: false
         },
         formMess: {
@@ -60,16 +153,28 @@ var store = new Vuex.Store({
         },
         accepts: {
             photo: false
+        },
+        user: {
+            uid: 0,
+            sex: 0
         }
     },
     actions: {
-        LOAD_API_TOKEN: function LOAD_API_TOKEN(_ref) {
+        LOAD_USER: function LOAD_USER(_ref) {
             var commit = _ref.commit;
+
+            commit('loadUser', {
+                sex: user_sex,
+                uid: uid
+            });
+        },
+        LOAD_API_TOKEN: function LOAD_API_TOKEN(_ref2) {
+            var commit = _ref2.commit;
 
             commit('setApiToken', { apiToken: get_cookie('jwt') });
         },
-        LOAD_ACCEPTS: function LOAD_ACCEPTS(_ref2) {
-            var commit = _ref2.commit;
+        LOAD_ACCEPTS: function LOAD_ACCEPTS(_ref3) {
+            var commit = _ref3.commit;
 
             var accepts = ls.get('accepts');
             if (accepts && accepts.photo) {
@@ -79,6 +184,9 @@ var store = new Vuex.Store({
         }
     },
     mutations: {
+        loadUser: function loadUser(state, data) {
+            _.extend(state.user, data);
+        },
         setApiToken: function setApiToken(state, data) {
             if (data) {
                 _.extend(state, data);
@@ -100,6 +208,9 @@ var store = new Vuex.Store({
         },
         intimated: function intimated(state, data) {
             state.formMess.intimate = data === true;
+        },
+        optionDialog: function optionDialog(state, data) {
+            state.optionStatic.view = data ? data : null;
         }
     },
     getters: {
@@ -109,6 +220,7 @@ var store = new Vuex.Store({
 
 store.dispatch('LOAD_API_TOKEN');
 store.dispatch('LOAD_ACCEPTS');
+store.dispatch('LOAD_USER');
 
 // -- Получить новый хэш ---
 var hash;
@@ -123,108 +235,6 @@ function disabled_with_timeout(elem, time) {
         elem.prop("disabled", false);
     }, time * 1000);
 }
-
-Vue.http.options.emulateJSON = true;
-
-var UploadPhoto = Vue.extend({
-    template: "#upload-photo",
-    data: function data() {
-        return {
-            photos: [],
-            server: null
-        };
-        // file: {
-        //     data: null,
-        //     name: '',
-        //     size: 0
-        // }
-    },
-
-    created: function created() {
-        this.server = this.$store.state.photoServer;
-    },
-    methods: {
-        loadPhoto: function loadPhoto() {
-            var _this = this;
-
-            var config = {
-                headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
-                params: { hash: hash }
-            };
-            axios.get('http://' + this.server + '/api/v1/users/' + uid + '/photos', config).then(function (response) {
-                var result = response.data.photos;
-                if (result && result.length) {
-                    _this.photos = response.data.photos;
-                }
-                //console.log(this.photos);
-            }).catch(function (error) {
-                console.log(error);
-            });
-        },
-        upload: function upload(e) {
-            $('#fileupload').click();
-        },
-
-        show: function show(index) {
-            this.preview(this.photos[index]);
-        },
-        preview: function preview(photo) {
-            var links = photo._links;
-            if (links.origin.href) {
-                var _data = {
-                    photo: links.origin.href,
-                    thumb: links.thumb.href,
-                    alias: photo.alias,
-                    height: photo.height,
-                    width: photo.width
-                };
-                store.commit('sendPhoto', _data);
-                //console.log('sendPhoto');
-                //console.log(data);
-            }
-            this.close();
-        },
-        close: function close() {
-            this.$emit('close');
-        }
-    },
-    mounted: function mounted() {
-        console.log('fileupload');
-        var self = this;
-        $('#fileupload').fileupload({
-            dataType: 'json',
-            add: function add(e, data) {
-                data.url = 'http://' + self.server + '/api/v1/users/' + uid + '/photos?jwt=' + self.$store.state.apiToken;
-                data.submit();
-            },
-            done: function done(e, data) {
-                self.preview(data.result.photo);
-            }
-        });
-        this.loadPhoto();
-    }
-});
-
-// var photo_upload = new Vue({
-//   el: "#upload-photo",
-//   data: {
-//     files : []
-//   },
-//   methods: {
-//     addPhoto: function(){
-//       this.files.push({ name: "", size: 0});
-//       this.$nextTick(function () {
-//         var inputId = "upload-photo__file-" + (this.files.length-1);
-//         document.getElementById(inputId).click();
-//       });
-//     },
-//     upload: function(e){
-//       var f = e.target.files[0];
-//       //file.name = f.name;
-//       //file.size = f.size;
-//     }
-//   }
-// })
 
 // -- Автогенератор информации ---        
 var auto_gen = {
@@ -3171,6 +3181,100 @@ var option_sex = {
     }
 };
 
+Vue.component('initial-dialog', {
+    data: function data() {
+        return {
+            contacts: [],
+            response: null,
+            slow: false,
+            next: 0,
+            batch: 10,
+            received: 0
+        };
+    },
+
+    methods: {
+        close: function close() {
+            this.$emit('close');
+        },
+        load: function load() {
+            var _this3 = this;
+
+            var config = {
+                headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
+                params: { hash: hash }
+            };
+            axios.get('/contact/list/initial/', config).then(function (response) {
+                var result = response.data;
+                _this3.received = result ? result.length : 0;
+                if (_this3.received) {
+                    _this3.contacts = _.union(_this3.contacts, result);
+                }
+                _this3.next += _this3.batch;
+                _this3.response = 200;
+                _this3.slow = false;
+            }).catch(function (error) {
+                console.log(error);
+            });
+            setTimeout(function () {
+                return _this3.slow = true;
+            }, 3000);
+        }
+    },
+    mounted: function mounted() {
+        this.load();
+    },
+
+    template: '#contact-dialog'
+});
+
+Vue.component('sends-dialog', {
+    data: function data() {
+        return {
+            contacts: [],
+            response: null,
+            slow: false,
+            next: 0,
+            batch: 10,
+            received: 0
+        };
+    },
+
+    methods: {
+        close: function close() {
+            this.$emit('close');
+        },
+        load: function load() {
+            var _this4 = this;
+
+            var config = {
+                headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
+                params: { hash: hash }
+            };
+            axios.get('/contact/list/sends/', config).then(function (response) {
+                var result = response.data;
+                _this4.received = result ? result.length : 0;
+                if (_this4.received) {
+                    _this4.contacts = _.union(_this4.contacts, result);
+                }
+                _this4.next += _this4.batch;
+                _this4.response = 200;
+                _this4.slow = false;
+            }).catch(function (error) {
+                console.log(error);
+            });
+            setTimeout(function () {
+                return _this4.slow = true;
+            }, 3000);
+        }
+    },
+    mounted: function mounted() {
+        this.load();
+    },
+
+    template: '#contact-dialog'
+});
+
 Vue.component('photo-view', {
     props: ['photo', 'thumb', 'width', 'height', 'bypass'],
     methods: {
@@ -3186,14 +3290,105 @@ Vue.component('photo-view', {
     template: '#photo-view'
 });
 
+Vue.component('photo-dialog', {
+    methods: {
+        close: function close() {
+            this.$emit('close');
+            store.commit('viewPhoto', { photo: null });
+        }
+    },
+    computed: Vuex.mapState({
+        config: function config(state) {
+            return state.photoView;
+        }
+    }),
+    template: '#photo-dialog'
+});
+
+Vue.component('upload-dialog', {
+    template: '#upload-dialog',
+    data: function data() {
+        return {
+            photos: [],
+            server: null
+        };
+        // file: {
+        //     data: null,
+        //     name: '',
+        //     size: 0
+        // }
+    },
+
+    created: function created() {
+        this.server = this.$store.state.photoServer;
+    },
+    methods: {
+        loadPhoto: function loadPhoto() {
+            var _this5 = this;
+
+            var config = {
+                headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
+                params: { hash: hash }
+            };
+            axios.get('http://' + this.server + '/api/v1/users/' + uid + '/photos', config).then(function (response) {
+                var result = response.data.photos;
+                if (result && result.length) {
+                    _this5.photos = response.data.photos;
+                }
+                //console.log(this.photos);
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        upload: function upload(e) {
+            $('#fileupload').click();
+        },
+
+        show: function show(index) {
+            this.preview(this.photos[index]);
+        },
+        preview: function preview(photo) {
+            var links = photo._links;
+            if (links.origin.href) {
+                var _data = {
+                    photo: links.origin.href,
+                    thumb: links.thumb.href,
+                    alias: photo.alias,
+                    height: photo.height,
+                    width: photo.width
+                };
+                store.commit('sendPhoto', _data);
+                //console.log('sendPhoto');
+                //console.log(data);
+            }
+            this.close();
+        },
+        close: function close() {
+            this.$emit('close');
+        }
+    },
+    mounted: function mounted() {
+        console.log('fileupload');
+        var self = this;
+        $('#fileupload').fileupload({
+            dataType: 'json',
+            add: function add(e, data) {
+                data.url = 'http://' + self.server + '/api/v1/users/' + uid + '/photos?jwt=' + self.$store.state.apiToken;
+                data.submit();
+            },
+            done: function done(e, data) {
+                self.preview(data.result.photo);
+            }
+        });
+        this.loadPhoto();
+    }
+});
+
 ///
 // Модальное окно настроек OptionDialog - контейнер
 ///
-var OptionDialog = Vue.extend({
+Vue.component('option-dialog', {
     template: '#option-static__dialog-window',
-    props: {
-        show: false
-    },
     methods: {
         close: function close() {
             this.$emit('close');
@@ -3215,47 +3410,18 @@ var OptionDialog = Vue.extend({
     }
 });
 
-var PhotoViewDialog = Vue.extend({
-    methods: {
-        close: function close() {
-            store.commit('viewPhoto', { photo: null });
-        }
-    },
-    components: {
-        optionDialog: OptionDialog
-    },
-    computed: Vuex.mapState({
-        config: function config(state) {
-            return state.photoView;
-        }
-    }),
-    template: '#option-content__photo-view'
-});
-
-var UploadDialog = Vue.extend({
-    methods: {
-        close: function close() {
-            store.commit('viewUpload', false);
-        }
-    },
-    components: {
-        optionDialog: OptionDialog,
-        uploadPhoto: UploadPhoto
-    },
-    computed: Vuex.mapState({
-        config: function config(state) {
-            return state.uploadView;
-        }
-    }),
-    template: '#option-content__upload-photo'
-});
-
 var OptionStaticViewer = new Vue({
     el: '#option-static__viewer',
     store: store,
-    components: {
-        photoDialog: PhotoViewDialog,
-        uploadDialog: UploadDialog
+    computed: Vuex.mapState({
+        view: function view(state) {
+            return state.optionStatic.view;
+        }
+    }),
+    methods: {
+        close: function close() {
+            store.commit('optionDialog', false);
+        }
     }
 });
 

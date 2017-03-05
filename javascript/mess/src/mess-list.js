@@ -222,13 +222,13 @@ Vue.component('message-item', {
             fdate = date;
             date = (fdate == first_date) ? '' : fdate;
             let today = moment().date();
-            let yestd = today - 1;
+            let yestd = moment().subtract(1, 'day').date();
 
-            date = (date == today) ? 'Сегодня' : date;
-            date = (date == yestd) ? 'Вчера' : date;
+            date = (date === today) ? 'Сегодня' : date;
+            date = (date === yestd) ? 'Вчера' : date;
 
             mdate = mdate.date() + ' ' + mdate.format('MMMM').substring(0,3);
-            date = (date === parseInt(date, 10)) ? mdate : date;
+            date = _.isString(date) ? date : mdate;
             return date;
         },
         alias() {
