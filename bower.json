@@ -29,6 +29,7 @@
     "json3": "^3.3.2",
     "lscache": "^1.0.5",
     "jquery-ui": "^1.12.1",
-    "blueimp-file-upload": "fileupload#^9.17.0"
+    "blueimp-file-upload": "fileupload#^9.17.0",
+    "vue-resource": "^1.2.1"
   }
 }

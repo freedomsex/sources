@@ -808,7 +808,7 @@ var FormMess = new Vue({
         },
         sendPhoto: function sendPhoto() {
             // TODO: почти готово, ждем сообщений
-            //Vue.http.headers.common['Authorization'] = 'Bearer ' + get_cookie('jwt');
+            //Vue.htt*p.headers.common['Authorization'] = 'Bearer ' + get_cookie('jwt');
             // let data = {
             // 	alias: this.photo.alias
             // };

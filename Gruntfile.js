@@ -3,9 +3,28 @@ module.exports = function (grunt) {
         //Склеивание файлов javascript
         concat: {
             options: {
+            
+            },
+            bower: {
+                src: [
+                    'bower_components/lscache/lscache.min.js',
+                    'bower_components/json3/lib/json3.min.js',
+                    'bower_components/underscore/underscore-min.js',
+                    'bower_components/moment/min/moment.min.js',
+                    'bower_components/moment/locale/ru.js',
+                    'bower_components/axios/dist/axios.min.js',
+                    'bower_components/vue/dist/vue.js',
+                    'bower_components/vuex/dist/vuex.min.js',
+                    'bower_components/vue-resource/dist/vue-resource.min.js',
+                    'bower_components/blueimp-file-upload/js/jquery.fileupload.js',
+                    'bower_components/blueimp-file-upload/js/jquery.iframe-transport.js',
+                ],
+                dest: 'bower_components/bower-components.js',
             },
             core: {
-                src: ['javascript/core/src/*.js'],
+                src: [
+                    'javascript/core/src/*.js'
+                ],
                 dest: 'javascript/core/dist/core.es6',
             },
             mess: {
@@ -47,6 +66,7 @@ module.exports = function (grunt) {
         // Сборка файлов шаблонов
         processhtml: {
             options: { 
+                environment: 'dev',
                 recursive: true,
             },
             dist: {
@@ -82,7 +102,10 @@ module.exports = function (grunt) {
         },
         uglify: {
             core: {
-                src: 'javascript/core/dist/core.js',
+                src: [
+                    'bower_components/bower-components.js',
+                    'javascript/core/dist/core.js'
+                ],
                 dest: 'javascript/core/dist/core.min.js'
             },
             mess: {
