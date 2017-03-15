@@ -53,7 +53,7 @@
   %%SEARCH_BLOCK%%
   %%BLOCK_STATIC_TIP%%
   <div style="border-bottom: 1px solid #E5E5E5;">
-<iframe style="position: relative; background-color: transparent; border: none; overflow: hidden; height: 89px;width: 728px;" src="//data.freedomsex.me/din_new6.php?code=c1b2082d1105d784218299f23aa44f93&bid=35225&w=728&h=89&linkdest=model&modelnick=&clickurl=&refresh=1&meffect=random&einterval=none&logo=black&bbgcolor=none&bg_none=none&btextcolor=222222&mbordercolor=000000&mhovercolor=F7941D&mbordertype=solid&shad=0&bfontfamily=Arial&mtextalign=right&id=28644&server=runetki.com&langs=ru&campaign=655683&size=728x89&header=1&modelname=1&modelicon=1&modelinfo=1&geoflag=1&geoheader=1&selgeoheader=0&mediagroup=0&mediatype=2&skins=def&no_ab=1&no_ab_sub_data=1&no_ab_sub_media=2&category=all&srv=0&no_ab=1&no_ab_sub_data=1&no_ab_sub_media=2&no_ab_domain=freedomsex.me"></iframe>
+<iframe id="frame-id-01" style="position: relative; background-color: transparent; border: none; overflow: hidden;  height: 89px; width: 728px; " src="//data.freedomsex.me/din_new8.php?code=c1b2082d1105d784218299f23aa44f93&bid=35225&w=728&h=89&linkdest=&modelnick=&clickurl=&refresh=1&meffect=random&einterval=none&logo=black&bbgcolor=none&bg_none=none&btextcolor=222222&mbordercolor=000000&mhovercolor=F7941D&mbordertype=solid&shad=0&bfontfamily=Arial&mtextalign=right&id=28644&server=runetki.com&langs=ru&campaign=655683&size=728x89&header=1&modelname=1&modelicon=1&modelinfo=1&geoflag=1&geoheader=1&selgeoheader=0&mediagroup=0&mediatype=2&skins=def&no_ab=1&no_ab_sub_data=1&no_ab_sub_media=2&category=all&srv=0&no_ab=1&no_ab_sub_data=1&no_ab_sub_media=2&no_ab_domain=freedomsex.me"></iframe>
 </div>
 
   %%TIP_FORM_BLOCK%%
@@ -80,12 +80,13 @@
   </div>
 
 
+<div id="router-view">
+  <router-view @close="close"></router-view>
+</div>
 
 <div id="option-static__viewer">
   <upload-dialog  @close="close" v-if="view == 'upload'"></upload-dialog>
   <photo-dialog   @close="close" v-if="view == 'photo'"></photo-dialog>
-  <sends-dialog   @close="close" v-if="view == 'sends'"></sends-dialog>
-  <initial-dialog @close="close" v-if="view == 'initial'"></initial-dialog>
 </div>
 
 <script type="text/x-template" id="option-static__dialog-window">

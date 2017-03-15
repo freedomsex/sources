@@ -21,7 +21,7 @@
           <b>Предложения знакомства</b>
         </div>
         <div class="tab_context">
-          Когда вы отправляете самое первое сообщение для знакомства, это считается предложением знакомства.
+          Когда вы отправляете или вам отправляют самое первое сообщение, это считается предложением знакомства.
         </div>
         <div class="option_loader" v-show="slow && !response">
           Загружаем
@@ -29,10 +29,13 @@
         <div class="" v-if="response && contacts.length">
           <contact-item v-for="(item, index) in contacts"
             :item="item"
-            :index="index"></contact-item>
+            :index="index"
+            :initial="initial"
+            @remove="remove"
+          />
         </div>
         <div class="hint_context" v-else-if="response && contacts < 1">
-          Здесь будет список отправленных вами предложений знакомства.
+          Здесь будет список ваших предложений знакомства.
         </div>
       </div>
     </div>
@@ -50,30 +53,35 @@
     </div>
     <div class="contact-list__item-option">
       <span :class="0 ? 'message-item__bunn-alert' : 'message-item__bunn'"
-        v-show="1" @click="1 ? 'some' : 'doit'">
+        v-show="initial" @click="confirm = !initial ? 'some' : 'doit'">
         <span aria-hidden="true" class="glyphicon glyphicon-thumbs-down"></span>
       </span>
-      <span class="message-item__remove" v-show="1" @click="1 ? 'some' : 'must'">
+      <span class="message-item__remove" v-show="1" @click="confirm = !initial ? 'some' : 'must'">
         <span aria-hidden="true" class="glyphicon glyphicon-remove"></span>
       </span>
     </div>
 
-    <human-dialog @close="close"
+    <remove-confirm :show="confirm" @bun="bun" @close="cancel" @remove="remove"/>
+
+    <quick-reply
       :show="detail"
       :data="item"
-    ></human-dialog>
+      @bun="bun"
+      @close="close"
+      @remove="remove"
+    />
   </div>
 </script>
 
 
 
-<script type="text/x-template" id="human-dialog">
+<script type="text/x-template" id="quick-reply">
   <modal-dialog :show="show" :data="data" @close="close">
     <div class="human-dialog__caption">
       Быстрый ответ
       <div class="human-dialog__option">
-        <span aria-hidden="true" class="glyphicon glyphicon-thumbs-down"></span>
-        <span aria-hidden="true" class="human-dialog__option-remove glyphicon glyphicon-trash"></span>
+        <span aria-hidden="true" class="glyphicon glyphicon-thumbs-down" @click="confirm = 'doit'"></span>
+        <span aria-hidden="true" class="human-dialog__option-remove glyphicon glyphicon-trash" @click="confirm = 'must'"></span>
       </div>
     </div>
     <div class="human-dialog__body">
@@ -94,14 +102,15 @@
           <div class="human-dialog__form-send" @click="send">
             <span aria-hidden="true" class="glyphicon glyphicon-send"></span>
           </div>
-
     </div>
-
+    <remove-confirm :show="confirm" @bun="bun" @close="cancel" @remove="remove"/>
     <captcha-dialog @close="close" @cancel="cancel" @code="setCode"
       :show="captcha"
       :data="data" ></captcha-dialog>
   </modal-dialog>
 </script>
+
+
 
 <script type="text/x-template" id="captcha-dialog">
   <modal-dialog :show="show" :data="data" @close="close">

@@ -30,6 +30,7 @@
     "lscache": "^1.0.5",
     "jquery-ui": "^1.12.1",
     "blueimp-file-upload": "fileupload#^9.17.0",
-    "vue-resource": "^1.2.1"
+    "vue-resource": "^1.2.1",
+    "vue-router": "^2.3.0"
   }
 }

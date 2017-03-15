@@ -320,6 +320,12 @@ li.menu_user_link img {
   position: relative;
   vertical-align: middle;
 }
+li.menu_user_link .glyphicon {
+  top: -1px;
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+}
 li.menu_user_link_exit {
   float: left;
 }
@@ -1305,6 +1311,9 @@ a.name:hover {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.modal-dialog__wrapper {
+  padding: 20px;
 }
 .modal-dialog__container {
   min-width: 200px;

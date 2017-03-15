@@ -46,6 +46,28 @@ class Api {
     }
 };
 
+class ApiBun extends Api {
+    send(data, handler, error) {
+        axios.post('mess/bun/', data, this.config).then((response) => {
+            //this.$emit('remove', this.index);
+        }).catch((error) => {
+            //console.log('error');
+        });
+        console.log('ApiBun Bun-Bun');
+    }
+};
+
+class ApiContact extends Api {
+    remove(data, handler, error) {
+        axios.post('human/delete/', data, this.config).then((response) => {
+            //this.$emit('remove', this.index);
+        }).catch((error) => {
+            //console.log('error');
+        });
+        console.log('ApiContact removed');
+    }
+};
+
 class ApiMessages extends Api {
     send(data, handler, error) {
         console.log(this);
@@ -72,8 +94,10 @@ class ApiUser extends Api {
     }
 };
 
+var apiUser     = new ApiUser('', 1234);
+var apiBun      = new ApiBun('', 1234);
+var apiContact  = new ApiContact('', 1234);
 var apiMessages = new ApiMessages('', 1234);
-var apiUser = new ApiUser('', 1234);
 //  = _.create(Api.prototype, {
 //     host: '/',
 //     jwt: '1234',
@@ -122,10 +146,12 @@ const store = new Vuex.Store({
     },
     actions: {
         LOAD_USER({ commit }) {
-            commit('loadUser', {
-                sex: user_sex,
-                uid: uid
-            });
+            if (typeof user_sex != 'undefined') {
+                commit('loadUser', {
+                    sex: user_sex,
+                    uid: uid
+                });
+            }
         },
         LOAD_API_TOKEN({ commit }) {
             commit('setApiToken', { apiToken: get_cookie('jwt') });
@@ -1816,7 +1842,7 @@ var option_sex = {
 
 
 
-Vue.component('initial-dialog', {
+const InitialDialog = Vue.component('initial-dialog', {
     data() {
         return {
             contacts: [],
@@ -1825,11 +1851,16 @@ Vue.component('initial-dialog', {
             next: 0,
             batch: 10,
             received: 0,
+            initial: true
         }
     },
     methods: {
         close() {
             this.$emit('close');
+        },
+        remove(index) {
+            this.contacts.splice(index, 1);
+            this.close();
         },
         load() {
             let config = {
@@ -1857,7 +1888,7 @@ Vue.component('initial-dialog', {
     template: '#contact-dialog'
 });
 
-Vue.component('sends-dialog', {
+const SendsDialog = Vue.component('sends-dialog', {
     data() {
         return {
             contacts: [],
@@ -1866,11 +1897,16 @@ Vue.component('sends-dialog', {
             next: 0,
             batch: 10,
             received: 0,
+            initial: false
         }
     },
     methods: {
         close() {
             this.$emit('close');
+        },
+        remove(index) {
+            this.contacts.splice(index, 1);
+            this.close();
         },
         load() {
             let config = {
@@ -2049,6 +2085,48 @@ var OptionStaticViewer = new Vue({
 });
 
 
+
+
+
+////
+// РОУТЕР ==========================================================
+////
+
+const routes = [
+    { path: '/sends-contacts', name: 'sends', component: SendsDialog },
+    { path: '/initial-contacts', name: 'initial', component: InitialDialog,
+        // children: [
+        //     {
+        //         path: 'quick-reply',
+        //         component: HumanDialog,
+        //         props: {
+        //             show : true
+        //         }
+        //     },
+        // ]
+    }
+];
+
+// 3. Создаём инстанс роутера с опцией `routes`
+// Можно передать и другие опции, но пока не будем усложнять
+const router = new VueRouter({
+  //mode: 'history',
+  routes // сокращение от routes: routes
+})
+
+const RouterView = new Vue({
+    el: '#router-view',
+    store,
+    router,
+    created() {
+        console.log('routerView created');
+    },
+    methods: {
+        close() {
+            router.go(-1);
+        }
+    }
+});
 
 
 

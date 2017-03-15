@@ -19,7 +19,7 @@ const ModalDialog = Vue.component('modal-dialog', {
 
 
 const RemoveConfirm = Vue.component('remove-confirm', {
-    props: ['show', 'data'],
+    props: ['show'],
     components: {
         modal: ModalDialog,
     },

@@ -14,6 +14,28 @@ class Api {
     }
 };
 
+class ApiBun extends Api {
+    send(data, handler, error) {
+        axios.post('mess/bun/', data, this.config).then((response) => {
+            //this.$emit('remove', this.index);
+        }).catch((error) => {
+            //console.log('error');
+        });
+        console.log('ApiBun Bun-Bun');
+    }
+};
+
+class ApiContact extends Api {
+    remove(data, handler, error) {
+        axios.post('human/delete/', data, this.config).then((response) => {
+            //this.$emit('remove', this.index);
+        }).catch((error) => {
+            //console.log('error');
+        });
+        console.log('ApiContact removed');
+    }
+};
+
 class ApiMessages extends Api {
     send(data, handler, error) {
         console.log(this);
@@ -40,8 +62,10 @@ class ApiUser extends Api {
     }
 };
 
+var apiUser     = new ApiUser('', 1234);
+var apiBun      = new ApiBun('', 1234);
+var apiContact  = new ApiContact('', 1234);
 var apiMessages = new ApiMessages('', 1234);
-var apiUser = new ApiUser('', 1234);
 //  = _.create(Api.prototype, {
 //     host: '/',
 //     jwt: '1234',
@@ -90,10 +114,12 @@ const store = new Vuex.Store({
     },
     actions: {
         LOAD_USER({ commit }) {
-            commit('loadUser', {
-                sex: user_sex,
-                uid: uid
-            });
+            if (typeof user_sex != 'undefined') {
+                commit('loadUser', {
+                    sex: user_sex,
+                    uid: uid
+                });
+            }
         },
         LOAD_API_TOKEN({ commit }) {
             commit('setApiToken', { apiToken: get_cookie('jwt') });

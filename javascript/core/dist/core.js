@@ -53,8 +53,60 @@ var Api = function Api(host, key) {
 
 ;
 
-var ApiMessages = function (_Api) {
-    _inherits(ApiMessages, _Api);
+var ApiBun = function (_Api) {
+    _inherits(ApiBun, _Api);
+
+    function ApiBun() {
+        _classCallCheck(this, ApiBun);
+
+        return _possibleConstructorReturn(this, (ApiBun.__proto__ || Object.getPrototypeOf(ApiBun)).apply(this, arguments));
+    }
+
+    _createClass(ApiBun, [{
+        key: 'send',
+        value: function send(data, handler, error) {
+            axios.post('mess/bun/', data, this.config).then(function (response) {
+                //this.$emit('remove', this.index);
+            }).catch(function (error) {
+                //console.log('error');
+            });
+            console.log('ApiBun Bun-Bun');
+        }
+    }]);
+
+    return ApiBun;
+}(Api);
+
+;
+
+var ApiContact = function (_Api2) {
+    _inherits(ApiContact, _Api2);
+
+    function ApiContact() {
+        _classCallCheck(this, ApiContact);
+
+        return _possibleConstructorReturn(this, (ApiContact.__proto__ || Object.getPrototypeOf(ApiContact)).apply(this, arguments));
+    }
+
+    _createClass(ApiContact, [{
+        key: 'remove',
+        value: function remove(data, handler, error) {
+            axios.post('human/delete/', data, this.config).then(function (response) {
+                //this.$emit('remove', this.index);
+            }).catch(function (error) {
+                //console.log('error');
+            });
+            console.log('ApiContact removed');
+        }
+    }]);
+
+    return ApiContact;
+}(Api);
+
+;
+
+var ApiMessages = function (_Api3) {
+    _inherits(ApiMessages, _Api3);
 
     function ApiMessages() {
         _classCallCheck(this, ApiMessages);
@@ -80,8 +132,8 @@ var ApiMessages = function (_Api) {
 
 ;
 
-var ApiUser = function (_Api2) {
-    _inherits(ApiUser, _Api2);
+var ApiUser = function (_Api4) {
+    _inherits(ApiUser, _Api4);
 
     function ApiUser() {
         _classCallCheck(this, ApiUser);
@@ -109,8 +161,10 @@ var ApiUser = function (_Api2) {
 
 ;
 
-var apiMessages = new ApiMessages('', 1234);
 var apiUser = new ApiUser('', 1234);
+var apiBun = new ApiBun('', 1234);
+var apiContact = new ApiContact('', 1234);
+var apiMessages = new ApiMessages('', 1234);
 //  = _.create(Api.prototype, {
 //     host: '/',
 //     jwt: '1234',
@@ -161,10 +215,12 @@ var store = new Vuex.Store({
         LOAD_USER: function LOAD_USER(_ref) {
             var commit = _ref.commit;
 
-            commit('loadUser', {
-                sex: user_sex,
-                uid: uid
-            });
+            if (typeof user_sex != 'undefined') {
+                commit('loadUser', {
+                    sex: user_sex,
+                    uid: uid
+                });
+            }
         },
         LOAD_API_TOKEN: function LOAD_API_TOKEN(_ref2) {
             var commit = _ref2.commit;
@@ -1659,7 +1715,7 @@ var option_sex = {
     }
 };
 
-Vue.component('initial-dialog', {
+var InitialDialog = Vue.component('initial-dialog', {
     data: function data() {
         return {
             contacts: [],
@@ -1667,7 +1723,8 @@ Vue.component('initial-dialog', {
             slow: false,
             next: 0,
             batch: 10,
-            received: 0
+            received: 0,
+            initial: true
         };
     },
 
@@ -1675,8 +1732,12 @@ Vue.component('initial-dialog', {
         close: function close() {
             this.$emit('close');
         },
+        remove: function remove(index) {
+            this.contacts.splice(index, 1);
+            this.close();
+        },
         load: function load() {
-            var _this3 = this;
+            var _this5 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
@@ -1684,18 +1745,18 @@ Vue.component('initial-dialog', {
             };
             axios.get('/contact/list/initial/', config).then(function (response) {
                 var result = response.data;
-                _this3.received = result ? result.length : 0;
-                if (_this3.received) {
-                    _this3.contacts = _.union(_this3.contacts, result);
+                _this5.received = result ? result.length : 0;
+                if (_this5.received) {
+                    _this5.contacts = _.union(_this5.contacts, result);
                 }
-                _this3.next += _this3.batch;
-                _this3.response = 200;
-                _this3.slow = false;
+                _this5.next += _this5.batch;
+                _this5.response = 200;
+                _this5.slow = false;
             }).catch(function (error) {
                 console.log(error);
             });
             setTimeout(function () {
-                return _this3.slow = true;
+                return _this5.slow = true;
             }, 3000);
         }
     },
@@ -1706,7 +1767,7 @@ Vue.component('initial-dialog', {
     template: '#contact-dialog'
 });
 
-Vue.component('sends-dialog', {
+var SendsDialog = Vue.component('sends-dialog', {
     data: function data() {
         return {
             contacts: [],
@@ -1714,7 +1775,8 @@ Vue.component('sends-dialog', {
             slow: false,
             next: 0,
             batch: 10,
-            received: 0
+            received: 0,
+            initial: false
         };
     },
 
@@ -1722,8 +1784,12 @@ Vue.component('sends-dialog', {
         close: function close() {
             this.$emit('close');
         },
+        remove: function remove(index) {
+            this.contacts.splice(index, 1);
+            this.close();
+        },
         load: function load() {
-            var _this4 = this;
+            var _this6 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
@@ -1731,18 +1797,18 @@ Vue.component('sends-dialog', {
             };
             axios.get('/contact/list/sends/', config).then(function (response) {
                 var result = response.data;
-                _this4.received = result ? result.length : 0;
-                if (_this4.received) {
-                    _this4.contacts = _.union(_this4.contacts, result);
+                _this6.received = result ? result.length : 0;
+                if (_this6.received) {
+                    _this6.contacts = _.union(_this6.contacts, result);
                 }
-                _this4.next += _this4.batch;
-                _this4.response = 200;
-                _this4.slow = false;
+                _this6.next += _this6.batch;
+                _this6.response = 200;
+                _this6.slow = false;
             }).catch(function (error) {
                 console.log(error);
             });
             setTimeout(function () {
-                return _this4.slow = true;
+                return _this6.slow = true;
             }, 3000);
         }
     },
@@ -1802,7 +1868,7 @@ Vue.component('upload-dialog', {
     },
     methods: {
         loadPhoto: function loadPhoto() {
-            var _this5 = this;
+            var _this7 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
@@ -1811,7 +1877,7 @@ Vue.component('upload-dialog', {
             axios.get('http://' + this.server + '/api/v1/users/' + uid + '/photos', config).then(function (response) {
                 var result = response.data.photos;
                 if (result && result.length) {
-                    _this5.photos = response.data.photos;
+                    _this7.photos = response.data.photos;
                 }
                 //console.log(this.photos);
             }).catch(function (error) {
@@ -1899,6 +1965,35 @@ var OptionStaticViewer = new Vue({
     methods: {
         close: function close() {
             store.commit('optionDialog', false);
+        }
+    }
+});
+
+////
+// РОУТЕР ==========================================================
+////
+
+var routes = [{ path: '/sends-contacts', name: 'sends', component: SendsDialog }, { path: '/initial-contacts', name: 'initial', component: InitialDialog
+}];
+
+// 3. Создаём инстанс роутера с опцией `routes`
+// Можно передать и другие опции, но пока не будем усложнять
+var router = new VueRouter({
+    //mode: 'history',
+    routes: routes // сокращение от routes: routes
+});
+
+var RouterView = new Vue({
+    el: '#router-view',
+    store: store,
+    router: router,
+    created: function created() {
+        console.log('routerView created');
+    },
+
+    methods: {
+        close: function close() {
+            router.go(-1);
         }
     }
 });

@@ -616,35 +616,73 @@ Vue.component('contact-item', {
     props: [
       'item',
       'index',
+      'initial',
     ],
     data() {
         return {
-            detail:  false
+            detail:  false,
+            confirm: false
         }
     },
     computed: {
-
+        sent() {
+            return this.item.cont_id == this.$store.state.user.uid;
+        },
     },
     methods: {
         show() {
+            if (this.initial) {
+                this.quick();
+            } else {
+                this.anketa();
+            }
+        },
+        quick() {
             this.detail = true;
-            console.log('show');
+            console.log('quick');
+        },
+        anketa() {
+            window.location = '/' + this.item.cont_id;
+            console.log('anketa');
         },
         close() {
             this.detail = false;
             console.log('close');
+        },
+        bun() {
+            let data = {
+                id: this.item.cont_id,
+                tid: this.item.from,
+                //text: this.item.message,
+                //token: 'super secret token'
+            };
+            apiBun.send(data, null, null);
+            this.$emit('remove');
+            console.log('bun');
+            this.close();
+        },
+        cancel() {
+            this.confirm = false;
+            console.log('cancel');
+        },
+        remove() {
+            apiContact.remove({ tid: this.item.cont_id });
+            this.$emit('remove', this.index);
+            console.log('remove');
+            this.close();
         }
     },
     template: '#contact-item'
 });
 
-Vue.component('human-dialog', {
+Vue.component('quick-reply', {
     props: ['show', 'data'],
     data() {
         return {
             message: 'eeeee',
             captcha: false,
             process: false,
+            confirm: false,
             code: null
         }
     },
@@ -658,8 +696,16 @@ Vue.component('human-dialog', {
         close() {
             this.$emit('close');
         },
+        bun() {
+            this.$emit('bun');
+        },
+        remove() {
+            this.$emit('remove');
+        },
         cancel() {
             this.captcha = false;
+            this.confirm = false;
+            console.log('cancel');
         },
         send() {
             let data = {
@@ -696,8 +742,10 @@ Vue.component('human-dialog', {
             this.process = false;
         }
     },
-    template: '#human-dialog',
+    template: '#quick-reply',
 });
+
+
 
 
 var ContactSection = new Vue({
@@ -708,10 +756,10 @@ var ContactSection = new Vue({
     },
     methods: {
         openSends() {
-            store.commit('optionDialog', 'sends');
+            router.push({ name: 'sends' });
         },
         openInit() {
-            store.commit('optionDialog', 'initial');
+            router.push({ name: 'initial' });
         }
     }
 });
@@ -1153,7 +1201,7 @@ const ModalDialog = Vue.component('modal-dialog', {
 
 
 const RemoveConfirm = Vue.component('remove-confirm', {
-    props: ['show', 'data'],
+    props: ['show'],
     components: {
         modal: ModalDialog,
     },

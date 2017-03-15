@@ -1331,9 +1331,6 @@ div.alert_block_mess b {
   display: block;
   clear: both;
 }
-#human-dialog {
-  max-width: 400px;
-}
 .human-dialog__caption {
   background: #3A5795;
   color: #ffffff;

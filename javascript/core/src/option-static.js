@@ -1,5 +1,5 @@
 
-Vue.component('initial-dialog', {
+const InitialDialog = Vue.component('initial-dialog', {
     data() {
         return {
             contacts: [],
@@ -8,11 +8,16 @@ Vue.component('initial-dialog', {
             next: 0,
             batch: 10,
             received: 0,
+            initial: true
         }
     },
     methods: {
         close() {
             this.$emit('close');
+        },
+        remove(index) {
+            this.contacts.splice(index, 1);
+            this.close();
         },
         load() {
             let config = {
@@ -40,7 +45,7 @@ Vue.component('initial-dialog', {
     template: '#contact-dialog'
 });
 
-Vue.component('sends-dialog', {
+const SendsDialog = Vue.component('sends-dialog', {
     data() {
         return {
             contacts: [],
@@ -49,11 +54,16 @@ Vue.component('sends-dialog', {
             next: 0,
             batch: 10,
             received: 0,
+            initial: false
         }
     },
     methods: {
         close() {
             this.$emit('close');
+        },
+        remove(index) {
+            this.contacts.splice(index, 1);
+            this.close();
         },
         load() {
             let config = {
@@ -232,6 +242,48 @@ var OptionStaticViewer = new Vue({
 });
 
 
+
+
+
+////
+// РОУТЕР ==========================================================
+////
+
+const routes = [
+    { path: '/sends-contacts', name: 'sends', component: SendsDialog },
+    { path: '/initial-contacts', name: 'initial', component: InitialDialog,
+        // children: [
+        //     {
+        //         path: 'quick-reply',
+        //         component: HumanDialog,
+        //         props: {
+        //             show : true
+        //         }
+        //     },
+        // ]
+    }
+];
+
+// 3. Создаём инстанс роутера с опцией `routes`
+// Можно передать и другие опции, но пока не будем усложнять
+const router = new VueRouter({
+  //mode: 'history',
+  routes // сокращение от routes: routes
+})
+
+const RouterView = new Vue({
+    el: '#router-view',
+    store,
+    router,
+    created() {
+        console.log('routerView created');
+    },
+    methods: {
+        close() {
+            router.go(-1);
+        }
+    }
+});
 
 
 
