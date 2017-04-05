@@ -525,175 +525,26 @@ var cont_list = {
     }
 };
 
-// var ContactViewDialog = Vue.extend({
-//     methods: {
-//         close() {
-//             store.commit('viewPhoto', { photo: null });
-//         }
-//     },
-//     computed: Vuex.mapState({
-//         config: state => state.photoView
-//     }),
-//     template: '#option-content__photo-view'
-// })
-Vue.component('contact-item', {
-    props: ['item', 'index', 'initial'],
-    data: function data() {
-        return {
-            detail: false,
-            confirm: false
-        };
-    },
-
-    computed: {
-        sent: function sent() {
-            return this.item.cont_id == this.$store.state.user.uid;
-        }
-    },
-    methods: {
-        show: function show() {
-            if (this.initial) {
-                this.quick();
-            } else {
-                this.anketa();
-            }
-        },
-        quick: function quick() {
-            this.detail = true;
-            console.log('quick');
-        },
-        anketa: function anketa() {
-            window.location = '/' + this.item.cont_id;
-            console.log('anketa');
-        },
-        close: function close() {
-            this.detail = false;
-            console.log('close');
-        },
-        bun: function bun() {
-            var data = {
-                id: this.item.cont_id,
-                tid: this.item.from
-            };
-            apiBun.send(data, null, null);
-            this.$emit('remove');
-            console.log('bun');
-            this.close();
-        },
-        cancel: function cancel() {
-            this.confirm = false;
-            console.log('cancel');
-        },
-        remove: function remove() {
-            apiContact.remove({ tid: this.item.cont_id });
-            this.$emit('remove', this.index);
-            console.log('remove');
-            this.close();
-        }
-    },
-    template: '#contact-item'
-});
-
-Vue.component('quick-reply', {
-    props: ['show', 'data'],
-    data: function data() {
-        return {
-            message: 'eeeee',
-            captcha: false,
-            process: false,
-            confirm: false,
-            code: null
-        };
-    },
-
-    computed: {
-        desire: function desire() {
-            var d = this.data.desire;
-            return d && d.length > 1 ? true : false;
-        }
-    },
-    methods: {
-        close: function close() {
-            this.$emit('close');
-        },
-        bun: function bun() {
-            this.$emit('bun');
-        },
-        remove: function remove() {
-            this.$emit('remove');
-        },
-        cancel: function cancel() {
-            this.captcha = false;
-            this.confirm = false;
-            console.log('cancel');
-        },
-        send: function send() {
-            var data = {
-                id: tid,
-                mess: this.message,
-                captcha_code: this.code
-            };
-            //apiMessages.send(data, this.handler, null);
-            this.process = true;
-            console.log('send');
-        },
-        setCode: function setCode(code) {
-            this.code = code;
-            this.send();
-        },
-        handler: function handler(response) {
-            if (!response.saved && response.error) {
-                if (response.error == 'need_captcha') {
-                    this.captcha();
-                }
-                this.error();
-            } else {
-                this.sended(response);
-            }
-            this.process = false;
-        },
-        sended: function sended(response) {},
-        captcha: function captcha() {
-            this.captcha = true;
-        },
-        error: function error() {
-            this.process = false;
-        }
-    },
-    template: '#quick-reply'
-});
-
 var ContactSection = new Vue({
     el: '#contact-section',
     store: store,
     data: {},
     methods: {
+        push: function push(name) {
+            if (router.name != name) {
+                router.push({ name: name });
+            }
+        },
         openSends: function openSends() {
-            router.push({ name: 'sends' });
+            this.push('sends');
         },
         openInit: function openInit() {
-            router.push({ name: 'initial' });
+            this.push('initial');
+        },
+        openIntim: function openIntim() {
+            this.push('intimate');
         }
     }
-});
-
-Vue.component('captcha-dialog', {
-    props: ['show', 'data'],
-    data: function data() {
-        return {
-            code: ''
-        };
-    },
-
-    methods: {
-        close: function close() {
-            this.$emit('cancel');
-        },
-        send: function send() {
-            this.$emit('code', this.code);
-        }
-    },
-    template: '#captcha-dialog'
 });
 
 // -- Время свиданий ---

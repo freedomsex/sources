@@ -34,6 +34,35 @@ class ApiContact extends Api {
         });
         console.log('ApiContact removed');
     }
+
+    ignore(data, handler, error) {
+        axios.post('human/ignore/', data, this.config).then((response) => {
+
+        }).catch((e) => {
+            error(e);
+        });
+        console.log('ApiContact ignored');
+    }
+
+    getList(url, handler, error) {
+        axios.get(`/contact/list/${url}/`, this.config).then((response) => {
+            handler(response.data);
+        }).catch((error) => {
+            error(error);
+        });
+    }
+
+    initialList(handler, error) {
+        this.getList('initial', handler, error);
+    }
+
+    intimateList(handler, error) {
+        this.getList('intimate', handler, error);
+    }
+
+    sendsList(handler, error) {
+        this.getList('sends', handler, error);
+    }
 };
 
 class ApiMessages extends Api {

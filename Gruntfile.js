@@ -24,12 +24,12 @@ module.exports = function (grunt) {
             },
             core: {
                 src: [
-                    'javascript/core/src/*.js'
+                    'javascript/core/src/**/*.js'
                 ],
                 dest: 'javascript/core/dist/core.es6',
             },
             mess: {
-                src: ['javascript/mess/src/*.js'],
+                src: ['javascript/mess/src/**/*.js'],
                 dest: 'javascript/mess/dist/mess.es6',
             },
             admin: {

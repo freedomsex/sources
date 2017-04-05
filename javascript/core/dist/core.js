@@ -98,6 +98,38 @@ var ApiContact = function (_Api2) {
             });
             console.log('ApiContact removed');
         }
+    }, {
+        key: 'ignore',
+        value: function ignore(data, handler, error) {
+            axios.post('human/ignore/', data, this.config).then(function (response) {}).catch(function (e) {
+                error(e);
+            });
+            console.log('ApiContact ignored');
+        }
+    }, {
+        key: 'getList',
+        value: function getList(url, handler, error) {
+            axios.get('/contact/list/' + url + '/', this.config).then(function (response) {
+                handler(response.data);
+            }).catch(function (error) {
+                error(error);
+            });
+        }
+    }, {
+        key: 'initialList',
+        value: function initialList(handler, error) {
+            this.getList('initial', handler, error);
+        }
+    }, {
+        key: 'intimateList',
+        value: function intimateList(handler, error) {
+            this.getList('intimate', handler, error);
+        }
+    }, {
+        key: 'sendsList',
+        value: function sendsList(handler, error) {
+            this.getList('sends', handler, error);
+        }
     }]);
 
     return ApiContact;
@@ -460,6 +492,436 @@ var device = {
     }
 
 };
+
+Vue.component('captcha-dialog', {
+    props: ['show', 'data'],
+    data: function data() {
+        return {
+            code: ''
+        };
+    },
+
+    methods: {
+        close: function close() {
+            this.$emit('cancel');
+        },
+        send: function send() {
+            this.$emit('code', this.code);
+        }
+    },
+    template: '#captcha-dialog'
+});
+
+var ContactDialog = {
+    props: ['quick'],
+    data: function data() {
+        return {
+            contacts: [],
+            response: null,
+            slow: false,
+            next: 0,
+            batch: 10,
+            received: 0
+        };
+    },
+
+    computed: {
+        showLoader: function showLoader() {
+            return this.slow && !this.response;
+        },
+        showHint: function showHint() {
+            return this.response && this.contacts < 1;
+        }
+    },
+    methods: {
+        close: function close() {
+            this.$emit('close');
+        },
+        onLoad: function onLoad(result) {
+            this.received = result ? result.length : 0;
+            if (this.received) {
+                this.contacts = _.union(this.contacts, result);
+            }
+            this.next += this.batch;
+            this.response = 200;
+            this.slow = false;
+        },
+        remove: function remove(index) {},
+        bun: function bun(index) {
+            console.log('bun');
+            var item = this.contacts[index];
+            var data = {
+                id: item.cont_id,
+                tid: item.from
+            };
+            apiBun.send(data, null, null);
+            this.remove(index);
+        },
+        splice: function splice(index) {
+            this.contacts.splice(index, 1);
+            this.close();
+        },
+        error: function error(_error) {
+            console.log(_error);
+        }
+    },
+    mounted: function mounted() {
+        this.load();
+    }
+};
+
+var InitialDialog = Vue.component('initial-dialog', {
+    extends: ContactDialog,
+    computed: {
+        initial: function initial() {
+            return true;
+        },
+        simple: function simple() {
+            return true;
+        }
+    },
+    methods: {
+        load: function load() {
+            var _this5 = this;
+
+            apiContact.initialList(this.onLoad, this.error);
+            setTimeout(function () {
+                return _this5.slow = true;
+            }, 3000);
+        },
+        remove: function remove(index) {
+            console.log('remove');
+            apiContact.ignore({ tid: this.contacts[index].cont_id });
+            this.splice();
+        }
+    },
+    template: '#initial-dialog'
+});
+
+var IntimateDialog = Vue.component('intimate-dialog', {
+    extends: ContactDialog,
+    computed: {
+        initial: function initial() {
+            return true;
+        },
+        simple: function simple() {
+            return false;
+        }
+    },
+    methods: {
+        load: function load() {
+            var _this6 = this;
+
+            apiContact.intimateList(this.onLoad, this.error);
+            setTimeout(function () {
+                return _this6.slow = true;
+            }, 3000);
+        },
+        remove: function remove(index) {
+            console.log('remove');
+            apiContact.remove({ tid: this.contacts[index].cont_id });
+            //this.$emit('remove', this.index);
+            this.splice();
+        }
+    },
+    template: '#intimate-dialog'
+});
+
+var SendsDialog = Vue.component('sends-dialog', {
+    extends: ContactDialog,
+    computed: {
+        initial: function initial() {
+            return false;
+        },
+        simple: function simple() {
+            return false;
+        }
+    },
+    methods: {
+        load: function load() {
+            var _this7 = this;
+
+            apiContact.sendsList(this.onLoad, this.error);
+            setTimeout(function () {
+                return _this7.slow = true;
+            }, 3000);
+        }
+    },
+    template: '#initial-dialog'
+});
+
+Vue.component('contact-item', {
+    props: ['item', 'index', 'initial'],
+    data: function data() {
+        return {
+            detail: false,
+            confirm: false
+        };
+    },
+
+    computed: {
+        sent: function sent() {
+            return this.item.cont_id == this.$store.state.user.uid;
+        }
+    },
+    methods: {
+        show: function show() {
+            //this.$emit('show');
+            console.log('show = initial-item');
+            if (this.initial) {
+                this.quick();
+            } else {
+                this.anketa();
+            }
+        },
+        confirmBun: function confirmBun() {
+            console.log(this.initial);
+            this.confirm = !this.initial ? 'some' : 'doit';
+        },
+        confirmRemove: function confirmRemove() {
+            //this.$emit('remove');
+            console.log('initial-item REMOVE');
+            this.confirm = !this.initial ? 'some' : 'must';
+        },
+        quick: function quick() {
+            this.detail = true;
+            console.log('quick');
+        },
+        anketa: function anketa() {
+            window.location = '/' + this.item.cont_id;
+            console.log('anketa');
+        },
+        close: function close() {
+            this.detail = false;
+            console.log('close');
+        },
+        bun: function bun() {
+            this.$emit('bun', this.index);
+        },
+        remove: function remove() {
+            this.$emit('remove', this.index);
+        },
+        cancel: function cancel() {
+            this.confirm = false;
+            console.log('cancel');
+        }
+    },
+    template: '#contact-item'
+});
+
+Vue.component('inform-dialog', {
+    props: ['loader', 'hint'],
+    methods: {
+        close: function close() {
+            this.$emit('close');
+        }
+    },
+    template: '#inform-dialog'
+});
+
+///
+// Модальное окно настроек OptionDialog - контейнер
+///
+Vue.component('option-dialog', {
+    template: '#option-static__dialog-window',
+    methods: {
+        close: function close() {
+            this.$emit('close');
+        }
+    },
+    created: function created() {
+        // Close the modal when the `escape` key is pressed.
+        var self = this;
+        document.addEventListener('keydown', function () {
+            if (self.show && event.keyCode === 27) {
+                self.close();
+            }
+        });
+    },
+    updated: function updated() {
+        if (this.show) {
+            $("html, body").animate({ scrollTop: 0 }, "slow");
+        }
+    }
+});
+
+Vue.component('photo-dialog', {
+    methods: {
+        close: function close() {
+            this.$emit('close');
+            store.commit('viewPhoto', { photo: null });
+        }
+    },
+    computed: Vuex.mapState({
+        config: function config(state) {
+            return state.photoView;
+        }
+    }),
+    template: '#photo-dialog'
+});
+
+Vue.component('photo-view', {
+    props: ['photo', 'thumb', 'width', 'height', 'bypass'],
+    methods: {
+        approve: function approve() {
+            store.commit('approveViewPhoto');
+        }
+    },
+    computed: Vuex.mapState({
+        accept: function accept(state) {
+            return state.accepts.photo || this.bypass ? true : false;
+        }
+    }),
+    template: '#photo-view'
+});
+
+Vue.component('quick-reply', {
+    props: ['show', 'data'],
+    data: function data() {
+        return {
+            message: 'eeeee',
+            captcha: false,
+            process: false,
+            confirm: false,
+            code: null
+        };
+    },
+
+    computed: {
+        desire: function desire() {
+            var d = this.data.desire;
+            return d && d.length > 1 ? true : false;
+        }
+    },
+    methods: {
+        close: function close() {
+            this.$emit('close');
+        },
+        bun: function bun() {
+            this.$emit('bun');
+        },
+        remove: function remove() {
+            this.$emit('remove');
+        },
+        cancel: function cancel() {
+            this.captcha = false;
+            this.confirm = false;
+            console.log('cancel');
+        },
+        send: function send() {
+            var data = {
+                id: tid,
+                mess: this.message,
+                captcha_code: this.code
+            };
+            //apiMessages.send(data, this.handler, null);
+            this.process = true;
+            console.log('send');
+        },
+        setCode: function setCode(code) {
+            this.code = code;
+            this.send();
+        },
+        handler: function handler(response) {
+            if (!response.saved && response.error) {
+                if (response.error == 'need_captcha') {
+                    this.captcha();
+                }
+                this.error();
+            } else {
+                this.sended(response);
+            }
+            this.process = false;
+        },
+        sended: function sended(response) {},
+        captcha: function captcha() {
+            this.captcha = true;
+        },
+        error: function error() {
+            this.process = false;
+        }
+    },
+    template: '#quick-reply'
+});
+
+Vue.component('upload-dialog', {
+    template: '#upload-dialog',
+    data: function data() {
+        return {
+            photos: [],
+            server: null
+        };
+        // file: {
+        //     data: null,
+        //     name: '',
+        //     size: 0
+        // }
+    },
+
+    created: function created() {
+        this.server = this.$store.state.photoServer;
+    },
+    methods: {
+        loadPhoto: function loadPhoto() {
+            var _this8 = this;
+
+            var config = {
+                headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
+                params: { hash: hash }
+            };
+            axios.get('http://' + this.server + '/api/v1/users/' + uid + '/photos', config).then(function (response) {
+                var result = response.data.photos;
+                if (result && result.length) {
+                    _this8.photos = response.data.photos;
+                }
+                //console.log(this.photos);
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        upload: function upload(e) {
+            $('#fileupload').click();
+        },
+
+        show: function show(index) {
+            this.preview(this.photos[index]);
+        },
+        preview: function preview(photo) {
+            var links = photo._links;
+            if (links.origin.href) {
+                var _data = {
+                    photo: links.origin.href,
+                    thumb: links.thumb.href,
+                    alias: photo.alias,
+                    height: photo.height,
+                    width: photo.width
+                };
+                store.commit('sendPhoto', _data);
+                //console.log('sendPhoto');
+                //console.log(data);
+            }
+            this.close();
+        },
+        close: function close() {
+            this.$emit('close');
+        }
+    },
+    mounted: function mounted() {
+        console.log('fileupload');
+        var self = this;
+        $('#fileupload').fileupload({
+            dataType: 'json',
+            add: function add(e, data) {
+                data.url = 'http://' + self.server + '/api/v1/users/' + uid + '/photos?jwt=' + self.$store.state.apiToken;
+                data.submit();
+            },
+            done: function done(e, data) {
+                self.preview(data.result.photo);
+            }
+        });
+        this.loadPhoto();
+    }
+});
 
 var active_textarea; ////////////////////////////////////////////////////////
 var giper_chat = {
@@ -1715,245 +2177,6 @@ var option_sex = {
     }
 };
 
-var InitialDialog = Vue.component('initial-dialog', {
-    data: function data() {
-        return {
-            contacts: [],
-            response: null,
-            slow: false,
-            next: 0,
-            batch: 10,
-            received: 0,
-            initial: true
-        };
-    },
-
-    methods: {
-        close: function close() {
-            this.$emit('close');
-        },
-        remove: function remove(index) {
-            this.contacts.splice(index, 1);
-            this.close();
-        },
-        load: function load() {
-            var _this5 = this;
-
-            var config = {
-                headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
-                params: { hash: hash }
-            };
-            axios.get('/contact/list/initial/', config).then(function (response) {
-                var result = response.data;
-                _this5.received = result ? result.length : 0;
-                if (_this5.received) {
-                    _this5.contacts = _.union(_this5.contacts, result);
-                }
-                _this5.next += _this5.batch;
-                _this5.response = 200;
-                _this5.slow = false;
-            }).catch(function (error) {
-                console.log(error);
-            });
-            setTimeout(function () {
-                return _this5.slow = true;
-            }, 3000);
-        }
-    },
-    mounted: function mounted() {
-        this.load();
-    },
-
-    template: '#contact-dialog'
-});
-
-var SendsDialog = Vue.component('sends-dialog', {
-    data: function data() {
-        return {
-            contacts: [],
-            response: null,
-            slow: false,
-            next: 0,
-            batch: 10,
-            received: 0,
-            initial: false
-        };
-    },
-
-    methods: {
-        close: function close() {
-            this.$emit('close');
-        },
-        remove: function remove(index) {
-            this.contacts.splice(index, 1);
-            this.close();
-        },
-        load: function load() {
-            var _this6 = this;
-
-            var config = {
-                headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
-                params: { hash: hash }
-            };
-            axios.get('/contact/list/sends/', config).then(function (response) {
-                var result = response.data;
-                _this6.received = result ? result.length : 0;
-                if (_this6.received) {
-                    _this6.contacts = _.union(_this6.contacts, result);
-                }
-                _this6.next += _this6.batch;
-                _this6.response = 200;
-                _this6.slow = false;
-            }).catch(function (error) {
-                console.log(error);
-            });
-            setTimeout(function () {
-                return _this6.slow = true;
-            }, 3000);
-        }
-    },
-    mounted: function mounted() {
-        this.load();
-    },
-
-    template: '#contact-dialog'
-});
-
-Vue.component('photo-view', {
-    props: ['photo', 'thumb', 'width', 'height', 'bypass'],
-    methods: {
-        approve: function approve() {
-            store.commit('approveViewPhoto');
-        }
-    },
-    computed: Vuex.mapState({
-        accept: function accept(state) {
-            return state.accepts.photo || this.bypass ? true : false;
-        }
-    }),
-    template: '#photo-view'
-});
-
-Vue.component('photo-dialog', {
-    methods: {
-        close: function close() {
-            this.$emit('close');
-            store.commit('viewPhoto', { photo: null });
-        }
-    },
-    computed: Vuex.mapState({
-        config: function config(state) {
-            return state.photoView;
-        }
-    }),
-    template: '#photo-dialog'
-});
-
-Vue.component('upload-dialog', {
-    template: '#upload-dialog',
-    data: function data() {
-        return {
-            photos: [],
-            server: null
-        };
-        // file: {
-        //     data: null,
-        //     name: '',
-        //     size: 0
-        // }
-    },
-
-    created: function created() {
-        this.server = this.$store.state.photoServer;
-    },
-    methods: {
-        loadPhoto: function loadPhoto() {
-            var _this7 = this;
-
-            var config = {
-                headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
-                params: { hash: hash }
-            };
-            axios.get('http://' + this.server + '/api/v1/users/' + uid + '/photos', config).then(function (response) {
-                var result = response.data.photos;
-                if (result && result.length) {
-                    _this7.photos = response.data.photos;
-                }
-                //console.log(this.photos);
-            }).catch(function (error) {
-                console.log(error);
-            });
-        },
-        upload: function upload(e) {
-            $('#fileupload').click();
-        },
-
-        show: function show(index) {
-            this.preview(this.photos[index]);
-        },
-        preview: function preview(photo) {
-            var links = photo._links;
-            if (links.origin.href) {
-                var _data = {
-                    photo: links.origin.href,
-                    thumb: links.thumb.href,
-                    alias: photo.alias,
-                    height: photo.height,
-                    width: photo.width
-                };
-                store.commit('sendPhoto', _data);
-                //console.log('sendPhoto');
-                //console.log(data);
-            }
-            this.close();
-        },
-        close: function close() {
-            this.$emit('close');
-        }
-    },
-    mounted: function mounted() {
-        console.log('fileupload');
-        var self = this;
-        $('#fileupload').fileupload({
-            dataType: 'json',
-            add: function add(e, data) {
-                data.url = 'http://' + self.server + '/api/v1/users/' + uid + '/photos?jwt=' + self.$store.state.apiToken;
-                data.submit();
-            },
-            done: function done(e, data) {
-                self.preview(data.result.photo);
-            }
-        });
-        this.loadPhoto();
-    }
-});
-
-///
-// Модальное окно настроек OptionDialog - контейнер
-///
-Vue.component('option-dialog', {
-    template: '#option-static__dialog-window',
-    methods: {
-        close: function close() {
-            this.$emit('close');
-        }
-    },
-    created: function created() {
-        // Close the modal when the `escape` key is pressed.
-        var self = this;
-        document.addEventListener('keydown', function () {
-            if (self.show && event.keyCode === 27) {
-                self.close();
-            }
-        });
-    },
-    updated: function updated() {
-        if (this.show) {
-            $("html, body").animate({ scrollTop: 0 }, "slow");
-        }
-    }
-});
-
 var OptionStaticViewer = new Vue({
     el: '#option-static__viewer',
     store: store,
@@ -1965,35 +2188,6 @@ var OptionStaticViewer = new Vue({
     methods: {
         close: function close() {
             store.commit('optionDialog', false);
-        }
-    }
-});
-
-////
-// РОУТЕР ==========================================================
-////
-
-var routes = [{ path: '/sends-contacts', name: 'sends', component: SendsDialog }, { path: '/initial-contacts', name: 'initial', component: InitialDialog
-}];
-
-// 3. Создаём инстанс роутера с опцией `routes`
-// Можно передать и другие опции, но пока не будем усложнять
-var router = new VueRouter({
-    //mode: 'history',
-    routes: routes // сокращение от routes: routes
-});
-
-var RouterView = new Vue({
-    el: '#router-view',
-    store: store,
-    router: router,
-    created: function created() {
-        console.log('routerView created');
-    },
-
-    methods: {
-        close: function close() {
-            router.go(-1);
         }
     }
 });
@@ -2458,6 +2652,35 @@ var result_list = {
 
     }
 };
+
+////
+// РОУТЕР ==========================================================
+////
+
+var routes = [{ path: '/sends-contacts', name: 'sends', component: SendsDialog }, { path: '/initial-contacts', name: 'initial', component: InitialDialog }, { path: '/intimate-contacts', name: 'intimate', component: IntimateDialog
+}];
+
+// 3. Создаём инстанс роутера с опцией `routes`
+// Можно передать и другие опции, но пока не будем усложнять
+var router = new VueRouter({
+    //mode: 'history',
+    routes: routes // сокращение от routes: routes
+});
+
+var RouterView = new Vue({
+    el: '#router-view',
+    store: store,
+    router: router,
+    created: function created() {
+        console.log('routerView created');
+    },
+
+    methods: {
+        close: function close() {
+            router.go(-1);
+        }
+    }
+});
 
 // -- Слайдер, главная ---
 var slider = {
