@@ -643,7 +643,6 @@ border-radius: 3px;">Сохранено</span>
 </div>
 
 
-
 <script type="text/x-template" id="inform-dialog">
   <option-dialog @close="close">
     <div class="contact-dialog">
@@ -665,7 +664,6 @@ border-radius: 3px;">Сохранено</span>
     </div>
   </option-dialog>
 </script>
-
 
 <script type="text/x-template" id="initial-dialog">
   <inform-dialog :loader="showLoader" :hint="showHint" @close="close">
@@ -705,12 +703,6 @@ border-radius: 3px;">Сохранено</span>
 </script>
 
 
-
-
-
-
-
-
 <script type="text/x-template" id="contact-item">
   <div class="contact-list__item">
     <div class="contact-list__item-content" @click.stop="show">
@@ -737,17 +729,10 @@ border-radius: 3px;">Сохранено</span>
     <quick-reply :show="detail" :data="item"
       @bun="bun"
       @close="close"
+      @sended="splice"
       @remove="remove"/>
   </div>
 </script>
-
-
-
-
-
-
-
-
 
 
 <script type="text/x-template" id="quick-reply">
@@ -767,25 +752,28 @@ border-radius: 3px;">Сохранено</span>
         {{data.message}}
       </div>
     </div>
-    <div class="human-dialog__form">
-          <a :href="'/' + data.cont_id" class="human-dialog__form-anketa btn btn-link">
-            <span aria-hidden="true" class="glyphicon glyphicon-user"></span>
-          </a>
-      <div class="human-dialog__form-input" placeholder="Введите текст" contenteditable>
 
-      </div>
-          <div class="human-dialog__form-send" @click="send">
-            <span aria-hidden="true" class="glyphicon glyphicon-send"></span>
-          </div>
+
+    <div class="message-input">
+    <table border="0" style="width: 100%;">
+        <tr>
+          <td style="width: 40px;">
+            <a :href="'/' + data.cont_id" class="message-input__button-account" style=""></a>
+          </td>
+          <td>
+            <textarea class="message-input__texarea" rows="1" placeholder="Введите текст" v-resized></textarea>
+          </td>
+          <td style="width: 40px;">
+            <div class="message-input__button-send" @click="send"></div>
+          </td>
+        </tr>
+      </table>
     </div>
+
     <remove-confirm :show="confirm" @bun="bun" @close="cancel" @remove="remove"/>
-    <captcha-dialog @close="close" @cancel="cancel" @code="setCode"
-      :show="captcha"
-      :data="data" ></captcha-dialog>
+    <captcha-dialog :show="captcha" @close="close" @cancel="cancel" @send="setCode"/>
   </modal-dialog>
 </script>
-
-
 
 <script type="text/x-template" id="captcha-dialog">
   <modal-dialog :show="show" :data="data" @close="close">
@@ -802,7 +790,7 @@ border-radius: 3px;">Сохранено</span>
           <span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span>
         </span>
         <span class="captcha-dialog__addon input-group-addon captcha-img__addon">
-          <img class="form-message__captcha-img" src="/secret_pic.php" width="48" height="20">
+          <img class="form-message__captcha-img" :src="src" width="48" height="20" @click="update">
         </span>
         <input class="form-control" type="text" autocomplete="off" v-model="code">
       </div>

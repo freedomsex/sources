@@ -1,9 +1,15 @@
 
 Vue.component('captcha-dialog', {
-    props: ['show', 'data'],
+    props: ['show'],
     data() {
         return {
-            code: ''
+            code: '',
+            inc: 0
+        }
+    },
+    computed: {
+        src() {
+            return '/secret_pic.php?inc=' + this.inc;
         }
     },
     methods: {
@@ -11,7 +17,12 @@ Vue.component('captcha-dialog', {
             this.$emit('cancel');
         },
         send() {
-            this.$emit('code', this.code);
+            this.$emit('send', this.code);
+            this.update();
+            this.close();
+        },
+        update() {
+            this.inc++;
         },
     },
     template: '#captcha-dialog',

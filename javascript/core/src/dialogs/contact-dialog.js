@@ -35,7 +35,9 @@ var ContactDialog = {
             this.slow = false;
         },
         remove(index) {
-
+            apiContact.remove({ tid: this.contacts[index] });
+            console.log('remove');
+            this.splice();
         },
         bun(index) {
             console.log('bun');

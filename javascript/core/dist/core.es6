@@ -171,6 +171,11 @@ const store = new Vuex.Store({
         user: {
             uid: 0,
             sex: 0,
+        },
+        contacts: {
+            initial: [],
+            intimate: [],
+            sends: [],
         }
     },
     actions: {
@@ -191,6 +196,12 @@ const store = new Vuex.Store({
                 commit('approveViewPhoto');
             }
             //console.log(ls.get('accepts'));
+        },
+        LOAD_INTIMATES({ commit }) {
+            let contacts = ls.get('intimate-contacts');
+            if (contacts && contacts.length > 0) {
+                commit('addIntimate', contacts);
+            }
         }
     },
     mutations: {
@@ -221,6 +232,9 @@ const store = new Vuex.Store({
         },
         optionDialog(state, data) {
             state.optionStatic.view = data ? data : null;
+        },
+        addIntimate(state, data) {
+            _.extend(state.contacts.intimate, data);
         },
     },
     getters: {
@@ -463,10 +477,16 @@ var device = {
 
 
 Vue.component('captcha-dialog', {
-    props: ['show', 'data'],
+    props: ['show'],
     data() {
         return {
-            code: ''
+            code: '',
+            inc: 0
+        }
+    },
+    computed: {
+        src() {
+            return '/secret_pic.php?inc=' + this.inc;
         }
     },
     methods: {
@@ -474,7 +494,12 @@ Vue.component('captcha-dialog', {
             this.$emit('cancel');
         },
         send() {
-            this.$emit('code', this.code);
+            this.$emit('send', this.code);
+            this.update();
+            this.close();
+        },
+        update() {
+            this.inc++;
         },
     },
     template: '#captcha-dialog',
@@ -517,7 +542,9 @@ var ContactDialog = {
             this.slow = false;
         },
         remove(index) {
-
+            apiContact.remove({ tid: this.contacts[index] });
+            console.log('remove');
+            this.splice();
         },
         bun(index) {
             console.log('bun');
@@ -657,6 +684,9 @@ Vue.component('contact-item', {
         remove() {
             this.$emit('remove', this.index);
         },
+        sens() {
+            this.$emit('remove', this.index);
+        },
         cancel() {
             this.confirm = false;
             console.log('cancel');
@@ -742,6 +772,15 @@ Vue.component('photo-view', {
     template: '#photo-view'
 });
 
+Vue.directive('resized', {
+  bind: function (el) {
+    el.style.height = (el.scrollHeight) + 'px';
+    $(el).on('input', function () {
+      this.style.height = 'auto';
+      this.style.height = (this.scrollHeight) + 'px';
+    });
+  }
+})
 
 Vue.component('quick-reply', {
     props: ['show', 'data'],
@@ -782,6 +821,7 @@ Vue.component('quick-reply', {
                 captcha_code: this.code
             };
             //apiMessages.send(data, this.handler, null);
+               this.captcha = true;
             this.process = true;
             console.log('send');
         },
@@ -792,7 +832,7 @@ Vue.component('quick-reply', {
         handler(response) {
             if (!response.saved && response.error) {
                 if (response.error == 'need_captcha') {
-                    this.captcha();
+                    this.captcha = true;
                 }
                 this.error();
             } else {
@@ -801,10 +841,7 @@ Vue.component('quick-reply', {
             this.process = false;
         },
         sended(response) {
-
-        },
-        captcha() {
-            this.captcha = true;
+            this.$emit('sended');
         },
         error() {
             this.process = false;

@@ -53,6 +53,9 @@ Vue.component('contact-item', {
         remove() {
             this.$emit('remove', this.index);
         },
+        sens() {
+            this.$emit('remove', this.index);
+        },
         cancel() {
             this.confirm = false;
             console.log('cancel');

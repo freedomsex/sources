@@ -121,8 +121,8 @@ module.exports = function (grunt) {
             },
             jscripts: {
                 files: [
-                    'javascript/core/src/*.js',
-                    'javascript/mess/src/*.js',
+                    'javascript/core/src/**/*.js',
+                    'javascript/mess/src/**/*.js',
                     'javascript/admin/src/*.js',
                 ],
                 tasks: ['default'],
@@ -145,10 +145,10 @@ module.exports = function (grunt) {
             },
             templates: {
                 files: [
-                    'templates/index/src/*.htm',
-                    'templates/mess/src/*.htm',
+                    'templates/index/src/**/*.htm',
+                    'templates/mess/src/**/*.htm',
                     'templates/profile/src/*.htm',
-                    'templates/_common/*.htm',
+                    'templates/_common/**/*.htm',
                 ],
                 tasks: ['default'],
                 options: {

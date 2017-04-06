@@ -241,6 +241,11 @@ var store = new Vuex.Store({
         user: {
             uid: 0,
             sex: 0
+        },
+        contacts: {
+            initial: [],
+            intimate: [],
+            sends: []
         }
     },
     actions: {
@@ -267,6 +272,14 @@ var store = new Vuex.Store({
                 commit('approveViewPhoto');
             }
             //console.log(ls.get('accepts'));
+        },
+        LOAD_INTIMATES: function LOAD_INTIMATES(_ref4) {
+            var commit = _ref4.commit;
+
+            var contacts = ls.get('intimate-contacts');
+            if (contacts && contacts.length > 0) {
+                commit('addIntimate', contacts);
+            }
         }
     },
     mutations: {
@@ -297,6 +310,9 @@ var store = new Vuex.Store({
         },
         optionDialog: function optionDialog(state, data) {
             state.optionStatic.view = data ? data : null;
+        },
+        addIntimate: function addIntimate(state, data) {
+            _.extend(state.contacts.intimate, data);
         }
     },
     getters: {
@@ -494,19 +510,30 @@ var device = {
 };
 
 Vue.component('captcha-dialog', {
-    props: ['show', 'data'],
+    props: ['show'],
     data: function data() {
         return {
-            code: ''
+            code: '',
+            inc: 0
         };
     },
 
+    computed: {
+        src: function src() {
+            return '/secret_pic.php?inc=' + this.inc;
+        }
+    },
     methods: {
         close: function close() {
             this.$emit('cancel');
         },
         send: function send() {
-            this.$emit('code', this.code);
+            this.$emit('send', this.code);
+            this.update();
+            this.close();
+        },
+        update: function update() {
+            this.inc++;
         }
     },
     template: '#captcha-dialog'
@@ -546,7 +573,11 @@ var ContactDialog = {
             this.response = 200;
             this.slow = false;
         },
-        remove: function remove(index) {},
+        remove: function remove(index) {
+            apiContact.remove({ tid: this.contacts[index] });
+            console.log('remove');
+            this.splice();
+        },
         bun: function bun(index) {
             console.log('bun');
             var item = this.contacts[index];
@@ -701,6 +732,9 @@ Vue.component('contact-item', {
         remove: function remove() {
             this.$emit('remove', this.index);
         },
+        sens: function sens() {
+            this.$emit('remove', this.index);
+        },
         cancel: function cancel() {
             this.confirm = false;
             console.log('cancel');
@@ -775,6 +809,16 @@ Vue.component('photo-view', {
     template: '#photo-view'
 });
 
+Vue.directive('resized', {
+    bind: function bind(el) {
+        el.style.height = el.scrollHeight + 'px';
+        $(el).on('input', function () {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        });
+    }
+});
+
 Vue.component('quick-reply', {
     props: ['show', 'data'],
     data: function data() {
@@ -815,6 +859,7 @@ Vue.component('quick-reply', {
                 captcha_code: this.code
             };
             //apiMessages.send(data, this.handler, null);
+            this.captcha = true;
             this.process = true;
             console.log('send');
         },
@@ -825,7 +870,7 @@ Vue.component('quick-reply', {
         handler: function handler(response) {
             if (!response.saved && response.error) {
                 if (response.error == 'need_captcha') {
-                    this.captcha();
+                    this.captcha = true;
                 }
                 this.error();
             } else {
@@ -833,9 +878,8 @@ Vue.component('quick-reply', {
             }
             this.process = false;
         },
-        sended: function sended(response) {},
-        captcha: function captcha() {
-            this.captcha = true;
+        sended: function sended(response) {
+            this.$emit('sended');
         },
         error: function error() {
             this.process = false;

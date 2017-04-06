@@ -1,3 +1,12 @@
+Vue.directive('resized', {
+  bind: function (el) {
+    el.style.height = (el.scrollHeight) + 'px';
+    $(el).on('input', function () {
+      this.style.height = 'auto';
+      this.style.height = (this.scrollHeight) + 'px';
+    });
+  }
+})
 
 Vue.component('quick-reply', {
     props: ['show', 'data'],
@@ -38,6 +47,7 @@ Vue.component('quick-reply', {
                 captcha_code: this.code
             };
             //apiMessages.send(data, this.handler, null);
+               this.captcha = true;
             this.process = true;
             console.log('send');
         },
@@ -48,7 +58,7 @@ Vue.component('quick-reply', {
         handler(response) {
             if (!response.saved && response.error) {
                 if (response.error == 'need_captcha') {
-                    this.captcha();
+                    this.captcha = true;
                 }
                 this.error();
             } else {
@@ -57,10 +67,7 @@ Vue.component('quick-reply', {
             this.process = false;
         },
         sended(response) {
-
-        },
-        captcha() {
-            this.captcha = true;
+            this.$emit('sended');
         },
         error() {
             this.process = false;

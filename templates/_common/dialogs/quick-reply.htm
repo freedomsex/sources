@@ -1,0 +1,40 @@
+
+<script type="text/x-template" id="quick-reply">
+  <modal-dialog :show="show" :data="data" @close="close">
+    <div class="human-dialog__caption">
+      Быстрый ответ
+      <div class="human-dialog__option">
+        <span aria-hidden="true" class="glyphicon glyphicon-thumbs-down" @click="confirm = 'doit'"></span>
+        <span aria-hidden="true" class="human-dialog__option-remove glyphicon glyphicon-trash" @click="confirm = 'must'"></span>
+      </div>
+    </div>
+    <div class="human-dialog__body">
+      <div class="human-dialog__desire" v-show="desire">
+        <span class="link_simple" v-for="(tag, index) in data.desire">{{tag}} &#8226; </span>
+      </div>
+      <div class="human-dialog__message">
+        {{data.message}}
+      </div>
+    </div>
+
+
+    <div class="message-input">
+    <table border="0" style="width: 100%;">
+        <tr>
+          <td style="width: 40px;">
+            <a :href="'/' + data.cont_id" class="message-input__button-account" style=""></a>
+          </td>
+          <td>
+            <textarea class="message-input__texarea" rows="1" placeholder="Введите текст" v-resized></textarea>
+          </td>
+          <td style="width: 40px;">
+            <div class="message-input__button-send" @click="send"></div>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <remove-confirm :show="confirm" @bun="bun" @close="cancel" @remove="remove"/>
+    <captcha-dialog :show="captcha" @close="close" @cancel="cancel" @send="setCode"/>
+  </modal-dialog>
+</script>

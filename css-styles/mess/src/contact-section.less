@@ -147,3 +147,44 @@
     background: @white;
 }
 
+
+
+.message-input {
+  min-height: 40px;
+  table {
+    position: relative;
+  }
+  margin: 0 @indent-sm @indent-xs;
+}
+
+.message-input__texarea {
+  border-width: 0px;
+  overflow: auto;
+  min-height: 36px;
+  padding: 10px 5px;
+  font-size: 14px;
+  margin: 2px;
+  overflow-y: hidden;
+  resize: vertical;
+}
+
+.message-input__button() {
+  position: absolute;
+  bottom: 1px;
+  display: block;
+  width: 36px;
+  height: 36px;
+  margin: 2px;
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.message-input__button-account {
+  .message-input__button();
+  background-image: url('/static/img/icon/account.png');
+}
+
+.message-input__button-send {
+  .message-input__button();
+  background-image: url('/static/img/icon/send.png');
+}

@@ -139,6 +139,11 @@ const store = new Vuex.Store({
         user: {
             uid: 0,
             sex: 0,
+        },
+        contacts: {
+            initial: [],
+            intimate: [],
+            sends: [],
         }
     },
     actions: {
@@ -159,6 +164,12 @@ const store = new Vuex.Store({
                 commit('approveViewPhoto');
             }
             //console.log(ls.get('accepts'));
+        },
+        LOAD_INTIMATES({ commit }) {
+            let contacts = ls.get('intimate-contacts');
+            if (contacts && contacts.length > 0) {
+                commit('addIntimate', contacts);
+            }
         }
     },
     mutations: {
@@ -189,6 +200,9 @@ const store = new Vuex.Store({
         },
         optionDialog(state, data) {
             state.optionStatic.view = data ? data : null;
+        },
+        addIntimate(state, data) {
+            _.extend(state.contacts.intimate, data);
         },
     },
     getters: {
