@@ -1,481 +1,4 @@
 
-$(document).ready(function()
-{
-
-    userinfo.init();
-    slider.init();
-    storage.init();
-    giper_chat.init();
-    notepad.init();
-
-    mailsett.init();
-    report.init();
-    navigate.init();
-
-    name_suggest.init();
-    city_suggest.init();
-
-    option_static.init();
-    option_sex.init();
-    option_email.init();
-    profile_alert.init();
-    profile_option.init();
-
-    user_tag.init();
-    desire_clip.init();
-
-    result_list.init();
-    visited.init();
-
-});
-
-
-
-moment.locale('ru');
-
-var ls = lscache;
-
-class Api {
-    constructor(host, key) {
-        this.root = host + '/';
-        this.key = key;
-        this.config = {
-            baseURL: this.root,
-            headers: {'Authorization': 'Bearer ' + key}
-        }
-    }
-};
-
-class ApiBun extends Api {
-    send(data, handler, error) {
-        axios.post('mess/bun/', data, this.config).then((response) => {
-            //this.$emit('remove', this.index);
-        }).catch((error) => {
-            //console.log('error');
-        });
-        console.log('ApiBun Bun-Bun');
-    }
-};
-
-class ApiContact extends Api {
-    remove(data, handler, error) {
-        axios.post('human/delete/', data, this.config).then((response) => {
-            //this.$emit('remove', this.index);
-        }).catch((error) => {
-            //console.log('error');
-        });
-        console.log('ApiContact removed');
-    }
-
-    ignore(data, handler, error) {
-        axios.post('human/ignore/', data, this.config).then((response) => {
-
-        }).catch((e) => {
-            error(e);
-        });
-        console.log('ApiContact ignored');
-    }
-
-    getList(url, handler, error) {
-        axios.get(`/contact/list/${url}/`, this.config).then((response) => {
-            handler(response.data);
-        }).catch((error) => {
-            error(error);
-        });
-    }
-
-    initialList(handler, error) {
-        this.getList('initial', handler, error);
-    }
-
-    intimateList(handler, error) {
-        this.getList('intimate', handler, error);
-    }
-
-    sendsList(handler, error) {
-        this.getList('sends', handler, error);
-    }
-};
-
-class ApiMessages extends Api {
-    send(data, handler, error) {
-        console.log(this);
-        axios.post('mailer/post/', data, this.config).then((response) => {
-            handler(response.data);
-        }).catch((error) => {
-            console.log(error);
-        });
-        console.log('ApiMessages send !!!');
-    }
-};
-
-class ApiUser extends Api {
-    saveSex(data, handler, error) {
-        axios.post('/option/sex/', data, this.config).then((response) => {
-            if (response.data.sex) {
-                store.commit('loadUser', { sex: response.data.sex });
-                handler();
-            }
-        }).catch((e) => {
-            console.log(e);
-            error();
-        });
-    }
-};
-
-var apiUser     = new ApiUser('', 1234);
-var apiBun      = new ApiBun('', 1234);
-var apiContact  = new ApiContact('', 1234);
-var apiMessages = new ApiMessages('', 1234);
-//  = _.create(Api.prototype, {
-//     host: '/',
-//     jwt: '1234',
-// });
-
-
-//ApiMessages.send();
-
-const store = new Vuex.Store({
-    state: {
-        apiToken: '',
-        //photoServer: '127.0.0.1:8888',
-        photoServer: '195.154.54.70',
-        count: 0,
-        optionStatic: {
-            view: null
-        },
-        photoView: {
-            thumb:  null,
-            photo:  null,
-            height: null,
-        },
-        uploadView: {
-            show: false
-        },
-        contactView: {
-            show: false
-        },
-        formMess: {
-            sendTo: null,
-            sendPhoto: {
-                thumb:  null,
-                photo:  null,
-                height: null,
-                width:  null,
-            },
-            intimate: true,
-        },
-        accepts: {
-            photo: false
-        },
-        user: {
-            uid: 0,
-            sex: 0,
-        },
-        contacts: {
-            initial: [],
-            intimate: [],
-            sends: [],
-        }
-    },
-    actions: {
-        LOAD_USER({ commit }) {
-            if (typeof user_sex != 'undefined') {
-                commit('loadUser', {
-                    sex: user_sex,
-                    uid: uid
-                });
-            }
-        },
-        LOAD_API_TOKEN({ commit }) {
-            commit('setApiToken', { apiToken: get_cookie('jwt') });
-        },
-        LOAD_ACCEPTS({ commit }) {
-            let accepts = ls.get('accepts');
-            if (accepts && accepts.photo) {
-                commit('approveViewPhoto');
-            }
-            //console.log(ls.get('accepts'));
-        },
-        LOAD_INTIMATES({ commit }) {
-            let contacts = ls.get('intimate-contacts');
-            if (contacts && contacts.length > 0) {
-                commit('addIntimate', contacts);
-            }
-        }
-    },
-    mutations: {
-        loadUser(state, data) {
-            _.extend(state.user, data);
-        },
-        setApiToken (state, data) {
-            if (data) {
-                _.extend(state, data);
-            }
-            //console.log(state)
-        },
-        viewPhoto(state, data) {
-            _.extend(state.photoView, data);
-        },
-        viewUpload(state, data) {
-            state.uploadView.show = (data === true);
-        },
-        sendPhoto(state, data) {
-            _.extend(state.formMess.sendPhoto, data);
-        },
-        approveViewPhoto(state) {
-            state.accepts.photo = true;
-            ls.set('accepts', _.extend(state.accepts, {photo: true}));
-        },
-        intimated(state, data) {
-            state.formMess.intimate = (data === true);
-        },
-        optionDialog(state, data) {
-            state.optionStatic.view = data ? data : null;
-        },
-        addIntimate(state, data) {
-            _.extend(state.contacts.intimate, data);
-        },
-    },
-    getters: {
-        accept() {
-
-        }
-    }
-});
-
-store.dispatch('LOAD_API_TOKEN');
-store.dispatch('LOAD_ACCEPTS');
-store.dispatch('LOAD_USER');
-
-
-// -- Получить новый хэш ---
-var hash; 
-function simple_hash() { 
-  var now = new Date(); 
-   hash = now.getTime();  
-}
-     
-function disabled_with_timeout(elem,time) {  
- elem.prop("disabled",true);
- setTimeout( function (){
-  elem.prop("disabled",false);
- },time * 1000); 
-}
-     
-
-   
-// -- Автогенератор информации ---        
-var auto_gen = {    
-    
-    name: function (sex) 
-    {      
-        var name = []                              
-        name[0] = ['Онилиона','Безимени','Неуказано','Хуисзиз','Незнаю','Неизвестно','Несонено'];
-        name[1] = ['Саша','Дима','Сергей','Иван','Максим','Валера','Николай'];          
-        name[2] = ['Оля','Юля','Настя','Алена','Катя','Маргарита','Татьяна'];  
-        
-        var x = Math.floor( Math.random() * 7);
-
-        return name[sex][x];     
-    } ,
-    
-    age: function (year) 
-    {                                    
-        var age = []                  
-        age[0] = [18,21,24,25,27,28,31];
-        age[1] = [year+3,year+2,year+1,year,year-1,year-2,year-3];
- 
-        var y = year ? 1 : 0;
-        var x = Math.floor( Math.random() * 7);
-                                
-        return age[y][x]; 
-    } 
-    
-}
-
-
-
-var cookie_storage = {
-         
-    enabled: 0, 
-
-    init: function () 
-    {  
-
-    } ,
-
-    get_cookie: function (name) 
-    {       
-        var results = document.cookie.match ( '(^|;) ?' + name + '=([^;]*)(;|$)' ); 
-        if (results)
-          return (unescape(results[2]));
-        else
-          return null; 
-    } ,
-     
-    del_cookie: function (name) 
-    {              
-        let expires = new Date(); // получаем текущую дату 
-        expires.setTime( expires.getTime() - 1000 ); 
-         document.cookie = name + "=; expires=" + expires.toGMTString() +  "; path=/";  
-    } ,    
-    
-    set_cookie: function (name, val, time) 
-    {      
-        let expires = new Date(); 
-        expires.setTime( expires.getTime() + (1000 * 60 * time ) ); // минут
-        document.cookie = name + "="+ val +"; expires=" + expires.toGMTString() +  "; path=/";
-    } ,  
-    
-    get_data: function (name) 
-    {  
-        var data = get_cookie(name); 
-        var result = null;     
-         
-        if (data)   
-        try 
-        {
-          result = JSON.parse(data);
-        } 
-        catch(e) { }      
-        
-        return result;     
-    } ,  
-    
-    set_data: function () 
-    {  
-
-    }  
-  
-  
-
-}
-
-
-
-function get_cookie ( cookie_name )
-{
-  var results = document.cookie.match ( '(^|;) ?' + cookie_name + '=([^;]*)(;|$)' );
-
-  if ( results )
-    return ( unescape ( results[2] ) );
-  else
-    return null;
-}
-
-function del_cookie ( name ) {
-  let expires = new Date(); // получаем текущую дату
-  expires.setTime( expires.getTime() - 1000 );
-   document.cookie = name + "=; expires=" + expires.toGMTString() +  "; path=/";
-}
-function set_cookie ( name, val, time ) {
-  let expires = new Date();
-  expires.setTime( expires.getTime() + (1000 * 60 * time ) ); // минут
-   document.cookie = name + "="+ val +"; expires=" + expires.toGMTString() +  "; path=/";
-}
-
-
-
-var desire_clip = {
-
-    sync_taglist: 0,
-
-    init: function () {
-        desire_clip.action.set();
-        desire_clip.ajax.sync();
-    },
-    ajax: {
-        sync: function () {
-            $.get('/sync/taglist/', desire_clip.ajax.parse);
-        },
-        parse: function (data) {
-            data = json.parse(data);
-            if (data) {
-                if (data.id && user_tag.sync != data.id) {
-                    user_tag.sync = data.id;
-                    user_tag.action.store();
-                    desire_clip.ajax.load();
-                }
-            }
-        },
-        load: function () {
-            $.get('/tag/user/', desire_clip.ajax.on_load);
-        },
-        on_load: function (data) {                    // alert(data)
-            data = json.parse(data);
-            if (data.tags != undefined) {
-                user_tag.list = data.tags;
-                user_tag.option.set_count();
-                user_tag.action.store();
-            }
-            if (data.tags.length > 0) {
-                desire_clip.action.set();
-            }
-        },
-        add: function (tag) {
-            $.post('/tag/add/', { tag: tag });
-        }
-    },
-    action: {
-        set: function () {
-            user_tag.action.ids();
-            $('.desire_clip').each(function (i,elem) {
-                $(elem).off('click');
-                $(elem).removeClass('desire_user');
-                if (user_tag.idls.indexOf($(elem).data('id')) >= 0) {
-                    $(elem).addClass('desire_user');
-                } else
-                    $(elem).on('click',desire_clip.action.add);
-            });
-            user_tag.option.set_count();
-        },
-        add: function () {
-            desire_clip.ajax.add($(this).data('tag'));
-            desire_clip.option.toggle(this);
-            //$(this).on('click',desire_clip.action.del);
-            var data = {"tag":$(this).data('tag'),"id":$(this).data('id')};
-            user_tag.list.push(data);
-        },
-        del: function () {
-            option_tag.ajax.del($(this).data('id'));
-            desire_clip.option.toggle(this);
-            user_tag.list.splice($(this).data('num'),1);
-            $(this).on('click',desire_clip.action.add);
-        }
-    },
-    option: {
-        toggle: function (elem) {
-            $(elem).off('click');
-            $(elem).toggleClass('desire_user');
-        }
-    }
-}
-
-
-
-var device = {    
-        
-    init: function () 
-    {   
-                                      
-    } ,
-
-    width: function () 
-    {   
-        return $(window).width();                                 
-    } ,
-
-    height: function () 
-    {   
-        return $(window).height();  //document                               
-    }  
-    
-        
-}
-  
-
-
 Vue.component('captcha-dialog', {
     props: ['show'],
     data() {
@@ -928,6 +451,504 @@ Vue.component('upload-dialog', {
 })
 
 
+
+
+$(document).ready(function()
+{
+
+    userinfo.init();
+    slider.init();
+    storage.init();
+    giper_chat.init();
+    notepad.init();
+
+    mailsett.init();
+    report.init();
+    navigate.init();
+
+    name_suggest.init();
+    city_suggest.init();
+
+    option_static.init();
+    option_sex.init();
+    option_email.init();
+    profile_alert.init();
+    profile_option.init();
+
+    user_tag.init();
+    desire_clip.init();
+
+    result_list.init();
+    visited.init();
+
+});
+
+
+
+moment.locale('ru');
+
+var ls = lscache;
+
+class Api {
+    constructor(host, key) {
+        this.root = host + '/';
+        this.key = key;
+        this.config = {
+            baseURL: this.root,
+            headers: {'Authorization': 'Bearer ' + key}
+        }
+    }
+};
+
+class ApiBun extends Api {
+    send(data, handler, error) {
+        axios.post('mess/bun/', data, this.config).then((response) => {
+            //this.$emit('remove', this.index);
+        }).catch((error) => {
+            //console.log('error');
+        });
+        console.log('ApiBun Bun-Bun');
+    }
+};
+
+class ApiContact extends Api {
+    remove(data, handler, error) {
+        axios.post('human/delete/', data, this.config).then((response) => {
+            //this.$emit('remove', this.index);
+        }).catch((error) => {
+            //console.log('error');
+        });
+        console.log('ApiContact removed');
+    }
+
+    ignore(data, handler, error) {
+        axios.post('human/ignore/', data, this.config).then((response) => {
+
+        }).catch((e) => {
+            error(e);
+        });
+        console.log('ApiContact ignored');
+    }
+
+    getList(url, handler, error) {
+        axios.get(`/contact/list/${url}/`, this.config).then((response) => {
+            handler(response.data);
+        }).catch((error) => {
+            error(error);
+        });
+    }
+
+    initialList(handler, error) {
+        this.getList('initial', handler, error);
+    }
+
+    intimateList(handler, error) {
+        this.getList('intimate', handler, error);
+    }
+
+    sendsList(handler, error) {
+        this.getList('sends', handler, error);
+    }
+};
+
+class ApiMessages extends Api {
+    send(data, handler, error) {
+        console.log(this);
+        axios.post('mailer/post/', data, this.config).then((response) => {
+            handler(response.data);
+        }).catch((error) => {
+            console.log(error);
+        });
+        console.log('ApiMessages send !!!');
+    }
+};
+
+class ApiUser extends Api {
+    saveSex(data, handler, error) {
+        axios.post('/option/sex/', data, this.config).then((response) => {
+            if (response.data.sex) {
+                store.commit('loadUser', { sex: response.data.sex });
+                handler();
+            }
+        }).catch((e) => {
+            console.log(e);
+            error();
+        });
+    }
+};
+
+var apiUser     = new ApiUser('', 1234);
+var apiBun      = new ApiBun('', 1234);
+var apiContact  = new ApiContact('', 1234);
+var apiMessages = new ApiMessages('', 1234);
+//  = _.create(Api.prototype, {
+//     host: '/',
+//     jwt: '1234',
+// });
+
+
+//ApiMessages.send();
+
+const contacts = {
+    state: {
+        initial: [],
+        intimate: [],
+        sends: [],
+    },
+    actions: {
+        LOAD_INTIMATES({ commit }) {
+            let contacts = ls.get('intimate-contacts');
+            if (contacts && contacts.length > 0) {
+                commit('addIntimate', contacts);
+            }
+        }
+    },
+    mutations: {
+        addIntimate(state, data) {
+            _.extend(state.contacts.intimate, data);
+        },
+    }
+}
+
+const user = {
+    state: {
+        uid: 0,
+        sex: 0,
+    },
+    actions: {
+        LOAD_USER({ commit }) {
+            if (typeof user_sex != 'undefined') {
+                commit('loadUser', {
+                    sex: user_sex,
+                    uid: uid
+                });
+            }
+            console.log('LOAD_USER');
+        },
+    },
+    mutations: {
+        loadUser(state, data) {
+            _.extend(state, data);
+            console.log(state);
+        },
+    }
+}
+
+
+const store = new Vuex.Store({
+    modules: {
+        user,
+        contacts
+    },
+    state: {
+        apiToken: '',
+        //photoServer: '127.0.0.1:8888',
+        photoServer: '195.154.54.70',
+        count: 0,
+        optionStatic: {
+            view: null
+        },
+        photoView: {
+            thumb:  null,
+            photo:  null,
+            height: null,
+        },
+        uploadView: {
+            show: false
+        },
+        contactView: {
+            show: false
+        },
+        formMess: {
+            sendTo: null,
+            sendPhoto: {
+                thumb:  null,
+                photo:  null,
+                height: null,
+                width:  null,
+            },
+            intimate: true,
+        },
+        accepts: {
+            photo: false
+        },
+    },
+    actions: {
+        LOAD_API_TOKEN({ commit }) {
+            commit('setApiToken', { apiToken: get_cookie('jwt') });
+        },
+        LOAD_ACCEPTS({ commit }) {
+            let accepts = ls.get('accepts');
+            if (accepts && accepts.photo) {
+                commit('approveViewPhoto');
+            }
+            //console.log(ls.get('accepts'));
+        },
+    },
+    mutations: {
+        setApiToken (state, data) {
+            if (data) {
+                _.extend(state, data);
+            }
+            //console.log(state)
+        },
+        viewPhoto(state, data) {
+            _.extend(state.photoView, data);
+        },
+        viewUpload(state, data) {
+            state.uploadView.show = (data === true);
+        },
+        sendPhoto(state, data) {
+            _.extend(state.formMess.sendPhoto, data);
+        },
+        approveViewPhoto(state) {
+            state.accepts.photo = true;
+            ls.set('accepts', _.extend(state.accepts, {photo: true}));
+        },
+        intimated(state, data) {
+            state.formMess.intimate = (data === true);
+        },
+        optionDialog(state, data) {
+            state.optionStatic.view = data ? data : null;
+        },
+    },
+    getters: {
+        accept() {
+
+        }
+    }
+});
+
+store.dispatch('LOAD_API_TOKEN');
+store.dispatch('LOAD_ACCEPTS');
+store.dispatch('LOAD_USER');
+
+
+// -- Получить новый хэш ---
+var hash; 
+function simple_hash() { 
+  var now = new Date(); 
+   hash = now.getTime();  
+}
+     
+function disabled_with_timeout(elem,time) {  
+ elem.prop("disabled",true);
+ setTimeout( function (){
+  elem.prop("disabled",false);
+ },time * 1000); 
+}
+     
+
+   
+// -- Автогенератор информации ---        
+var auto_gen = {    
+    
+    name: function (sex) 
+    {      
+        var name = []                              
+        name[0] = ['Онилиона','Безимени','Неуказано','Хуисзиз','Незнаю','Неизвестно','Несонено'];
+        name[1] = ['Саша','Дима','Сергей','Иван','Максим','Валера','Николай'];          
+        name[2] = ['Оля','Юля','Настя','Алена','Катя','Маргарита','Татьяна'];  
+        
+        var x = Math.floor( Math.random() * 7);
+
+        return name[sex][x];     
+    } ,
+    
+    age: function (year) 
+    {                                    
+        var age = []                  
+        age[0] = [18,21,24,25,27,28,31];
+        age[1] = [year+3,year+2,year+1,year,year-1,year-2,year-3];
+ 
+        var y = year ? 1 : 0;
+        var x = Math.floor( Math.random() * 7);
+                                
+        return age[y][x]; 
+    } 
+    
+}
+
+
+
+var cookie_storage = {
+         
+    enabled: 0, 
+
+    init: function () 
+    {  
+
+    } ,
+
+    get_cookie: function (name) 
+    {       
+        var results = document.cookie.match ( '(^|;) ?' + name + '=([^;]*)(;|$)' ); 
+        if (results)
+          return (unescape(results[2]));
+        else
+          return null; 
+    } ,
+     
+    del_cookie: function (name) 
+    {              
+        let expires = new Date(); // получаем текущую дату 
+        expires.setTime( expires.getTime() - 1000 ); 
+         document.cookie = name + "=; expires=" + expires.toGMTString() +  "; path=/";  
+    } ,    
+    
+    set_cookie: function (name, val, time) 
+    {      
+        let expires = new Date(); 
+        expires.setTime( expires.getTime() + (1000 * 60 * time ) ); // минут
+        document.cookie = name + "="+ val +"; expires=" + expires.toGMTString() +  "; path=/";
+    } ,  
+    
+    get_data: function (name) 
+    {  
+        var data = get_cookie(name); 
+        var result = null;     
+         
+        if (data)   
+        try 
+        {
+          result = JSON.parse(data);
+        } 
+        catch(e) { }      
+        
+        return result;     
+    } ,  
+    
+    set_data: function () 
+    {  
+
+    }  
+  
+  
+
+}
+
+
+
+function get_cookie ( cookie_name )
+{
+  var results = document.cookie.match ( '(^|;) ?' + cookie_name + '=([^;]*)(;|$)' );
+
+  if ( results )
+    return ( unescape ( results[2] ) );
+  else
+    return null;
+}
+
+function del_cookie ( name ) {
+  let expires = new Date(); // получаем текущую дату
+  expires.setTime( expires.getTime() - 1000 );
+   document.cookie = name + "=; expires=" + expires.toGMTString() +  "; path=/";
+}
+function set_cookie ( name, val, time ) {
+  let expires = new Date();
+  expires.setTime( expires.getTime() + (1000 * 60 * time ) ); // минут
+   document.cookie = name + "="+ val +"; expires=" + expires.toGMTString() +  "; path=/";
+}
+
+
+
+var desire_clip = {
+
+    sync_taglist: 0,
+
+    init: function () {
+        desire_clip.action.set();
+        desire_clip.ajax.sync();
+    },
+    ajax: {
+        sync: function () {
+            $.get('/sync/taglist/', desire_clip.ajax.parse);
+        },
+        parse: function (data) {
+            data = json.parse(data);
+            if (data) {
+                if (data.id && user_tag.sync != data.id) {
+                    user_tag.sync = data.id;
+                    user_tag.action.store();
+                    desire_clip.ajax.load();
+                }
+            }
+        },
+        load: function () {
+            $.get('/tag/user/', desire_clip.ajax.on_load);
+        },
+        on_load: function (data) {                    // alert(data)
+            data = json.parse(data);
+            if (data.tags != undefined) {
+                user_tag.list = data.tags;
+                user_tag.option.set_count();
+                user_tag.action.store();
+            }
+            if (data.tags.length > 0) {
+                desire_clip.action.set();
+            }
+        },
+        add: function (tag) {
+            $.post('/tag/add/', { tag: tag });
+        }
+    },
+    action: {
+        set: function () {
+            user_tag.action.ids();
+            $('.desire_clip').each(function (i,elem) {
+                $(elem).off('click');
+                $(elem).removeClass('desire_user');
+                if (user_tag.idls.indexOf($(elem).data('id')) >= 0) {
+                    $(elem).addClass('desire_user');
+                } else
+                    $(elem).on('click',desire_clip.action.add);
+            });
+            user_tag.option.set_count();
+        },
+        add: function () {
+            desire_clip.ajax.add($(this).data('tag'));
+            desire_clip.option.toggle(this);
+            //$(this).on('click',desire_clip.action.del);
+            var data = {"tag":$(this).data('tag'),"id":$(this).data('id')};
+            user_tag.list.push(data);
+        },
+        del: function () {
+            option_tag.ajax.del($(this).data('id'));
+            desire_clip.option.toggle(this);
+            user_tag.list.splice($(this).data('num'),1);
+            $(this).on('click',desire_clip.action.add);
+        }
+    },
+    option: {
+        toggle: function (elem) {
+            $(elem).off('click');
+            $(elem).toggleClass('desire_user');
+        }
+    }
+}
+
+
+
+var device = {    
+        
+    init: function () 
+    {   
+                                      
+    } ,
+
+    width: function () 
+    {   
+        return $(window).width();                                 
+    } ,
+
+    height: function () 
+    {   
+        return $(window).height();  //document                               
+    }  
+    
+        
+}
+  
 
 
 var active_textarea ;             ////////////////////////////////////////////////////////

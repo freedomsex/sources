@@ -22,9 +22,18 @@ module.exports = function (grunt) {
                 ],
                 dest: 'bower_components/bower-components.js',
             },
+            state: {
+                src: [
+                    'javascript/core/src/state/api.js',
+                    'javascript/core/src/state/modules/*.js',
+                    'javascript/core/src/state/state.js',
+                ],
+                dest: 'javascript/core/src/1-state.js',
+            },
             core: {
                 src: [
-                    'javascript/core/src/**/*.js'
+                    'javascript/core/src/dialogs/*.js',
+                    'javascript/core/src/*.js',
                 ],
                 dest: 'javascript/core/dist/core.es6',
             },

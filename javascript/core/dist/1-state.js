@@ -105,9 +105,11 @@ var apiMessages = new ApiMessages('', 1234);
 
 const contacts = {
     state: {
-        initial: [],
-        intimate: [],
-        sends: [],
+        contacts: {
+            initial: [],
+            intimate: [],
+            sends: [],
+        }
     },
     actions: {
         LOAD_INTIMATES({ commit }) {
@@ -126,8 +128,10 @@ const contacts = {
 
 const user = {
     state: {
-        uid: 0,
-        sex: 0,
+        user: {
+            uid: 0,
+            sex: 0,
+        },
     },
     actions: {
         LOAD_USER({ commit }) {
@@ -137,13 +141,11 @@ const user = {
                     uid: uid
                 });
             }
-            console.log('LOAD_USER');
         },
     },
     mutations: {
         loadUser(state, data) {
-            _.extend(state, data);
-            console.log(state);
+            _.extend(state.user, data);
         },
     }
 }

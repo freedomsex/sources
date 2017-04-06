@@ -8,507 +8,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-$(document).ready(function () {
-
-    userinfo.init();
-    slider.init();
-    storage.init();
-    giper_chat.init();
-    notepad.init();
-
-    mailsett.init();
-    report.init();
-    navigate.init();
-
-    name_suggest.init();
-    city_suggest.init();
-
-    option_static.init();
-    option_sex.init();
-    option_email.init();
-    profile_alert.init();
-    profile_option.init();
-
-    user_tag.init();
-    desire_clip.init();
-
-    result_list.init();
-    visited.init();
-});
-
-moment.locale('ru');
-
-var ls = lscache;
-
-var Api = function Api(host, key) {
-    _classCallCheck(this, Api);
-
-    this.root = host + '/';
-    this.key = key;
-    this.config = {
-        baseURL: this.root,
-        headers: { 'Authorization': 'Bearer ' + key }
-    };
-};
-
-;
-
-var ApiBun = function (_Api) {
-    _inherits(ApiBun, _Api);
-
-    function ApiBun() {
-        _classCallCheck(this, ApiBun);
-
-        return _possibleConstructorReturn(this, (ApiBun.__proto__ || Object.getPrototypeOf(ApiBun)).apply(this, arguments));
-    }
-
-    _createClass(ApiBun, [{
-        key: 'send',
-        value: function send(data, handler, error) {
-            axios.post('mess/bun/', data, this.config).then(function (response) {
-                //this.$emit('remove', this.index);
-            }).catch(function (error) {
-                //console.log('error');
-            });
-            console.log('ApiBun Bun-Bun');
-        }
-    }]);
-
-    return ApiBun;
-}(Api);
-
-;
-
-var ApiContact = function (_Api2) {
-    _inherits(ApiContact, _Api2);
-
-    function ApiContact() {
-        _classCallCheck(this, ApiContact);
-
-        return _possibleConstructorReturn(this, (ApiContact.__proto__ || Object.getPrototypeOf(ApiContact)).apply(this, arguments));
-    }
-
-    _createClass(ApiContact, [{
-        key: 'remove',
-        value: function remove(data, handler, error) {
-            axios.post('human/delete/', data, this.config).then(function (response) {
-                //this.$emit('remove', this.index);
-            }).catch(function (error) {
-                //console.log('error');
-            });
-            console.log('ApiContact removed');
-        }
-    }, {
-        key: 'ignore',
-        value: function ignore(data, handler, error) {
-            axios.post('human/ignore/', data, this.config).then(function (response) {}).catch(function (e) {
-                error(e);
-            });
-            console.log('ApiContact ignored');
-        }
-    }, {
-        key: 'getList',
-        value: function getList(url, handler, error) {
-            axios.get('/contact/list/' + url + '/', this.config).then(function (response) {
-                handler(response.data);
-            }).catch(function (error) {
-                error(error);
-            });
-        }
-    }, {
-        key: 'initialList',
-        value: function initialList(handler, error) {
-            this.getList('initial', handler, error);
-        }
-    }, {
-        key: 'intimateList',
-        value: function intimateList(handler, error) {
-            this.getList('intimate', handler, error);
-        }
-    }, {
-        key: 'sendsList',
-        value: function sendsList(handler, error) {
-            this.getList('sends', handler, error);
-        }
-    }]);
-
-    return ApiContact;
-}(Api);
-
-;
-
-var ApiMessages = function (_Api3) {
-    _inherits(ApiMessages, _Api3);
-
-    function ApiMessages() {
-        _classCallCheck(this, ApiMessages);
-
-        return _possibleConstructorReturn(this, (ApiMessages.__proto__ || Object.getPrototypeOf(ApiMessages)).apply(this, arguments));
-    }
-
-    _createClass(ApiMessages, [{
-        key: 'send',
-        value: function send(data, handler, error) {
-            console.log(this);
-            axios.post('mailer/post/', data, this.config).then(function (response) {
-                handler(response.data);
-            }).catch(function (error) {
-                console.log(error);
-            });
-            console.log('ApiMessages send !!!');
-        }
-    }]);
-
-    return ApiMessages;
-}(Api);
-
-;
-
-var ApiUser = function (_Api4) {
-    _inherits(ApiUser, _Api4);
-
-    function ApiUser() {
-        _classCallCheck(this, ApiUser);
-
-        return _possibleConstructorReturn(this, (ApiUser.__proto__ || Object.getPrototypeOf(ApiUser)).apply(this, arguments));
-    }
-
-    _createClass(ApiUser, [{
-        key: 'saveSex',
-        value: function saveSex(data, handler, error) {
-            axios.post('/option/sex/', data, this.config).then(function (response) {
-                if (response.data.sex) {
-                    store.commit('loadUser', { sex: response.data.sex });
-                    handler();
-                }
-            }).catch(function (e) {
-                console.log(e);
-                error();
-            });
-        }
-    }]);
-
-    return ApiUser;
-}(Api);
-
-;
-
-var apiUser = new ApiUser('', 1234);
-var apiBun = new ApiBun('', 1234);
-var apiContact = new ApiContact('', 1234);
-var apiMessages = new ApiMessages('', 1234);
-//  = _.create(Api.prototype, {
-//     host: '/',
-//     jwt: '1234',
-// });
-
-
-//ApiMessages.send();
-
-var store = new Vuex.Store({
-    state: {
-        apiToken: '',
-        //photoServer: '127.0.0.1:8888',
-        photoServer: '195.154.54.70',
-        count: 0,
-        optionStatic: {
-            view: null
-        },
-        photoView: {
-            thumb: null,
-            photo: null,
-            height: null
-        },
-        uploadView: {
-            show: false
-        },
-        contactView: {
-            show: false
-        },
-        formMess: {
-            sendTo: null,
-            sendPhoto: {
-                thumb: null,
-                photo: null,
-                height: null,
-                width: null
-            },
-            intimate: true
-        },
-        accepts: {
-            photo: false
-        },
-        user: {
-            uid: 0,
-            sex: 0
-        },
-        contacts: {
-            initial: [],
-            intimate: [],
-            sends: []
-        }
-    },
-    actions: {
-        LOAD_USER: function LOAD_USER(_ref) {
-            var commit = _ref.commit;
-
-            if (typeof user_sex != 'undefined') {
-                commit('loadUser', {
-                    sex: user_sex,
-                    uid: uid
-                });
-            }
-        },
-        LOAD_API_TOKEN: function LOAD_API_TOKEN(_ref2) {
-            var commit = _ref2.commit;
-
-            commit('setApiToken', { apiToken: get_cookie('jwt') });
-        },
-        LOAD_ACCEPTS: function LOAD_ACCEPTS(_ref3) {
-            var commit = _ref3.commit;
-
-            var accepts = ls.get('accepts');
-            if (accepts && accepts.photo) {
-                commit('approveViewPhoto');
-            }
-            //console.log(ls.get('accepts'));
-        },
-        LOAD_INTIMATES: function LOAD_INTIMATES(_ref4) {
-            var commit = _ref4.commit;
-
-            var contacts = ls.get('intimate-contacts');
-            if (contacts && contacts.length > 0) {
-                commit('addIntimate', contacts);
-            }
-        }
-    },
-    mutations: {
-        loadUser: function loadUser(state, data) {
-            _.extend(state.user, data);
-        },
-        setApiToken: function setApiToken(state, data) {
-            if (data) {
-                _.extend(state, data);
-            }
-            //console.log(state)
-        },
-        viewPhoto: function viewPhoto(state, data) {
-            _.extend(state.photoView, data);
-        },
-        viewUpload: function viewUpload(state, data) {
-            state.uploadView.show = data === true;
-        },
-        sendPhoto: function sendPhoto(state, data) {
-            _.extend(state.formMess.sendPhoto, data);
-        },
-        approveViewPhoto: function approveViewPhoto(state) {
-            state.accepts.photo = true;
-            ls.set('accepts', _.extend(state.accepts, { photo: true }));
-        },
-        intimated: function intimated(state, data) {
-            state.formMess.intimate = data === true;
-        },
-        optionDialog: function optionDialog(state, data) {
-            state.optionStatic.view = data ? data : null;
-        },
-        addIntimate: function addIntimate(state, data) {
-            _.extend(state.contacts.intimate, data);
-        }
-    },
-    getters: {
-        accept: function accept() {}
-    }
-});
-
-store.dispatch('LOAD_API_TOKEN');
-store.dispatch('LOAD_ACCEPTS');
-store.dispatch('LOAD_USER');
-
-// -- Получить новый хэш ---
-var hash;
-function simple_hash() {
-    var now = new Date();
-    hash = now.getTime();
-}
-
-function disabled_with_timeout(elem, time) {
-    elem.prop("disabled", true);
-    setTimeout(function () {
-        elem.prop("disabled", false);
-    }, time * 1000);
-}
-
-// -- Автогенератор информации ---        
-var auto_gen = {
-
-    name: function name(sex) {
-        var name = [];
-        name[0] = ['Онилиона', 'Безимени', 'Неуказано', 'Хуисзиз', 'Незнаю', 'Неизвестно', 'Несонено'];
-        name[1] = ['Саша', 'Дима', 'Сергей', 'Иван', 'Максим', 'Валера', 'Николай'];
-        name[2] = ['Оля', 'Юля', 'Настя', 'Алена', 'Катя', 'Маргарита', 'Татьяна'];
-
-        var x = Math.floor(Math.random() * 7);
-
-        return name[sex][x];
-    },
-
-    age: function age(year) {
-        var age = [];
-        age[0] = [18, 21, 24, 25, 27, 28, 31];
-        age[1] = [year + 3, year + 2, year + 1, year, year - 1, year - 2, year - 3];
-
-        var y = year ? 1 : 0;
-        var x = Math.floor(Math.random() * 7);
-
-        return age[y][x];
-    }
-
-};
-
-var cookie_storage = {
-
-    enabled: 0,
-
-    init: function init() {},
-
-    get_cookie: function get_cookie(name) {
-        var results = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-        if (results) return unescape(results[2]);else return null;
-    },
-
-    del_cookie: function del_cookie(name) {
-        var expires = new Date(); // получаем текущую дату 
-        expires.setTime(expires.getTime() - 1000);
-        document.cookie = name + "=; expires=" + expires.toGMTString() + "; path=/";
-    },
-
-    set_cookie: function set_cookie(name, val, time) {
-        var expires = new Date();
-        expires.setTime(expires.getTime() + 1000 * 60 * time); // минут
-        document.cookie = name + "=" + val + "; expires=" + expires.toGMTString() + "; path=/";
-    },
-
-    get_data: function get_data(name) {
-        var data = get_cookie(name);
-        var result = null;
-
-        if (data) try {
-            result = JSON.parse(data);
-        } catch (e) {}
-
-        return result;
-    },
-
-    set_data: function set_data() {}
-
-};
-
-function get_cookie(cookie_name) {
-    var results = document.cookie.match('(^|;) ?' + cookie_name + '=([^;]*)(;|$)');
-
-    if (results) return unescape(results[2]);else return null;
-}
-
-function del_cookie(name) {
-    var expires = new Date(); // получаем текущую дату
-    expires.setTime(expires.getTime() - 1000);
-    document.cookie = name + "=; expires=" + expires.toGMTString() + "; path=/";
-}
-function set_cookie(name, val, time) {
-    var expires = new Date();
-    expires.setTime(expires.getTime() + 1000 * 60 * time); // минут
-    document.cookie = name + "=" + val + "; expires=" + expires.toGMTString() + "; path=/";
-}
-
-var desire_clip = {
-
-    sync_taglist: 0,
-
-    init: function init() {
-        desire_clip.action.set();
-        desire_clip.ajax.sync();
-    },
-    ajax: {
-        sync: function sync() {
-            $.get('/sync/taglist/', desire_clip.ajax.parse);
-        },
-        parse: function parse(data) {
-            data = json.parse(data);
-            if (data) {
-                if (data.id && user_tag.sync != data.id) {
-                    user_tag.sync = data.id;
-                    user_tag.action.store();
-                    desire_clip.ajax.load();
-                }
-            }
-        },
-        load: function load() {
-            $.get('/tag/user/', desire_clip.ajax.on_load);
-        },
-        on_load: function on_load(data) {
-            // alert(data)
-            data = json.parse(data);
-            if (data.tags != undefined) {
-                user_tag.list = data.tags;
-                user_tag.option.set_count();
-                user_tag.action.store();
-            }
-            if (data.tags.length > 0) {
-                desire_clip.action.set();
-            }
-        },
-        add: function add(tag) {
-            $.post('/tag/add/', { tag: tag });
-        }
-    },
-    action: {
-        set: function set() {
-            user_tag.action.ids();
-            $('.desire_clip').each(function (i, elem) {
-                $(elem).off('click');
-                $(elem).removeClass('desire_user');
-                if (user_tag.idls.indexOf($(elem).data('id')) >= 0) {
-                    $(elem).addClass('desire_user');
-                } else $(elem).on('click', desire_clip.action.add);
-            });
-            user_tag.option.set_count();
-        },
-        add: function add() {
-            desire_clip.ajax.add($(this).data('tag'));
-            desire_clip.option.toggle(this);
-            //$(this).on('click',desire_clip.action.del);
-            var data = { "tag": $(this).data('tag'), "id": $(this).data('id') };
-            user_tag.list.push(data);
-        },
-        del: function del() {
-            option_tag.ajax.del($(this).data('id'));
-            desire_clip.option.toggle(this);
-            user_tag.list.splice($(this).data('num'), 1);
-            $(this).on('click', desire_clip.action.add);
-        }
-    },
-    option: {
-        toggle: function toggle(elem) {
-            $(elem).off('click');
-            $(elem).toggleClass('desire_user');
-        }
-    }
-};
-
-var device = {
-
-    init: function init() {},
-
-    width: function width() {
-        return $(window).width();
-    },
-
-    height: function height() {
-        return $(window).height(); //document                               
-    }
-
-};
-
 Vue.component('captcha-dialog', {
     props: ['show'],
     data: function data() {
@@ -613,11 +112,11 @@ var InitialDialog = Vue.component('initial-dialog', {
     },
     methods: {
         load: function load() {
-            var _this5 = this;
+            var _this = this;
 
             apiContact.initialList(this.onLoad, this.error);
             setTimeout(function () {
-                return _this5.slow = true;
+                return _this.slow = true;
             }, 3000);
         },
         remove: function remove(index) {
@@ -641,11 +140,11 @@ var IntimateDialog = Vue.component('intimate-dialog', {
     },
     methods: {
         load: function load() {
-            var _this6 = this;
+            var _this2 = this;
 
             apiContact.intimateList(this.onLoad, this.error);
             setTimeout(function () {
-                return _this6.slow = true;
+                return _this2.slow = true;
             }, 3000);
         },
         remove: function remove(index) {
@@ -670,11 +169,11 @@ var SendsDialog = Vue.component('sends-dialog', {
     },
     methods: {
         load: function load() {
-            var _this7 = this;
+            var _this3 = this;
 
             apiContact.sendsList(this.onLoad, this.error);
             setTimeout(function () {
-                return _this7.slow = true;
+                return _this3.slow = true;
             }, 3000);
         }
     },
@@ -907,7 +406,7 @@ Vue.component('upload-dialog', {
     },
     methods: {
         loadPhoto: function loadPhoto() {
-            var _this8 = this;
+            var _this4 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
@@ -916,7 +415,7 @@ Vue.component('upload-dialog', {
             axios.get('http://' + this.server + '/api/v1/users/' + uid + '/photos', config).then(function (response) {
                 var result = response.data.photos;
                 if (result && result.length) {
-                    _this8.photos = response.data.photos;
+                    _this4.photos = response.data.photos;
                 }
                 //console.log(this.photos);
             }).catch(function (error) {
@@ -966,6 +465,527 @@ Vue.component('upload-dialog', {
         this.loadPhoto();
     }
 });
+
+$(document).ready(function () {
+
+    userinfo.init();
+    slider.init();
+    storage.init();
+    giper_chat.init();
+    notepad.init();
+
+    mailsett.init();
+    report.init();
+    navigate.init();
+
+    name_suggest.init();
+    city_suggest.init();
+
+    option_static.init();
+    option_sex.init();
+    option_email.init();
+    profile_alert.init();
+    profile_option.init();
+
+    user_tag.init();
+    desire_clip.init();
+
+    result_list.init();
+    visited.init();
+});
+
+moment.locale('ru');
+
+var ls = lscache;
+
+var Api = function Api(host, key) {
+    _classCallCheck(this, Api);
+
+    this.root = host + '/';
+    this.key = key;
+    this.config = {
+        baseURL: this.root,
+        headers: { 'Authorization': 'Bearer ' + key }
+    };
+};
+
+;
+
+var ApiBun = function (_Api) {
+    _inherits(ApiBun, _Api);
+
+    function ApiBun() {
+        _classCallCheck(this, ApiBun);
+
+        return _possibleConstructorReturn(this, (ApiBun.__proto__ || Object.getPrototypeOf(ApiBun)).apply(this, arguments));
+    }
+
+    _createClass(ApiBun, [{
+        key: 'send',
+        value: function send(data, handler, error) {
+            axios.post('mess/bun/', data, this.config).then(function (response) {
+                //this.$emit('remove', this.index);
+            }).catch(function (error) {
+                //console.log('error');
+            });
+            console.log('ApiBun Bun-Bun');
+        }
+    }]);
+
+    return ApiBun;
+}(Api);
+
+;
+
+var ApiContact = function (_Api2) {
+    _inherits(ApiContact, _Api2);
+
+    function ApiContact() {
+        _classCallCheck(this, ApiContact);
+
+        return _possibleConstructorReturn(this, (ApiContact.__proto__ || Object.getPrototypeOf(ApiContact)).apply(this, arguments));
+    }
+
+    _createClass(ApiContact, [{
+        key: 'remove',
+        value: function remove(data, handler, error) {
+            axios.post('human/delete/', data, this.config).then(function (response) {
+                //this.$emit('remove', this.index);
+            }).catch(function (error) {
+                //console.log('error');
+            });
+            console.log('ApiContact removed');
+        }
+    }, {
+        key: 'ignore',
+        value: function ignore(data, handler, error) {
+            axios.post('human/ignore/', data, this.config).then(function (response) {}).catch(function (e) {
+                error(e);
+            });
+            console.log('ApiContact ignored');
+        }
+    }, {
+        key: 'getList',
+        value: function getList(url, handler, error) {
+            axios.get('/contact/list/' + url + '/', this.config).then(function (response) {
+                handler(response.data);
+            }).catch(function (error) {
+                error(error);
+            });
+        }
+    }, {
+        key: 'initialList',
+        value: function initialList(handler, error) {
+            this.getList('initial', handler, error);
+        }
+    }, {
+        key: 'intimateList',
+        value: function intimateList(handler, error) {
+            this.getList('intimate', handler, error);
+        }
+    }, {
+        key: 'sendsList',
+        value: function sendsList(handler, error) {
+            this.getList('sends', handler, error);
+        }
+    }]);
+
+    return ApiContact;
+}(Api);
+
+;
+
+var ApiMessages = function (_Api3) {
+    _inherits(ApiMessages, _Api3);
+
+    function ApiMessages() {
+        _classCallCheck(this, ApiMessages);
+
+        return _possibleConstructorReturn(this, (ApiMessages.__proto__ || Object.getPrototypeOf(ApiMessages)).apply(this, arguments));
+    }
+
+    _createClass(ApiMessages, [{
+        key: 'send',
+        value: function send(data, handler, error) {
+            console.log(this);
+            axios.post('mailer/post/', data, this.config).then(function (response) {
+                handler(response.data);
+            }).catch(function (error) {
+                console.log(error);
+            });
+            console.log('ApiMessages send !!!');
+        }
+    }]);
+
+    return ApiMessages;
+}(Api);
+
+;
+
+var ApiUser = function (_Api4) {
+    _inherits(ApiUser, _Api4);
+
+    function ApiUser() {
+        _classCallCheck(this, ApiUser);
+
+        return _possibleConstructorReturn(this, (ApiUser.__proto__ || Object.getPrototypeOf(ApiUser)).apply(this, arguments));
+    }
+
+    _createClass(ApiUser, [{
+        key: 'saveSex',
+        value: function saveSex(data, handler, error) {
+            axios.post('/option/sex/', data, this.config).then(function (response) {
+                if (response.data.sex) {
+                    store.commit('loadUser', { sex: response.data.sex });
+                    handler();
+                }
+            }).catch(function (e) {
+                console.log(e);
+                error();
+            });
+        }
+    }]);
+
+    return ApiUser;
+}(Api);
+
+;
+
+var apiUser = new ApiUser('', 1234);
+var apiBun = new ApiBun('', 1234);
+var apiContact = new ApiContact('', 1234);
+var apiMessages = new ApiMessages('', 1234);
+//  = _.create(Api.prototype, {
+//     host: '/',
+//     jwt: '1234',
+// });
+
+
+//ApiMessages.send();
+
+var contacts = {
+    state: {
+        initial: [],
+        intimate: [],
+        sends: []
+    },
+    actions: {
+        LOAD_INTIMATES: function LOAD_INTIMATES(_ref) {
+            var commit = _ref.commit;
+
+            var contacts = ls.get('intimate-contacts');
+            if (contacts && contacts.length > 0) {
+                commit('addIntimate', contacts);
+            }
+        }
+    },
+    mutations: {
+        addIntimate: function addIntimate(state, data) {
+            _.extend(state.contacts.intimate, data);
+        }
+    }
+};
+
+var user = {
+    state: {
+        uid: 0,
+        sex: 0
+    },
+    actions: {
+        LOAD_USER: function LOAD_USER(_ref2) {
+            var commit = _ref2.commit;
+
+            if (typeof user_sex != 'undefined') {
+                commit('loadUser', {
+                    sex: user_sex,
+                    uid: uid
+                });
+            }
+            console.log('LOAD_USER');
+        }
+    },
+    mutations: {
+        loadUser: function loadUser(state, data) {
+            _.extend(state, data);
+            console.log(state);
+        }
+    }
+};
+
+var store = new Vuex.Store({
+    modules: {
+        user: user,
+        contacts: contacts
+    },
+    state: {
+        apiToken: '',
+        //photoServer: '127.0.0.1:8888',
+        photoServer: '195.154.54.70',
+        count: 0,
+        optionStatic: {
+            view: null
+        },
+        photoView: {
+            thumb: null,
+            photo: null,
+            height: null
+        },
+        uploadView: {
+            show: false
+        },
+        contactView: {
+            show: false
+        },
+        formMess: {
+            sendTo: null,
+            sendPhoto: {
+                thumb: null,
+                photo: null,
+                height: null,
+                width: null
+            },
+            intimate: true
+        },
+        accepts: {
+            photo: false
+        }
+    },
+    actions: {
+        LOAD_API_TOKEN: function LOAD_API_TOKEN(_ref3) {
+            var commit = _ref3.commit;
+
+            commit('setApiToken', { apiToken: get_cookie('jwt') });
+        },
+        LOAD_ACCEPTS: function LOAD_ACCEPTS(_ref4) {
+            var commit = _ref4.commit;
+
+            var accepts = ls.get('accepts');
+            if (accepts && accepts.photo) {
+                commit('approveViewPhoto');
+            }
+            //console.log(ls.get('accepts'));
+        }
+    },
+    mutations: {
+        setApiToken: function setApiToken(state, data) {
+            if (data) {
+                _.extend(state, data);
+            }
+            //console.log(state)
+        },
+        viewPhoto: function viewPhoto(state, data) {
+            _.extend(state.photoView, data);
+        },
+        viewUpload: function viewUpload(state, data) {
+            state.uploadView.show = data === true;
+        },
+        sendPhoto: function sendPhoto(state, data) {
+            _.extend(state.formMess.sendPhoto, data);
+        },
+        approveViewPhoto: function approveViewPhoto(state) {
+            state.accepts.photo = true;
+            ls.set('accepts', _.extend(state.accepts, { photo: true }));
+        },
+        intimated: function intimated(state, data) {
+            state.formMess.intimate = data === true;
+        },
+        optionDialog: function optionDialog(state, data) {
+            state.optionStatic.view = data ? data : null;
+        }
+    },
+    getters: {
+        accept: function accept() {}
+    }
+});
+
+store.dispatch('LOAD_API_TOKEN');
+store.dispatch('LOAD_ACCEPTS');
+store.dispatch('LOAD_USER');
+
+// -- Получить новый хэш ---
+var hash;
+function simple_hash() {
+    var now = new Date();
+    hash = now.getTime();
+}
+
+function disabled_with_timeout(elem, time) {
+    elem.prop("disabled", true);
+    setTimeout(function () {
+        elem.prop("disabled", false);
+    }, time * 1000);
+}
+
+// -- Автогенератор информации ---        
+var auto_gen = {
+
+    name: function name(sex) {
+        var name = [];
+        name[0] = ['Онилиона', 'Безимени', 'Неуказано', 'Хуисзиз', 'Незнаю', 'Неизвестно', 'Несонено'];
+        name[1] = ['Саша', 'Дима', 'Сергей', 'Иван', 'Максим', 'Валера', 'Николай'];
+        name[2] = ['Оля', 'Юля', 'Настя', 'Алена', 'Катя', 'Маргарита', 'Татьяна'];
+
+        var x = Math.floor(Math.random() * 7);
+
+        return name[sex][x];
+    },
+
+    age: function age(year) {
+        var age = [];
+        age[0] = [18, 21, 24, 25, 27, 28, 31];
+        age[1] = [year + 3, year + 2, year + 1, year, year - 1, year - 2, year - 3];
+
+        var y = year ? 1 : 0;
+        var x = Math.floor(Math.random() * 7);
+
+        return age[y][x];
+    }
+
+};
+
+var cookie_storage = {
+
+    enabled: 0,
+
+    init: function init() {},
+
+    get_cookie: function get_cookie(name) {
+        var results = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+        if (results) return unescape(results[2]);else return null;
+    },
+
+    del_cookie: function del_cookie(name) {
+        var expires = new Date(); // получаем текущую дату 
+        expires.setTime(expires.getTime() - 1000);
+        document.cookie = name + "=; expires=" + expires.toGMTString() + "; path=/";
+    },
+
+    set_cookie: function set_cookie(name, val, time) {
+        var expires = new Date();
+        expires.setTime(expires.getTime() + 1000 * 60 * time); // минут
+        document.cookie = name + "=" + val + "; expires=" + expires.toGMTString() + "; path=/";
+    },
+
+    get_data: function get_data(name) {
+        var data = get_cookie(name);
+        var result = null;
+
+        if (data) try {
+            result = JSON.parse(data);
+        } catch (e) {}
+
+        return result;
+    },
+
+    set_data: function set_data() {}
+
+};
+
+function get_cookie(cookie_name) {
+    var results = document.cookie.match('(^|;) ?' + cookie_name + '=([^;]*)(;|$)');
+
+    if (results) return unescape(results[2]);else return null;
+}
+
+function del_cookie(name) {
+    var expires = new Date(); // получаем текущую дату
+    expires.setTime(expires.getTime() - 1000);
+    document.cookie = name + "=; expires=" + expires.toGMTString() + "; path=/";
+}
+function set_cookie(name, val, time) {
+    var expires = new Date();
+    expires.setTime(expires.getTime() + 1000 * 60 * time); // минут
+    document.cookie = name + "=" + val + "; expires=" + expires.toGMTString() + "; path=/";
+}
+
+var desire_clip = {
+
+    sync_taglist: 0,
+
+    init: function init() {
+        desire_clip.action.set();
+        desire_clip.ajax.sync();
+    },
+    ajax: {
+        sync: function sync() {
+            $.get('/sync/taglist/', desire_clip.ajax.parse);
+        },
+        parse: function parse(data) {
+            data = json.parse(data);
+            if (data) {
+                if (data.id && user_tag.sync != data.id) {
+                    user_tag.sync = data.id;
+                    user_tag.action.store();
+                    desire_clip.ajax.load();
+                }
+            }
+        },
+        load: function load() {
+            $.get('/tag/user/', desire_clip.ajax.on_load);
+        },
+        on_load: function on_load(data) {
+            // alert(data)
+            data = json.parse(data);
+            if (data.tags != undefined) {
+                user_tag.list = data.tags;
+                user_tag.option.set_count();
+                user_tag.action.store();
+            }
+            if (data.tags.length > 0) {
+                desire_clip.action.set();
+            }
+        },
+        add: function add(tag) {
+            $.post('/tag/add/', { tag: tag });
+        }
+    },
+    action: {
+        set: function set() {
+            user_tag.action.ids();
+            $('.desire_clip').each(function (i, elem) {
+                $(elem).off('click');
+                $(elem).removeClass('desire_user');
+                if (user_tag.idls.indexOf($(elem).data('id')) >= 0) {
+                    $(elem).addClass('desire_user');
+                } else $(elem).on('click', desire_clip.action.add);
+            });
+            user_tag.option.set_count();
+        },
+        add: function add() {
+            desire_clip.ajax.add($(this).data('tag'));
+            desire_clip.option.toggle(this);
+            //$(this).on('click',desire_clip.action.del);
+            var data = { "tag": $(this).data('tag'), "id": $(this).data('id') };
+            user_tag.list.push(data);
+        },
+        del: function del() {
+            option_tag.ajax.del($(this).data('id'));
+            desire_clip.option.toggle(this);
+            user_tag.list.splice($(this).data('num'), 1);
+            $(this).on('click', desire_clip.action.add);
+        }
+    },
+    option: {
+        toggle: function toggle(elem) {
+            $(elem).off('click');
+            $(elem).toggleClass('desire_user');
+        }
+    }
+};
+
+var device = {
+
+    init: function init() {},
+
+    width: function width() {
+        return $(window).width();
+    },
+
+    height: function height() {
+        return $(window).height(); //document                               
+    }
+
+};
 
 var active_textarea; ////////////////////////////////////////////////////////
 var giper_chat = {
