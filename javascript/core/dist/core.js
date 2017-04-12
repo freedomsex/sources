@@ -42,12 +42,10 @@ var ContactDialog = {
     props: ['quick'],
     data: function data() {
         return {
-            contacts: [],
-            response: null,
+            response: false,
             slow: false,
             next: 0,
-            batch: 10,
-            received: 0
+            batch: 10
         };
     },
 
@@ -56,26 +54,39 @@ var ContactDialog = {
             return this.slow && !this.response;
         },
         showHint: function showHint() {
-            return this.response && this.contacts < 1;
+            return this.count < 1;
+        },
+        count: function count() {
+            var result = this.contacts ? this.contacts.length : 0;
+            return result;
         }
     },
     methods: {
         close: function close() {
             this.$emit('close');
         },
-        onLoad: function onLoad(result) {
-            this.received = result ? result.length : 0;
-            if (this.received) {
-                this.contacts = _.union(this.contacts, result);
-            }
-            this.next += this.batch;
-            this.response = 200;
+        hope: function hope() {
+            var _this = this;
+
+            var sec = 2;
+            setTimeout(function () {
+                return _this.slow = true;
+            }, sec * 1000);
+            this.response = false;
+        },
+        loaded: function loaded(result) {
+            //this.received = result ? result.length : 0;
+            // if (this.received) {
+            //     this.contacts = _.union(this.contacts, result);
+            // }
+            //this.next += this.batch;
+            this.response = true;
             this.slow = false;
         },
         remove: function remove(index) {
             apiContact.remove({ tid: this.contacts[index] });
-            console.log('remove');
-            this.splice();
+            this.splice(index);
+            this.close();
         },
         bun: function bun(index) {
             console.log('bun');
@@ -84,12 +95,13 @@ var ContactDialog = {
                 id: item.cont_id,
                 tid: item.from
             };
-            apiBun.send(data, null, null);
-            this.remove(index);
+            apiBun.send(data);
+            this.splice(index);
+            this.close();
         },
         splice: function splice(index) {
             this.contacts.splice(index, 1);
-            this.close();
+            console.log('remove');
         },
         error: function error(_error) {
             console.log(_error);
@@ -108,20 +120,24 @@ var InitialDialog = Vue.component('initial-dialog', {
         },
         simple: function simple() {
             return true;
+        },
+        contacts: function contacts() {
+            console.log('contacts *** ');
+            return this.$store.state.contacts.initial.list;
         }
     },
     methods: {
         load: function load() {
-            var _this = this;
+            var _this2 = this;
 
-            apiContact.initialList(this.onLoad, this.error);
-            setTimeout(function () {
-                return _this.slow = true;
-            }, 3000);
+            store.dispatch('initial/LOAD').then(function (response) {
+                _this2.loaded();
+            });
+            this.hope();
         },
         remove: function remove(index) {
             console.log('remove');
-            apiContact.ignore({ tid: this.contacts[index].cont_id });
+            //apiContact.ignore({ tid: this.contacts[index].cont_id });
             this.splice();
         }
     },
@@ -136,20 +152,23 @@ var IntimateDialog = Vue.component('intimate-dialog', {
         },
         simple: function simple() {
             return false;
+        },
+        contacts: function contacts() {
+            return this.$store.state.contacts.intimate.list;
         }
     },
     methods: {
         load: function load() {
-            var _this2 = this;
+            var _this3 = this;
 
-            apiContact.intimateList(this.onLoad, this.error);
-            setTimeout(function () {
-                return _this2.slow = true;
-            }, 3000);
+            store.dispatch('intimate/LOAD').then(function (response) {
+                _this3.loaded();
+            });
+            this.hope();
         },
         remove: function remove(index) {
             console.log('remove');
-            apiContact.remove({ tid: this.contacts[index].cont_id });
+            //apiContact.remove({ tid: this.contacts[index].cont_id });
             //this.$emit('remove', this.index);
             this.splice();
         }
@@ -165,16 +184,19 @@ var SendsDialog = Vue.component('sends-dialog', {
         },
         simple: function simple() {
             return false;
+        },
+        contacts: function contacts() {
+            return this.$store.state.contacts.sends.list;
         }
     },
     methods: {
         load: function load() {
-            var _this3 = this;
+            var _this4 = this;
 
-            apiContact.sendsList(this.onLoad, this.error);
-            setTimeout(function () {
-                return _this3.slow = true;
-            }, 3000);
+            store.dispatch('sends/LOAD').then(function (response) {
+                _this4.loaded();
+            });
+            this.hope();
         }
     },
     template: '#initial-dialog'
@@ -231,8 +253,8 @@ Vue.component('contact-item', {
         remove: function remove() {
             this.$emit('remove', this.index);
         },
-        sens: function sens() {
-            this.$emit('remove', this.index);
+        splice: function splice() {
+            this.$emit('splice', this.index);
         },
         cancel: function cancel() {
             this.confirm = false;
@@ -250,6 +272,26 @@ Vue.component('inform-dialog', {
         }
     },
     template: '#inform-dialog'
+});
+
+Vue.component('modal-dialog', {
+    props: ['show', 'data'],
+    methods: {
+        close: function close() {
+            this.$emit('close');
+        }
+    },
+    mounted: function mounted() {
+        // Close the modal when the escape key is pressed.
+        var self = this;
+        document.addEventListener('keydown', function () {
+            if (self.show && event.keyCode === 27) {
+                self.close();
+            }
+        });
+    },
+
+    template: '#modal-dialog'
 });
 
 ///
@@ -351,16 +393,27 @@ Vue.component('quick-reply', {
             this.confirm = false;
             console.log('cancel');
         },
+        inProcess: function inProcess(sec) {
+            var _this5 = this;
+
+            this.process = true;
+            setTimeout(function () {
+                return _this5.process = false;
+            }, sec * 1000);
+        },
         send: function send() {
             var data = {
                 id: tid,
                 mess: this.message,
                 captcha_code: this.code
             };
-            //apiMessages.send(data, this.handler, null);
-            this.captcha = true;
-            this.process = true;
-            console.log('send');
+            // apiMessages.send(data).then((response) => {
+            //     this.handler(response.data);
+            // }).catch((error) => {
+            //     this.error(error);
+            // });
+            this.sended();
+            this.inProcess(5);
         },
         setCode: function setCode(code) {
             this.code = code;
@@ -373,11 +426,12 @@ Vue.component('quick-reply', {
                 }
                 this.error();
             } else {
-                this.sended(response);
+                this.sended();
             }
             this.process = false;
         },
-        sended: function sended(response) {
+        sended: function sended() {
+            console.log('send');
             this.$emit('sended');
         },
         error: function error() {
@@ -385,6 +439,60 @@ Vue.component('quick-reply', {
         }
     },
     template: '#quick-reply'
+});
+
+Vue.component('remove-confirm', {
+    props: ['show'],
+    data: function data() {
+        return {
+            content: {
+                doit: {
+                    caption: 'Наказывайте как следует',
+                    text: '\u0417\u0430 \u0440\u0435\u0437\u043A\u0438\u0435 \u0441\u043B\u043E\u0432\u0430, \u0437\u0430 \u043E\u0441\u043A\u043E\u0440\u0431\u043B\u0435\u043D\u0438\u044F \u0438\u043B\u0438 \u0445\u0430\u043C\u0441\u0442\u0432\u043E,\n                    \u0437\u0430 \u0444\u043E\u0442\u043E\u0433\u0440\u0430\u0444\u0438\u0438 \u043D\u0435 \u0432 \u0442\u0435\u043C\u0443 \u0438\u043B\u0438 \u0431\u0435\u0441\u0441\u043C\u044B\u0441\u043B\u0435\u043D\u043D\u044B\u0435 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u044F, \u043D\u0430\u043A\u0430\u0437\u044B\u0432\u0430\u0439\u0442\u0435 \u0432\u0441\u0435\u0445, \u043A\u043E\u0433\u043E\n                    \u0441\u0447\u0438\u0442\u0430\u0435\u0442\u0435 \u043D\u0443\u0436\u043D\u044B\u043C. \u041D\u0430\u043A\u0430\u0437\u0430\u043D\u0438\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u0435\u0442 \u0441\u0440\u0430\u0437\u0443.',
+                    action: 'Удалить и наказать'
+                },
+                must: {
+                    caption: 'Может стоит наказать?',
+                    text: '\u041D\u0430\u0436\u043C\u0438\u0442\u0435 "\u0414\u0438\u0437\u043B\u0430\u0439\u043A" \u0443 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u044F, \u043A\u043E\u0442\u043E\u0440\u043E\u0435 \u0432\u044B\u0437\u0432\u0430\u043B\u043E \u043D\u0435\u0433\u0430\u0442\u0438\u0432\u043D\u044B\u0435 \u044D\u043C\u043E\u0446\u0438\u0438.\n                    \u041D\u0430\u043A\u0430\u0437\u0430\u043D\u0438\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u0435\u0442 \u0441\u0440\u0430\u0437\u0443 \u0436\u0435. \u041C\u044B \u043D\u0438\u043A\u043E\u0433\u0434\u0430 \u043D\u0435 \u0443\u0437\u043D\u0430\u0435\u043C \u043E \u043D\u0430\u0440\u0443\u0448\u0435\u043D\u0438\u044F\u0445\n                    \u0441\u043E\u0431\u0435\u0441\u0435\u0434\u043D\u0438\u043A\u0430, \u0435\u0441\u043B\u0438 \u0443\u0434\u0430\u043B\u0438\u0442\u044C \u0431\u0435\u0437 \u043D\u0430\u043A\u0430\u0437\u0430\u043D\u0438\u044F.',
+                    action: 'Удалить и забыть'
+                },
+                some: {
+                    caption: 'Удалить навсегда',
+                    text: '\u0412\u0430\u0448\u0435 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435 \u0431\u0443\u0434\u0435\u0442 \u0443\u0434\u0430\u043B\u0435\u043D\u043E \u043E\u0442\u043E\u0432\u0441\u044E\u0434\u0443, \u0431\u0435\u0437 \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0441\u0442\u0438 \u0432\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C. \u0421\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435\n                    \u043F\u0440\u043E\u043F\u0430\u0434\u0435\u0442 \u043A\u0430\u043A \u0438\u0437 \u0432\u0430\u0448\u0435\u0439 \u0438\u0441\u0442\u043E\u0440\u0438\u0438 \u043F\u0435\u0440\u0435\u043F\u0438\u0441\u043A\u0438, \u0442\u0430\u043A \u0438 \u0438\u0437 \u043F\u0435\u0440\u0435\u043F\u0438\u0441\u043A\u0438 \u0432\u0430\u0448\u0435\u0433\u043E \u0441\u043E\u0431\u0435\u0441\u0435\u0434\u043D\u0438\u043A\u0430.',
+                    action: 'Удалить навсегда'
+                }
+            }
+        };
+    },
+
+    computed: {
+        variant: function variant() {
+            return this.show ? this.show : 'some';
+        },
+        caption: function caption() {
+            return this.content[this.variant].caption;
+        },
+        text: function text() {
+            return this.content[this.variant].text;
+        },
+        action: function action() {
+            return this.content[this.variant].action;
+        }
+    },
+    methods: {
+        close: function close() {
+            this.$emit('close');
+        },
+        bun: function bun() {
+            this.$emit('bun');
+            this.close();
+        },
+        remove: function remove() {
+            this.$emit('remove');
+            this.close();
+        }
+    },
+    template: '#remove-confirm'
 });
 
 Vue.component('upload-dialog', {
@@ -406,7 +514,7 @@ Vue.component('upload-dialog', {
     },
     methods: {
         loadPhoto: function loadPhoto() {
-            var _this4 = this;
+            var _this6 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
@@ -415,7 +523,7 @@ Vue.component('upload-dialog', {
             axios.get('http://' + this.server + '/api/v1/users/' + uid + '/photos', config).then(function (response) {
                 var result = response.data.photos;
                 if (result && result.length) {
-                    _this4.photos = response.data.photos;
+                    _this6.photos = response.data.photos;
                 }
                 //console.log(this.photos);
             }).catch(function (error) {
@@ -522,12 +630,8 @@ var ApiBun = function (_Api) {
 
     _createClass(ApiBun, [{
         key: 'send',
-        value: function send(data, handler, error) {
-            axios.post('mess/bun/', data, this.config).then(function (response) {
-                //this.$emit('remove', this.index);
-            }).catch(function (error) {
-                //console.log('error');
-            });
+        value: function send(data) {
+            return axios.post('mess/bun/', data, this.config);
             console.log('ApiBun Bun-Bun');
         }
     }]);
@@ -549,44 +653,52 @@ var ApiContact = function (_Api2) {
     _createClass(ApiContact, [{
         key: 'remove',
         value: function remove(data, handler, error) {
-            axios.post('human/delete/', data, this.config).then(function (response) {
-                //this.$emit('remove', this.index);
-            }).catch(function (error) {
-                //console.log('error');
+            var _this9 = this;
+
+            return axios.post('human/delete/', data, this.config).catch(function (error) {
+                _this9.error(error);
             });
             console.log('ApiContact removed');
         }
     }, {
         key: 'ignore',
         value: function ignore(data, handler, error) {
-            axios.post('human/ignore/', data, this.config).then(function (response) {}).catch(function (e) {
-                error(e);
+            var _this10 = this;
+
+            return axios.post('human/ignore/', data, this.config).catch(function (error) {
+                _this10.error(error);
             });
             console.log('ApiContact ignored');
         }
     }, {
         key: 'getList',
-        value: function getList(url, handler, error) {
-            axios.get('/contact/list/' + url + '/', this.config).then(function (response) {
-                handler(response.data);
-            }).catch(function (error) {
-                error(error);
+        value: function getList(url) {
+            var _this11 = this;
+
+            return axios.get('/contact/list/' + url + '/', this.config).catch(function (error) {
+                _this11.error(error);
             });
         }
     }, {
         key: 'initialList',
-        value: function initialList(handler, error) {
-            this.getList('initial', handler, error);
+        value: function initialList() {
+            var _this12 = this;
+
+            return new Promise(function (resolve, reject) {
+                setTimeout(function () {
+                    resolve(_this12.getList('initial'));
+                }, 5000);
+            });
         }
     }, {
         key: 'intimateList',
-        value: function intimateList(handler, error) {
-            this.getList('intimate', handler, error);
+        value: function intimateList() {
+            return this.getList('intimate');
         }
     }, {
         key: 'sendsList',
-        value: function sendsList(handler, error) {
-            this.getList('sends', handler, error);
+        value: function sendsList() {
+            return this.getList('sends');
         }
     }]);
 
@@ -606,13 +718,9 @@ var ApiMessages = function (_Api3) {
 
     _createClass(ApiMessages, [{
         key: 'send',
-        value: function send(data, handler, error) {
+        value: function send(data) {
             console.log(this);
-            axios.post('mailer/post/', data, this.config).then(function (response) {
-                handler(response.data);
-            }).catch(function (error) {
-                console.log(error);
-            });
+            return axios.post('mailer/post/', data, this.config);
             console.log('ApiMessages send !!!');
         }
     }]);
@@ -633,15 +741,14 @@ var ApiUser = function (_Api4) {
 
     _createClass(ApiUser, [{
         key: 'saveSex',
-        value: function saveSex(data, handler, error) {
-            axios.post('/option/sex/', data, this.config).then(function (response) {
+        value: function saveSex(data) {
+            return axios.post('/option/sex/', data, this.config).then(function (response) {
                 if (response.data.sex) {
                     store.commit('loadUser', { sex: response.data.sex });
                     handler();
                 }
             }).catch(function (e) {
                 console.log(e);
-                error();
             });
         }
     }]);
@@ -663,26 +770,90 @@ var apiMessages = new ApiMessages('', 1234);
 
 //ApiMessages.send();
 
-var contacts = {
-    state: {
-        initial: [],
-        intimate: [],
-        sends: []
-    },
-    actions: {
-        LOAD_INTIMATES: function LOAD_INTIMATES(_ref) {
-            var commit = _ref.commit;
 
-            var contacts = ls.get('intimate-contacts');
-            if (contacts && contacts.length > 0) {
-                commit('addIntimate', contacts);
+var mutations = {
+    mutations: {
+        load: function load(state, data) {
+            console.log('initial-contacts');
+            console.log(data);
+            if (data && data.length > 0) {
+                state.list = data;
+            }
+        },
+        add: function add(state, data) {
+            if (data && data.length > 0) {
+                _.extend(state.list, data);
             }
         }
+    }
+};
+// // //
+
+var initial = _.extend({
+    namespaced: true,
+    state: {
+        list: []
     },
-    mutations: {
-        addIntimate: function addIntimate(state, data) {
-            _.extend(state.contacts.intimate, data);
+    actions: {
+        LOAD: function LOAD(_ref) {
+            var commit = _ref.commit;
+
+            //commit('load', ls.get('initial-contacts'));
+            var promise = apiContact.initialList();
+            promise.then(function (response) {
+                commit('load', response.data);
+                ls.set('initial-contacts', response.data);
+            });
+            return promise;
         }
+    }
+}, mutations);
+
+var intimate = _.extend({
+    namespaced: true,
+    state: {
+        list: []
+    },
+    actions: {
+        LOAD: function LOAD(_ref2) {
+            var commit = _ref2.commit;
+
+            commit('load', ls.get('intimate-contacts'));
+            var promise = apiContact.intimateList();
+            promise.then(function (response) {
+                commit('load', response.data);
+                //ls.set('intimate-contacts', state.contacts.intimate);
+            });
+            return promise;
+        }
+    }
+}, mutations);
+
+var sends = _.extend({
+    namespaced: true,
+    state: {
+        list: []
+    },
+    actions: {
+        LOAD: function LOAD(_ref3) {
+            var commit = _ref3.commit;
+
+            commit('load', ls.get('sends-contacts'));
+            var promise = apiContact.sendsList();
+            promise.then(function (response) {
+                commit('load', response.data);
+                //ls.set('intimate-contacts', state.contacts.intimate);
+            });
+            return promise;
+        }
+    }
+}, mutations);
+
+var contacts = {
+    modules: {
+        initial: initial,
+        intimate: intimate,
+        sends: sends
     }
 };
 
@@ -692,8 +863,8 @@ var user = {
         sex: 0
     },
     actions: {
-        LOAD_USER: function LOAD_USER(_ref2) {
-            var commit = _ref2.commit;
+        LOAD_USER: function LOAD_USER(_ref4) {
+            var commit = _ref4.commit;
 
             if (typeof user_sex != 'undefined') {
                 commit('loadUser', {
@@ -751,13 +922,13 @@ var store = new Vuex.Store({
         }
     },
     actions: {
-        LOAD_API_TOKEN: function LOAD_API_TOKEN(_ref3) {
-            var commit = _ref3.commit;
+        LOAD_API_TOKEN: function LOAD_API_TOKEN(_ref5) {
+            var commit = _ref5.commit;
 
             commit('setApiToken', { apiToken: get_cookie('jwt') });
         },
-        LOAD_ACCEPTS: function LOAD_ACCEPTS(_ref4) {
-            var commit = _ref4.commit;
+        LOAD_ACCEPTS: function LOAD_ACCEPTS(_ref6) {
+            var commit = _ref6.commit;
 
             var accepts = ls.get('accepts');
             if (accepts && accepts.photo) {
@@ -1462,6 +1633,16 @@ var json = {
         return JSON.stringify(str);
     }
 };
+
+Vue.component('loading-cover', {
+    props: ['show', 'text'],
+    computed: {
+        loader: function loader() {
+            return this.text ? this.text : 'Отправляю';
+        }
+    },
+    template: '#loading-cover'
+});
 
 // Установки  почты        
 var mailsett = {

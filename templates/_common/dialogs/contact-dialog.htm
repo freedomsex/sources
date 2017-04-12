@@ -5,13 +5,14 @@
     <span slot="context">Когда вы отправляете или вам отправляют самое первое сообщение, это считается предложением знакомства.</span>
     <span slot="hint">Здесь будет список ваших предложений знакомства.</span>
 
-    <div class="" v-if="response && contacts.length">
+    <div class="" v-if="count">
       <contact-item v-for="(item, index) in contacts"
         :item="item"
         :index="index"
         :initial="initial"
         @bun="bun"
         @close="close"
+        @splice="splice"
         @remove="remove"/>
     </div>
   </inform-dialog>
@@ -24,13 +25,14 @@
     <span slot="context">Отвечайте на предложения знакомства. Ваши активные диалоги сохраняются здесь, отдельно от предложений знакомства.</span>
     <span slot="hint">Здесь будет список ваших контактов, сообщений, диалогов.</span>
 
-    <div class="" v-if="response && contacts.length">
+    <div class="" v-if="count">
       <contact-item v-for="(item, index) in contacts"
         :item="item"
         :index="index"
         :initial="initial"
         @bun="bun"
         @close="close"
+        @splice="splice"
         @remove="remove"/>
     </div>
   </inform-dialog>

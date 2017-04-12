@@ -40,16 +40,23 @@ Vue.component('quick-reply', {
             this.confirm = false;
             console.log('cancel');
         },
+        inProcess(sec) {
+            this.process = true;
+            setTimeout(() => this.process = false, sec*1000);
+        },
         send() {
             let data = {
                 id: tid,
                 mess: this.message,
                 captcha_code: this.code
             };
-            //apiMessages.send(data, this.handler, null);
-               this.captcha = true;
-            this.process = true;
-            console.log('send');
+            // apiMessages.send(data).then((response) => {
+            //     this.handler(response.data);
+            // }).catch((error) => {
+            //     this.error(error);
+            // });
+              this.sended();
+            this.inProcess(5);
         },
         setCode(code) {
             this.code = code;
@@ -62,11 +69,12 @@ Vue.component('quick-reply', {
                 }
                 this.error();
             } else {
-                this.sended(response);
+                this.sended();
             }
             this.process = false;
         },
-        sended(response) {
+        sended() {
+            console.log('send');
             this.$emit('sended');
         },
         error() {

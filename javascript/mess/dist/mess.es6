@@ -815,11 +815,17 @@ var FormMess = new Vue({
                 data['mess'] = this.message;
                 data['re'] = this.reply;
             }
-            apiMessages.send(data, this.handler, null);
+            apiMessages.send(data).then((response) => {
+                this.handler(response.data);
+            });
             this.process = true;
         },
         sendSex(sex) {
-            apiUser.saveSex({ sex }, this.sendMessage, this.error);
+            apiUser.saveSex({ sex }).then((response) => {
+                this.sendMessage(response.data);
+            }).catch((error) => {
+                this.error(error);
+            });
             this.process = true;
         },
         handler(response) {
@@ -1020,90 +1026,6 @@ var lock_user = {
     }
 
 }
-
-
-const ModalDialog = Vue.component('modal-dialog', {
-    props: ['show', 'data'],
-    methods: {
-        close() {
-            this.$emit('close');
-        },
-    },
-    mounted() {
-        // Close the modal when the escape key is pressed.
-        var self = this;
-        document.addEventListener('keydown', function() {
-            if (self.show && event.keyCode === 27) {
-                self.close();
-            }
-        });
-    },
-    template: '#modal-dialog',
-})
-
-
-const RemoveConfirm = Vue.component('remove-confirm', {
-    props: ['show'],
-    components: {
-        modal: ModalDialog,
-    },
-    data() {
-        return {
-            content: {
-                doit: {
-                    caption: 'Наказывайте как следует',
-                    text: `За резкие слова, за оскорбления или хамство,
-                    за фотографии не в тему или бессмысленные сообщения, наказывайте всех, кого
-                    считаете нужным. Наказание действует сразу.`,
-                    action: 'Удалить и наказать'
-                },
-                must: {
-                    caption: 'Может стоит наказать?',
-                    text: `Нажмите "Дизлайк" у сообщения, которое вызвало негативные эмоции.
-                    Наказание действует сразу же. Мы никогда не узнаем о нарушениях
-                    собеседника, если удалить без наказания.`,
-                    action: 'Удалить и забыть'
-                },
-                some: {
-                    caption: 'Удалить навсегда',
-                    text: `Ваше сообщение будет удалено отовсюду, без возможности восстановить. Сообщение
-                    пропадет как из вашей истории переписки, так и из переписки вашего собеседника.`,
-                    action: 'Удалить навсегда'
-                }
-            }
-        }
-    },
-    computed: {
-        variant() {
-            return this.show ? this.show : 'some';
-        },
-        caption() {
-            return this.content[this.variant].caption;
-        },
-        text() {
-            return this.content[this.variant].text;
-        },
-        action() {
-            return this.content[this.variant].action;
-        },
-    },
-    methods: {
-        close() {
-            this.$emit('close');
-        },
-        bun() {
-            this.$emit('bun');
-            this.close();
-        },
-        remove() {
-            this.$emit('remove');
-            this.close();
-        },
-    },
-    template: '#remove-confirm',
-})
-
-
 
 
 var fdate = null;

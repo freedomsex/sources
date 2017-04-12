@@ -76,11 +76,17 @@ var FormMess = new Vue({
                 data['mess'] = this.message;
                 data['re'] = this.reply;
             }
-            apiMessages.send(data, this.handler, null);
+            apiMessages.send(data).then((response) => {
+                this.handler(response.data);
+            });
             this.process = true;
         },
         sendSex(sex) {
-            apiUser.saveSex({ sex }, this.sendMessage, this.error);
+            apiUser.saveSex({ sex }).then((response) => {
+                this.sendMessage(response.data);
+            }).catch((error) => {
+                this.error(error);
+            });
             this.process = true;
         },
         handler(response) {

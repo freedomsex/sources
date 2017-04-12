@@ -33,8 +33,10 @@
         </tr>
       </table>
     </div>
+    <loading-cover :show="process"/>
 
     <remove-confirm :show="confirm" @bun="bun" @close="cancel" @remove="remove"/>
     <captcha-dialog :show="captcha" @close="close" @cancel="cancel" @send="setCode"/>
   </modal-dialog>
 </script>
+

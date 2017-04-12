@@ -714,6 +714,8 @@ var FormMess = new Vue({
             // window.location.reload();
         },
         sendMessage: function sendMessage() {
+            var _this2 = this;
+
             // TODO: убрать из формы старое говно
             var data = {
                 id: this.tid,
@@ -725,11 +727,19 @@ var FormMess = new Vue({
                 data['mess'] = this.message;
                 data['re'] = this.reply;
             }
-            apiMessages.send(data, this.handler, null);
+            apiMessages.send(data).then(function (response) {
+                _this2.handler(response.data);
+            });
             this.process = true;
         },
         sendSex: function sendSex(sex) {
-            apiUser.saveSex({ sex: sex }, this.sendMessage, this.error);
+            var _this3 = this;
+
+            apiUser.saveSex({ sex: sex }).then(function (response) {
+                _this3.sendMessage(response.data);
+            }).catch(function (error) {
+                _this3.error(error);
+            });
             this.process = true;
         },
         handler: function handler(response) {
@@ -789,14 +799,14 @@ var incoming_photo = new Vue({
     },
     methods: {
         loadPhoto: function loadPhoto() {
-            var _this2 = this;
+            var _this4 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
                 params: { tid: tid, hash: hash }
             };
             axios.get('http://' + this.server + '/api/v1/users/' + uid + '/sends', config).then(function (response) {
-                _this2.photos = response.data.photos;
+                _this4.photos = response.data.photos;
                 //console.log(this.photos);
             }).catch(function (error) {
                 console.log(error);
@@ -909,83 +919,6 @@ var lock_user = {
 
 };
 
-var ModalDialog = Vue.component('modal-dialog', {
-    props: ['show', 'data'],
-    methods: {
-        close: function close() {
-            this.$emit('close');
-        }
-    },
-    mounted: function mounted() {
-        // Close the modal when the escape key is pressed.
-        var self = this;
-        document.addEventListener('keydown', function () {
-            if (self.show && event.keyCode === 27) {
-                self.close();
-            }
-        });
-    },
-
-    template: '#modal-dialog'
-});
-
-var RemoveConfirm = Vue.component('remove-confirm', {
-    props: ['show'],
-    components: {
-        modal: ModalDialog
-    },
-    data: function data() {
-        return {
-            content: {
-                doit: {
-                    caption: 'Наказывайте как следует',
-                    text: '\u0417\u0430 \u0440\u0435\u0437\u043A\u0438\u0435 \u0441\u043B\u043E\u0432\u0430, \u0437\u0430 \u043E\u0441\u043A\u043E\u0440\u0431\u043B\u0435\u043D\u0438\u044F \u0438\u043B\u0438 \u0445\u0430\u043C\u0441\u0442\u0432\u043E,\n                    \u0437\u0430 \u0444\u043E\u0442\u043E\u0433\u0440\u0430\u0444\u0438\u0438 \u043D\u0435 \u0432 \u0442\u0435\u043C\u0443 \u0438\u043B\u0438 \u0431\u0435\u0441\u0441\u043C\u044B\u0441\u043B\u0435\u043D\u043D\u044B\u0435 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u044F, \u043D\u0430\u043A\u0430\u0437\u044B\u0432\u0430\u0439\u0442\u0435 \u0432\u0441\u0435\u0445, \u043A\u043E\u0433\u043E\n                    \u0441\u0447\u0438\u0442\u0430\u0435\u0442\u0435 \u043D\u0443\u0436\u043D\u044B\u043C. \u041D\u0430\u043A\u0430\u0437\u0430\u043D\u0438\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u0435\u0442 \u0441\u0440\u0430\u0437\u0443.',
-                    action: 'Удалить и наказать'
-                },
-                must: {
-                    caption: 'Может стоит наказать?',
-                    text: '\u041D\u0430\u0436\u043C\u0438\u0442\u0435 "\u0414\u0438\u0437\u043B\u0430\u0439\u043A" \u0443 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u044F, \u043A\u043E\u0442\u043E\u0440\u043E\u0435 \u0432\u044B\u0437\u0432\u0430\u043B\u043E \u043D\u0435\u0433\u0430\u0442\u0438\u0432\u043D\u044B\u0435 \u044D\u043C\u043E\u0446\u0438\u0438.\n                    \u041D\u0430\u043A\u0430\u0437\u0430\u043D\u0438\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u0435\u0442 \u0441\u0440\u0430\u0437\u0443 \u0436\u0435. \u041C\u044B \u043D\u0438\u043A\u043E\u0433\u0434\u0430 \u043D\u0435 \u0443\u0437\u043D\u0430\u0435\u043C \u043E \u043D\u0430\u0440\u0443\u0448\u0435\u043D\u0438\u044F\u0445\n                    \u0441\u043E\u0431\u0435\u0441\u0435\u0434\u043D\u0438\u043A\u0430, \u0435\u0441\u043B\u0438 \u0443\u0434\u0430\u043B\u0438\u0442\u044C \u0431\u0435\u0437 \u043D\u0430\u043A\u0430\u0437\u0430\u043D\u0438\u044F.',
-                    action: 'Удалить и забыть'
-                },
-                some: {
-                    caption: 'Удалить навсегда',
-                    text: '\u0412\u0430\u0448\u0435 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435 \u0431\u0443\u0434\u0435\u0442 \u0443\u0434\u0430\u043B\u0435\u043D\u043E \u043E\u0442\u043E\u0432\u0441\u044E\u0434\u0443, \u0431\u0435\u0437 \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0441\u0442\u0438 \u0432\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C. \u0421\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435\n                    \u043F\u0440\u043E\u043F\u0430\u0434\u0435\u0442 \u043A\u0430\u043A \u0438\u0437 \u0432\u0430\u0448\u0435\u0439 \u0438\u0441\u0442\u043E\u0440\u0438\u0438 \u043F\u0435\u0440\u0435\u043F\u0438\u0441\u043A\u0438, \u0442\u0430\u043A \u0438 \u0438\u0437 \u043F\u0435\u0440\u0435\u043F\u0438\u0441\u043A\u0438 \u0432\u0430\u0448\u0435\u0433\u043E \u0441\u043E\u0431\u0435\u0441\u0435\u0434\u043D\u0438\u043A\u0430.',
-                    action: 'Удалить навсегда'
-                }
-            }
-        };
-    },
-
-    computed: {
-        variant: function variant() {
-            return this.show ? this.show : 'some';
-        },
-        caption: function caption() {
-            return this.content[this.variant].caption;
-        },
-        text: function text() {
-            return this.content[this.variant].text;
-        },
-        action: function action() {
-            return this.content[this.variant].action;
-        }
-    },
-    methods: {
-        close: function close() {
-            this.$emit('close');
-        },
-        bun: function bun() {
-            this.$emit('bun');
-            this.close();
-        },
-        remove: function remove() {
-            this.$emit('remove');
-            this.close();
-        }
-    },
-    template: '#remove-confirm'
-});
-
 var fdate = null;
 var prev = null;
 
@@ -1012,7 +945,7 @@ Vue.component('message-item', {
             }
         },
         bun: function bun() {
-            var _this3 = this;
+            var _this5 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken }
@@ -1022,7 +955,7 @@ Vue.component('message-item', {
                 tid: this.item.from
             };
             axios.post('/mess/bun/', data, config).then(function (response) {
-                _this3.$emit('remove', _this3.index);
+                _this5.$emit('remove', _this5.index);
             }).catch(function (error) {
                 console.log('error');
             });
@@ -1032,7 +965,7 @@ Vue.component('message-item', {
             console.log('cancel');
         },
         remove: function remove() {
-            var _this4 = this;
+            var _this6 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken }
@@ -1041,14 +974,14 @@ Vue.component('message-item', {
                 id: this.item.id
             };
             axios.post('/mess/delete/', data, config).then(function (response) {
-                _this4.$emit('remove', _this4.index);
+                _this6.$emit('remove', _this6.index);
             }).catch(function (error) {
                 console.log(error);
             });
             console.log('remove');
         },
         play: function play() {
-            var _this5 = this;
+            var _this7 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
@@ -1057,7 +990,7 @@ Vue.component('message-item', {
             var server = this.$store.state.photoServer;
             var url = 'http://' + server + '/api/v1/users/' + uid + '/sends/' + this.alias + '.jpg';
             axios.get(url, config).then(function (response) {
-                _this5.photo(response.data.photo);
+                _this7.photo(response.data.photo);
             }).catch(function (error) {
                 console.log('error');
             });
@@ -1190,7 +1123,7 @@ var MessList = new Vue({
             //TODO: переписать глобальную зависимость
         },
         load: function load() {
-            var _this6 = this;
+            var _this8 = this;
 
             //console.log('load MessList data');
             this.response = 0;
@@ -1199,13 +1132,13 @@ var MessList = new Vue({
                 params: { id: this.tid, next: this.next, hash: hash }
             };
             axios.get('/ajax/messages_load.php', config).then(function (response) {
-                _this6.onLoad(response);
+                _this8.onLoad(response);
             }).catch(function (error) {
-                _this6.error = 10;
+                _this8.error = 10;
                 console.log(error);
             });
             setTimeout(function () {
-                return _this6.toSlow = true;
+                return _this8.toSlow = true;
             }, 7000);
         },
         onLoad: function onLoad(response) {

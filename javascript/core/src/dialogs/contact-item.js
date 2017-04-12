@@ -53,8 +53,8 @@ Vue.component('contact-item', {
         remove() {
             this.$emit('remove', this.index);
         },
-        sens() {
-            this.$emit('remove', this.index);
+        splice() {
+            this.$emit('splice', this.index);
         },
         cancel() {
             this.confirm = false;

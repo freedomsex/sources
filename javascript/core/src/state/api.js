@@ -15,78 +15,67 @@ class Api {
 };
 
 class ApiBun extends Api {
-    send(data, handler, error) {
-        axios.post('mess/bun/', data, this.config).then((response) => {
-            //this.$emit('remove', this.index);
-        }).catch((error) => {
-            //console.log('error');
-        });
+    send(data) {
+        return axios.post('mess/bun/', data, this.config);
         console.log('ApiBun Bun-Bun');
     }
 };
 
 class ApiContact extends Api {
     remove(data, handler, error) {
-        axios.post('human/delete/', data, this.config).then((response) => {
-            //this.$emit('remove', this.index);
-        }).catch((error) => {
-            //console.log('error');
+        return axios.post('human/delete/', data, this.config).catch((error) => {
+            this.error(error);
         });
         console.log('ApiContact removed');
     }
 
     ignore(data, handler, error) {
-        axios.post('human/ignore/', data, this.config).then((response) => {
-
-        }).catch((e) => {
-            error(e);
+        return axios.post('human/ignore/', data, this.config).catch((error) => {
+            this.error(error);
         });
         console.log('ApiContact ignored');
     }
 
-    getList(url, handler, error) {
-        axios.get(`/contact/list/${url}/`, this.config).then((response) => {
-            handler(response.data);
-        }).catch((error) => {
-            error(error);
+    getList(url) {
+        return axios.get(`/contact/list/${url}/`, this.config).catch((error) => {
+            this.error(error);
         });
     }
 
-    initialList(handler, error) {
-        this.getList('initial', handler, error);
+    initialList() {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve(this.getList('initial'));
+            }, 5000);
+        });
     }
 
-    intimateList(handler, error) {
-        this.getList('intimate', handler, error);
+    intimateList() {
+        return this.getList('intimate');
     }
 
-    sendsList(handler, error) {
-        this.getList('sends', handler, error);
+    sendsList() {
+        return this.getList('sends');
     }
 };
 
 class ApiMessages extends Api {
-    send(data, handler, error) {
+    send(data) {
         console.log(this);
-        axios.post('mailer/post/', data, this.config).then((response) => {
-            handler(response.data);
-        }).catch((error) => {
-            console.log(error);
-        });
+        return axios.post('mailer/post/', data, this.config);
         console.log('ApiMessages send !!!');
     }
 };
 
 class ApiUser extends Api {
-    saveSex(data, handler, error) {
-        axios.post('/option/sex/', data, this.config).then((response) => {
+    saveSex(data) {
+        return axios.post('/option/sex/', data, this.config).then((response) => {
             if (response.data.sex) {
                 store.commit('loadUser', { sex: response.data.sex });
                 handler();
             }
         }).catch((e) => {
             console.log(e);
-            error();
         });
     }
 };

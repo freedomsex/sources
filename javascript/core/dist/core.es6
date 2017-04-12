@@ -35,12 +35,10 @@ var ContactDialog = {
     ],
     data() {
         return {
-            contacts: [],
-            response: null,
+            response: false,
             slow: false,
             next: 0,
-            batch: 10,
-            received: 0
+            batch: 10
         }
     },
     computed: {
@@ -48,26 +46,35 @@ var ContactDialog = {
             return this.slow && !this.response;
         },
         showHint() {
-            return this.response && this.contacts < 1;
+            return this.count < 1;
         },
+        count() {
+            let result = this.contacts ? this.contacts.length : 0;
+            return result;
+        }
     },
     methods: {
         close() {
             this.$emit('close');
         },
-        onLoad(result) {
-            this.received = result ? result.length : 0;
-            if (this.received) {
-                this.contacts = _.union(this.contacts, result);
-            }
-            this.next += this.batch;
-            this.response = 200;
+        hope() {
+            let sec = 2;
+            setTimeout(() => this.slow = true,  sec * 1000);
+            this.response = false;
+        },
+        loaded(result) {
+            //this.received = result ? result.length : 0;
+            // if (this.received) {
+            //     this.contacts = _.union(this.contacts, result);
+            // }
+            //this.next += this.batch;
+            this.response = true;
             this.slow = false;
         },
         remove(index) {
             apiContact.remove({ tid: this.contacts[index] });
-            console.log('remove');
-            this.splice();
+            this.splice(index);
+            this.close();
         },
         bun(index) {
             console.log('bun');
@@ -78,12 +85,13 @@ var ContactDialog = {
                 //text: this.item.message,
                 //token: 'super secret token'
             };
-            apiBun.send(data, null, null);
-            this.remove(index);
+            apiBun.send(data);
+            this.splice(index);
+            this.close();
         },
         splice(index) {
             this.contacts.splice(index, 1);
-            this.close();
+            console.log('remove');
         },
         error(error) {
             console.log(error);
@@ -100,15 +108,21 @@ const InitialDialog = Vue.component('initial-dialog', {
     computed: {
         initial: () => true,
         simple:  () => true,
+        contacts() {
+            console.log('contacts *** ');
+            return this.$store.state.contacts.initial.list;
+        }
     },
     methods: {
         load() {
-            apiContact.initialList(this.onLoad, this.error);
-            setTimeout(() => this.slow = true, 3000);
+            store.dispatch('initial/LOAD').then((response) => {
+                this.loaded();
+            });
+            this.hope();
         },
         remove(index) {
             console.log('remove');
-            apiContact.ignore({ tid: this.contacts[index].cont_id });
+            //apiContact.ignore({ tid: this.contacts[index].cont_id });
             this.splice();
         },
     },
@@ -120,15 +134,20 @@ const IntimateDialog = Vue.component('intimate-dialog', {
     computed: {
         initial: () => true,
         simple:  () => false,
+        contacts() {
+            return this.$store.state.contacts.intimate.list;
+        }
     },
     methods: {
         load() {
-            apiContact.intimateList(this.onLoad, this.error);
-            setTimeout(() => this.slow = true, 3000);
+            store.dispatch('intimate/LOAD').then((response) => {
+                this.loaded();
+            });
+            this.hope();
         },
         remove(index) {
             console.log('remove');
-            apiContact.remove({ tid: this.contacts[index].cont_id });
+            //apiContact.remove({ tid: this.contacts[index].cont_id });
             //this.$emit('remove', this.index);
             this.splice();
         },
@@ -141,11 +160,16 @@ const SendsDialog = Vue.component('sends-dialog', {
     computed: {
         initial: () => false,
         simple:  () => false,
+        contacts() {
+            return this.$store.state.contacts.sends.list;
+        }
     },
     methods: {
         load() {
-            apiContact.sendsList(this.onLoad, this.error);
-            setTimeout(() => this.slow = true, 3000);
+            store.dispatch('sends/LOAD').then((response) => {
+                this.loaded();
+            });
+            this.hope();
         },
     },
     template: '#initial-dialog'
@@ -207,8 +231,8 @@ Vue.component('contact-item', {
         remove() {
             this.$emit('remove', this.index);
         },
-        sens() {
-            this.$emit('remove', this.index);
+        splice() {
+            this.$emit('splice', this.index);
         },
         cancel() {
             this.confirm = false;
@@ -232,6 +256,26 @@ Vue.component('inform-dialog', {
     },
     template: '#inform-dialog'
 });
+
+Vue.component('modal-dialog', {
+    props: ['show', 'data'],
+    methods: {
+        close() {
+            this.$emit('close');
+        },
+    },
+    mounted() {
+        // Close the modal when the escape key is pressed.
+        var self = this;
+        document.addEventListener('keydown', function() {
+            if (self.show && event.keyCode === 27) {
+                self.close();
+            }
+        });
+    },
+    template: '#modal-dialog',
+});
+
 
 ///
 // Модальное окно настроек OptionDialog - контейнер
@@ -337,16 +381,23 @@ Vue.component('quick-reply', {
             this.confirm = false;
             console.log('cancel');
         },
+        inProcess(sec) {
+            this.process = true;
+            setTimeout(() => this.process = false, sec*1000);
+        },
         send() {
             let data = {
                 id: tid,
                 mess: this.message,
                 captcha_code: this.code
             };
-            //apiMessages.send(data, this.handler, null);
-               this.captcha = true;
-            this.process = true;
-            console.log('send');
+            // apiMessages.send(data).then((response) => {
+            //     this.handler(response.data);
+            // }).catch((error) => {
+            //     this.error(error);
+            // });
+              this.sended();
+            this.inProcess(5);
         },
         setCode(code) {
             this.code = code;
@@ -359,11 +410,12 @@ Vue.component('quick-reply', {
                 }
                 this.error();
             } else {
-                this.sended(response);
+                this.sended();
             }
             this.process = false;
         },
-        sended(response) {
+        sended() {
+            console.log('send');
             this.$emit('sended');
         },
         error() {
@@ -371,6 +423,66 @@ Vue.component('quick-reply', {
         }
     },
     template: '#quick-reply',
+});
+
+
+
+Vue.component('remove-confirm', {
+    props: ['show'],
+    data() {
+        return {
+            content: {
+                doit: {
+                    caption: 'Наказывайте как следует',
+                    text: `За резкие слова, за оскорбления или хамство,
+                    за фотографии не в тему или бессмысленные сообщения, наказывайте всех, кого
+                    считаете нужным. Наказание действует сразу.`,
+                    action: 'Удалить и наказать'
+                },
+                must: {
+                    caption: 'Может стоит наказать?',
+                    text: `Нажмите "Дизлайк" у сообщения, которое вызвало негативные эмоции.
+                    Наказание действует сразу же. Мы никогда не узнаем о нарушениях
+                    собеседника, если удалить без наказания.`,
+                    action: 'Удалить и забыть'
+                },
+                some: {
+                    caption: 'Удалить навсегда',
+                    text: `Ваше сообщение будет удалено отовсюду, без возможности восстановить. Сообщение
+                    пропадет как из вашей истории переписки, так и из переписки вашего собеседника.`,
+                    action: 'Удалить навсегда'
+                }
+            }
+        }
+    },
+    computed: {
+        variant() {
+            return this.show ? this.show : 'some';
+        },
+        caption() {
+            return this.content[this.variant].caption;
+        },
+        text() {
+            return this.content[this.variant].text;
+        },
+        action() {
+            return this.content[this.variant].action;
+        },
+    },
+    methods: {
+        close() {
+            this.$emit('close');
+        },
+        bun() {
+            this.$emit('bun');
+            this.close();
+        },
+        remove() {
+            this.$emit('remove');
+            this.close();
+        },
+    },
+    template: '#remove-confirm',
 });
 
 
@@ -501,78 +613,67 @@ class Api {
 };
 
 class ApiBun extends Api {
-    send(data, handler, error) {
-        axios.post('mess/bun/', data, this.config).then((response) => {
-            //this.$emit('remove', this.index);
-        }).catch((error) => {
-            //console.log('error');
-        });
+    send(data) {
+        return axios.post('mess/bun/', data, this.config);
         console.log('ApiBun Bun-Bun');
     }
 };
 
 class ApiContact extends Api {
     remove(data, handler, error) {
-        axios.post('human/delete/', data, this.config).then((response) => {
-            //this.$emit('remove', this.index);
-        }).catch((error) => {
-            //console.log('error');
+        return axios.post('human/delete/', data, this.config).catch((error) => {
+            this.error(error);
         });
         console.log('ApiContact removed');
     }
 
     ignore(data, handler, error) {
-        axios.post('human/ignore/', data, this.config).then((response) => {
-
-        }).catch((e) => {
-            error(e);
+        return axios.post('human/ignore/', data, this.config).catch((error) => {
+            this.error(error);
         });
         console.log('ApiContact ignored');
     }
 
-    getList(url, handler, error) {
-        axios.get(`/contact/list/${url}/`, this.config).then((response) => {
-            handler(response.data);
-        }).catch((error) => {
-            error(error);
+    getList(url) {
+        return axios.get(`/contact/list/${url}/`, this.config).catch((error) => {
+            this.error(error);
         });
     }
 
-    initialList(handler, error) {
-        this.getList('initial', handler, error);
+    initialList() {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve(this.getList('initial'));
+            }, 5000);
+        });
     }
 
-    intimateList(handler, error) {
-        this.getList('intimate', handler, error);
+    intimateList() {
+        return this.getList('intimate');
     }
 
-    sendsList(handler, error) {
-        this.getList('sends', handler, error);
+    sendsList() {
+        return this.getList('sends');
     }
 };
 
 class ApiMessages extends Api {
-    send(data, handler, error) {
+    send(data) {
         console.log(this);
-        axios.post('mailer/post/', data, this.config).then((response) => {
-            handler(response.data);
-        }).catch((error) => {
-            console.log(error);
-        });
+        return axios.post('mailer/post/', data, this.config);
         console.log('ApiMessages send !!!');
     }
 };
 
 class ApiUser extends Api {
-    saveSex(data, handler, error) {
-        axios.post('/option/sex/', data, this.config).then((response) => {
+    saveSex(data) {
+        return axios.post('/option/sex/', data, this.config).then((response) => {
             if (response.data.sex) {
                 store.commit('loadUser', { sex: response.data.sex });
                 handler();
             }
         }).catch((e) => {
             console.log(e);
-            error();
         });
     }
 };
@@ -589,24 +690,85 @@ var apiMessages = new ApiMessages('', 1234);
 
 //ApiMessages.send();
 
-const contacts = {
+
+const mutations = {
+    mutations: {
+        load(state, data) {
+            console.log('initial-contacts');
+            console.log(data);
+            if (data && data.length > 0) {
+                state.list = data;
+            }
+        },
+        add(state, data) {
+            if (data && data.length > 0) {
+                _.extend(state.list, data);
+            }
+        },
+    }
+}
+// // //
+
+const initial = _.extend({
+    namespaced: true,
     state: {
-        initial: [],
-        intimate: [],
-        sends: [],
+        list: []
     },
     actions: {
-        LOAD_INTIMATES({ commit }) {
-            let contacts = ls.get('intimate-contacts');
-            if (contacts && contacts.length > 0) {
-                commit('addIntimate', contacts);
-            }
+        LOAD({ commit }) {
+            //commit('load', ls.get('initial-contacts'));
+            let promise = apiContact.initialList();
+            promise.then((response) => {
+                commit('load', response.data);
+                ls.set('initial-contacts', response.data);
+            });
+            return promise;
         }
+    }
+}, mutations);
+
+const intimate = _.extend({
+    namespaced: true,
+    state: {
+        list: []
     },
-    mutations: {
-        addIntimate(state, data) {
-            _.extend(state.contacts.intimate, data);
-        },
+    actions: {
+        LOAD({ commit }) {
+            commit('load', ls.get('intimate-contacts'));
+            let promise = apiContact.intimateList();
+            promise.then((response) => {
+                commit('load', response.data);
+                //ls.set('intimate-contacts', state.contacts.intimate);
+            });
+            return promise;
+        }
+    }
+}, mutations);
+
+const sends = _.extend({
+    namespaced: true,
+    state: {
+        list: []
+    },
+    actions: {
+        LOAD({ commit }) {
+            commit('load', ls.get('sends-contacts'));
+            let promise = apiContact.sendsList();
+            promise.then((response) => {
+                commit('load', response.data);
+                //ls.set('intimate-contacts', state.contacts.intimate);
+            });
+            return promise;
+        }
+    }
+}, mutations);
+
+
+const contacts = {
+    modules: {
+        initial,
+        intimate,
+        sends
     }
 }
 
@@ -1509,6 +1671,19 @@ var json = {
     }       
 }       
    
+
+
+Vue.component('loading-cover', {
+    props: ['show', 'text'],
+    computed: {
+        loader() {
+            return this.text ? this.text : 'Отправляю';
+        }
+    },
+    template: '#loading-cover',
+});
+
+
 
   
 // Установки  почты        

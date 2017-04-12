@@ -5,12 +5,10 @@ var ContactDialog = {
     ],
     data() {
         return {
-            contacts: [],
-            response: null,
+            response: false,
             slow: false,
             next: 0,
-            batch: 10,
-            received: 0
+            batch: 10
         }
     },
     computed: {
@@ -18,26 +16,35 @@ var ContactDialog = {
             return this.slow && !this.response;
         },
         showHint() {
-            return this.response && this.contacts < 1;
+            return this.count < 1;
         },
+        count() {
+            let result = this.contacts ? this.contacts.length : 0;
+            return result;
+        }
     },
     methods: {
         close() {
             this.$emit('close');
         },
-        onLoad(result) {
-            this.received = result ? result.length : 0;
-            if (this.received) {
-                this.contacts = _.union(this.contacts, result);
-            }
-            this.next += this.batch;
-            this.response = 200;
+        hope() {
+            let sec = 2;
+            setTimeout(() => this.slow = true,  sec * 1000);
+            this.response = false;
+        },
+        loaded(result) {
+            //this.received = result ? result.length : 0;
+            // if (this.received) {
+            //     this.contacts = _.union(this.contacts, result);
+            // }
+            //this.next += this.batch;
+            this.response = true;
             this.slow = false;
         },
         remove(index) {
             apiContact.remove({ tid: this.contacts[index] });
-            console.log('remove');
-            this.splice();
+            this.splice(index);
+            this.close();
         },
         bun(index) {
             console.log('bun');
@@ -48,12 +55,13 @@ var ContactDialog = {
                 //text: this.item.message,
                 //token: 'super secret token'
             };
-            apiBun.send(data, null, null);
-            this.remove(index);
+            apiBun.send(data);
+            this.splice(index);
+            this.close();
         },
         splice(index) {
             this.contacts.splice(index, 1);
-            this.close();
+            console.log('remove');
         },
         error(error) {
             console.log(error);
@@ -70,15 +78,21 @@ const InitialDialog = Vue.component('initial-dialog', {
     computed: {
         initial: () => true,
         simple:  () => true,
+        contacts() {
+            console.log('contacts *** ');
+            return this.$store.state.contacts.initial.list;
+        }
     },
     methods: {
         load() {
-            apiContact.initialList(this.onLoad, this.error);
-            setTimeout(() => this.slow = true, 3000);
+            store.dispatch('initial/LOAD').then((response) => {
+                this.loaded();
+            });
+            this.hope();
         },
         remove(index) {
             console.log('remove');
-            apiContact.ignore({ tid: this.contacts[index].cont_id });
+            //apiContact.ignore({ tid: this.contacts[index].cont_id });
             this.splice();
         },
     },
@@ -90,15 +104,20 @@ const IntimateDialog = Vue.component('intimate-dialog', {
     computed: {
         initial: () => true,
         simple:  () => false,
+        contacts() {
+            return this.$store.state.contacts.intimate.list;
+        }
     },
     methods: {
         load() {
-            apiContact.intimateList(this.onLoad, this.error);
-            setTimeout(() => this.slow = true, 3000);
+            store.dispatch('intimate/LOAD').then((response) => {
+                this.loaded();
+            });
+            this.hope();
         },
         remove(index) {
             console.log('remove');
-            apiContact.remove({ tid: this.contacts[index].cont_id });
+            //apiContact.remove({ tid: this.contacts[index].cont_id });
             //this.$emit('remove', this.index);
             this.splice();
         },
@@ -111,11 +130,16 @@ const SendsDialog = Vue.component('sends-dialog', {
     computed: {
         initial: () => false,
         simple:  () => false,
+        contacts() {
+            return this.$store.state.contacts.sends.list;
+        }
     },
     methods: {
         load() {
-            apiContact.sendsList(this.onLoad, this.error);
-            setTimeout(() => this.slow = true, 3000);
+            store.dispatch('sends/LOAD').then((response) => {
+                this.loaded();
+            });
+            this.hope();
         },
     },
     template: '#initial-dialog'

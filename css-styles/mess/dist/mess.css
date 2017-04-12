@@ -1291,7 +1291,7 @@ div.alert_block_mess b {
   font-size: 14px;
 }
 .contact-list__item {
-  border-top: 1px solid #cccccc;
+  border-top: 1px solid #e5e5e5;
   position: relative;
   background: #ffffff;
   overflow: hidden;
@@ -1458,4 +1458,26 @@ div.alert_block_mess b {
   opacity: 0.5;
   cursor: pointer;
   background-image: url('/static/img/icon/send.png');
+}
+.loading-cover {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(222, 222, 222, 0.7);
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+}
+.loading-cover__wrapper {
+  position: relative;
+  top: 50%;
+}
+.loading-cover__loader {
+  display: inline-block;
+  border: 1px solid #999999;
+  padding: 5px 10px;
+  background: #e5e5e5;
+  border-radius: 2px;
 }

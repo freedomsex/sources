@@ -1,0 +1,18 @@
+<script type="text/x-template" id="remove-confirm">
+  <modal-dialog :show="show" @close="close">
+    <div class="modal-dialog__wrapper">
+      <div class="modal-dialog__caption">
+        {{caption}}
+      </div>
+      <div class="modal-dialog__body">
+        {{text}}
+      </div>
+      <div class="modal-dialog__footer">
+        <button class="btn btn-primary" @click="bun()" v-if="show == 'doit'">{{action}}</button>
+        <button class="btn btn-primary" @click="remove()" v-else>{{action}}</button>
+        <button class="btn btn-default" @click="close()">Отмена</button>
+      </div>
+    </div>
+  </modal-dialog>
+</script>
+

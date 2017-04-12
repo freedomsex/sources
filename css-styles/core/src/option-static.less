@@ -78,13 +78,13 @@
 
 .option_tab {
     font-size: 13px;
-    padding: 0 25px 10px;
+    padding: 5px 25px 5px;
     text-align: left;
 }
 .tab_context {
     font-size: 14px;
     max-width: 500px;
-    padding: 10px 0px;
+    padding: 10px 0px 0;
 }
 .hint_context {
     background: @light;
@@ -103,7 +103,21 @@
 
 .option_loader {
     text-align: center;
-    padding: @indent-sm;
-    margin-top: @indent-sm;
-    color: @gray;
+    position: relative;
+    height: 15px;
+    &__label {
+      padding: 2px;
+      margin-top: 1px;
+      font-size: 12px;
+      border-radius: 10px;
+      width: 22px;
+      height: 22px;
+      border: 1px solid @gray;
+      box-shadow: 0 0 2px 1px rgba(0, 0, 0, .1);
+      display: inline-block;
+      background-color: @white;
+      background-image: url('/static/img/loader.gif');
+      background-position: center;
+      background-repeat: no-repeat;
+    }
 }

@@ -399,33 +399,6 @@
 </div>
 </script>
 
-<script type="text/x-template" id="modal-dialog">
-  <div class="modal-dialog__mask" :show="show" :data="data" v-if="show" transition="modal" @click="close">
-    <div class="modal-dialog__container" @click.stop>
-      <slot></slot>
-    </div>
-  </div>
-</script>
-
-<script type="text/x-template" id="remove-confirm">
-  <modal-dialog :show="show" @close="close">
-    <div class="modal-dialog__wrapper">
-      <div class="modal-dialog__caption">
-        {{caption}}
-      </div>
-      <div class="modal-dialog__body">
-        {{text}}
-      </div>
-      <div class="modal-dialog__footer">
-        <button class="btn btn-primary" @click="bun()" v-if="show == 'doit'">{{action}}</button>
-        <button class="btn btn-primary" @click="remove()" v-else>{{action}}</button>
-        <button class="btn btn-default" @click="close()">Отмена</button>
-      </div>
-    </div>
-  </modal-dialog>
-</script>
-
-
 
 
 
@@ -643,6 +616,33 @@ border-radius: 3px;">Сохранено</span>
 </div>
 
 
+<script type="text/x-template" id="modal-dialog">
+  <div class="modal-dialog__mask" v-if="show" transition="modal" @click="close">
+    <div class="modal-dialog__container" @click.stop>
+      <slot></slot>
+    </div>
+  </div>
+</script>
+<script type="text/x-template" id="remove-confirm">
+  <modal-dialog :show="show" @close="close">
+    <div class="modal-dialog__wrapper">
+      <div class="modal-dialog__caption">
+        {{caption}}
+      </div>
+      <div class="modal-dialog__body">
+        {{text}}
+      </div>
+      <div class="modal-dialog__footer">
+        <button class="btn btn-primary" @click="bun()" v-if="show == 'doit'">{{action}}</button>
+        <button class="btn btn-primary" @click="remove()" v-else>{{action}}</button>
+        <button class="btn btn-default" @click="close()">Отмена</button>
+      </div>
+    </div>
+  </modal-dialog>
+</script>
+
+
+
 <script type="text/x-template" id="inform-dialog">
   <option-dialog @close="close">
     <div class="contact-dialog">
@@ -653,8 +653,8 @@ border-radius: 3px;">Сохранено</span>
         <div class="tab_context">
           <slot name="context">Описание</slot>
         </div>
-        <div class="option_loader" v-show="loader">
-          Загружаем
+        <div class="option_loader">
+          <div class="option_loader__label" v-show="loader"></div>
         </div>
         <slot></slot>
         <div class="hint_context" v-show="hint">
@@ -671,13 +671,14 @@ border-radius: 3px;">Сохранено</span>
     <span slot="context">Когда вы отправляете или вам отправляют самое первое сообщение, это считается предложением знакомства.</span>
     <span slot="hint">Здесь будет список ваших предложений знакомства.</span>
 
-    <div class="" v-if="response && contacts.length">
+    <div class="" v-if="count">
       <contact-item v-for="(item, index) in contacts"
         :item="item"
         :index="index"
         :initial="initial"
         @bun="bun"
         @close="close"
+        @splice="splice"
         @remove="remove"/>
     </div>
   </inform-dialog>
@@ -690,13 +691,14 @@ border-radius: 3px;">Сохранено</span>
     <span slot="context">Отвечайте на предложения знакомства. Ваши активные диалоги сохраняются здесь, отдельно от предложений знакомства.</span>
     <span slot="hint">Здесь будет список ваших контактов, сообщений, диалогов.</span>
 
-    <div class="" v-if="response && contacts.length">
+    <div class="" v-if="count">
       <contact-item v-for="(item, index) in contacts"
         :item="item"
         :index="index"
         :initial="initial"
         @bun="bun"
         @close="close"
+        @splice="splice"
         @remove="remove"/>
     </div>
   </inform-dialog>
@@ -735,6 +737,15 @@ border-radius: 3px;">Сохранено</span>
 </script>
 
 
+<script type="text/x-template" id="loading-cover">
+  <div class="loading-cover" v-if="show">
+    <div class="loading-cover__wrapper">
+      <div class="loading-cover__loader">{{loader}}...</div>
+    </div>
+  </div>
+</script>
+
+
 <script type="text/x-template" id="quick-reply">
   <modal-dialog :show="show" :data="data" @close="close">
     <div class="human-dialog__caption">
@@ -769,14 +780,16 @@ border-radius: 3px;">Сохранено</span>
         </tr>
       </table>
     </div>
+    <loading-cover :show="process"/>
 
     <remove-confirm :show="confirm" @bun="bun" @close="cancel" @remove="remove"/>
     <captcha-dialog :show="captcha" @close="close" @cancel="cancel" @send="setCode"/>
   </modal-dialog>
 </script>
 
+
 <script type="text/x-template" id="captcha-dialog">
-  <modal-dialog :show="show" :data="data" @close="close">
+  <modal-dialog :show="show" @close="close">
     <div class="captcha-dialog__caption">
       Подтвердите
       <a href="/блог/простые-проверки/" target="_blank" aria-hidden="true" class="glyphicon glyphicon-info-sign"></a>

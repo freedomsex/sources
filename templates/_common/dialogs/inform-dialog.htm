@@ -9,8 +9,8 @@
         <div class="tab_context">
           <slot name="context">Описание</slot>
         </div>
-        <div class="option_loader" v-show="loader">
-          Загружаем
+        <div class="option_loader">
+          <div class="option_loader__label" v-show="loader"></div>
         </div>
         <slot></slot>
         <div class="hint_context" v-show="hint">

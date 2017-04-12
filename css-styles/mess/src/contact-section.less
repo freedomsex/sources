@@ -11,7 +11,7 @@
 }
 
 .contact-list__item {
-  border-top: 1px solid @gray;
+  border-top: 1px solid @gray-light;
   position: relative;
   background: @white;
   overflow: hidden;
@@ -187,4 +187,27 @@
 .message-input__button-send {
   .message-input__button();
   background-image: url('/static/img/icon/send.png');
+}
+
+.loading-cover {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(222, 222, 222, 0.7);
+  display: table-cell;
+  text-align: center;
+  vertical-align:middle;
+  &__wrapper {
+    position: relative;
+    top: 50%;
+  }
+  &__loader {
+    display: inline-block;
+    border: 1px solid @gray-dark;
+    padding: @indent-xs @indent-sm;
+    background: @gray-light;
+    border-radius: 2px;
+  }
 }
