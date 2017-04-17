@@ -50,6 +50,7 @@ Vue.component('remove-confirm', {
             this.close();
         },
         remove() {
+            //apiContact.remove({ tid: this.contacts[index] });
             this.$emit('remove');
             this.close();
         },

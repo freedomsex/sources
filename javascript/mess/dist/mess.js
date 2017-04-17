@@ -727,7 +727,7 @@ var FormMess = new Vue({
                 data['mess'] = this.message;
                 data['re'] = this.reply;
             }
-            apiMessages.send(data).then(function (response) {
+            api.messages.send(data).then(function (response) {
                 _this2.handler(response.data);
             });
             this.process = true;
@@ -735,7 +735,7 @@ var FormMess = new Vue({
         sendSex: function sendSex(sex) {
             var _this3 = this;
 
-            apiUser.saveSex({ sex: sex }).then(function (response) {
+            api.user.saveSex({ sex: sex }).then(function (response) {
                 _this3.sendMessage(response.data);
             }).catch(function (error) {
                 _this3.error(error);

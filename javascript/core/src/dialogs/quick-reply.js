@@ -50,7 +50,7 @@ Vue.component('quick-reply', {
                 mess: this.message,
                 captcha_code: this.code
             };
-            // apiMessages.send(data).then((response) => {
+            // api.messages.send(data).then((response) => {
             //     this.handler(response.data);
             // }).catch((error) => {
             //     this.error(error);

@@ -1,5 +1,7 @@
 'use strict';
 
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -84,7 +86,6 @@ var ContactDialog = {
             this.slow = false;
         },
         remove: function remove(index) {
-            apiContact.remove({ tid: this.contacts[index] });
             this.splice(index);
             this.close();
         },
@@ -95,7 +96,7 @@ var ContactDialog = {
                 id: item.cont_id,
                 tid: item.from
             };
-            apiBun.send(data);
+            api.bun.send(data);
             this.splice(index);
             this.close();
         },
@@ -407,7 +408,7 @@ Vue.component('quick-reply', {
                 mess: this.message,
                 captcha_code: this.code
             };
-            // apiMessages.send(data).then((response) => {
+            // api.messages.send(data).then((response) => {
             //     this.handler(response.data);
             // }).catch((error) => {
             //     this.error(error);
@@ -488,6 +489,7 @@ Vue.component('remove-confirm', {
             this.close();
         },
         remove: function remove() {
+            //apiContact.remove({ tid: this.contacts[index] });
             this.$emit('remove');
             this.close();
         }
@@ -606,16 +608,144 @@ moment.locale('ru');
 
 var ls = lscache;
 
-var Api = function Api(host, key) {
-    _classCallCheck(this, Api);
+var Api = function () {
+    function Api(host, key, version, routing) {
+        _classCallCheck(this, Api);
 
-    this.root = host + '/';
-    this.key = key;
-    this.config = {
-        baseURL: this.root,
-        headers: { 'Authorization': 'Bearer ' + key }
-    };
-};
+        // Delay requests msec
+        this.wait = 5000; //
+
+        var ver = version ? 'v' + version + '/' : '';
+        this.root = host + ver;
+        this.key = key;
+        this.config = {
+            baseURL: this.root,
+            headers: { 'Authorization': 'Bearer ' + key }
+        };
+        this.routing = {
+            route: '',
+            load: '',
+            get: '',
+            cget: '',
+            send: '',
+            post: '',
+            save: '',
+            remove: '',
+            delete: '',
+            put: '',
+            patch: '',
+            option: ''
+        };
+        _.extend(this.routing, routing);
+    }
+
+    _createClass(Api, [{
+        key: 'setUrl',
+        value: function setUrl(method, url) {
+            var result = this.routing.route;
+            if (url) {
+                result = url;
+            } else {
+                var action = this.routing[method];
+                result = action ? action : result;
+            }
+            //console.log('url: ', [this.root, result])
+            return this.root + result;
+        }
+    }, {
+        key: 'setParams',
+        value: function setParams(params) {
+            this.config.params = params ? params : {};
+        }
+    }, {
+        key: 'get',
+        value: function get(params, url) {
+            this.setParams(params);
+            return this.delay(axios.get(this.setUrl('get', url), this.config), 0);
+        }
+    }, {
+        key: 'load',
+        value: function load(params, url) {
+            this.setParams(params);
+            return this.delay(axios.get(this.setUrl('load', url), this.config), 0);
+        }
+    }, {
+        key: 'cget',
+        value: function cget(params, url) {
+            this.setParams(params);
+            return this.delay(axios.get(this.setUrl('cget', url), this.config), 0);
+        }
+    }, {
+        key: 'send',
+        value: function send(params, url) {
+            this.setParams(params);
+            return this.delay(axios.get(this.setUrl('send', url), this.config), 0);
+        }
+    }, {
+        key: 'post',
+        value: function post(data, params, url) {
+            this.setParams(params);
+            return this.delay(axios.post(this.setUrl('post', url), data, this.config), 0);
+        }
+    }, {
+        key: 'save',
+        value: function save(data, params, url) {
+            this.setParams(params);
+            return this.delay(axios.post(this.setUrl('save', url), data, this.config), 0);
+        }
+    }, {
+        key: 'remove',
+        value: function remove(data, params, url) {
+            this.setParams(params);
+            return this.delay(axios.post(this.setUrl('remove', url), data, this.config), 0);
+        }
+    }, {
+        key: 'delete',
+        value: function _delete(data, params, url) {
+            this.setParams(params);
+            return this.delay(axios.post(this.setUrl('delete', url), data, this.config), 0);
+        }
+    }, {
+        key: 'request',
+        value: function request(method, action, data, params, url) {
+            // this.config.method = method;
+            // this.config.url = this.setUrl(action, url);
+            // this.config.data = data;
+            // this.config.params = params;
+            // return this.delay(axios.request(this.config), 0);
+            if (data) {
+                return this.delay(axios[method](this.setUrl(action, url), data, this.config), 0);
+            } else {
+                return this.delay(axios[method](this.setUrl(action, url), this.config), 0);
+            }
+        }
+    }, {
+        key: 'put',
+        value: function put() {}
+    }, {
+        key: 'patch',
+        value: function patch() {}
+    }, {
+        key: 'option',
+        value: function option() {}
+    }, {
+        key: 'delay',
+        value: function delay(result, wait) {
+            var msec = wait ? wait : this.wait;
+            if (msec < this.wait) {
+                msec = this.wait;
+            }
+            if (msec == 0 || typeof Promise == "undefined") {
+                return result;
+            }
+            return new Promise(function (resolve, reject) {
+                _.delay(resolve, msec, result);
+            });
+        }
+    }]);
+
+    return Api;
+}();
 
 ;
 
@@ -625,12 +755,15 @@ var ApiBun = function (_Api) {
     function ApiBun() {
         _classCallCheck(this, ApiBun);
 
-        return _possibleConstructorReturn(this, (ApiBun.__proto__ || Object.getPrototypeOf(ApiBun)).apply(this, arguments));
+        var key = '1234';
+        var host = '/';
+        return _possibleConstructorReturn(this, (ApiBun.__proto__ || Object.getPrototypeOf(ApiBun)).call(this, host, key));
     }
 
     _createClass(ApiBun, [{
         key: 'send',
         value: function send(data) {
+
             return axios.post('mess/bun/', data, this.config);
             console.log('ApiBun Bun-Bun');
         }
@@ -641,79 +774,15 @@ var ApiBun = function (_Api) {
 
 ;
 
-var ApiContact = function (_Api2) {
-    _inherits(ApiContact, _Api2);
-
-    function ApiContact() {
-        _classCallCheck(this, ApiContact);
-
-        return _possibleConstructorReturn(this, (ApiContact.__proto__ || Object.getPrototypeOf(ApiContact)).apply(this, arguments));
-    }
-
-    _createClass(ApiContact, [{
-        key: 'remove',
-        value: function remove(data, handler, error) {
-            var _this9 = this;
-
-            return axios.post('human/delete/', data, this.config).catch(function (error) {
-                _this9.error(error);
-            });
-            console.log('ApiContact removed');
-        }
-    }, {
-        key: 'ignore',
-        value: function ignore(data, handler, error) {
-            var _this10 = this;
-
-            return axios.post('human/ignore/', data, this.config).catch(function (error) {
-                _this10.error(error);
-            });
-            console.log('ApiContact ignored');
-        }
-    }, {
-        key: 'getList',
-        value: function getList(url) {
-            var _this11 = this;
-
-            return axios.get('/contact/list/' + url + '/', this.config).catch(function (error) {
-                _this11.error(error);
-            });
-        }
-    }, {
-        key: 'initialList',
-        value: function initialList() {
-            var _this12 = this;
-
-            return new Promise(function (resolve, reject) {
-                setTimeout(function () {
-                    resolve(_this12.getList('initial'));
-                }, 5000);
-            });
-        }
-    }, {
-        key: 'intimateList',
-        value: function intimateList() {
-            return this.getList('intimate');
-        }
-    }, {
-        key: 'sendsList',
-        value: function sendsList() {
-            return this.getList('sends');
-        }
-    }]);
-
-    return ApiContact;
-}(Api);
-
-;
-
-var ApiMessages = function (_Api3) {
-    _inherits(ApiMessages, _Api3);
+var ApiMessages = function (_Api2) {
+    _inherits(ApiMessages, _Api2);
 
     function ApiMessages() {
         _classCallCheck(this, ApiMessages);
 
-        return _possibleConstructorReturn(this, (ApiMessages.__proto__ || Object.getPrototypeOf(ApiMessages)).apply(this, arguments));
+        var key = '1234';
+        var host = '/';
+        return _possibleConstructorReturn(this, (ApiMessages.__proto__ || Object.getPrototypeOf(ApiMessages)).call(this, host, key));
     }
 
     _createClass(ApiMessages, [{
@@ -730,13 +799,15 @@ var ApiMessages = function (_Api3) {
 
 ;
 
-var ApiUser = function (_Api4) {
-    _inherits(ApiUser, _Api4);
+var ApiUser = function (_Api3) {
+    _inherits(ApiUser, _Api3);
 
     function ApiUser() {
         _classCallCheck(this, ApiUser);
 
-        return _possibleConstructorReturn(this, (ApiUser.__proto__ || Object.getPrototypeOf(ApiUser)).apply(this, arguments));
+        var key = '1234';
+        var host = '/';
+        return _possibleConstructorReturn(this, (ApiUser.__proto__ || Object.getPrototypeOf(ApiUser)).call(this, host, key));
     }
 
     _createClass(ApiUser, [{
@@ -758,15 +829,129 @@ var ApiUser = function (_Api4) {
 
 ;
 
-var apiUser = new ApiUser('', 1234);
-var apiBun = new ApiBun('', 1234);
-var apiContact = new ApiContact('', 1234);
-var apiMessages = new ApiMessages('', 1234);
-//  = _.create(Api.prototype, {
-//     host: '/',
-//     jwt: '1234',
-// });
+var ApiContact = function (_Api4) {
+    _inherits(ApiContact, _Api4);
 
+    function ApiContact(routing) {
+        _classCallCheck(this, ApiContact);
+
+        var key = '1234';
+        var host = '/';
+        return _possibleConstructorReturn(this, (ApiContact.__proto__ || Object.getPrototypeOf(ApiContact)).call(this, host, key, null, routing));
+    }
+
+    _createClass(ApiContact, [{
+        key: 'getList',
+        value: function getList(url) {
+            return axios.get('/contact/list/' + url + '/', this.config);
+        }
+    }, {
+        key: 'initialList',
+        value: function initialList() {
+            var _this11 = this;
+
+            return new Promise(function (resolve, reject) {
+                setTimeout(function () {
+                    resolve(_this11.getList('initial'));
+                }, 5000);
+            });
+        }
+    }, {
+        key: 'intimateList',
+        value: function intimateList() {
+            return this.getList('intimate');
+        }
+    }, {
+        key: 'sendsList',
+        value: function sendsList() {
+            return this.getList('sends');
+        }
+    }, {
+        key: 'ignore',
+        value: function ignore(data) {
+            console.log('contact ignored');
+            return _get(ApiContact.prototype.__proto__ || Object.getPrototypeOf(ApiContact.prototype), 'request', this).call(this, 'post', 'ignore', data);
+            //return super.post(data);
+        }
+    }, {
+        key: 'remove',
+        value: function remove(data) {
+            console.log('contact removed');
+            return _get(ApiContact.prototype.__proto__ || Object.getPrototypeOf(ApiContact.prototype), 'remove', this).call(this, data);
+        }
+    }, {
+        key: 'cget',
+        value: function cget(next) {
+            return _get(ApiContact.prototype.__proto__ || Object.getPrototypeOf(ApiContact.prototype), 'cget', this).call(this, { next: next });
+        }
+    }]);
+
+    return ApiContact;
+}(Api);
+
+;
+
+var ApiInitial = function (_ApiContact) {
+    _inherits(ApiInitial, _ApiContact);
+
+    function ApiInitial() {
+        _classCallCheck(this, ApiInitial);
+
+        var routing = {
+            cget: 'contact/list/initial',
+            remove: 'human/delete',
+            post: 'human/ignore'
+        };
+        return _possibleConstructorReturn(this, (ApiInitial.__proto__ || Object.getPrototypeOf(ApiInitial)).call(this, routing));
+    }
+
+    return ApiInitial;
+}(ApiContact);
+
+var ApiIntimate = function (_ApiContact2) {
+    _inherits(ApiIntimate, _ApiContact2);
+
+    function ApiIntimate() {
+        _classCallCheck(this, ApiIntimate);
+
+        var routing = {
+            cget: 'contact/list/initial',
+            remove: 'human/delete',
+            post: 'human/ignore'
+        };
+        return _possibleConstructorReturn(this, (ApiIntimate.__proto__ || Object.getPrototypeOf(ApiIntimate)).call(this, routing));
+    }
+
+    return ApiIntimate;
+}(ApiContact);
+
+var ApiSends = function (_ApiContact3) {
+    _inherits(ApiSends, _ApiContact3);
+
+    function ApiSends() {
+        _classCallCheck(this, ApiSends);
+
+        var routing = {
+            cget: 'contact/list/initial',
+            remove: 'human/delete',
+            ignore: 'human/ignore'
+        };
+        return _possibleConstructorReturn(this, (ApiSends.__proto__ || Object.getPrototypeOf(ApiSends)).call(this, routing));
+    }
+
+    return ApiSends;
+}(ApiContact);
+
+var api = {
+    user: new ApiUser(),
+    bun: new ApiBun(),
+    contacts: {
+        initial: new ApiInitial(),
+        intimate: new ApiIntimate(),
+        sends: new ApiSends()
+    },
+    messages: new ApiMessages()
+};
 
 //ApiMessages.send();
 
@@ -775,13 +960,14 @@ var mutations = {
     mutations: {
         load: function load(state, data) {
             console.log('initial-contacts');
+            // console.log('!!! 8888 !!!');
             console.log(data);
             if (data && data.length > 0) {
                 state.list = data;
             }
         },
         add: function add(state, data) {
-            if (data && data.length > 0) {
+            if (data && data instanceof Array && data.length > 0) {
                 _.extend(state.list, data);
             }
         }
@@ -798,8 +984,18 @@ var initial = _.extend({
         LOAD: function LOAD(_ref) {
             var commit = _ref.commit;
 
-            //commit('load', ls.get('initial-contacts'));
-            var promise = apiContact.initialList();
+            commit('load', ls.get('initial-contacts'));
+            var promise = api.contacts.initial.cget();
+            promise.then(function (response) {
+                commit('load', response.data);
+                ls.set('initial-contacts', response.data);
+            });
+            return promise;
+        },
+        DELETE: function DELETE(_ref2) {
+            var commit = _ref2.commit;
+
+            var promise = api.contacts.initial.remove();
             promise.then(function (response) {
                 commit('load', response.data);
                 ls.set('initial-contacts', response.data);
@@ -815,11 +1011,11 @@ var intimate = _.extend({
         list: []
     },
     actions: {
-        LOAD: function LOAD(_ref2) {
-            var commit = _ref2.commit;
+        LOAD: function LOAD(_ref3) {
+            var commit = _ref3.commit;
 
             commit('load', ls.get('intimate-contacts'));
-            var promise = apiContact.intimateList();
+            var promise = api.contacts.intimate.cget();
             promise.then(function (response) {
                 commit('load', response.data);
                 //ls.set('intimate-contacts', state.contacts.intimate);
@@ -835,11 +1031,11 @@ var sends = _.extend({
         list: []
     },
     actions: {
-        LOAD: function LOAD(_ref3) {
-            var commit = _ref3.commit;
+        LOAD: function LOAD(_ref4) {
+            var commit = _ref4.commit;
 
             commit('load', ls.get('sends-contacts'));
-            var promise = apiContact.sendsList();
+            var promise = api.contacts.sends.cget();
             promise.then(function (response) {
                 commit('load', response.data);
                 //ls.set('intimate-contacts', state.contacts.intimate);
@@ -863,8 +1059,8 @@ var user = {
         sex: 0
     },
     actions: {
-        LOAD_USER: function LOAD_USER(_ref4) {
-            var commit = _ref4.commit;
+        LOAD_USER: function LOAD_USER(_ref5) {
+            var commit = _ref5.commit;
 
             if (typeof user_sex != 'undefined') {
                 commit('loadUser', {
@@ -922,13 +1118,13 @@ var store = new Vuex.Store({
         }
     },
     actions: {
-        LOAD_API_TOKEN: function LOAD_API_TOKEN(_ref5) {
-            var commit = _ref5.commit;
+        LOAD_API_TOKEN: function LOAD_API_TOKEN(_ref6) {
+            var commit = _ref6.commit;
 
             commit('setApiToken', { apiToken: get_cookie('jwt') });
         },
-        LOAD_ACCEPTS: function LOAD_ACCEPTS(_ref6) {
-            var commit = _ref6.commit;
+        LOAD_ACCEPTS: function LOAD_ACCEPTS(_ref7) {
+            var commit = _ref7.commit;
 
             var accepts = ls.get('accepts');
             if (accepts && accepts.photo) {

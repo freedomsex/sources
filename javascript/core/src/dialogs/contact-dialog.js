@@ -42,7 +42,6 @@ var ContactDialog = {
             this.slow = false;
         },
         remove(index) {
-            apiContact.remove({ tid: this.contacts[index] });
             this.splice(index);
             this.close();
         },
@@ -55,7 +54,7 @@ var ContactDialog = {
                 //text: this.item.message,
                 //token: 'super secret token'
             };
-            apiBun.send(data);
+            api.bun.send(data);
             this.splice(index);
             this.close();
         },

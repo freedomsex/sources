@@ -3,13 +3,14 @@ const mutations = {
     mutations: {
         load(state, data) {
             console.log('initial-contacts');
+            // console.log('!!! 8888 !!!');
             console.log(data);
             if (data && data.length > 0) {
                 state.list = data;
             }
         },
         add(state, data) {
-            if (data && data.length > 0) {
+            if (data && data instanceof Array && data.length > 0) {
                 _.extend(state.list, data);
             }
         },
@@ -24,14 +25,22 @@ const initial = _.extend({
     },
     actions: {
         LOAD({ commit }) {
-            //commit('load', ls.get('initial-contacts'));
-            let promise = apiContact.initialList();
+            commit('load', ls.get('initial-contacts'));
+            let promise = api.contacts.initial.cget();
             promise.then((response) => {
                 commit('load', response.data);
                 ls.set('initial-contacts', response.data);
             });
             return promise;
-        }
+        },
+        DELETE({ commit }) {
+            let promise = api.contacts.initial.remove();
+            promise.then((response) => {
+                commit('load', response.data);
+                ls.set('initial-contacts', response.data);
+            });
+            return promise;
+        },
     }
 }, mutations);
 
@@ -43,7 +52,7 @@ const intimate = _.extend({
     actions: {
         LOAD({ commit }) {
             commit('load', ls.get('intimate-contacts'));
-            let promise = apiContact.intimateList();
+            let promise = api.contacts.intimate.cget();
             promise.then((response) => {
                 commit('load', response.data);
                 //ls.set('intimate-contacts', state.contacts.intimate);
@@ -61,7 +70,7 @@ const sends = _.extend({
     actions: {
         LOAD({ commit }) {
             commit('load', ls.get('sends-contacts'));
-            let promise = apiContact.sendsList();
+            let promise = api.contacts.sends.cget();
             promise.then((response) => {
                 commit('load', response.data);
                 //ls.set('intimate-contacts', state.contacts.intimate);
