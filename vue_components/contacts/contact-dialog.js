@@ -78,7 +78,6 @@ const InitialDialog = Vue.component('initial-dialog', {
         initial: () => true,
         simple:  () => true,
         contacts() {
-            console.log('contacts *** ');
             return this.$store.state.contacts.initial.list;
         }
     },

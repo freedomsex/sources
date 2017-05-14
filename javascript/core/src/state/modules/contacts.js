@@ -24,17 +24,17 @@ const initial = _.extend({
         list: []
     },
     actions: {
-        LOAD({ commit }) {
+        LOAD({ commit }, next) {
             commit('load', ls.get('initial-contacts'));
-            let promise = api.contacts.initial.cget();
+            let promise = api.contacts.initial.cget('10336', next);
             promise.then((response) => {
                 commit('load', response.data);
                 ls.set('initial-contacts', response.data);
             });
             return promise;
         },
-        DELETE({ commit }) {
-            let promise = api.contacts.initial.remove();
+        DELETE({ commit }, params) {
+            let promise = api.contacts.initial.delete(params);
             promise.then((response) => {
                 commit('load', response.data);
                 ls.set('initial-contacts', response.data);
@@ -50,12 +50,12 @@ const intimate = _.extend({
         list: []
     },
     actions: {
-        LOAD({ commit }) {
+        LOAD({ commit }, next) {
             commit('load', ls.get('intimate-contacts'));
-            let promise = api.contacts.intimate.cget();
+            let promise = api.contacts.intimate.cget('10336', next);
             promise.then((response) => {
                 commit('load', response.data);
-                //ls.set('intimate-contacts', state.contacts.intimate);
+                ls.set('intimate-contacts', response.data);
             });
             return promise;
         }
@@ -68,9 +68,9 @@ const sends = _.extend({
         list: []
     },
     actions: {
-        LOAD({ commit }) {
+        LOAD({ commit }, next) {
             commit('load', ls.get('sends-contacts'));
-            let promise = api.contacts.sends.cget();
+            let promise = api.contacts.sends.cget('10336', next);
             promise.then((response) => {
                 commit('load', response.data);
                 //ls.set('intimate-contacts', state.contacts.intimate);

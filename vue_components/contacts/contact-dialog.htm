@@ -6,10 +6,10 @@
     <span slot="hint">Здесь будет список ваших предложений знакомства.</span>
 
     <div class="" v-if="count">
-      <contact-item v-for="(item, index) in contacts"
+      <contact-item v-for="(item, index) in contacts" :key="index"
         :item="item"
         :index="index"
-        :initial="initial"
+        :quick="quick"
         @bun="bun"
         @close="close"
         @splice="splice"
@@ -26,10 +26,10 @@
     <span slot="hint">Здесь будет список ваших контактов, сообщений, диалогов.</span>
 
     <div class="" v-if="count">
-      <contact-item v-for="(item, index) in contacts"
+      <contact-item v-for="(item, index) in contacts" :key="index"
         :item="item"
         :index="index"
-        :initial="initial"
+        :quick="quick"
         @bun="bun"
         @close="close"
         @splice="splice"

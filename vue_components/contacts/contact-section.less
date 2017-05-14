@@ -19,21 +19,26 @@
   &-info {
     margin-right: @indent-xs;
     .user-list__name {
-      color: @link-color;
+      color: @dark;
     }
     .user-list__age {
       color: @red;
     }
+    .user-list__city {
+      color: @link-color;
+    }
   }
   &-content {
     .link;
-    padding: @indent-md @indent-xs;
+    padding: @indent-sm @indent-xs;
     white-space: nowrap;
   }
   &-message {
+    color: @gray-dark;
     overflow: hidden;
     font-style: italic;
     white-space: nowrap;
+    padding: @indent-sm @indent-xs 0;
   }
   &-option {
     position: absolute;
@@ -47,72 +52,6 @@
     &:after {
       .clear-fix;
     }
-}
-
-
-.human-dialog__caption {
-  background: @menu-color;
-  color: @white;
-  font-weight: bold;
-  font-size: 16px;
-  padding: @indent-sm @indent-md;
-
-}
-
-.human-dialog__option {
-    float: right;
-    &-remove {
-      margin-left: @indent-sm;
-    }
-}
-
-
-.human-dialog__input {
-  border-width: 0px;
-}
-.human-dialog__body {
-  padding: @indent-md @indent-md 0;
-}
-.human-dialog__desire {
-  margin-bottom: @indent-md;
-  font-size: 14px;
-}
-.human-dialog__message {
-  padding: @indent-sm @indent-sm;
-  background: @gray-light;
-  margin-bottom: @indent-sm;
-}
-
-.human-dialog__form {
-  position: relative;
-  padding-bottom: @indent-sm;
-  &-send {
-    .btn-circle;
-    background: @menu-color;
-    position: absolute;
-    padding: @indent-sm;
-    right: @indent-sm;
-    bottom: @indent-sm;
-    .glyphicon {
-      position: relative;
-      left: -2px;
-    }
-  }
-  &-anketa {
-    width: 40px;
-    position: absolute;
-    left: @indent-sm;
-    bottom: @indent-sm;
-  }
-  &-input {
-    margin: 0 55px 0 45px;
-    padding: @indent-sm @indent-sm;
-    &:empty:not(:focus):before {
-      color: @gray-dark;
-      content: attr(placeholder);
-      display: block;
-    }
-  }
 }
 
 
@@ -187,28 +126,4 @@
 .message-input__button-send {
   .message-input__button();
   background-image: url('/static/img/icon/send.png');
-}
-
-.loading-cover {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(222, 222, 222, 0.7);
-  display: table-cell;
-  text-align: center;
-  vertical-align:middle;
-  &__wrapper {
-    position: relative;
-    top: 50%;
-  }
-  &__loader {
-    display: inline-block;
-    border: 1px solid @gray-dark;
-    padding: @indent-xs @indent-sm;
-    background: @gray-light;
-    border-radius: 2px;
-    z-index: 1000;
-  }
 }

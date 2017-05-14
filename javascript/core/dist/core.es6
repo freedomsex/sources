@@ -1,32 +1,43 @@
 
-Vue.component('captcha-dialog', {
-    props: ['show'],
+Vue.component('attention-wall', {
+    props: ['show', 'text'],
     data() {
         return {
-            code: '',
-            inc: 0
+            content: {
+                1: {
+                    caption: 'Предупреждение',
+                    text: `На сообщения от этого пользователя поступают жалобы. Возможно его сообщения имеют грубый тон,
+                    могут оскорбить, содержат интим фотографии, бессмысленные или резкие предложения.`
+                },
+                8: {
+                    caption: 'Внимание',
+                    text: `Действия пользователя нарушают правила. Сообщения пользователя намеренно оскорбительны,
+                    имеют противоправное содержание, обман или предложение оплаты услуг.`
+                }
+            }
         }
     },
     computed: {
-        src() {
-            return '/secret_pic.php?inc=' + this.inc;
-        }
+        caption() {
+            return this.content[this.show].caption;
+        },
+        text() {
+            return this.content[this.show].text;
+        },
     },
     methods: {
         close() {
-            this.$emit('cancel');
+            this.$emit('close');
         },
-        send() {
-            this.$emit('send', this.code);
-            this.update();
+        remove() {
+            this.$emit('remove');
             this.close();
         },
-        update() {
-            this.inc++;
-        },
     },
-    template: '#captcha-dialog',
+    template: '#attention-wall',
 });
+
+
 
 
 var ContactDialog = {
@@ -108,7 +119,6 @@ const InitialDialog = Vue.component('initial-dialog', {
         initial: () => true,
         simple:  () => true,
         contacts() {
-            console.log('contacts *** ');
             return this.$store.state.contacts.initial.list;
         }
     },
@@ -180,7 +190,7 @@ Vue.component('contact-item', {
     props: [
       'item',
       'index',
-      'initial',
+      'quick',
     ],
     data() {
         return {
@@ -190,15 +200,34 @@ Vue.component('contact-item', {
     },
     computed: {
         sent() {
-            return this.item.cont_id == this.$store.state.user.uid;
+            return this.item.user_id == this.$store.state.user.uid;
+        },
+        name() {
+            var result = 'Парень или девушка';
+            if (this.item.user) {
+                result = this.item.user.sex == 2 ? 'Девушка' : 'Парень';
+                if (this.item.user.name) {
+                    result = this.item.user.name;
+                }
+            }
+            return result;
+        },
+        age() {
+            return this.item.user ? this.item.user.age : null;
+        },
+        city() {
+            return this.item.user ? this.item.user.city : '';
+        },
+        message() {
+            return this.item.message ? this.item.message.text : '';
         }
     },
     methods: {
         show() {
             //this.$emit('show');
             console.log('show = initial-item');
-            if (this.initial) {
-                this.quick();
+            if (this.quick) {
+                this.reply();
             } else {
                 this.anketa();
             }
@@ -212,12 +241,12 @@ Vue.component('contact-item', {
             console.log('initial-item REMOVE');
             this.confirm = !this.initial ? 'some' : 'must';
         },
-        quick() {
+        reply() {
             this.detail = true;
             console.log('quick');
         },
         anketa() {
-            window.location = '/' + this.item.cont_id;
+            window.location = '/' + this.item.human_id;
             console.log('anketa');
         },
         close() {
@@ -243,18 +272,64 @@ Vue.component('contact-item', {
 
 
 
-Vue.component('inform-dialog', {
-    props: [
-      'loader',
-      'hint',
-    ],
-    methods: {
-        close() {
-            this.$emit('close');
-        },
+var ContactSection = new Vue({
+    el: '#contact-section',
+    store,
+    data: {
+
     },
-    template: '#inform-dialog'
+    methods: {
+        push(name) {
+            if (router.name != name) {
+                router.push({ name });
+            }
+        },
+        openSends() {
+            this.push('sends');
+        },
+        openInit() {
+            this.push('initial');
+        },
+        openIntim() {
+            this.push('intimate');
+        }
+    }
 });
+
+
+Vue.component('loading-cover', {
+    props: ['show', 'text'],
+    computed: {
+        loader() {
+            return this.text ? this.text : 'Отправляю';
+        }
+    },
+    template: '#loading-cover',
+});
+
+
+
+
+Vue.component('loading-wall', {
+    props: ['show', 'text'],
+    data() {
+        return {
+            hope: false
+        }
+    },
+    computed: {
+        loader() {
+            return this.text ? this.text : 'Загружаем';
+        }
+    },
+    mounted() {
+        this.hope = false;
+        setTimeout(() => this.hope = true, 3000);
+    },
+    template: '#loading-wall',
+});
+
+
 
 Vue.component('modal-dialog', {
     props: ['show', 'data'],
@@ -275,6 +350,232 @@ Vue.component('modal-dialog', {
     template: '#modal-dialog',
 });
 
+
+Vue.directive('resized', {
+  bind: function (el) {
+    el.style.height = (el.scrollHeight) + 'px';
+    $(el).on('input', function () {
+      this.style.height = 'auto';
+      this.style.height = (this.scrollHeight) + 'px';
+    });
+  }
+})
+
+Vue.component('quick-reply', {
+    props: ['show', 'item'],
+    data() {
+        return {
+            text: '',
+            captcha: false,
+            process: false,
+            loading: false,
+            confirm: false,
+            ignore: false,
+            code: null
+        }
+    },
+    computed: {
+        human() {
+            return this.$store.state.search.human;
+        },
+        tags() {
+            return 'tags' in this.human ? this.human.tags : [];
+        },
+        hold() {
+            return this.ignore ? 0 : this.human.hold;
+        },
+        message() {
+            return this.item.message ? this.item.message.text : '';
+        }
+    },
+    mounted() {
+        this.reload();
+    },
+    updated() {
+        if (this.show) {
+        }
+    },
+    methods: {
+        reload() {
+            this.loading = true;
+            setTimeout(() => this.loading = false, 30 * 1000);
+            store.dispatch('human', this.item.human_id).then((response) => {
+                this.loaded();
+            });
+        },
+        loaded() {
+            this.loading = false;
+            console.log('hold:', this.human.hold);
+            console.log('tags:', this.human);
+            //this.process = false;
+        },
+        close() {
+            this.$emit('close');
+        },
+        bun() {
+            this.$emit('bun');
+        },
+        remove() {
+            // store.dispatch('initial/DELETE', {uid: '10336', cont_id: contact}).then((response) => {
+            //     this.loaded();
+            // });
+            console.log('conf:',{uid: '10336', cont_id: this.item.id} )
+            this.$emit('remove');
+        },
+        cancel() {
+            this.captcha = false;
+            this.confirm = false;
+            this.ignore = true;
+            console.log('cancel');
+        },
+        inProcess(sec) {
+            this.process = true;
+            setTimeout(() => this.process = false, sec*1000);
+        },
+        send() {
+            let data = {
+                id: this.item.human_id,
+                mess: this.text,
+                captcha_code: this.code
+            };
+            api.messages.send(data).then((response) => {
+                this.handler(response.data);
+            }).catch((error) => {
+                this.error(error);
+            });
+            //  this.sended();
+            this.inProcess(5);
+        },
+        setCode(code) {
+            this.code = code;
+            this.send();
+        },
+        handler(response) {
+            if (!response.saved && response.error) {
+                if (response.error == 'need_captcha') {
+                    this.captcha = true;
+                }
+                this.error();
+            } else {
+                this.sended();
+            }
+            this.process = false;
+        },
+        sended() {
+            console.log('send');
+            this.$emit('sended');
+        },
+        error() {
+            this.process = false;
+        }
+    },
+    template: '#quick-reply',
+});
+
+
+
+Vue.component('remove-confirm', {
+    props: ['show', 'item'],
+    data() {
+        return {
+            content: {
+                doit: {
+                    caption: 'Наказывайте как следует',
+                    text: `За резкие слова, за оскорбления или хамство,
+                    за фотографии не в тему или бессмысленные сообщения, наказывайте всех, кого
+                    считаете нужным. Наказание действует сразу.`,
+                    action: 'Удалить и наказать'
+                },
+                must: {
+                    caption: 'Может стоит наказать?',
+                    text: `Нажмите "Дизлайк" у сообщения, которое вызвало негативные эмоции.
+                    Наказание действует сразу же. Мы никогда не узнаем о нарушениях
+                    собеседника, если удалить без наказания.`,
+                    action: 'Удалить и забыть'
+                },
+                some: {
+                    caption: 'Удалить навсегда',
+                    text: `Ваше сообщение будет удалено отовсюду, без возможности восстановить. Сообщение
+                    пропадет как из вашей истории переписки, так и из переписки вашего собеседника.`,
+                    action: 'Удалить навсегда'
+                }
+            }
+        }
+    },
+    computed: {
+        variant() {
+            return this.show ? this.show : 'some';
+        },
+        caption() {
+            return this.content[this.variant].caption;
+        },
+        text() {
+            return this.content[this.variant].text;
+        },
+        action() {
+            return this.content[this.variant].action;
+        },
+    },
+    methods: {
+        close() {
+            this.$emit('close');
+        },
+        bun() {
+            this.$emit('bun');
+            this.close();
+        },
+        remove() {
+            this.$emit('remove');
+            this.close();
+        },
+    },
+    template: '#remove-confirm',
+});
+
+
+
+Vue.component('captcha-dialog', {
+    props: ['show'],
+    data() {
+        return {
+            code: '',
+            inc: 0
+        }
+    },
+    computed: {
+        src() {
+            return '/secret_pic.php?inc=' + this.inc;
+        }
+    },
+    methods: {
+        close() {
+            this.$emit('cancel');
+        },
+        send() {
+            this.$emit('send', this.code);
+            this.update();
+            this.close();
+        },
+        update() {
+            this.inc++;
+        },
+    },
+    template: '#captcha-dialog',
+});
+
+
+Vue.component('inform-dialog', {
+    props: [
+      'loader',
+      'hint',
+    ],
+    methods: {
+        close() {
+            this.$emit('close');
+        },
+    },
+    template: '#inform-dialog'
+});
 
 ///
 // Модальное окно настроек OptionDialog - контейнер
@@ -337,154 +638,6 @@ Vue.component('photo-view', {
     }),
     template: '#photo-view'
 });
-
-Vue.directive('resized', {
-  bind: function (el) {
-    el.style.height = (el.scrollHeight) + 'px';
-    $(el).on('input', function () {
-      this.style.height = 'auto';
-      this.style.height = (this.scrollHeight) + 'px';
-    });
-  }
-})
-
-Vue.component('quick-reply', {
-    props: ['show', 'data'],
-    data() {
-        return {
-            message: 'eeeee',
-            captcha: false,
-            process: false,
-            confirm: false,
-            code: null
-        }
-    },
-    computed: {
-        desire() {
-            let d = this.data.desire;
-            return (d && d.length > 1) ? true : false;
-        }
-    },
-    methods: {
-        close() {
-            this.$emit('close');
-        },
-        bun() {
-            this.$emit('bun');
-        },
-        remove() {
-            this.$emit('remove');
-        },
-        cancel() {
-            this.captcha = false;
-            this.confirm = false;
-            console.log('cancel');
-        },
-        inProcess(sec) {
-            this.process = true;
-            setTimeout(() => this.process = false, sec*1000);
-        },
-        send() {
-            let data = {
-                id: tid,
-                mess: this.message,
-                captcha_code: this.code
-            };
-            // api.messages.send(data).then((response) => {
-            //     this.handler(response.data);
-            // }).catch((error) => {
-            //     this.error(error);
-            // });
-              this.sended();
-            this.inProcess(5);
-        },
-        setCode(code) {
-            this.code = code;
-            this.send();
-        },
-        handler(response) {
-            if (!response.saved && response.error) {
-                if (response.error == 'need_captcha') {
-                    this.captcha = true;
-                }
-                this.error();
-            } else {
-                this.sended();
-            }
-            this.process = false;
-        },
-        sended() {
-            console.log('send');
-            this.$emit('sended');
-        },
-        error() {
-            this.process = false;
-        }
-    },
-    template: '#quick-reply',
-});
-
-
-
-Vue.component('remove-confirm', {
-    props: ['show'],
-    data() {
-        return {
-            content: {
-                doit: {
-                    caption: 'Наказывайте как следует',
-                    text: `За резкие слова, за оскорбления или хамство,
-                    за фотографии не в тему или бессмысленные сообщения, наказывайте всех, кого
-                    считаете нужным. Наказание действует сразу.`,
-                    action: 'Удалить и наказать'
-                },
-                must: {
-                    caption: 'Может стоит наказать?',
-                    text: `Нажмите "Дизлайк" у сообщения, которое вызвало негативные эмоции.
-                    Наказание действует сразу же. Мы никогда не узнаем о нарушениях
-                    собеседника, если удалить без наказания.`,
-                    action: 'Удалить и забыть'
-                },
-                some: {
-                    caption: 'Удалить навсегда',
-                    text: `Ваше сообщение будет удалено отовсюду, без возможности восстановить. Сообщение
-                    пропадет как из вашей истории переписки, так и из переписки вашего собеседника.`,
-                    action: 'Удалить навсегда'
-                }
-            }
-        }
-    },
-    computed: {
-        variant() {
-            return this.show ? this.show : 'some';
-        },
-        caption() {
-            return this.content[this.variant].caption;
-        },
-        text() {
-            return this.content[this.variant].text;
-        },
-        action() {
-            return this.content[this.variant].action;
-        },
-    },
-    methods: {
-        close() {
-            this.$emit('close');
-        },
-        bun() {
-            this.$emit('bun');
-            this.close();
-        },
-        remove() {
-            //apiContact.remove({ tid: this.contacts[index] });
-            this.$emit('remove');
-            this.close();
-        },
-    },
-    template: '#remove-confirm',
-});
-
 
 
 Vue.component('upload-dialog', {
@@ -597,262 +750,6 @@ $(document).ready(function()
 
 
 
-moment.locale('ru');
-
-var ls = lscache;
-
-class Api {
-    constructor(host, key, version, routing) {
-        // Delay requests msec
-        this.wait = 5000; //
-
-        let ver = version ? 'v' + version + '/' : '';
-        this.root = host + ver;
-        this.key = key;
-        this.config = {
-            baseURL: this.root,
-            headers: {'Authorization': 'Bearer ' + key}
-        }
-        this.routing = {
-            route: '',
-            load: '',
-            get: '',
-            cget: '',
-            send: '',
-            post: '',
-            save: '',
-            remove: '',
-            delete: '',
-            put: '',
-            patch: '',
-            option: '',
-        };
-        _.extend(this.routing, routing);
-    }
-    setUrl(method, url) {
-        let result = this.routing.route;
-        if (url) {
-            result = url;
-        } else {
-            let action = this.routing[method];
-            result = action ? action : result;
-        }
-        //console.log('url: ', [this.root, result])
-        return this.root + result;
-    }
-    setParams(params) {
-        this.config.params = params ? params : {};
-    }
-
-    get(params, url) {
-        this.setParams(params);
-        return this.delay(axios.get(this.setUrl('get', url), this.config), 0);
-    }
-    load(params, url) {
-        this.setParams(params);
-        return this.delay(axios.get(this.setUrl('load', url), this.config), 0);
-    }
-    cget(params, url) {
-        this.setParams(params);
-        return this.delay(axios.get(this.setUrl('cget', url), this.config), 0);
-    }
-    send(params, url) {
-        this.setParams(params);
-        return this.delay(axios.get(this.setUrl('send', url), this.config), 0);
-    }
-    post(data, params, url) {
-        this.setParams(params);
-        return this.delay(axios.post(this.setUrl('post', url), data, this.config), 0);
-    }
-    save(data, params, url) {
-        this.setParams(params);
-        return this.delay(axios.post(this.setUrl('save', url), data, this.config), 0);
-    }
-    remove(data, params, url) {
-        this.setParams(params);
-        return this.delay(axios.post(this.setUrl('remove', url), data, this.config), 0);
-    }
-    delete(data, params, url) {
-        this.setParams(params);
-        return this.delay(axios.post(this.setUrl('delete', url), data, this.config), 0);
-    }
-    request(method, action, data, params, url) {
-        // this.config.method = method;
-        // this.config.url = this.setUrl(action, url);
-        // this.config.data = data;
-        // this.config.params = params;
-        // return this.delay(axios.request(this.config), 0);
-        if (data) {
-            return this.delay(axios[method](this.setUrl(action, url), data, this.config), 0);
-        } else {
-            return this.delay(axios[method](this.setUrl(action, url), this.config), 0);
-        }
-    }
-
-    put() {}
-    patch() {}
-    option() {}
-
-    delay(result, wait) {
-        let msec = wait ? wait : this.wait;
-        if (msec < this.wait) {
-            msec = this.wait;
-        }
-        if(msec == 0 || typeof Promise == "undefined") {
-            return result;
-        }
-        return new Promise((resolve, reject) => {
-            _.delay(resolve, msec, result);
-        });
-    }
-};
-
-class ApiBun extends Api {
-    constructor() {
-        let key = '1234';
-        let host = '/';
-        super(host, key);
-    }
-    send(data) {
-
-        return axios.post('mess/bun/', data, this.config);
-        console.log('ApiBun Bun-Bun');
-    }
-};
-
-
-class ApiMessages extends Api {
-    constructor() {
-        let key = '1234';
-        let host = '/';
-        super(host, key);
-    }
-    send(data) {
-        console.log(this);
-        return axios.post('mailer/post/', data, this.config);
-        console.log('ApiMessages send !!!');
-    }
-};
-
-class ApiUser extends Api {
-    constructor() {
-        let key = '1234';
-        let host = '/';
-        super(host, key);
-    }
-    saveSex(data) {
-        return axios.post('/option/sex/', data, this.config).then((response) => {
-            if (response.data.sex) {
-                store.commit('loadUser', { sex: response.data.sex });
-                handler();
-            }
-        }).catch((e) => {
-            console.log(e);
-        });
-    }
-};
-
-
-
-
-class ApiContact extends Api {
-    constructor(routing) {
-        let key = '1234';
-        let host = '/';
-        super(host, key, null, routing);
-    }
-
-    getList(url) {
-        return axios.get(`/contact/list/${url}/`, this.config);
-    }
-
-    initialList() {
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                resolve(this.getList('initial'));
-            }, 5000);
-        });
-    }
-
-    intimateList() {
-        return this.getList('intimate');
-    }
-
-    sendsList() {
-        return this.getList('sends');
-    }
-
-
-
-
-
-
-    ignore(data) {
-        console.log('contact ignored');
-        return super.request('post', 'ignore', data);
-        //return super.post(data);
-    }
-
-    remove(data) {
-        console.log('contact removed');
-        return super.remove(data);
-    }
-    cget(next) {
-        return super.cget({next});
-    }
-};
-
-class ApiInitial extends ApiContact {
-    constructor() {
-        let routing = {
-            cget:   'contact/list/initial',
-            remove: 'human/delete',
-            post:   'human/ignore',
-        };
-        super(routing);
-    }
-}
-
-class ApiIntimate extends ApiContact {
-    constructor() {
-        let routing = {
-            cget:   'contact/list/initial',
-            remove: 'human/delete',
-            post:   'human/ignore',
-        };
-        super(routing);
-    }
-}
-
-class ApiSends extends ApiContact {
-    constructor() {
-        let routing = {
-            cget:   'contact/list/initial',
-            remove: 'human/delete',
-            ignore: 'human/ignore',
-        };
-        super(routing);
-    }
-}
-
-
-
-var api = {
-    user: new ApiUser(),
-    bun: new ApiBun(),
-    contacts: {
-        initial: new ApiInitial(),
-        intimate: new ApiIntimate(),
-        sends: new ApiSends(),
-    },
-    messages: new ApiMessages(),
-}
-
-
-
-//ApiMessages.send();
-
-
 const mutations = {
     mutations: {
         load(state, data) {
@@ -878,17 +775,17 @@ const initial = _.extend({
         list: []
     },
     actions: {
-        LOAD({ commit }) {
+        LOAD({ commit }, next) {
             commit('load', ls.get('initial-contacts'));
-            let promise = api.contacts.initial.cget();
+            let promise = api.contacts.initial.cget('10336', next);
             promise.then((response) => {
                 commit('load', response.data);
                 ls.set('initial-contacts', response.data);
             });
             return promise;
         },
-        DELETE({ commit }) {
-            let promise = api.contacts.initial.remove();
+        DELETE({ commit }, params) {
+            let promise = api.contacts.initial.delete(params);
             promise.then((response) => {
                 commit('load', response.data);
                 ls.set('initial-contacts', response.data);
@@ -904,12 +801,12 @@ const intimate = _.extend({
         list: []
     },
     actions: {
-        LOAD({ commit }) {
+        LOAD({ commit }, next) {
             commit('load', ls.get('intimate-contacts'));
-            let promise = api.contacts.intimate.cget();
+            let promise = api.contacts.intimate.cget('10336', next);
             promise.then((response) => {
                 commit('load', response.data);
-                //ls.set('intimate-contacts', state.contacts.intimate);
+                ls.set('intimate-contacts', response.data);
             });
             return promise;
         }
@@ -922,9 +819,9 @@ const sends = _.extend({
         list: []
     },
     actions: {
-        LOAD({ commit }) {
+        LOAD({ commit }, next) {
             commit('load', ls.get('sends-contacts'));
-            let promise = api.contacts.sends.cget();
+            let promise = api.contacts.sends.cget('10336', next);
             promise.then((response) => {
                 commit('load', response.data);
                 //ls.set('intimate-contacts', state.contacts.intimate);
@@ -942,6 +839,55 @@ const contacts = {
         sends
     }
 }
+
+const modals = {
+    state: {
+        initial: false,
+        intimate: false,
+        sends: false,
+    },
+    mutations: {
+        showInitial(state, data) {
+            state.initial = data == true;
+        },
+        showIntimate(state, data) {
+            state.intimate = data == true;
+        },
+        showSends(state, data) {
+            state.sends = data == true;
+        },
+    }
+}
+
+const search = {
+    state: {
+        list: [],
+        human: {}
+    },
+    actions: {
+        human({ commit }, tid) {
+            //commit('load', ls.get('initial-contacts'));
+            commit('resetHuman', tid);
+            let promise = api.search.get({tid});
+            promise.then((response) => {
+                commit('setHuman', response.data);
+                //ls.set('initial-contacts', response.data);
+            });
+            return promise;
+        },
+    },
+    mutations: {
+        resetHuman(state, tid) {
+            if (state.human && state.human.id != tid) {
+                state.human = {};
+            }
+        },
+        setHuman(state, data) {
+            //console.log(data);
+            state.human = data;
+        },
+    }
+};
 
 const user = {
     state: {
@@ -968,9 +914,14 @@ const user = {
 }
 
 
+moment.locale('ru');
+
+var ls = lscache;
+
 const store = new Vuex.Store({
     modules: {
         user,
+        search,
         contacts
     },
     state: {
@@ -1055,6 +1006,246 @@ const store = new Vuex.Store({
 store.dispatch('LOAD_API_TOKEN');
 store.dispatch('LOAD_ACCEPTS');
 store.dispatch('LOAD_USER');
+
+
+class Api {
+    constructor(host, key, version, routing) {
+        // Delay requests sec
+        let delay = 4;
+
+        let ver = version ? 'v' + version + '/' : '';
+        this.root = host + ver;
+        this.key = key;
+        this.config = {
+            baseURL: this.root,
+            headers: {'Authorization': 'Bearer ' + key}
+        }
+        this.wait = delay * 1000; //
+        this.routing = {
+            route: '',
+            load: '',
+            get: '',
+            cget: '',
+            send: '',
+            post: '',
+            save: '',
+            remove: '',
+            delete: '',
+            put: '',
+            patch: '',
+            option: ''
+        };
+        _.extend(this.routing, routing);
+    }
+    setParams(params, url) {
+        let result = url.replace(/\{(.*?)\}/ig, (match, token) => {
+            let slug = params[token];
+            delete params[token];
+            return slug;
+        });
+        //console.log('url: ', [this.root, result, params]);
+        this.config.params = params ? params : {};
+        return result;
+    }
+    setUrl(method, params, url) {
+        let route = this.routing.route;
+        if (url) {
+            result = url;
+        } else {
+            let action = this.routing[method];
+            result = route ? route : '';
+            if (result && action) {
+                result = result + '/' + action;
+            } else if(action) {
+                result = action;
+            }
+        }
+        result = this.setParams(params, result);
+        return this.root + result;
+    }
+
+    get(params, url) {
+        return this.delay(axios.get(this.setUrl('get', params, url), this.config), 0);
+    }
+    load(params, url) {
+        return this.delay(axios.get(this.setUrl('load', params, url), this.config), 0);
+    }
+    cget(params, url) {
+        return this.delay(axios.get(this.setUrl('cget', params, url), this.config), 0);
+    }
+    send(params, url) {
+        return this.delay(axios.get(this.setUrl('send', params, url), this.config), 0);
+    }
+    post(data, params, url) {
+        return this.delay(axios.post(this.setUrl('post', params, url), data, this.config), 0);
+    }
+    save(data, params, url) {
+        return this.delay(axios.post(this.setUrl('save', params, url), data, this.config), 0);
+    }
+    remove(data, params, url) {
+        return this.delay(axios.post(this.setUrl('remove', params, url), data, this.config), 0);
+    }
+    delete(data, params, url) {
+        return this.delay(axios.post(this.setUrl('delete', params, url), data, this.config), 0);
+    }
+    request(method, action, data, params, url) {
+        // this.config.method = method;
+        // this.config.url = this.setUrl(action, url);
+        // this.config.data = data;
+        // this.config.params = params;
+        // return this.delay(axios.request(this.config), 0);
+        if (data) {
+            return this.delay(axios[method](this.setUrl(action, params, url), data, this.config), 0);
+        } else {
+            return this.delay(axios[method](this.setUrl(action, params, url), this.config), 0);
+        }
+    }
+
+    put() {}
+    patch() {}
+    option() {}
+
+    delay(result, wait) {
+        let msec = wait ? wait : this.wait;
+        if (msec < this.wait) {
+            msec = this.wait;
+        }
+        if(msec == 0 || typeof Promise == "undefined") {
+            return result;
+        }
+        return new Promise((resolve, reject) => {
+            _.delay(resolve, msec, result);
+        });
+    }
+}
+
+class ApiBun extends Api {
+    constructor() {
+        let key = '1234';
+        let host = '/';
+        super(host, key);
+    }
+    send(data) {
+
+        return axios.post('mess/bun/', data, this.config);
+        console.log('ApiBun Bun-Bun');
+    }
+}
+
+
+class ApiMessages extends Api {
+    constructor() {
+        let key = '1234';
+        let host = '/';
+        super(host, key);
+    }
+    send(data) {
+        //console.log(this);
+        return axios.post('mailer/post/', data, this.config);
+    }
+}
+
+class ApiUser extends Api {
+    constructor() {
+        let key = '1234';
+        let host = '/';
+        let routing = {
+            post: 'option/sex',
+        };
+        super(host, key);
+    }
+    saveSex(data) {
+        return this.post(data).then((response) => {
+            if (response.data.sex) {
+                store.commit('loadUser', { sex: response.data.sex });
+            }
+        }).catch((e) => {
+            console.log(e);
+        });
+    }
+}
+
+class ApiSearch extends Api {
+    constructor() {
+        let key = '1234';
+        let host = 'http://127.0.0.1:9000/';
+        let routing = {
+            route: 'users',
+            get: '{tid}',
+        };
+        super(host, key, null, routing);
+    }
+}
+
+
+
+
+class ApiContact extends Api {
+    constructor(routing) {
+        let key = store.state.apiToken;
+        let host = 'http://127.0.0.1:8000/';
+        super(host, key, null, routing);
+    }
+
+    ignore(data) {
+        console.log('contact ignored');
+        return super.request('post', 'ignore', data);
+        //return super.post(data);
+    }
+
+    remove(data) {
+        console.log('contact removed');
+        return super.remove(data);
+    }
+    cget(uid, next) {
+        return super.cget({uid, next});
+    }
+}
+
+class ApiInitial extends ApiContact {
+    constructor() {
+        let routing = {
+            route: 'users/{uid}/initials',
+        };
+        super(routing);
+    }
+}
+
+class ApiIntimate extends ApiContact {
+    constructor() {
+        let routing = {
+            route: 'users/{uid}/intimates',
+        };
+        super(routing);
+    }
+}
+
+class ApiSends extends ApiContact {
+    constructor() {
+        let routing = {
+            route: 'users/{uid}/sends',
+        };
+        super(routing);
+    }
+}
+
+
+
+var api = {
+    user: new ApiUser(),
+    search: new ApiSearch(),
+    bun: new ApiBun(),
+    contacts: {
+        initial: new ApiInitial(),
+        intimate: new ApiIntimate(),
+        sends: new ApiSends(),
+    },
+    messages: new ApiMessages(),
+};
+
+
+
+//ApiMessages.send();
 
 
 // -- Получить новый хэш ---
@@ -1842,19 +2033,6 @@ var json = {
     }       
 }       
    
-
-
-Vue.component('loading-cover', {
-    props: ['show', 'text'],
-    computed: {
-        loader() {
-            return this.text ? this.text : 'Отправляю';
-        }
-    },
-    template: '#loading-cover',
-});
-
-
 
   
 // Установки  почты        
@@ -3226,9 +3404,9 @@ var result_list = {
 ////
 
 const routes = [
-    { path: '/sends-contacts', name: 'sends', component: SendsDialog },
-    { path: '/initial-contacts', name: 'initial', component: InitialDialog },
-    { path: '/intimate-contacts',  name: 'intimate', component: IntimateDialog,
+    { path: '/sends-contacts', name: 'sends', component: SendsDialog, props: { quick: false } },
+    { path: '/initial-contacts', name: 'initial', component: InitialDialog, props: { quick: true } },
+    { path: '/intimate-contacts',  name: 'intimate', component: IntimateDialog, props: { quick: false },
         // children: [
         //     {
         //         path: 'quick-reply',

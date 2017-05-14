@@ -1,7 +1,12 @@
 
+moment.locale('ru');
+
+var ls = lscache;
+
 const store = new Vuex.Store({
     modules: {
         user,
+        search,
         contacts
     },
     state: {

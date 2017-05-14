@@ -525,28 +525,6 @@ var cont_list = {
     }
 };
 
-var ContactSection = new Vue({
-    el: '#contact-section',
-    store: store,
-    data: {},
-    methods: {
-        push: function push(name) {
-            if (router.name != name) {
-                router.push({ name: name });
-            }
-        },
-        openSends: function openSends() {
-            this.push('sends');
-        },
-        openInit: function openInit() {
-            this.push('initial');
-        },
-        openIntim: function openIntim() {
-            this.push('intimate');
-        }
-    }
-});
-
 // -- Время свиданий ---
 var dating_time = {
 

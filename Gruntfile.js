@@ -2,8 +2,12 @@ module.exports = function (grunt) {
     grunt.initConfig({
         //Склеивание файлов javascript
         concat: {
-            options: {
-            
+            vue: {
+                files: {
+                    'javascript/core/vue-components.js': 'vue_components/**/*.js',
+                    'templates/core/vue-components.htm':  'vue_components/**/*.htm',
+                    'css-styles/core/vue-components.less': 'vue_components/**/*.less',
+                }
             },
             bower: {
                 src: [
@@ -19,31 +23,49 @@ module.exports = function (grunt) {
                     'bower_components/vue-resource/dist/vue-resource.min.js',
                     'bower_components/blueimp-file-upload/js/jquery.fileupload.js',
                     'bower_components/blueimp-file-upload/js/jquery.iframe-transport.js',
+                    'bower_components/pluralize/pluralize.js',
                 ],
                 dest: 'bower_components/bower-components.js',
             },
-            state: {
-                src: [
-                    'javascript/core/src/state/api.js',
-                    'javascript/core/src/state/modules/*.js',
-                    'javascript/core/src/state/state.js',
-                ],
-                dest: 'javascript/core/src/1-state.js',
-            },
-            core: {
-                src: [
-                    'javascript/core/src/dialogs/*.js',
-                    'javascript/core/src/*.js',
-                ],
-                dest: 'javascript/core/dist/core.es6',
-            },
-            mess: {
-                src: ['javascript/mess/src/**/*.js'],
-                dest: 'javascript/mess/dist/mess.es6',
+            javascript: {
+                files: {
+                    'javascript/core/src/1-state.js': [
+                        'javascript/core/src/state/modules/*.js',
+                        'javascript/core/src/state/state.js',
+                        'javascript/core/src/state/api.js',
+                    ],
+                    'javascript/core/dist/core.es6': [
+                        'javascript/core/vue-components.js',
+                        'javascript/core/src/dialogs/*.js',
+                        'javascript/core/src/*.js',
+                    ],
+                    'javascript/mess/dist/mess.es6': [
+                        'javascript/mess/src/**/*.js',
+                    ],
+                }
             },
             admin: {
                 src: ['javascript/admin/src/*.js'],
                 dest: 'javascript/admin/dist/admin.js',
+            },
+            bundle_dev: {
+                files: {
+                    'javascript/core/dist/core.min.js': [
+                        'bower_components/bower-components.js',
+                        'javascript/core/dist/core.js'
+                    ],
+                    'javascript/mess/dist/mess.min.js': [
+                        'javascript/mess/dist/mess.js'
+                    ], 
+                }
+            },
+            bundle_prod: {
+                files: {
+                    'javascript/core/dist/core.min.js': [
+                        'bower_components/bower-components.js',
+                        'javascript/core/dist/core.min.js'
+                    ]
+                }
             },
         },
         babel: {
@@ -51,7 +73,7 @@ module.exports = function (grunt) {
                 sourceMap: false,
                 presets: ['es2015']
             },
-            dist: {
+            javascript: {
                 files: {
                     'javascript/core/dist/core.js': 'javascript/core/dist/core.es6',
                     'javascript/mess/dist/mess.js': 'javascript/mess/dist/mess.es6'
@@ -112,55 +134,63 @@ module.exports = function (grunt) {
         },
         uglify: {
             core: {
-                src: [
-                    'bower_components/bower-components.js',
-                    'javascript/core/dist/core.js'
-                ],
-                dest: 'javascript/core/dist/core.min.js'
+                files: {'javascript/core/dist/core.min.js': 'javascript/core/dist/core.js'} 
             },
             mess: {
-                src: 'javascript/mess/dist/mess.js',
-                dest: 'javascript/mess/dist/mess.min.js'
+                files: {'javascript/mess/dist/mess.min.js': 'javascript/mess/dist/mess.js'}
             }
         },
         // Наблюдение за изменениями в файлах исходниках
         watch: {
             options: {
-                livereload: true
+                //livereload: true
+            },
+            vue: {
+                files: [
+                    'vue_components/**/*.js',
+                    'vue_components/**/*.htm',
+                    'vue_components/**/*.less',
+                ],
+                tasks: ['concat:vue'],
             },
             jscripts: {
                 files: [
+                    'javascript/core/vue-components.js',
                     'javascript/core/src/**/*.js',
                     'javascript/mess/src/**/*.js',
                     'javascript/admin/src/*.js',
                 ],
-                tasks: ['default'],
+                tasks: ['concat:javascript', 'babel:javascript', 'concat:bundle_dev'],
                 options: {
+                    livereload: true,
                     spawn: false,
                 },
             },
             cstyles: {
                 files: [ 
+                    'css-styles/core/vue-components.less',
                     'css-styles/0_import/**/*',
                     'css-styles/core/src/*', 
                     'css-styles/mess/src/*',
                     'css-styles/admin/src/*',
                     'css-styles/blog/src/*',
                 ],
-                tasks: ['default'],
+                tasks: ['less:dev'],
                 options: {
                     spawn: false,
                 },
             },
             templates: {
                 files: [
+                    'templates/core/vue-components.htm',
                     'templates/index/src/**/*.htm',
                     'templates/mess/src/**/*.htm',
                     'templates/profile/src/*.htm',
                     'templates/_common/**/*.htm',
                 ],
-                tasks: ['default'],
+                tasks: ['processhtml:dist'],
                 options: {
+                    livereload: true,
                     spawn: false,
                 },
             },
@@ -168,7 +198,7 @@ module.exports = function (grunt) {
                 files: [
                     'Gruntfile.js', 
                 ],
-                tasks: ['default'],
+                tasks: ['core'],
                 options: {
                     spawn: false,
                 },
@@ -186,8 +216,17 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
 
     // Эти задания будут выполнятся сразу же когда вы в консоли напечатание grunt, и нажмете Enter
-    grunt.registerTask('default', ['concat', 'babel', 'uglify', 'less', 'processhtml']);
-    grunt.registerTask('w',       ['default', 'watch']);
-    grunt.registerTask('g',       ['image_resize']);
+    grunt.registerTask('core', [
+        'concat:vue', 
+        'concat:javascript', 'babel:javascript',
+        'less:dev', 
+        'processhtml'
+    ]);
+    //grunt.registerTask('default', ['concat', 'babel', 'uglify', 'less', 'processhtml']);
+    grunt.registerTask('dev',  ['core', 'concat:bundle_dev']);
+    grunt.registerTask('prod', ['core', 'uglify', 'concat:bundle_prod' ]);
+    grunt.registerTask('p',    ['prod', 'watch']);
+    grunt.registerTask('d',    ['dev', 'watch']);
+    grunt.registerTask('img',  ['image_resize']);
 };
 

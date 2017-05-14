@@ -1,12 +1,8 @@
 
-moment.locale('ru');
-
-var ls = lscache;
-
 class Api {
     constructor(host, key, version, routing) {
-        // Delay requests msec
-        this.wait = 5000; //
+        // Delay requests sec
+        let delay = 4;
 
         let ver = version ? 'v' + version + '/' : '';
         this.root = host + ver;
@@ -15,6 +11,7 @@ class Api {
             baseURL: this.root,
             headers: {'Authorization': 'Bearer ' + key}
         }
+        this.wait = delay * 1000; //
         this.routing = {
             route: '',
             load: '',
@@ -27,56 +24,60 @@ class Api {
             delete: '',
             put: '',
             patch: '',
-            option: '',
+            option: ''
         };
         _.extend(this.routing, routing);
     }
-    setUrl(method, url) {
-        let result = this.routing.route;
+    setParams(params, url) {
+        let result = url.replace(/\{(.*?)\}/ig, (match, token) => {
+            let slug = params[token];
+            delete params[token];
+            return slug;
+        });
+        //console.log('url: ', [this.root, result, params]);
+        this.config.params = params ? params : {};
+        return result;
+    }
+    setUrl(method, params, url) {
+        let route = this.routing.route;
         if (url) {
             result = url;
         } else {
             let action = this.routing[method];
-            result = action ? action : result;
+            result = route ? route : '';
+            if (result && action) {
+                result = result + '/' + action;
+            } else if(action) {
+                result = action;
+            }
         }
-        //console.log('url: ', [this.root, result])
+        result = this.setParams(params, result);
         return this.root + result;
-    }
-    setParams(params) {
-        this.config.params = params ? params : {};
     }
 
     get(params, url) {
-        this.setParams(params);
-        return this.delay(axios.get(this.setUrl('get', url), this.config), 0);
+        return this.delay(axios.get(this.setUrl('get', params, url), this.config), 0);
     }
     load(params, url) {
-        this.setParams(params);
-        return this.delay(axios.get(this.setUrl('load', url), this.config), 0);
+        return this.delay(axios.get(this.setUrl('load', params, url), this.config), 0);
     }
     cget(params, url) {
-        this.setParams(params);
-        return this.delay(axios.get(this.setUrl('cget', url), this.config), 0);
+        return this.delay(axios.get(this.setUrl('cget', params, url), this.config), 0);
     }
     send(params, url) {
-        this.setParams(params);
-        return this.delay(axios.get(this.setUrl('send', url), this.config), 0);
+        return this.delay(axios.get(this.setUrl('send', params, url), this.config), 0);
     }
     post(data, params, url) {
-        this.setParams(params);
-        return this.delay(axios.post(this.setUrl('post', url), data, this.config), 0);
+        return this.delay(axios.post(this.setUrl('post', params, url), data, this.config), 0);
     }
     save(data, params, url) {
-        this.setParams(params);
-        return this.delay(axios.post(this.setUrl('save', url), data, this.config), 0);
+        return this.delay(axios.post(this.setUrl('save', params, url), data, this.config), 0);
     }
     remove(data, params, url) {
-        this.setParams(params);
-        return this.delay(axios.post(this.setUrl('remove', url), data, this.config), 0);
+        return this.delay(axios.post(this.setUrl('remove', params, url), data, this.config), 0);
     }
     delete(data, params, url) {
-        this.setParams(params);
-        return this.delay(axios.post(this.setUrl('delete', url), data, this.config), 0);
+        return this.delay(axios.post(this.setUrl('delete', params, url), data, this.config), 0);
     }
     request(method, action, data, params, url) {
         // this.config.method = method;
@@ -85,9 +86,9 @@ class Api {
         // this.config.params = params;
         // return this.delay(axios.request(this.config), 0);
         if (data) {
-            return this.delay(axios[method](this.setUrl(action, url), data, this.config), 0);
+            return this.delay(axios[method](this.setUrl(action, params, url), data, this.config), 0);
         } else {
-            return this.delay(axios[method](this.setUrl(action, url), this.config), 0);
+            return this.delay(axios[method](this.setUrl(action, params, url), this.config), 0);
         }
     }
 
@@ -107,7 +108,7 @@ class Api {
             _.delay(resolve, msec, result);
         });
     }
-};
+}
 
 class ApiBun extends Api {
     constructor() {
@@ -120,7 +121,7 @@ class ApiBun extends Api {
         return axios.post('mess/bun/', data, this.config);
         console.log('ApiBun Bun-Bun');
     }
-};
+}
 
 
 class ApiMessages extends Api {
@@ -130,64 +131,52 @@ class ApiMessages extends Api {
         super(host, key);
     }
     send(data) {
-        console.log(this);
+        //console.log(this);
         return axios.post('mailer/post/', data, this.config);
-        console.log('ApiMessages send !!!');
     }
-};
+}
 
 class ApiUser extends Api {
     constructor() {
         let key = '1234';
         let host = '/';
+        let routing = {
+            post: 'option/sex',
+        };
         super(host, key);
     }
     saveSex(data) {
-        return axios.post('/option/sex/', data, this.config).then((response) => {
+        return this.post(data).then((response) => {
             if (response.data.sex) {
                 store.commit('loadUser', { sex: response.data.sex });
-                handler();
             }
         }).catch((e) => {
             console.log(e);
         });
     }
-};
+}
+
+class ApiSearch extends Api {
+    constructor() {
+        let key = '1234';
+        let host = 'http://127.0.0.1:9000/';
+        let routing = {
+            route: 'users',
+            get: '{tid}',
+        };
+        super(host, key, null, routing);
+    }
+}
 
 
 
 
 class ApiContact extends Api {
     constructor(routing) {
-        let key = '1234';
-        let host = '/';
+        let key = store.state.apiToken;
+        let host = 'http://127.0.0.1:8000/';
         super(host, key, null, routing);
     }
-
-    getList(url) {
-        return axios.get(`/contact/list/${url}/`, this.config);
-    }
-
-    initialList() {
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                resolve(this.getList('initial'));
-            }, 5000);
-        });
-    }
-
-    intimateList() {
-        return this.getList('intimate');
-    }
-
-    sendsList() {
-        return this.getList('sends');
-    }
-
-
-
-
-
 
     ignore(data) {
         console.log('contact ignored');
@@ -199,17 +188,15 @@ class ApiContact extends Api {
         console.log('contact removed');
         return super.remove(data);
     }
-    cget(next) {
-        return super.cget({next});
+    cget(uid, next) {
+        return super.cget({uid, next});
     }
-};
+}
 
 class ApiInitial extends ApiContact {
     constructor() {
         let routing = {
-            cget:   'contact/list/initial',
-            remove: 'human/delete',
-            post:   'human/ignore',
+            route: 'users/{uid}/initials',
         };
         super(routing);
     }
@@ -218,9 +205,7 @@ class ApiInitial extends ApiContact {
 class ApiIntimate extends ApiContact {
     constructor() {
         let routing = {
-            cget:   'contact/list/initial',
-            remove: 'human/delete',
-            post:   'human/ignore',
+            route: 'users/{uid}/intimates',
         };
         super(routing);
     }
@@ -229,9 +214,7 @@ class ApiIntimate extends ApiContact {
 class ApiSends extends ApiContact {
     constructor() {
         let routing = {
-            cget:   'contact/list/initial',
-            remove: 'human/delete',
-            ignore: 'human/ignore',
+            route: 'users/{uid}/sends',
         };
         super(routing);
     }
@@ -241,6 +224,7 @@ class ApiSends extends ApiContact {
 
 var api = {
     user: new ApiUser(),
+    search: new ApiSearch(),
     bun: new ApiBun(),
     contacts: {
         initial: new ApiInitial(),
@@ -248,7 +232,7 @@ var api = {
         sends: new ApiSends(),
     },
     messages: new ApiMessages(),
-}
+};
 
 
 

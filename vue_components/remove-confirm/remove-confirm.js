@@ -1,6 +1,6 @@
 
 Vue.component('remove-confirm', {
-    props: ['show'],
+    props: ['show', 'item'],
     data() {
         return {
             content: {
@@ -50,7 +50,6 @@ Vue.component('remove-confirm', {
             this.close();
         },
         remove() {
-            //apiContact.remove({ tid: this.contacts[index] });
             this.$emit('remove');
             this.close();
         },

@@ -10,34 +10,41 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-Vue.component('captcha-dialog', {
-    props: ['show'],
+Vue.component('attention-wall', {
+    props: ['show', 'text'],
     data: function data() {
         return {
-            code: '',
-            inc: 0
+            content: {
+                1: {
+                    caption: 'Предупреждение',
+                    text: '\u041D\u0430 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u044F \u043E\u0442 \u044D\u0442\u043E\u0433\u043E \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044F \u043F\u043E\u0441\u0442\u0443\u043F\u0430\u044E\u0442 \u0436\u0430\u043B\u043E\u0431\u044B. \u0412\u043E\u0437\u043C\u043E\u0436\u043D\u043E \u0435\u0433\u043E \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u044F \u0438\u043C\u0435\u044E\u0442 \u0433\u0440\u0443\u0431\u044B\u0439 \u0442\u043E\u043D,\n                    \u043C\u043E\u0433\u0443\u0442 \u043E\u0441\u043A\u043E\u0440\u0431\u0438\u0442\u044C, \u0441\u043E\u0434\u0435\u0440\u0436\u0430\u0442 \u0438\u043D\u0442\u0438\u043C \u0444\u043E\u0442\u043E\u0433\u0440\u0430\u0444\u0438\u0438, \u0431\u0435\u0441\u0441\u043C\u044B\u0441\u043B\u0435\u043D\u043D\u044B\u0435 \u0438\u043B\u0438 \u0440\u0435\u0437\u043A\u0438\u0435 \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u044F.'
+                },
+                8: {
+                    caption: 'Внимание',
+                    text: '\u0414\u0435\u0439\u0441\u0442\u0432\u0438\u044F \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044F \u043D\u0430\u0440\u0443\u0448\u0430\u044E\u0442 \u043F\u0440\u0430\u0432\u0438\u043B\u0430. \u0421\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u044F \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044F \u043D\u0430\u043C\u0435\u0440\u0435\u043D\u043D\u043E \u043E\u0441\u043A\u043E\u0440\u0431\u0438\u0442\u0435\u043B\u044C\u043D\u044B,\n                    \u0438\u043C\u0435\u044E\u0442 \u043F\u0440\u043E\u0442\u0438\u0432\u043E\u043F\u0440\u0430\u0432\u043D\u043E\u0435 \u0441\u043E\u0434\u0435\u0440\u0436\u0430\u043D\u0438\u0435, \u043E\u0431\u043C\u0430\u043D \u0438\u043B\u0438 \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u0435 \u043E\u043F\u043B\u0430\u0442\u044B \u0443\u0441\u043B\u0443\u0433.'
+                }
+            }
         };
     },
 
     computed: {
-        src: function src() {
-            return '/secret_pic.php?inc=' + this.inc;
+        caption: function caption() {
+            return this.content[this.show].caption;
+        },
+        text: function text() {
+            return this.content[this.show].text;
         }
     },
     methods: {
         close: function close() {
-            this.$emit('cancel');
+            this.$emit('close');
         },
-        send: function send() {
-            this.$emit('send', this.code);
-            this.update();
+        remove: function remove() {
+            this.$emit('remove');
             this.close();
-        },
-        update: function update() {
-            this.inc++;
         }
     },
-    template: '#captcha-dialog'
+    template: '#attention-wall'
 });
 
 var ContactDialog = {
@@ -123,7 +130,6 @@ var InitialDialog = Vue.component('initial-dialog', {
             return true;
         },
         contacts: function contacts() {
-            console.log('contacts *** ');
             return this.$store.state.contacts.initial.list;
         }
     },
@@ -204,7 +210,7 @@ var SendsDialog = Vue.component('sends-dialog', {
 });
 
 Vue.component('contact-item', {
-    props: ['item', 'index', 'initial'],
+    props: ['item', 'index', 'quick'],
     data: function data() {
         return {
             detail: false,
@@ -214,15 +220,34 @@ Vue.component('contact-item', {
 
     computed: {
         sent: function sent() {
-            return this.item.cont_id == this.$store.state.user.uid;
+            return this.item.user_id == this.$store.state.user.uid;
+        },
+        name: function name() {
+            var result = 'Парень или девушка';
+            if (this.item.user) {
+                result = this.item.user.sex == 2 ? 'Девушка' : 'Парень';
+                if (this.item.user.name) {
+                    result = this.item.user.name;
+                }
+            }
+            return result;
+        },
+        age: function age() {
+            return this.item.user ? this.item.user.age : null;
+        },
+        city: function city() {
+            return this.item.user ? this.item.user.city : '';
+        },
+        message: function message() {
+            return this.item.message ? this.item.message.text : '';
         }
     },
     methods: {
         show: function show() {
             //this.$emit('show');
             console.log('show = initial-item');
-            if (this.initial) {
-                this.quick();
+            if (this.quick) {
+                this.reply();
             } else {
                 this.anketa();
             }
@@ -236,12 +261,12 @@ Vue.component('contact-item', {
             console.log('initial-item REMOVE');
             this.confirm = !this.initial ? 'some' : 'must';
         },
-        quick: function quick() {
+        reply: function reply() {
             this.detail = true;
             console.log('quick');
         },
         anketa: function anketa() {
-            window.location = '/' + this.item.cont_id;
+            window.location = '/' + this.item.human_id;
             console.log('anketa');
         },
         close: function close() {
@@ -265,14 +290,61 @@ Vue.component('contact-item', {
     template: '#contact-item'
 });
 
-Vue.component('inform-dialog', {
-    props: ['loader', 'hint'],
+var ContactSection = new Vue({
+    el: '#contact-section',
+    store: store,
+    data: {},
     methods: {
-        close: function close() {
-            this.$emit('close');
+        push: function push(name) {
+            if (router.name != name) {
+                router.push({ name: name });
+            }
+        },
+        openSends: function openSends() {
+            this.push('sends');
+        },
+        openInit: function openInit() {
+            this.push('initial');
+        },
+        openIntim: function openIntim() {
+            this.push('intimate');
+        }
+    }
+});
+
+Vue.component('loading-cover', {
+    props: ['show', 'text'],
+    computed: {
+        loader: function loader() {
+            return this.text ? this.text : 'Отправляю';
         }
     },
-    template: '#inform-dialog'
+    template: '#loading-cover'
+});
+
+Vue.component('loading-wall', {
+    props: ['show', 'text'],
+    data: function data() {
+        return {
+            hope: false
+        };
+    },
+
+    computed: {
+        loader: function loader() {
+            return this.text ? this.text : 'Загружаем';
+        }
+    },
+    mounted: function mounted() {
+        var _this5 = this;
+
+        this.hope = false;
+        setTimeout(function () {
+            return _this5.hope = true;
+        }, 3000);
+    },
+
+    template: '#loading-wall'
 });
 
 Vue.component('modal-dialog', {
@@ -293,6 +365,232 @@ Vue.component('modal-dialog', {
     },
 
     template: '#modal-dialog'
+});
+
+Vue.directive('resized', {
+    bind: function bind(el) {
+        el.style.height = el.scrollHeight + 'px';
+        $(el).on('input', function () {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        });
+    }
+});
+
+Vue.component('quick-reply', {
+    props: ['show', 'item'],
+    data: function data() {
+        return {
+            text: '',
+            captcha: false,
+            process: false,
+            loading: false,
+            confirm: false,
+            ignore: false,
+            code: null
+        };
+    },
+
+    computed: {
+        human: function human() {
+            return this.$store.state.search.human;
+        },
+        tags: function tags() {
+            return 'tags' in this.human ? this.human.tags : [];
+        },
+        hold: function hold() {
+            return this.ignore ? 0 : this.human.hold;
+        },
+        message: function message() {
+            return this.item.message ? this.item.message.text : '';
+        }
+    },
+    mounted: function mounted() {
+        this.reload();
+    },
+    updated: function updated() {
+        if (this.show) {}
+    },
+
+    methods: {
+        reload: function reload() {
+            var _this6 = this;
+
+            this.loading = true;
+            setTimeout(function () {
+                return _this6.loading = false;
+            }, 30 * 1000);
+            store.dispatch('human', this.item.human_id).then(function (response) {
+                _this6.loaded();
+            });
+        },
+        loaded: function loaded() {
+            this.loading = false;
+            console.log('hold:', this.human.hold);
+            console.log('tags:', this.human);
+            //this.process = false;
+        },
+        close: function close() {
+            this.$emit('close');
+        },
+        bun: function bun() {
+            this.$emit('bun');
+        },
+        remove: function remove() {
+            // store.dispatch('initial/DELETE', {uid: '10336', cont_id: contact}).then((response) => {
+            //     this.loaded();
+            // });
+            console.log('conf:', { uid: '10336', cont_id: this.item.id });
+            this.$emit('remove');
+        },
+        cancel: function cancel() {
+            this.captcha = false;
+            this.confirm = false;
+            this.ignore = true;
+            console.log('cancel');
+        },
+        inProcess: function inProcess(sec) {
+            var _this7 = this;
+
+            this.process = true;
+            setTimeout(function () {
+                return _this7.process = false;
+            }, sec * 1000);
+        },
+        send: function send() {
+            var _this8 = this;
+
+            var data = {
+                id: this.item.human_id,
+                mess: this.text,
+                captcha_code: this.code
+            };
+            api.messages.send(data).then(function (response) {
+                _this8.handler(response.data);
+            }).catch(function (error) {
+                _this8.error(error);
+            });
+            //  this.sended();
+            this.inProcess(5);
+        },
+        setCode: function setCode(code) {
+            this.code = code;
+            this.send();
+        },
+        handler: function handler(response) {
+            if (!response.saved && response.error) {
+                if (response.error == 'need_captcha') {
+                    this.captcha = true;
+                }
+                this.error();
+            } else {
+                this.sended();
+            }
+            this.process = false;
+        },
+        sended: function sended() {
+            console.log('send');
+            this.$emit('sended');
+        },
+        error: function error() {
+            this.process = false;
+        }
+    },
+    template: '#quick-reply'
+});
+
+Vue.component('remove-confirm', {
+    props: ['show', 'item'],
+    data: function data() {
+        return {
+            content: {
+                doit: {
+                    caption: 'Наказывайте как следует',
+                    text: '\u0417\u0430 \u0440\u0435\u0437\u043A\u0438\u0435 \u0441\u043B\u043E\u0432\u0430, \u0437\u0430 \u043E\u0441\u043A\u043E\u0440\u0431\u043B\u0435\u043D\u0438\u044F \u0438\u043B\u0438 \u0445\u0430\u043C\u0441\u0442\u0432\u043E,\n                    \u0437\u0430 \u0444\u043E\u0442\u043E\u0433\u0440\u0430\u0444\u0438\u0438 \u043D\u0435 \u0432 \u0442\u0435\u043C\u0443 \u0438\u043B\u0438 \u0431\u0435\u0441\u0441\u043C\u044B\u0441\u043B\u0435\u043D\u043D\u044B\u0435 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u044F, \u043D\u0430\u043A\u0430\u0437\u044B\u0432\u0430\u0439\u0442\u0435 \u0432\u0441\u0435\u0445, \u043A\u043E\u0433\u043E\n                    \u0441\u0447\u0438\u0442\u0430\u0435\u0442\u0435 \u043D\u0443\u0436\u043D\u044B\u043C. \u041D\u0430\u043A\u0430\u0437\u0430\u043D\u0438\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u0435\u0442 \u0441\u0440\u0430\u0437\u0443.',
+                    action: 'Удалить и наказать'
+                },
+                must: {
+                    caption: 'Может стоит наказать?',
+                    text: '\u041D\u0430\u0436\u043C\u0438\u0442\u0435 "\u0414\u0438\u0437\u043B\u0430\u0439\u043A" \u0443 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u044F, \u043A\u043E\u0442\u043E\u0440\u043E\u0435 \u0432\u044B\u0437\u0432\u0430\u043B\u043E \u043D\u0435\u0433\u0430\u0442\u0438\u0432\u043D\u044B\u0435 \u044D\u043C\u043E\u0446\u0438\u0438.\n                    \u041D\u0430\u043A\u0430\u0437\u0430\u043D\u0438\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u0435\u0442 \u0441\u0440\u0430\u0437\u0443 \u0436\u0435. \u041C\u044B \u043D\u0438\u043A\u043E\u0433\u0434\u0430 \u043D\u0435 \u0443\u0437\u043D\u0430\u0435\u043C \u043E \u043D\u0430\u0440\u0443\u0448\u0435\u043D\u0438\u044F\u0445\n                    \u0441\u043E\u0431\u0435\u0441\u0435\u0434\u043D\u0438\u043A\u0430, \u0435\u0441\u043B\u0438 \u0443\u0434\u0430\u043B\u0438\u0442\u044C \u0431\u0435\u0437 \u043D\u0430\u043A\u0430\u0437\u0430\u043D\u0438\u044F.',
+                    action: 'Удалить и забыть'
+                },
+                some: {
+                    caption: 'Удалить навсегда',
+                    text: '\u0412\u0430\u0448\u0435 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435 \u0431\u0443\u0434\u0435\u0442 \u0443\u0434\u0430\u043B\u0435\u043D\u043E \u043E\u0442\u043E\u0432\u0441\u044E\u0434\u0443, \u0431\u0435\u0437 \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0441\u0442\u0438 \u0432\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C. \u0421\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435\n                    \u043F\u0440\u043E\u043F\u0430\u0434\u0435\u0442 \u043A\u0430\u043A \u0438\u0437 \u0432\u0430\u0448\u0435\u0439 \u0438\u0441\u0442\u043E\u0440\u0438\u0438 \u043F\u0435\u0440\u0435\u043F\u0438\u0441\u043A\u0438, \u0442\u0430\u043A \u0438 \u0438\u0437 \u043F\u0435\u0440\u0435\u043F\u0438\u0441\u043A\u0438 \u0432\u0430\u0448\u0435\u0433\u043E \u0441\u043E\u0431\u0435\u0441\u0435\u0434\u043D\u0438\u043A\u0430.',
+                    action: 'Удалить навсегда'
+                }
+            }
+        };
+    },
+
+    computed: {
+        variant: function variant() {
+            return this.show ? this.show : 'some';
+        },
+        caption: function caption() {
+            return this.content[this.variant].caption;
+        },
+        text: function text() {
+            return this.content[this.variant].text;
+        },
+        action: function action() {
+            return this.content[this.variant].action;
+        }
+    },
+    methods: {
+        close: function close() {
+            this.$emit('close');
+        },
+        bun: function bun() {
+            this.$emit('bun');
+            this.close();
+        },
+        remove: function remove() {
+            this.$emit('remove');
+            this.close();
+        }
+    },
+    template: '#remove-confirm'
+});
+
+Vue.component('captcha-dialog', {
+    props: ['show'],
+    data: function data() {
+        return {
+            code: '',
+            inc: 0
+        };
+    },
+
+    computed: {
+        src: function src() {
+            return '/secret_pic.php?inc=' + this.inc;
+        }
+    },
+    methods: {
+        close: function close() {
+            this.$emit('cancel');
+        },
+        send: function send() {
+            this.$emit('send', this.code);
+            this.update();
+            this.close();
+        },
+        update: function update() {
+            this.inc++;
+        }
+    },
+    template: '#captcha-dialog'
+});
+
+Vue.component('inform-dialog', {
+    props: ['loader', 'hint'],
+    methods: {
+        close: function close() {
+            this.$emit('close');
+        }
+    },
+    template: '#inform-dialog'
 });
 
 ///
@@ -351,152 +649,6 @@ Vue.component('photo-view', {
     template: '#photo-view'
 });
 
-Vue.directive('resized', {
-    bind: function bind(el) {
-        el.style.height = el.scrollHeight + 'px';
-        $(el).on('input', function () {
-            this.style.height = 'auto';
-            this.style.height = this.scrollHeight + 'px';
-        });
-    }
-});
-
-Vue.component('quick-reply', {
-    props: ['show', 'data'],
-    data: function data() {
-        return {
-            message: 'eeeee',
-            captcha: false,
-            process: false,
-            confirm: false,
-            code: null
-        };
-    },
-
-    computed: {
-        desire: function desire() {
-            var d = this.data.desire;
-            return d && d.length > 1 ? true : false;
-        }
-    },
-    methods: {
-        close: function close() {
-            this.$emit('close');
-        },
-        bun: function bun() {
-            this.$emit('bun');
-        },
-        remove: function remove() {
-            this.$emit('remove');
-        },
-        cancel: function cancel() {
-            this.captcha = false;
-            this.confirm = false;
-            console.log('cancel');
-        },
-        inProcess: function inProcess(sec) {
-            var _this5 = this;
-
-            this.process = true;
-            setTimeout(function () {
-                return _this5.process = false;
-            }, sec * 1000);
-        },
-        send: function send() {
-            var data = {
-                id: tid,
-                mess: this.message,
-                captcha_code: this.code
-            };
-            // api.messages.send(data).then((response) => {
-            //     this.handler(response.data);
-            // }).catch((error) => {
-            //     this.error(error);
-            // });
-            this.sended();
-            this.inProcess(5);
-        },
-        setCode: function setCode(code) {
-            this.code = code;
-            this.send();
-        },
-        handler: function handler(response) {
-            if (!response.saved && response.error) {
-                if (response.error == 'need_captcha') {
-                    this.captcha = true;
-                }
-                this.error();
-            } else {
-                this.sended();
-            }
-            this.process = false;
-        },
-        sended: function sended() {
-            console.log('send');
-            this.$emit('sended');
-        },
-        error: function error() {
-            this.process = false;
-        }
-    },
-    template: '#quick-reply'
-});
-
-Vue.component('remove-confirm', {
-    props: ['show'],
-    data: function data() {
-        return {
-            content: {
-                doit: {
-                    caption: 'Наказывайте как следует',
-                    text: '\u0417\u0430 \u0440\u0435\u0437\u043A\u0438\u0435 \u0441\u043B\u043E\u0432\u0430, \u0437\u0430 \u043E\u0441\u043A\u043E\u0440\u0431\u043B\u0435\u043D\u0438\u044F \u0438\u043B\u0438 \u0445\u0430\u043C\u0441\u0442\u0432\u043E,\n                    \u0437\u0430 \u0444\u043E\u0442\u043E\u0433\u0440\u0430\u0444\u0438\u0438 \u043D\u0435 \u0432 \u0442\u0435\u043C\u0443 \u0438\u043B\u0438 \u0431\u0435\u0441\u0441\u043C\u044B\u0441\u043B\u0435\u043D\u043D\u044B\u0435 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u044F, \u043D\u0430\u043A\u0430\u0437\u044B\u0432\u0430\u0439\u0442\u0435 \u0432\u0441\u0435\u0445, \u043A\u043E\u0433\u043E\n                    \u0441\u0447\u0438\u0442\u0430\u0435\u0442\u0435 \u043D\u0443\u0436\u043D\u044B\u043C. \u041D\u0430\u043A\u0430\u0437\u0430\u043D\u0438\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u0435\u0442 \u0441\u0440\u0430\u0437\u0443.',
-                    action: 'Удалить и наказать'
-                },
-                must: {
-                    caption: 'Может стоит наказать?',
-                    text: '\u041D\u0430\u0436\u043C\u0438\u0442\u0435 "\u0414\u0438\u0437\u043B\u0430\u0439\u043A" \u0443 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u044F, \u043A\u043E\u0442\u043E\u0440\u043E\u0435 \u0432\u044B\u0437\u0432\u0430\u043B\u043E \u043D\u0435\u0433\u0430\u0442\u0438\u0432\u043D\u044B\u0435 \u044D\u043C\u043E\u0446\u0438\u0438.\n                    \u041D\u0430\u043A\u0430\u0437\u0430\u043D\u0438\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u0435\u0442 \u0441\u0440\u0430\u0437\u0443 \u0436\u0435. \u041C\u044B \u043D\u0438\u043A\u043E\u0433\u0434\u0430 \u043D\u0435 \u0443\u0437\u043D\u0430\u0435\u043C \u043E \u043D\u0430\u0440\u0443\u0448\u0435\u043D\u0438\u044F\u0445\n                    \u0441\u043E\u0431\u0435\u0441\u0435\u0434\u043D\u0438\u043A\u0430, \u0435\u0441\u043B\u0438 \u0443\u0434\u0430\u043B\u0438\u0442\u044C \u0431\u0435\u0437 \u043D\u0430\u043A\u0430\u0437\u0430\u043D\u0438\u044F.',
-                    action: 'Удалить и забыть'
-                },
-                some: {
-                    caption: 'Удалить навсегда',
-                    text: '\u0412\u0430\u0448\u0435 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435 \u0431\u0443\u0434\u0435\u0442 \u0443\u0434\u0430\u043B\u0435\u043D\u043E \u043E\u0442\u043E\u0432\u0441\u044E\u0434\u0443, \u0431\u0435\u0437 \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0441\u0442\u0438 \u0432\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C. \u0421\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435\n                    \u043F\u0440\u043E\u043F\u0430\u0434\u0435\u0442 \u043A\u0430\u043A \u0438\u0437 \u0432\u0430\u0448\u0435\u0439 \u0438\u0441\u0442\u043E\u0440\u0438\u0438 \u043F\u0435\u0440\u0435\u043F\u0438\u0441\u043A\u0438, \u0442\u0430\u043A \u0438 \u0438\u0437 \u043F\u0435\u0440\u0435\u043F\u0438\u0441\u043A\u0438 \u0432\u0430\u0448\u0435\u0433\u043E \u0441\u043E\u0431\u0435\u0441\u0435\u0434\u043D\u0438\u043A\u0430.',
-                    action: 'Удалить навсегда'
-                }
-            }
-        };
-    },
-
-    computed: {
-        variant: function variant() {
-            return this.show ? this.show : 'some';
-        },
-        caption: function caption() {
-            return this.content[this.variant].caption;
-        },
-        text: function text() {
-            return this.content[this.variant].text;
-        },
-        action: function action() {
-            return this.content[this.variant].action;
-        }
-    },
-    methods: {
-        close: function close() {
-            this.$emit('close');
-        },
-        bun: function bun() {
-            this.$emit('bun');
-            this.close();
-        },
-        remove: function remove() {
-            //apiContact.remove({ tid: this.contacts[index] });
-            this.$emit('remove');
-            this.close();
-        }
-    },
-    template: '#remove-confirm'
-});
-
 Vue.component('upload-dialog', {
     template: '#upload-dialog',
     data: function data() {
@@ -516,7 +668,7 @@ Vue.component('upload-dialog', {
     },
     methods: {
         loadPhoto: function loadPhoto() {
-            var _this6 = this;
+            var _this9 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
@@ -525,7 +677,7 @@ Vue.component('upload-dialog', {
             axios.get('http://' + this.server + '/api/v1/users/' + uid + '/photos', config).then(function (response) {
                 var result = response.data.photos;
                 if (result && result.length) {
-                    _this6.photos = response.data.photos;
+                    _this9.photos = response.data.photos;
                 }
                 //console.log(this.photos);
             }).catch(function (error) {
@@ -604,358 +756,6 @@ $(document).ready(function () {
     visited.init();
 });
 
-moment.locale('ru');
-
-var ls = lscache;
-
-var Api = function () {
-    function Api(host, key, version, routing) {
-        _classCallCheck(this, Api);
-
-        // Delay requests msec
-        this.wait = 5000; //
-
-        var ver = version ? 'v' + version + '/' : '';
-        this.root = host + ver;
-        this.key = key;
-        this.config = {
-            baseURL: this.root,
-            headers: { 'Authorization': 'Bearer ' + key }
-        };
-        this.routing = {
-            route: '',
-            load: '',
-            get: '',
-            cget: '',
-            send: '',
-            post: '',
-            save: '',
-            remove: '',
-            delete: '',
-            put: '',
-            patch: '',
-            option: ''
-        };
-        _.extend(this.routing, routing);
-    }
-
-    _createClass(Api, [{
-        key: 'setUrl',
-        value: function setUrl(method, url) {
-            var result = this.routing.route;
-            if (url) {
-                result = url;
-            } else {
-                var action = this.routing[method];
-                result = action ? action : result;
-            }
-            //console.log('url: ', [this.root, result])
-            return this.root + result;
-        }
-    }, {
-        key: 'setParams',
-        value: function setParams(params) {
-            this.config.params = params ? params : {};
-        }
-    }, {
-        key: 'get',
-        value: function get(params, url) {
-            this.setParams(params);
-            return this.delay(axios.get(this.setUrl('get', url), this.config), 0);
-        }
-    }, {
-        key: 'load',
-        value: function load(params, url) {
-            this.setParams(params);
-            return this.delay(axios.get(this.setUrl('load', url), this.config), 0);
-        }
-    }, {
-        key: 'cget',
-        value: function cget(params, url) {
-            this.setParams(params);
-            return this.delay(axios.get(this.setUrl('cget', url), this.config), 0);
-        }
-    }, {
-        key: 'send',
-        value: function send(params, url) {
-            this.setParams(params);
-            return this.delay(axios.get(this.setUrl('send', url), this.config), 0);
-        }
-    }, {
-        key: 'post',
-        value: function post(data, params, url) {
-            this.setParams(params);
-            return this.delay(axios.post(this.setUrl('post', url), data, this.config), 0);
-        }
-    }, {
-        key: 'save',
-        value: function save(data, params, url) {
-            this.setParams(params);
-            return this.delay(axios.post(this.setUrl('save', url), data, this.config), 0);
-        }
-    }, {
-        key: 'remove',
-        value: function remove(data, params, url) {
-            this.setParams(params);
-            return this.delay(axios.post(this.setUrl('remove', url), data, this.config), 0);
-        }
-    }, {
-        key: 'delete',
-        value: function _delete(data, params, url) {
-            this.setParams(params);
-            return this.delay(axios.post(this.setUrl('delete', url), data, this.config), 0);
-        }
-    }, {
-        key: 'request',
-        value: function request(method, action, data, params, url) {
-            // this.config.method = method;
-            // this.config.url = this.setUrl(action, url);
-            // this.config.data = data;
-            // this.config.params = params;
-            // return this.delay(axios.request(this.config), 0);
-            if (data) {
-                return this.delay(axios[method](this.setUrl(action, url), data, this.config), 0);
-            } else {
-                return this.delay(axios[method](this.setUrl(action, url), this.config), 0);
-            }
-        }
-    }, {
-        key: 'put',
-        value: function put() {}
-    }, {
-        key: 'patch',
-        value: function patch() {}
-    }, {
-        key: 'option',
-        value: function option() {}
-    }, {
-        key: 'delay',
-        value: function delay(result, wait) {
-            var msec = wait ? wait : this.wait;
-            if (msec < this.wait) {
-                msec = this.wait;
-            }
-            if (msec == 0 || typeof Promise == "undefined") {
-                return result;
-            }
-            return new Promise(function (resolve, reject) {
-                _.delay(resolve, msec, result);
-            });
-        }
-    }]);
-
-    return Api;
-}();
-
-;
-
-var ApiBun = function (_Api) {
-    _inherits(ApiBun, _Api);
-
-    function ApiBun() {
-        _classCallCheck(this, ApiBun);
-
-        var key = '1234';
-        var host = '/';
-        return _possibleConstructorReturn(this, (ApiBun.__proto__ || Object.getPrototypeOf(ApiBun)).call(this, host, key));
-    }
-
-    _createClass(ApiBun, [{
-        key: 'send',
-        value: function send(data) {
-
-            return axios.post('mess/bun/', data, this.config);
-            console.log('ApiBun Bun-Bun');
-        }
-    }]);
-
-    return ApiBun;
-}(Api);
-
-;
-
-var ApiMessages = function (_Api2) {
-    _inherits(ApiMessages, _Api2);
-
-    function ApiMessages() {
-        _classCallCheck(this, ApiMessages);
-
-        var key = '1234';
-        var host = '/';
-        return _possibleConstructorReturn(this, (ApiMessages.__proto__ || Object.getPrototypeOf(ApiMessages)).call(this, host, key));
-    }
-
-    _createClass(ApiMessages, [{
-        key: 'send',
-        value: function send(data) {
-            console.log(this);
-            return axios.post('mailer/post/', data, this.config);
-            console.log('ApiMessages send !!!');
-        }
-    }]);
-
-    return ApiMessages;
-}(Api);
-
-;
-
-var ApiUser = function (_Api3) {
-    _inherits(ApiUser, _Api3);
-
-    function ApiUser() {
-        _classCallCheck(this, ApiUser);
-
-        var key = '1234';
-        var host = '/';
-        return _possibleConstructorReturn(this, (ApiUser.__proto__ || Object.getPrototypeOf(ApiUser)).call(this, host, key));
-    }
-
-    _createClass(ApiUser, [{
-        key: 'saveSex',
-        value: function saveSex(data) {
-            return axios.post('/option/sex/', data, this.config).then(function (response) {
-                if (response.data.sex) {
-                    store.commit('loadUser', { sex: response.data.sex });
-                    handler();
-                }
-            }).catch(function (e) {
-                console.log(e);
-            });
-        }
-    }]);
-
-    return ApiUser;
-}(Api);
-
-;
-
-var ApiContact = function (_Api4) {
-    _inherits(ApiContact, _Api4);
-
-    function ApiContact(routing) {
-        _classCallCheck(this, ApiContact);
-
-        var key = '1234';
-        var host = '/';
-        return _possibleConstructorReturn(this, (ApiContact.__proto__ || Object.getPrototypeOf(ApiContact)).call(this, host, key, null, routing));
-    }
-
-    _createClass(ApiContact, [{
-        key: 'getList',
-        value: function getList(url) {
-            return axios.get('/contact/list/' + url + '/', this.config);
-        }
-    }, {
-        key: 'initialList',
-        value: function initialList() {
-            var _this11 = this;
-
-            return new Promise(function (resolve, reject) {
-                setTimeout(function () {
-                    resolve(_this11.getList('initial'));
-                }, 5000);
-            });
-        }
-    }, {
-        key: 'intimateList',
-        value: function intimateList() {
-            return this.getList('intimate');
-        }
-    }, {
-        key: 'sendsList',
-        value: function sendsList() {
-            return this.getList('sends');
-        }
-    }, {
-        key: 'ignore',
-        value: function ignore(data) {
-            console.log('contact ignored');
-            return _get(ApiContact.prototype.__proto__ || Object.getPrototypeOf(ApiContact.prototype), 'request', this).call(this, 'post', 'ignore', data);
-            //return super.post(data);
-        }
-    }, {
-        key: 'remove',
-        value: function remove(data) {
-            console.log('contact removed');
-            return _get(ApiContact.prototype.__proto__ || Object.getPrototypeOf(ApiContact.prototype), 'remove', this).call(this, data);
-        }
-    }, {
-        key: 'cget',
-        value: function cget(next) {
-            return _get(ApiContact.prototype.__proto__ || Object.getPrototypeOf(ApiContact.prototype), 'cget', this).call(this, { next: next });
-        }
-    }]);
-
-    return ApiContact;
-}(Api);
-
-;
-
-var ApiInitial = function (_ApiContact) {
-    _inherits(ApiInitial, _ApiContact);
-
-    function ApiInitial() {
-        _classCallCheck(this, ApiInitial);
-
-        var routing = {
-            cget: 'contact/list/initial',
-            remove: 'human/delete',
-            post: 'human/ignore'
-        };
-        return _possibleConstructorReturn(this, (ApiInitial.__proto__ || Object.getPrototypeOf(ApiInitial)).call(this, routing));
-    }
-
-    return ApiInitial;
-}(ApiContact);
-
-var ApiIntimate = function (_ApiContact2) {
-    _inherits(ApiIntimate, _ApiContact2);
-
-    function ApiIntimate() {
-        _classCallCheck(this, ApiIntimate);
-
-        var routing = {
-            cget: 'contact/list/initial',
-            remove: 'human/delete',
-            post: 'human/ignore'
-        };
-        return _possibleConstructorReturn(this, (ApiIntimate.__proto__ || Object.getPrototypeOf(ApiIntimate)).call(this, routing));
-    }
-
-    return ApiIntimate;
-}(ApiContact);
-
-var ApiSends = function (_ApiContact3) {
-    _inherits(ApiSends, _ApiContact3);
-
-    function ApiSends() {
-        _classCallCheck(this, ApiSends);
-
-        var routing = {
-            cget: 'contact/list/initial',
-            remove: 'human/delete',
-            ignore: 'human/ignore'
-        };
-        return _possibleConstructorReturn(this, (ApiSends.__proto__ || Object.getPrototypeOf(ApiSends)).call(this, routing));
-    }
-
-    return ApiSends;
-}(ApiContact);
-
-var api = {
-    user: new ApiUser(),
-    bun: new ApiBun(),
-    contacts: {
-        initial: new ApiInitial(),
-        intimate: new ApiIntimate(),
-        sends: new ApiSends()
-    },
-    messages: new ApiMessages()
-};
-
-//ApiMessages.send();
-
-
 var mutations = {
     mutations: {
         load: function load(state, data) {
@@ -981,21 +781,21 @@ var initial = _.extend({
         list: []
     },
     actions: {
-        LOAD: function LOAD(_ref) {
+        LOAD: function LOAD(_ref, next) {
             var commit = _ref.commit;
 
             commit('load', ls.get('initial-contacts'));
-            var promise = api.contacts.initial.cget();
+            var promise = api.contacts.initial.cget('10336', next);
             promise.then(function (response) {
                 commit('load', response.data);
                 ls.set('initial-contacts', response.data);
             });
             return promise;
         },
-        DELETE: function DELETE(_ref2) {
+        DELETE: function DELETE(_ref2, params) {
             var commit = _ref2.commit;
 
-            var promise = api.contacts.initial.remove();
+            var promise = api.contacts.initial.delete(params);
             promise.then(function (response) {
                 commit('load', response.data);
                 ls.set('initial-contacts', response.data);
@@ -1011,14 +811,14 @@ var intimate = _.extend({
         list: []
     },
     actions: {
-        LOAD: function LOAD(_ref3) {
+        LOAD: function LOAD(_ref3, next) {
             var commit = _ref3.commit;
 
             commit('load', ls.get('intimate-contacts'));
-            var promise = api.contacts.intimate.cget();
+            var promise = api.contacts.intimate.cget('10336', next);
             promise.then(function (response) {
                 commit('load', response.data);
-                //ls.set('intimate-contacts', state.contacts.intimate);
+                ls.set('intimate-contacts', response.data);
             });
             return promise;
         }
@@ -1031,11 +831,11 @@ var sends = _.extend({
         list: []
     },
     actions: {
-        LOAD: function LOAD(_ref4) {
+        LOAD: function LOAD(_ref4, next) {
             var commit = _ref4.commit;
 
             commit('load', ls.get('sends-contacts'));
-            var promise = api.contacts.sends.cget();
+            var promise = api.contacts.sends.cget('10336', next);
             promise.then(function (response) {
                 commit('load', response.data);
                 //ls.set('intimate-contacts', state.contacts.intimate);
@@ -1053,14 +853,65 @@ var contacts = {
     }
 };
 
+var modals = {
+    state: {
+        initial: false,
+        intimate: false,
+        sends: false
+    },
+    mutations: {
+        showInitial: function showInitial(state, data) {
+            state.initial = data == true;
+        },
+        showIntimate: function showIntimate(state, data) {
+            state.intimate = data == true;
+        },
+        showSends: function showSends(state, data) {
+            state.sends = data == true;
+        }
+    }
+};
+
+var search = {
+    state: {
+        list: [],
+        human: {}
+    },
+    actions: {
+        human: function human(_ref5, tid) {
+            var commit = _ref5.commit;
+
+            //commit('load', ls.get('initial-contacts'));
+            commit('resetHuman', tid);
+            var promise = api.search.get({ tid: tid });
+            promise.then(function (response) {
+                commit('setHuman', response.data);
+                //ls.set('initial-contacts', response.data);
+            });
+            return promise;
+        }
+    },
+    mutations: {
+        resetHuman: function resetHuman(state, tid) {
+            if (state.human && state.human.id != tid) {
+                state.human = {};
+            }
+        },
+        setHuman: function setHuman(state, data) {
+            //console.log(data);
+            state.human = data;
+        }
+    }
+};
+
 var user = {
     state: {
         uid: 0,
         sex: 0
     },
     actions: {
-        LOAD_USER: function LOAD_USER(_ref5) {
-            var commit = _ref5.commit;
+        LOAD_USER: function LOAD_USER(_ref6) {
+            var commit = _ref6.commit;
 
             if (typeof user_sex != 'undefined') {
                 commit('loadUser', {
@@ -1079,9 +930,14 @@ var user = {
     }
 };
 
+moment.locale('ru');
+
+var ls = lscache;
+
 var store = new Vuex.Store({
     modules: {
         user: user,
+        search: search,
         contacts: contacts
     },
     state: {
@@ -1118,13 +974,13 @@ var store = new Vuex.Store({
         }
     },
     actions: {
-        LOAD_API_TOKEN: function LOAD_API_TOKEN(_ref6) {
-            var commit = _ref6.commit;
+        LOAD_API_TOKEN: function LOAD_API_TOKEN(_ref7) {
+            var commit = _ref7.commit;
 
             commit('setApiToken', { apiToken: get_cookie('jwt') });
         },
-        LOAD_ACCEPTS: function LOAD_ACCEPTS(_ref7) {
-            var commit = _ref7.commit;
+        LOAD_ACCEPTS: function LOAD_ACCEPTS(_ref8) {
+            var commit = _ref8.commit;
 
             var accepts = ls.get('accepts');
             if (accepts && accepts.photo) {
@@ -1168,6 +1024,337 @@ var store = new Vuex.Store({
 store.dispatch('LOAD_API_TOKEN');
 store.dispatch('LOAD_ACCEPTS');
 store.dispatch('LOAD_USER');
+
+var Api = function () {
+    function Api(host, key, version, routing) {
+        _classCallCheck(this, Api);
+
+        // Delay requests sec
+        var delay = 4;
+
+        var ver = version ? 'v' + version + '/' : '';
+        this.root = host + ver;
+        this.key = key;
+        this.config = {
+            baseURL: this.root,
+            headers: { 'Authorization': 'Bearer ' + key }
+        };
+        this.wait = delay * 1000; //
+        this.routing = {
+            route: '',
+            load: '',
+            get: '',
+            cget: '',
+            send: '',
+            post: '',
+            save: '',
+            remove: '',
+            delete: '',
+            put: '',
+            patch: '',
+            option: ''
+        };
+        _.extend(this.routing, routing);
+    }
+
+    _createClass(Api, [{
+        key: 'setParams',
+        value: function setParams(params, url) {
+            var result = url.replace(/\{(.*?)\}/ig, function (match, token) {
+                var slug = params[token];
+                delete params[token];
+                return slug;
+            });
+            //console.log('url: ', [this.root, result, params]);
+            this.config.params = params ? params : {};
+            return result;
+        }
+    }, {
+        key: 'setUrl',
+        value: function setUrl(method, params, url) {
+            var route = this.routing.route;
+            if (url) {
+                result = url;
+            } else {
+                var action = this.routing[method];
+                result = route ? route : '';
+                if (result && action) {
+                    result = result + '/' + action;
+                } else if (action) {
+                    result = action;
+                }
+            }
+            result = this.setParams(params, result);
+            return this.root + result;
+        }
+    }, {
+        key: 'get',
+        value: function get(params, url) {
+            return this.delay(axios.get(this.setUrl('get', params, url), this.config), 0);
+        }
+    }, {
+        key: 'load',
+        value: function load(params, url) {
+            return this.delay(axios.get(this.setUrl('load', params, url), this.config), 0);
+        }
+    }, {
+        key: 'cget',
+        value: function cget(params, url) {
+            return this.delay(axios.get(this.setUrl('cget', params, url), this.config), 0);
+        }
+    }, {
+        key: 'send',
+        value: function send(params, url) {
+            return this.delay(axios.get(this.setUrl('send', params, url), this.config), 0);
+        }
+    }, {
+        key: 'post',
+        value: function post(data, params, url) {
+            return this.delay(axios.post(this.setUrl('post', params, url), data, this.config), 0);
+        }
+    }, {
+        key: 'save',
+        value: function save(data, params, url) {
+            return this.delay(axios.post(this.setUrl('save', params, url), data, this.config), 0);
+        }
+    }, {
+        key: 'remove',
+        value: function remove(data, params, url) {
+            return this.delay(axios.post(this.setUrl('remove', params, url), data, this.config), 0);
+        }
+    }, {
+        key: 'delete',
+        value: function _delete(data, params, url) {
+            return this.delay(axios.post(this.setUrl('delete', params, url), data, this.config), 0);
+        }
+    }, {
+        key: 'request',
+        value: function request(method, action, data, params, url) {
+            // this.config.method = method;
+            // this.config.url = this.setUrl(action, url);
+            // this.config.data = data;
+            // this.config.params = params;
+            // return this.delay(axios.request(this.config), 0);
+            if (data) {
+                return this.delay(axios[method](this.setUrl(action, params, url), data, this.config), 0);
+            } else {
+                return this.delay(axios[method](this.setUrl(action, params, url), this.config), 0);
+            }
+        }
+    }, {
+        key: 'put',
+        value: function put() {}
+    }, {
+        key: 'patch',
+        value: function patch() {}
+    }, {
+        key: 'option',
+        value: function option() {}
+    }, {
+        key: 'delay',
+        value: function delay(result, wait) {
+            var msec = wait ? wait : this.wait;
+            if (msec < this.wait) {
+                msec = this.wait;
+            }
+            if (msec == 0 || typeof Promise == "undefined") {
+                return result;
+            }
+            return new Promise(function (resolve, reject) {
+                _.delay(resolve, msec, result);
+            });
+        }
+    }]);
+
+    return Api;
+}();
+
+var ApiBun = function (_Api) {
+    _inherits(ApiBun, _Api);
+
+    function ApiBun() {
+        _classCallCheck(this, ApiBun);
+
+        var key = '1234';
+        var host = '/';
+        return _possibleConstructorReturn(this, (ApiBun.__proto__ || Object.getPrototypeOf(ApiBun)).call(this, host, key));
+    }
+
+    _createClass(ApiBun, [{
+        key: 'send',
+        value: function send(data) {
+
+            return axios.post('mess/bun/', data, this.config);
+            console.log('ApiBun Bun-Bun');
+        }
+    }]);
+
+    return ApiBun;
+}(Api);
+
+var ApiMessages = function (_Api2) {
+    _inherits(ApiMessages, _Api2);
+
+    function ApiMessages() {
+        _classCallCheck(this, ApiMessages);
+
+        var key = '1234';
+        var host = '/';
+        return _possibleConstructorReturn(this, (ApiMessages.__proto__ || Object.getPrototypeOf(ApiMessages)).call(this, host, key));
+    }
+
+    _createClass(ApiMessages, [{
+        key: 'send',
+        value: function send(data) {
+            //console.log(this);
+            return axios.post('mailer/post/', data, this.config);
+        }
+    }]);
+
+    return ApiMessages;
+}(Api);
+
+var ApiUser = function (_Api3) {
+    _inherits(ApiUser, _Api3);
+
+    function ApiUser() {
+        _classCallCheck(this, ApiUser);
+
+        var key = '1234';
+        var host = '/';
+        var routing = {
+            post: 'option/sex'
+        };
+        return _possibleConstructorReturn(this, (ApiUser.__proto__ || Object.getPrototypeOf(ApiUser)).call(this, host, key));
+    }
+
+    _createClass(ApiUser, [{
+        key: 'saveSex',
+        value: function saveSex(data) {
+            return this.post(data).then(function (response) {
+                if (response.data.sex) {
+                    store.commit('loadUser', { sex: response.data.sex });
+                }
+            }).catch(function (e) {
+                console.log(e);
+            });
+        }
+    }]);
+
+    return ApiUser;
+}(Api);
+
+var ApiSearch = function (_Api4) {
+    _inherits(ApiSearch, _Api4);
+
+    function ApiSearch() {
+        _classCallCheck(this, ApiSearch);
+
+        var key = '1234';
+        var host = 'http://127.0.0.1:9000/';
+        var routing = {
+            route: 'users',
+            get: '{tid}'
+        };
+        return _possibleConstructorReturn(this, (ApiSearch.__proto__ || Object.getPrototypeOf(ApiSearch)).call(this, host, key, null, routing));
+    }
+
+    return ApiSearch;
+}(Api);
+
+var ApiContact = function (_Api5) {
+    _inherits(ApiContact, _Api5);
+
+    function ApiContact(routing) {
+        _classCallCheck(this, ApiContact);
+
+        var key = store.state.apiToken;
+        var host = 'http://127.0.0.1:8000/';
+        return _possibleConstructorReturn(this, (ApiContact.__proto__ || Object.getPrototypeOf(ApiContact)).call(this, host, key, null, routing));
+    }
+
+    _createClass(ApiContact, [{
+        key: 'ignore',
+        value: function ignore(data) {
+            console.log('contact ignored');
+            return _get(ApiContact.prototype.__proto__ || Object.getPrototypeOf(ApiContact.prototype), 'request', this).call(this, 'post', 'ignore', data);
+            //return super.post(data);
+        }
+    }, {
+        key: 'remove',
+        value: function remove(data) {
+            console.log('contact removed');
+            return _get(ApiContact.prototype.__proto__ || Object.getPrototypeOf(ApiContact.prototype), 'remove', this).call(this, data);
+        }
+    }, {
+        key: 'cget',
+        value: function cget(uid, next) {
+            return _get(ApiContact.prototype.__proto__ || Object.getPrototypeOf(ApiContact.prototype), 'cget', this).call(this, { uid: uid, next: next });
+        }
+    }]);
+
+    return ApiContact;
+}(Api);
+
+var ApiInitial = function (_ApiContact) {
+    _inherits(ApiInitial, _ApiContact);
+
+    function ApiInitial() {
+        _classCallCheck(this, ApiInitial);
+
+        var routing = {
+            route: 'users/{uid}/initials'
+        };
+        return _possibleConstructorReturn(this, (ApiInitial.__proto__ || Object.getPrototypeOf(ApiInitial)).call(this, routing));
+    }
+
+    return ApiInitial;
+}(ApiContact);
+
+var ApiIntimate = function (_ApiContact2) {
+    _inherits(ApiIntimate, _ApiContact2);
+
+    function ApiIntimate() {
+        _classCallCheck(this, ApiIntimate);
+
+        var routing = {
+            route: 'users/{uid}/intimates'
+        };
+        return _possibleConstructorReturn(this, (ApiIntimate.__proto__ || Object.getPrototypeOf(ApiIntimate)).call(this, routing));
+    }
+
+    return ApiIntimate;
+}(ApiContact);
+
+var ApiSends = function (_ApiContact3) {
+    _inherits(ApiSends, _ApiContact3);
+
+    function ApiSends() {
+        _classCallCheck(this, ApiSends);
+
+        var routing = {
+            route: 'users/{uid}/sends'
+        };
+        return _possibleConstructorReturn(this, (ApiSends.__proto__ || Object.getPrototypeOf(ApiSends)).call(this, routing));
+    }
+
+    return ApiSends;
+}(ApiContact);
+
+var api = {
+    user: new ApiUser(),
+    search: new ApiSearch(),
+    bun: new ApiBun(),
+    contacts: {
+        initial: new ApiInitial(),
+        intimate: new ApiIntimate(),
+        sends: new ApiSends()
+    },
+    messages: new ApiMessages()
+};
+
+//ApiMessages.send();
+
 
 // -- Получить новый хэш ---
 var hash;
@@ -1829,16 +2016,6 @@ var json = {
         return JSON.stringify(str);
     }
 };
-
-Vue.component('loading-cover', {
-    props: ['show', 'text'],
-    computed: {
-        loader: function loader() {
-            return this.text ? this.text : 'Отправляю';
-        }
-    },
-    template: '#loading-cover'
-});
 
 // Установки  почты        
 var mailsett = {
@@ -3098,7 +3275,7 @@ var result_list = {
 // РОУТЕР ==========================================================
 ////
 
-var routes = [{ path: '/sends-contacts', name: 'sends', component: SendsDialog }, { path: '/initial-contacts', name: 'initial', component: InitialDialog }, { path: '/intimate-contacts', name: 'intimate', component: IntimateDialog
+var routes = [{ path: '/sends-contacts', name: 'sends', component: SendsDialog, props: { quick: false } }, { path: '/initial-contacts', name: 'initial', component: InitialDialog, props: { quick: true } }, { path: '/intimate-contacts', name: 'intimate', component: IntimateDialog, props: { quick: false }
 }];
 
 // 3. Создаём инстанс роутера с опцией `routes`

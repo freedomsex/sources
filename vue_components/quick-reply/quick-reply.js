@@ -9,23 +9,53 @@ Vue.directive('resized', {
 })
 
 Vue.component('quick-reply', {
-    props: ['show', 'data'],
+    props: ['show', 'item'],
     data() {
         return {
-            message: 'eeeee',
+            text: '',
             captcha: false,
             process: false,
+            loading: false,
             confirm: false,
+            ignore: false,
             code: null
         }
     },
     computed: {
-        desire() {
-            let d = this.data.desire;
-            return (d && d.length > 1) ? true : false;
+        human() {
+            return this.$store.state.search.human;
+        },
+        tags() {
+            return 'tags' in this.human ? this.human.tags : [];
+        },
+        hold() {
+            return this.ignore ? 0 : this.human.hold;
+        },
+        message() {
+            return this.item.message ? this.item.message.text : '';
+        }
+    },
+    mounted() {
+        this.reload();
+    },
+    updated() {
+        if (this.show) {
         }
     },
     methods: {
+        reload() {
+            this.loading = true;
+            setTimeout(() => this.loading = false, 30 * 1000);
+            store.dispatch('human', this.item.human_id).then((response) => {
+                this.loaded();
+            });
+        },
+        loaded() {
+            this.loading = false;
+            console.log('hold:', this.human.hold);
+            console.log('tags:', this.human);
+            //this.process = false;
+        },
         close() {
             this.$emit('close');
         },
@@ -33,11 +63,16 @@ Vue.component('quick-reply', {
             this.$emit('bun');
         },
         remove() {
+            // store.dispatch('initial/DELETE', {uid: '10336', cont_id: contact}).then((response) => {
+            //     this.loaded();
+            // });
+            console.log('conf:',{uid: '10336', cont_id: this.item.id} )
             this.$emit('remove');
         },
         cancel() {
             this.captcha = false;
             this.confirm = false;
+            this.ignore = true;
             console.log('cancel');
         },
         inProcess(sec) {
@@ -46,16 +81,16 @@ Vue.component('quick-reply', {
         },
         send() {
             let data = {
-                id: tid,
-                mess: this.message,
+                id: this.item.human_id,
+                mess: this.text,
                 captcha_code: this.code
             };
-            // api.messages.send(data).then((response) => {
-            //     this.handler(response.data);
-            // }).catch((error) => {
-            //     this.error(error);
-            // });
-              this.sended();
+            api.messages.send(data).then((response) => {
+                this.handler(response.data);
+            }).catch((error) => {
+                this.error(error);
+            });
+            //  this.sended();
             this.inProcess(5);
         },
         setCode(code) {

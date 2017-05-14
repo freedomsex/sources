@@ -2,18 +2,19 @@
 <script type="text/x-template" id="contact-item">
   <div class="contact-list__item">
     <div class="contact-list__item-content" @click.stop="show">
-      <span class="contact-list__item-info">
-        <span class="user-list__name">{{item.name}}</span>,
-        <span class="user-list__age">{{item.age}}</span>
-      </span>
-      <span class="contact-list__item-message">{{item.message}}</span>
+      <div class="contact-list__item-info">
+        <span class="user-list__name">{{name}}</span><span v-show="age || city">,</span>
+        <span class="user-list__age">{{age}}</span>
+        <span class="user-list__city">{{city}}</span>
+      </div>
+      <div class="contact-list__item-message">{{message}}</div>
     </div>
     <div class="contact-list__item-option">
       <span :class="0 ? 'message-item__bunn-alert' : 'message-item__bunn'"
-        v-show="initial" @click="confirmBun">
+        v-show="sent" @click="confirmBun">
         <span aria-hidden="true" class="glyphicon glyphicon-thumbs-down"></span>
       </span>
-      <span class="message-item__remove" v-show="initial" @click="confirmRemove">
+      <span class="message-item__remove" v-show="sent" @click="confirmRemove">
         <span aria-hidden="true" class="glyphicon glyphicon-remove"></span>
       </span>
     </div>
@@ -22,7 +23,7 @@
       @bun="bun"
       @close="cancel"
       @remove="remove"/>
-    <quick-reply :show="detail" :data="item"
+    <quick-reply :show="detail" :item="item"
       @bun="bun"
       @close="close"
       @sended="splice"

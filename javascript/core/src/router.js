@@ -4,9 +4,9 @@
 ////
 
 const routes = [
-    { path: '/sends-contacts', name: 'sends', component: SendsDialog },
-    { path: '/initial-contacts', name: 'initial', component: InitialDialog },
-    { path: '/intimate-contacts',  name: 'intimate', component: IntimateDialog,
+    { path: '/sends-contacts', name: 'sends', component: SendsDialog, props: { quick: false } },
+    { path: '/initial-contacts', name: 'initial', component: InitialDialog, props: { quick: true } },
+    { path: '/intimate-contacts',  name: 'intimate', component: IntimateDialog, props: { quick: false },
         // children: [
         //     {
         //         path: 'quick-reply',

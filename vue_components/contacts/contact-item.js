@@ -3,7 +3,7 @@ Vue.component('contact-item', {
     props: [
       'item',
       'index',
-      'initial',
+      'quick',
     ],
     data() {
         return {
@@ -13,15 +13,34 @@ Vue.component('contact-item', {
     },
     computed: {
         sent() {
-            return this.item.cont_id == this.$store.state.user.uid;
+            return this.item.user_id == this.$store.state.user.uid;
+        },
+        name() {
+            var result = 'Парень или девушка';
+            if (this.item.user) {
+                result = this.item.user.sex == 2 ? 'Девушка' : 'Парень';
+                if (this.item.user.name) {
+                    result = this.item.user.name;
+                }
+            }
+            return result;
+        },
+        age() {
+            return this.item.user ? this.item.user.age : null;
+        },
+        city() {
+            return this.item.user ? this.item.user.city : '';
+        },
+        message() {
+            return this.item.message ? this.item.message.text : '';
         }
     },
     methods: {
         show() {
             //this.$emit('show');
             console.log('show = initial-item');
-            if (this.initial) {
-                this.quick();
+            if (this.quick) {
+                this.reply();
             } else {
                 this.anketa();
             }
@@ -35,12 +54,12 @@ Vue.component('contact-item', {
             console.log('initial-item REMOVE');
             this.confirm = !this.initial ? 'some' : 'must';
         },
-        quick() {
+        reply() {
             this.detail = true;
             console.log('quick');
         },
         anketa() {
-            window.location = '/' + this.item.cont_id;
+            window.location = '/' + this.item.human_id;
             console.log('anketa');
         },
         close() {
