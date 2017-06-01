@@ -227,6 +227,7 @@ var IntimateDialog = Vue.component('intimate-dialog', {
             this.hope();
         },
         remove: function remove(index) {
+            console.log('imm=remove', index);
             this.$store.dispatch('intimate/DELETE', index);
         },
         splice: function splice(index) {
@@ -1043,11 +1044,12 @@ var initial = _.extend({
                 commit = _ref3.commit,
                 rootState = _ref3.rootState;
 
-            commit('delete', index);
-            return api.contacts.intimate.delete({
+            var result = api.contacts.initial.delete({
                 uid: rootState.user.uid,
                 resource_id: state.list[index].id
             });
+            commit('delete', index);
+            return result;
         }
     },
     mutations: _.extend({
@@ -1095,11 +1097,12 @@ var intimate = _.extend({
                 commit = _ref6.commit,
                 rootState = _ref6.rootState;
 
-            commit('delete', index);
-            return api.contacts.intimate.delete({
+            var result = api.contacts.intimate.delete({
                 uid: rootState.user.uid,
                 resource_id: state.list[index].id
             });
+            commit('delete', index);
+            return result;
         }
     },
     mutations: _.extend({
@@ -1147,11 +1150,12 @@ var sends = _.extend({
                 commit = _ref9.commit,
                 rootState = _ref9.rootState;
 
-            commit('delete', index);
-            return api.contacts.sends.delete({
+            var result = api.contacts.sends.delete({
                 uid: rootState.user.uid,
                 resource_id: state.list[index].id
             });
+            commit('delete', index);
+            return result;
         }
     },
     mutations: _.extend({

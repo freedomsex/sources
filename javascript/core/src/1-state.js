@@ -38,11 +38,12 @@ const initial = _.extend({
             });
         },
         DELETE({ state, commit, rootState }, index) {
-            commit('delete', index);
-            return api.contacts.intimate.delete({
+            let result = api.contacts.initial.delete({
                 uid: rootState.user.uid,
                 resource_id: state.list[index].id
             });
+            commit('delete', index);
+            return result;
         },
     },
     mutations: _.extend({
@@ -78,11 +79,12 @@ const intimate = _.extend({
             });
         },
         DELETE({ state, commit, rootState }, index) {
-            commit('delete', index);
-            return api.contacts.intimate.delete({
+            let result = api.contacts.intimate.delete({
                 uid: rootState.user.uid,
                 resource_id: state.list[index].id
             });
+            commit('delete', index);
+            return result;
         },
     },
     mutations: _.extend({
@@ -118,11 +120,12 @@ const sends = _.extend({
             });
         },
         DELETE({ state, commit, rootState }, index) {
-            commit('delete', index);
-            return api.contacts.sends.delete({
+            let result = api.contacts.sends.delete({
                 uid: rootState.user.uid,
                 resource_id: state.list[index].id
             });
+            commit('delete', index);
+            return result;
         },
     },
     mutations: _.extend({

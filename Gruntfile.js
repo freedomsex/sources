@@ -141,8 +141,8 @@ module.exports = function (grunt) {
                         json: {
                             "NET-DELAY": 2,
                             "API-PHOTO": "127.0.0.1:9000",
-                            "API-SEARCH": "127.0.0.1:8000",
-                            "API-CONTACT": "127.0.0.1:9000",
+                            "API-SEARCH": "127.0.0.1:9000",
+                            "API-CONTACT": "127.0.0.1:8000",
                         }
                     }
                   ]
@@ -203,7 +203,7 @@ module.exports = function (grunt) {
                     'javascript/mess/src/**/*.js',
                     'javascript/admin/src/*.js',
                 ],
-                tasks: ['concat:javascript', 'babel:javascript', 'concat:bundle_dev'],
+                tasks: ['concat:javascript', 'babel:javascript', 'replace:dev', 'concat:bundle_dev'],
                 options: {
                     livereload: true,
                     spawn: false,

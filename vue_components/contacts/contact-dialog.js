@@ -133,6 +133,7 @@ const IntimateDialog = Vue.component('intimate-dialog', {
             this.hope();
         },
         remove(index) {
+            console.log('imm=remove', index);
             this.$store.dispatch('intimate/DELETE', index);
         },
         splice(index) {
