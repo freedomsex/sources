@@ -66,6 +66,7 @@ Vue.component('contact-item', {
             console.log('close');
         },
         bun() {
+            console.log('bun1', this.index);
             this.$emit('bun', this.index);
         },
         remove() {

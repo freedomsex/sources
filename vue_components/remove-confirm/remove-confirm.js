@@ -45,6 +45,7 @@ var RemoveConfirm = Vue.component('remove-confirm', {
             this.$emit('close');
         },
         bun() {
+            console.log('bun0');
             this.$emit('bun');
             this.close();
         },

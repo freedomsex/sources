@@ -122,8 +122,8 @@ var ContactDialog = {
             this.slow = false;
         },
         bun(index) {
-            console.log('bun');
             let item = this.contacts[index];
+            console.log('bun', item);
             this.remove(index); return;
             api.bun.send({
                 id: item.cont_id,
@@ -315,6 +315,7 @@ Vue.component('contact-item', {
             console.log('close');
         },
         bun() {
+            console.log('bun1', this.index);
             this.$emit('bun', this.index);
         },
         remove() {
@@ -799,6 +800,7 @@ var RemoveConfirm = Vue.component('remove-confirm', {
             this.$emit('close');
         },
         bun() {
+            console.log('bun0');
             this.$emit('bun');
             this.close();
         },

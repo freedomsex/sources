@@ -51,8 +51,8 @@ var ContactDialog = {
             this.slow = false;
         },
         bun(index) {
-            console.log('bun');
             let item = this.contacts[index];
+            console.log('bun', item);
             this.remove(index); return;
             api.bun.send({
                 id: item.cont_id,
