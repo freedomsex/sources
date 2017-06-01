@@ -1,19 +1,14 @@
 
 const mutations = {
-    mutations: {
-        load(state, data) {
-            console.log('initial-contacts');
-            // console.log('!!! 8888 !!!');
-            console.log(data);
-            if (data && data.length > 0) {
-                state.list = data;
-            }
-        },
-        add(state, data) {
-            if (data && data instanceof Array && data.length > 0) {
-                _.extend(state.list, data);
-            }
-        },
+    load(state, data) {
+        if (data && data instanceof Array && data.length > 0) {
+            state.list = data;
+        }
+    },
+    add(state, data) {
+        if (data && data instanceof Array && data.length > 0) {
+            state.list = _.union(state.list, data);
+        }
     }
 }
 // // //
@@ -24,25 +19,39 @@ const initial = _.extend({
         list: []
     },
     actions: {
-        LOAD({ commit }, next) {
+        LOAD({ state, commit, rootState }) {
             commit('load', ls.get('initial-contacts'));
-            let promise = api.contacts.initial.cget('10336', next);
-            promise.then((response) => {
+            return api.contacts.initial.cget({
+                uid: rootState.user.uid,
+                offset: 0
+            }).then((response) => {
                 commit('load', response.data);
-                ls.set('initial-contacts', response.data);
+                ls.set('initial-contacts', state.list);
             });
-            return promise;
         },
-        DELETE({ commit }, params) {
-            let promise = api.contacts.initial.delete(params);
-            promise.then((response) => {
-                commit('load', response.data);
-                ls.set('initial-contacts', response.data);
+        NEXT({ state, commit, rootState }, offset) {
+            return api.contacts.initial.cget({
+                uid: rootState.user.uid,
+                offset
+            }).then((response) => {
+                commit('add', response.data);
             });
-            return promise;
         },
-    }
-}, mutations);
+        DELETE({ state, commit, rootState }, index) {
+            commit('delete', index);
+            return api.contacts.intimate.delete({
+                uid: rootState.user.uid,
+                resource_id: state.list[index].id
+            });
+        },
+    },
+    mutations: _.extend({
+        delete(state, index) {
+            state.list.splice(index, 1);
+            ls.set('initial-contacts', state.list);
+        }
+    }, mutations)
+});
 
 const intimate = _.extend({
     namespaced: true,
@@ -50,17 +59,39 @@ const intimate = _.extend({
         list: []
     },
     actions: {
-        LOAD({ commit }, next) {
+        LOAD({ state, commit, rootState }) {
             commit('load', ls.get('intimate-contacts'));
-            let promise = api.contacts.intimate.cget('10336', next);
-            promise.then((response) => {
+            return api.contacts.intimate.cget({
+                uid: rootState.user.uid,
+                offset: 0
+            }).then((response) => {
                 commit('load', response.data);
-                ls.set('intimate-contacts', response.data);
+                ls.set('intimate-contacts', state.list);
             });
-            return promise;
+        },
+        NEXT({ state, commit, rootState }, offset) {
+            return api.contacts.intimate.cget({
+                uid: rootState.user.uid,
+                offset
+            }).then((response) => {
+                commit('add', response.data);
+            });
+        },
+        DELETE({ state, commit, rootState }, index) {
+            commit('delete', index);
+            return api.contacts.intimate.delete({
+                uid: rootState.user.uid,
+                resource_id: state.list[index].id
+            });
+        },
+    },
+    mutations: _.extend({
+        delete(state, index) {
+            state.list.splice(index, 1);
+            ls.set('intimate-contacts', state.list);
         }
-    }
-}, mutations);
+    }, mutations)
+});
 
 const sends = _.extend({
     namespaced: true,
@@ -68,17 +99,39 @@ const sends = _.extend({
         list: []
     },
     actions: {
-        LOAD({ commit }, next) {
+        LOAD({ state, commit, rootState }) {
             commit('load', ls.get('sends-contacts'));
-            let promise = api.contacts.sends.cget('10336', next);
-            promise.then((response) => {
+            return api.contacts.sends.cget({
+                uid: rootState.user.uid,
+                offset: 0
+            }).then((response) => {
                 commit('load', response.data);
-                //ls.set('intimate-contacts', state.contacts.intimate);
+                ls.set('sends-contacts', state.list);
             });
-            return promise;
+        },
+        NEXT({ state, commit, rootState }, offset) {
+            return api.contacts.sends.cget({
+                uid: rootState.user.uid,
+                offset
+            }).then((response) => {
+                commit('add', response.data);
+            });
+        },
+        DELETE({ state, commit, rootState }, index) {
+            commit('delete', index);
+            return api.contacts.sends.delete({
+                uid: rootState.user.uid,
+                resource_id: state.list[index].id
+            });
+        },
+    },
+    mutations: _.extend({
+        delete(state, index) {
+            state.list.splice(index, 1);
+            ls.set('sends-contacts', state.list);
         }
-    }
-}, mutations);
+    }, mutations)
+});
 
 
 const contacts = {
@@ -97,14 +150,22 @@ const modals = {
     },
     mutations: {
         showInitial(state, data) {
+            store.commit('closeAll');
             state.initial = data == true;
         },
         showIntimate(state, data) {
+            store.commit('closeAll');
             state.intimate = data == true;
         },
         showSends(state, data) {
+            store.commit('closeAll');
             state.sends = data == true;
         },
+        closeAll(state) {
+            state.initial  = false;
+            state.intimate = false;
+            state.sends    = false;
+        }
     }
 }
 
@@ -145,19 +206,26 @@ const user = {
     },
     actions: {
         LOAD_USER({ commit }) {
-            if (typeof user_sex != 'undefined') {
-                commit('loadUser', {
-                    sex: user_sex,
-                    uid: uid
-                });
+            if (uid) {
+                commit('loadUser', {uid});
             }
-            console.log('LOAD_USER');
+            if (typeof user_sex != 'undefined') {
+                commit('loadUser', {sex: user_sex});
+            }
+        },
+        SAVE_SEX({ commit }, sex) {
+            let promise = api.user.saveSex(sex);
+            promise.then((response) => {
+                if (response.data.sex) {
+                    store.commit('loadUser', { sex: response.data.sex });
+                }
+            });
+            return promise;
         },
     },
     mutations: {
         loadUser(state, data) {
             _.extend(state, data);
-            console.log(state);
         },
     }
 }
@@ -171,12 +239,13 @@ const store = new Vuex.Store({
     modules: {
         user,
         search,
-        contacts
+        contacts,
+        modals
     },
     state: {
         apiToken: '',
         //photoServer: '127.0.0.1:8888',
-        photoServer: '195.154.54.70',
+        photoServer: '@@API-PHOTO',
         count: 0,
         optionStatic: {
             view: null
@@ -260,7 +329,7 @@ store.dispatch('LOAD_USER');
 class Api {
     constructor(host, key, version, routing) {
         // Delay requests sec
-        let delay = 4;
+        let delay = '@@NET-DELAY';         // [!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]
 
         let ver = version ? 'v' + version + '/' : '';
         this.root = host + ver;
@@ -273,16 +342,16 @@ class Api {
         this.routing = {
             route: '',
             load: '',
-            get: '',
+            get: '{resource_id}',
             cget: '',
             send: '',
             post: '',
             save: '',
             remove: '',
-            delete: '',
-            put: '',
-            patch: '',
-            option: ''
+            delete: '{resource_id}',
+            put: '{resource_id}',
+            patch: '{resource_id}',
+            option: '{resource_id}'
         };
         _.extend(this.routing, routing);
     }
@@ -334,8 +403,14 @@ class Api {
     remove(data, params, url) {
         return this.delay(axios.post(this.setUrl('remove', params, url), data, this.config), 0);
     }
-    delete(data, params, url) {
-        return this.delay(axios.post(this.setUrl('delete', params, url), data, this.config), 0);
+    delete(params, url) {
+        return this.delay(axios.delete(this.setUrl('delete', params, url), this.config), 0);
+    }
+    put(params, url) {
+        return this.delay(axios.put(this.setUrl('put', params, url), this.config), 0);
+    }
+    patch(params, url) {
+        return this.delay(axios.patch(this.setUrl('patch', params, url), this.config), 0);
     }
     request(method, action, data, params, url) {
         // this.config.method = method;
@@ -349,9 +424,6 @@ class Api {
             return this.delay(axios[method](this.setUrl(action, params, url), this.config), 0);
         }
     }
-
-    put() {}
-    patch() {}
     option() {}
 
     delay(result, wait) {
@@ -389,8 +461,7 @@ class ApiMessages extends Api {
         super(host, key);
     }
     send(data) {
-        //console.log(this);
-        return axios.post('mailer/post/', data, this.config);
+        return this.post(data, null, 'mailer/post/');
     }
 }
 
@@ -401,23 +472,17 @@ class ApiUser extends Api {
         let routing = {
             post: 'option/sex',
         };
-        super(host, key);
+        super(host, key, null, routing);
     }
-    saveSex(data) {
-        return this.post(data).then((response) => {
-            if (response.data.sex) {
-                store.commit('loadUser', { sex: response.data.sex });
-            }
-        }).catch((e) => {
-            console.log(e);
-        });
+    saveSex(sex) {
+        return this.post({sex});
     }
 }
 
 class ApiSearch extends Api {
     constructor() {
         let key = '1234';
-        let host = 'http://127.0.0.1:9000/';
+        let host = 'http://@@API-SEARCH/';
         let routing = {
             route: 'users',
             get: '{tid}',
@@ -432,29 +497,15 @@ class ApiSearch extends Api {
 class ApiContact extends Api {
     constructor(routing) {
         let key = store.state.apiToken;
-        let host = 'http://127.0.0.1:8000/';
+        let host = 'http://@@API-CONTACT/';
         super(host, key, null, routing);
-    }
-
-    ignore(data) {
-        console.log('contact ignored');
-        return super.request('post', 'ignore', data);
-        //return super.post(data);
-    }
-
-    remove(data) {
-        console.log('contact removed');
-        return super.remove(data);
-    }
-    cget(uid, next) {
-        return super.cget({uid, next});
     }
 }
 
 class ApiInitial extends ApiContact {
     constructor() {
         let routing = {
-            route: 'users/{uid}/initials',
+            route:  'users/{uid}/initials',
         };
         super(routing);
     }

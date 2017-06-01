@@ -17,7 +17,7 @@ module.exports = function (grunt) {
                     'bower_components/moment/min/moment.min.js',
                     'bower_components/moment/locale/ru.js',
                     'bower_components/axios/dist/axios.min.js',
-                    'bower_components/vue/dist/vue.js', 
+                    'bower_components/vue/dist/vue.js',
                     'bower_components/vuex/dist/vuex.min.js',
                     'bower_components/vue-router/dist/vue-router.js',
                     'bower_components/vue-resource/dist/vue-resource.min.js',
@@ -56,7 +56,7 @@ module.exports = function (grunt) {
                     ],
                     'javascript/mess/dist/mess.min.js': [
                         'javascript/mess/dist/mess.js'
-                    ], 
+                    ],
                 }
             },
             bundle_prod: {
@@ -83,7 +83,7 @@ module.exports = function (grunt) {
         // Сборка исходников LESS в файлы css-style
         less: {
             dev: {
-                options: { 
+                options: {
                   paths: ['css-styles/0_import/resourses'],
                   rootpath: 'css-styles',
                 },
@@ -93,12 +93,11 @@ module.exports = function (grunt) {
                   "css-styles/mess/dist/mess.css":   "css-styles/mess/src/_main.less",
                   "css-styles/blog/dist/blog.css":   "css-styles/blog/src/_main.less",
                 }
-            }    
+            }
         },
         // Сборка файлов шаблонов
         processhtml: {
-            options: { 
-                environment: 'dev',
+            options: {
                 recursive: true,
             },
             dist: {
@@ -106,6 +105,50 @@ module.exports = function (grunt) {
                     'templates/mess/dist/mess.htm':   ['templates/mess/src/_main.htm'],
                     'templates/index/dist/index.htm': ['templates/index/src/_main.htm'],
                     'templates/profile/dist/profile.htm': ['templates/profile/src/_main.htm']
+                }
+            },
+            dev: {
+                files: {
+                    'templates/mess/dist/mess.htm':   ['templates/mess/src/_main.htm'],
+                    'templates/index/dist/index.htm': ['templates/index/src/_main.htm'],
+                    'templates/profile/dist/profile.htm': ['templates/profile/src/_main.htm']
+                }
+            }
+        }, 
+        //  
+        replace: {
+            dist: {
+                options: {
+                    patterns: [
+                    {
+                        json: {
+                            "NET-DELAY": 0,
+                            "API-PHOTO": "195.154.54.70",
+                            "API-SEARCH": "212.83.162.58",
+                            "API-CONTACT": "212.83.134.89:9000",
+                        }
+                    }
+                  ]
+                },
+                files: {
+                    'javascript/core/dist/core.js':   ['javascript/core/dist/core.js'] 
+                }
+            },
+            dev: {
+                options: {
+                    patterns: [
+                    {
+                        json: {
+                            "NET-DELAY": 2,
+                            "API-PHOTO": "127.0.0.1:9000",
+                            "API-SEARCH": "127.0.0.1:8000",
+                            "API-CONTACT": "127.0.0.1:9000",
+                        }
+                    }
+                  ]
+                },
+                files: {
+                    'javascript/core/dist/core.js': 'javascript/core/dist/core.js' 
                 }
             }
         },
@@ -134,7 +177,7 @@ module.exports = function (grunt) {
         },
         uglify: {
             core: {
-                files: {'javascript/core/dist/core.min.js': 'javascript/core/dist/core.js'} 
+                files: {'javascript/core/dist/core.min.js': 'javascript/core/dist/core.js'}
             },
             mess: {
                 files: {'javascript/mess/dist/mess.min.js': 'javascript/mess/dist/mess.js'}
@@ -167,10 +210,10 @@ module.exports = function (grunt) {
                 },
             },
             cstyles: {
-                files: [ 
+                files: [
                     'css-styles/core/vue-components.less',
                     'css-styles/0_import/**/*',
-                    'css-styles/core/src/*', 
+                    'css-styles/core/src/*',
                     'css-styles/mess/src/*',
                     'css-styles/admin/src/*',
                     'css-styles/blog/src/*',
@@ -188,7 +231,7 @@ module.exports = function (grunt) {
                     'templates/profile/src/*.htm',
                     'templates/_common/**/*.htm',
                 ],
-                tasks: ['processhtml:dist'],
+                tasks: ['processhtml:dev'],
                 options: {
                     livereload: true,
                     spawn: false,
@@ -196,7 +239,7 @@ module.exports = function (grunt) {
             },
             grunt: {
                 files: [
-                    'Gruntfile.js', 
+                    'Gruntfile.js',
                 ],
                 tasks: ['core'],
                 options: {
@@ -212,19 +255,19 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-image-resize');
     grunt.loadNpmTasks('grunt-processhtml');
+    grunt.loadNpmTasks('grunt-replace');
     grunt.loadNpmTasks('grunt-babel');
     grunt.loadNpmTasks('grunt-contrib-uglify');
 
     // Эти задания будут выполнятся сразу же когда вы в консоли напечатание grunt, и нажмете Enter
     grunt.registerTask('core', [
-        'concat:vue', 
+        'concat:vue',
         'concat:javascript', 'babel:javascript',
-        'less:dev', 
-        'processhtml'
+        'less:dev'
     ]);
     //grunt.registerTask('default', ['concat', 'babel', 'uglify', 'less', 'processhtml']);
-    grunt.registerTask('dev',  ['core', 'concat:bundle_dev']);
-    grunt.registerTask('prod', ['core', 'uglify', 'concat:bundle_prod' ]);
+    grunt.registerTask('dev',  ['core', 'replace:dev', 'concat:bundle_dev', 'processhtml:dev']);
+    grunt.registerTask('prod', ['core', 'replace:dist', 'uglify', 'concat:bundle_prod', 'processhtml:dist' ]);
     grunt.registerTask('p',    ['prod', 'watch']);
     grunt.registerTask('d',    ['dev', 'watch']);
     grunt.registerTask('img',  ['image_resize']);

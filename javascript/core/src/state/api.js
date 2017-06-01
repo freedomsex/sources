@@ -2,7 +2,7 @@
 class Api {
     constructor(host, key, version, routing) {
         // Delay requests sec
-        let delay = 4;
+        let delay = '@@NET-DELAY';         // [!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]
 
         let ver = version ? 'v' + version + '/' : '';
         this.root = host + ver;
@@ -15,16 +15,16 @@ class Api {
         this.routing = {
             route: '',
             load: '',
-            get: '',
+            get: '{resource_id}',
             cget: '',
             send: '',
             post: '',
             save: '',
             remove: '',
-            delete: '',
-            put: '',
-            patch: '',
-            option: ''
+            delete: '{resource_id}',
+            put: '{resource_id}',
+            patch: '{resource_id}',
+            option: '{resource_id}'
         };
         _.extend(this.routing, routing);
     }
@@ -76,8 +76,14 @@ class Api {
     remove(data, params, url) {
         return this.delay(axios.post(this.setUrl('remove', params, url), data, this.config), 0);
     }
-    delete(data, params, url) {
-        return this.delay(axios.post(this.setUrl('delete', params, url), data, this.config), 0);
+    delete(params, url) {
+        return this.delay(axios.delete(this.setUrl('delete', params, url), this.config), 0);
+    }
+    put(params, url) {
+        return this.delay(axios.put(this.setUrl('put', params, url), this.config), 0);
+    }
+    patch(params, url) {
+        return this.delay(axios.patch(this.setUrl('patch', params, url), this.config), 0);
     }
     request(method, action, data, params, url) {
         // this.config.method = method;
@@ -91,9 +97,6 @@ class Api {
             return this.delay(axios[method](this.setUrl(action, params, url), this.config), 0);
         }
     }
-
-    put() {}
-    patch() {}
     option() {}
 
     delay(result, wait) {
@@ -131,8 +134,7 @@ class ApiMessages extends Api {
         super(host, key);
     }
     send(data) {
-        //console.log(this);
-        return axios.post('mailer/post/', data, this.config);
+        return this.post(data, null, 'mailer/post/');
     }
 }
 
@@ -143,23 +145,17 @@ class ApiUser extends Api {
         let routing = {
             post: 'option/sex',
         };
-        super(host, key);
+        super(host, key, null, routing);
     }
-    saveSex(data) {
-        return this.post(data).then((response) => {
-            if (response.data.sex) {
-                store.commit('loadUser', { sex: response.data.sex });
-            }
-        }).catch((e) => {
-            console.log(e);
-        });
+    saveSex(sex) {
+        return this.post({sex});
     }
 }
 
 class ApiSearch extends Api {
     constructor() {
         let key = '1234';
-        let host = 'http://127.0.0.1:9000/';
+        let host = 'http://@@API-SEARCH/';
         let routing = {
             route: 'users',
             get: '{tid}',
@@ -174,29 +170,15 @@ class ApiSearch extends Api {
 class ApiContact extends Api {
     constructor(routing) {
         let key = store.state.apiToken;
-        let host = 'http://127.0.0.1:8000/';
+        let host = 'http://@@API-CONTACT/';
         super(host, key, null, routing);
-    }
-
-    ignore(data) {
-        console.log('contact ignored');
-        return super.request('post', 'ignore', data);
-        //return super.post(data);
-    }
-
-    remove(data) {
-        console.log('contact removed');
-        return super.remove(data);
-    }
-    cget(uid, next) {
-        return super.cget({uid, next});
     }
 }
 
 class ApiInitial extends ApiContact {
     constructor() {
         let routing = {
-            route: 'users/{uid}/initials',
+            route:  'users/{uid}/initials',
         };
         super(routing);
     }

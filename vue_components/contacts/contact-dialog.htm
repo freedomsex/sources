@@ -1,6 +1,6 @@
 
 <script type="text/x-template" id="initial-dialog">
-  <inform-dialog :loader="showLoader" :hint="showHint" @close="close">
+  <inform-dialog :loader="showLoader" :alert="showAlert" :hint="showHint" @close="close">
     <span slot="caption"><b>Предложения знакомства</b></span>
     <span slot="context">Когда вы отправляете или вам отправляют самое первое сообщение, это считается предложением знакомства.</span>
     <span slot="hint">Здесь будет список ваших предложений знакомства.</span>
@@ -10,17 +10,19 @@
         :item="item"
         :index="index"
         :quick="quick"
-        @bun="bun"
+        @sended="splice"
         @close="close"
-        @splice="splice"
         @remove="remove"/>
+    </div>
+    <div style="text-align: center;">
+      <div class="btn btn-default btn-xs" @click="next()" :disabled="response == false" v-show="count >= 10"> Следующие </div>
     </div>
   </inform-dialog>
 </script>
 
 
 <script type="text/x-template" id="intimate-dialog">
-  <inform-dialog :loader="showLoader" :hint="showHint" @close="close">
+  <inform-dialog :loader="showLoader" :alert="showAlert" :hint="showHint" @close="close">
     <span slot="caption"><b>Общение, диалоги и контакты</b></span>
     <span slot="context">Отвечайте на предложения знакомства. Ваши активные диалоги сохраняются здесь, отдельно от предложений знакомства.</span>
     <span slot="hint">Здесь будет список ваших контактов, сообщений, диалогов.</span>
@@ -30,10 +32,12 @@
         :item="item"
         :index="index"
         :quick="quick"
-        @bun="bun"
+        @sended="splice"
         @close="close"
-        @splice="splice"
         @remove="remove"/>
+    </div>
+    <div style="text-align: center;">
+      <div class="btn btn-default btn-xs" @click="next()" :disabled="response == false" v-show="count >= 10"> Следующие </div>
     </div>
   </inform-dialog>
 </script>

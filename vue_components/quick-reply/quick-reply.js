@@ -26,7 +26,7 @@ Vue.component('quick-reply', {
             return this.$store.state.search.human;
         },
         tags() {
-            return 'tags' in this.human ? this.human.tags : [];
+            return ('tags' in this.human) ? this.human.tags : [];
         },
         hold() {
             return this.ignore ? 0 : this.human.hold;
@@ -44,6 +44,9 @@ Vue.component('quick-reply', {
     },
     methods: {
         reload() {
+            if (!this.show) {
+                return false;
+            }
             this.loading = true;
             setTimeout(() => this.loading = false, 30 * 1000);
             store.dispatch('human', this.item.human_id).then((response) => {
@@ -63,10 +66,14 @@ Vue.component('quick-reply', {
             this.$emit('bun');
         },
         remove() {
-            // store.dispatch('initial/DELETE', {uid: '10336', cont_id: contact}).then((response) => {
+            // store.dispatch('initial/DELETE', {uid: '1001', cont_id: contact}).then((response) => {
             //     this.loaded();
             // });
-            console.log('conf:',{uid: '10336', cont_id: this.item.id} )
+            //
+            //  :href="'/' + item.human_id"
+            //
+            //
+            console.log('conf:',{uid: '1001', cont_id: this.item.id} )
             this.$emit('remove');
         },
         cancel() {
@@ -86,9 +93,9 @@ Vue.component('quick-reply', {
                 captcha_code: this.code
             };
             api.messages.send(data).then((response) => {
-                this.handler(response.data);
+                this.onMessageSend(response.data);
             }).catch((error) => {
-                this.error(error);
+                this.onError(error);
             });
             //  this.sended();
             this.inProcess(5);
@@ -97,22 +104,24 @@ Vue.component('quick-reply', {
             this.code = code;
             this.send();
         },
-        handler(response) {
+        onMessageSend(response) {
             if (!response.saved && response.error) {
                 if (response.error == 'need_captcha') {
                     this.captcha = true;
                 }
-                this.error();
+                this.onError();
             } else {
                 this.sended();
             }
             this.process = false;
         },
         sended() {
-            console.log('send');
             this.$emit('sended');
         },
-        error() {
+        anketa() {
+            window.location = '/' + this.item.human_id;
+        },
+        onError() {
             this.process = false;
         }
     },

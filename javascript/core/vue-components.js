@@ -40,6 +40,36 @@ Vue.component('attention-wall', {
 
 
 
+Vue.component('captcha-dialog', {
+    props: ['show'],
+    data() {
+        return {
+            code: '',
+            inc: 0
+        }
+    },
+    computed: {
+        src() {
+            return '/secret_pic.php?inc=' + this.inc;
+        }
+    },
+    methods: {
+        close() {
+            this.$emit('cancel');
+        },
+        send() {
+            this.$emit('send', this.code);
+            this.update();
+            this.close();
+        },
+        update() {
+            this.inc++;
+        },
+    },
+    template: '#captcha-dialog',
+});
+
+
 var ContactDialog = {
     props: [
       'quick',
@@ -48,13 +78,17 @@ var ContactDialog = {
         return {
             response: false,
             slow: false,
-            next: 0,
+            error: false,
+            offset: 0,
             batch: 10
         }
     },
     computed: {
         showLoader() {
             return this.slow && !this.response;
+        },
+        showAlert() {
+            return this.error && this.response;
         },
         showHint() {
             return this.count < 1;
@@ -68,42 +102,42 @@ var ContactDialog = {
         close() {
             this.$emit('close');
         },
+        reset() {
+            this.response = false;
+            this.error  = false;
+            this.slow = false;
+        },
         hope() {
             let sec = 2;
             setTimeout(() => this.slow = true,  sec * 1000);
-            this.response = false;
+            this.reset();
         },
         loaded(result) {
             //this.received = result ? result.length : 0;
             // if (this.received) {
             //     this.contacts = _.union(this.contacts, result);
             // }
-            //this.next += this.batch;
+            this.offset += this.batch;
             this.response = true;
             this.slow = false;
-        },
-        remove(index) {
-            this.splice(index);
-            this.close();
         },
         bun(index) {
             console.log('bun');
             let item = this.contacts[index];
-            let data = {
+            this.remove(index); return;
+            api.bun.send({
                 id: item.cont_id,
                 tid: item.from,
                 //text: this.item.message,
                 //token: 'super secret token'
-            };
-            api.bun.send(data);
-            this.splice(index);
-            this.close();
+            });
         },
         splice(index) {
-            this.contacts.splice(index, 1);
-            console.log('remove');
+            this.$store.commit('delete', index);
         },
         error(error) {
+            this.response = true;
+            this.error = true;
             console.log(error);
         }
     },
@@ -119,20 +153,29 @@ const InitialDialog = Vue.component('initial-dialog', {
         initial: () => true,
         simple:  () => true,
         contacts() {
+            //console.log(this.$store);
             return this.$store.state.contacts.initial.list;
         }
     },
     methods: {
         load() {
-            store.dispatch('initial/LOAD').then((response) => {
+            this.$store.dispatch('initial/LOAD').then((response) => {
                 this.loaded();
             });
             this.hope();
         },
+        next() {
+            this.$store.dispatch('initial/NEXT', this.offset).then((response) => {
+                this.loaded();
+            });
+            this.reset();
+        },
         remove(index) {
-            console.log('remove');
-            //apiContact.ignore({ tid: this.contacts[index].cont_id });
-            this.splice();
+            this.$store.dispatch('initial/DELETE', index);
+        },
+        splice(index) {
+            //console.log(this.$store); return;
+            this.$store.commit('initial/delete', index);
         },
     },
     template: '#initial-dialog'
@@ -149,16 +192,22 @@ const IntimateDialog = Vue.component('intimate-dialog', {
     },
     methods: {
         load() {
-            store.dispatch('intimate/LOAD').then((response) => {
+            this.$store.dispatch('intimate/LOAD', this.next).then((response) => {
+                this.loaded();
+            }).catch((error) => this.error(error));
+            this.hope();
+        },
+        next() {
+            this.$store.dispatch('intimate/NEXT', this.offset).then((response) => {
                 this.loaded();
             });
             this.hope();
         },
         remove(index) {
-            console.log('remove');
-            //apiContact.remove({ tid: this.contacts[index].cont_id });
-            //this.$emit('remove', this.index);
-            this.splice();
+            this.$store.dispatch('intimate/DELETE', index);
+        },
+        splice(index) {
+            this.$store.commit('intimate/delete', index);
         },
     },
     template: '#intimate-dialog'
@@ -175,10 +224,22 @@ const SendsDialog = Vue.component('sends-dialog', {
     },
     methods: {
         load() {
-            store.dispatch('sends/LOAD').then((response) => {
+            this.$store.dispatch('sends/LOAD', this.next).then((response) => {
                 this.loaded();
             });
             this.hope();
+        },
+        next() {
+            this.$store.dispatch('sends/NEXT', this.offset).then((response) => {
+                this.loaded();
+            });
+            this.reset();
+        },
+        remove(index) {
+            this.$store.dispatch('sends/DELETE', index);
+        },
+        splice(index) {
+            this.$store.commit('sends/delete', index);
         },
     },
     template: '#initial-dialog'
@@ -233,13 +294,13 @@ Vue.component('contact-item', {
             }
         },
         confirmBun() {
-            console.log(this.initial);
-            this.confirm = !this.initial ? 'some' : 'doit';
+            //console.log(this.initial);
+            this.confirm = 'doit';
         },
         confirmRemove() {
             //this.$emit('remove');
-            console.log('initial-item REMOVE');
-            this.confirm = !this.initial ? 'some' : 'must';
+            //console.log('initial-item REMOVE');
+            this.confirm = !this.quick ? 'some' : 'must';
         },
         reply() {
             this.detail = true;
@@ -247,7 +308,6 @@ Vue.component('contact-item', {
         },
         anketa() {
             window.location = '/' + this.item.human_id;
-            console.log('anketa');
         },
         close() {
             this.detail = false;
@@ -257,14 +317,16 @@ Vue.component('contact-item', {
             this.$emit('bun', this.index);
         },
         remove() {
+            console.log('remove=remove', this.index);
             this.$emit('remove', this.index);
-        },
-        splice() {
-            this.$emit('splice', this.index);
         },
         cancel() {
             this.confirm = false;
             console.log('cancel');
+        },
+        sended() {
+            this.$emit('sended', this.index);
+            this.close();
         }
     },
     template: '#contact-item'
@@ -272,28 +334,18 @@ Vue.component('contact-item', {
 
 
 
-var ContactSection = new Vue({
-    el: '#contact-section',
-    store,
-    data: {
-
-    },
+Vue.component('inform-dialog', {
+    props: [
+      'loader',
+      'alert',
+      'hint',
+    ],
     methods: {
-        push(name) {
-            if (router.name != name) {
-                router.push({ name });
-            }
+        close() {
+            this.$emit('close');
         },
-        openSends() {
-            this.push('sends');
-        },
-        openInit() {
-            this.push('initial');
-        },
-        openIntim() {
-            this.push('intimate');
-        }
-    }
+    },
+    template: '#inform-dialog'
 });
 
 
@@ -331,6 +383,197 @@ Vue.component('loading-wall', {
 
 
 
+
+var MenuUser = new Vue({
+    methods: {
+        initial() {
+            console.log('MenuUser')
+            store.commit('showInitial', 1);
+        },
+        intimate() {
+            store.commit('showIntimate', 1);
+        },
+    },
+    store,
+    data: {
+        text: 'yyy'
+    },
+    el: '#menu-user',
+});
+var fdate = null;
+var prev  = null;
+
+Vue.component('message-item', {
+    props: [
+      'item',
+      'index',
+      'count',
+      'alert',
+      'uid',
+      'first_date'
+    ],
+    template: '#messages-item',
+    data() {
+        return {
+            showOption:  false,
+            fixOption:   false,
+            alertOption: false,
+            showDialog: false,
+        }
+    },
+    methods: {
+        fix() {
+            this.showOption = true;
+            this.alertOption = false;
+            if (!this.alert) {
+                this.fixOption = this.alert ? false : !this.fixOption;
+            } else {
+                this.$emit('admit');
+            }
+        },
+        bun() {
+            let config = {
+                headers: {'Authorization': 'Bearer ' + this.$store.state.apiToken}
+            };
+            let data = {
+                id:  this.item.id,
+                tid: this.item.from
+            };
+            axios.post('/mess/bun/', data, config).then((response) => {
+                this.$emit('remove', this.index);
+            }).catch((error) => {
+                console.log('error');
+            });
+        },
+        cancel() {
+            this.showDialog = false;
+            console.log('cancel');
+        },
+        remove() {
+            let config = {
+                headers: {'Authorization': 'Bearer ' + this.$store.state.apiToken}
+            };
+            let data = {
+                id:  this.item.id
+            };
+            axios.post('/mess/delete/', data, config).then((response) => {
+                this.$emit('remove', this.index);
+            }).catch((error) => {
+                console.log(error);
+            });
+            console.log('remove');
+        },
+        play() {
+            let config = {
+                headers: {'Authorization': 'Bearer ' + this.$store.state.apiToken},
+                params: {tid}
+            };
+            let server = this.$store.state.photoServer;
+            let url = `http://${server}/api/v1/users/${uid}/sends/${this.alias}.jpg`;
+            axios.get(url, config).then((response) => {
+                this.photo(response.data.photo)
+            }).catch((error) => {
+                console.log('error');
+            });
+        },
+        photo(photo) {
+            //console.log(photo);
+            let links = photo._links;
+            if (links.origin.href) {
+                let data = {
+                    thumb: links.thumb.href,
+                    photo: links.origin.href,
+                    alias:  photo.alias,
+                    height: photo.height,
+                    width:  photo.width,
+                }
+                store.commit('viewPhoto', data);
+            }
+        },
+        pathName(name) {
+            if (!name || name.length < 10) {
+                return null;
+            }
+            let path = [
+                name.substr(0, 2),
+                name.substr(2, 2),
+                name.substr(4, 3),
+            ];
+            return path.join('/')+'/'+name;
+        },
+    },
+    mounted() {
+        if (!this.sent && !this.index && this.count < 5) {
+            this.fix();
+            this.alertOption = true;
+        }
+        if (!this.sent && !this.read) {
+            this.$emit('set-new');
+        }
+    },
+    beforeUpdate() {
+        //this.attention();
+    },
+    computed: {
+        attention() {
+            return (this.alert || this.alertOption) ? 1 : 0;
+        },
+        option() {
+            if (!this.index && this.alert) {
+                return true;
+            }
+            return (this.showOption || this.fixOption) ? 1 : 0;
+        },
+        sent() {
+            return (!uid || uid == this.item.from) ? 1 : 0;
+        },
+        read() {
+            return (this.item.read == 0) ? false : true;
+        },
+        time() {
+            return moment(this.item.date).format('HH:mm');
+        },
+        date() {
+            let mdate = moment(this.item.date);
+            let date = mdate.date();
+            let first_date = fdate;
+            fdate = date;
+            date = (fdate == first_date) ? '' : fdate;
+            let today = moment().date();
+            let yestd = moment().subtract(1, 'day').date();
+
+            date = (date === today) ? 'Сегодня' : date;
+            date = (date === yestd) ? 'Вчера' : date;
+
+            mdate = mdate.date() + ' ' + mdate.format('MMMM').substring(0,3);
+            date = _.isString(date) ? date : mdate;
+            return date;
+        },
+        alias() {
+            let result = false;
+            let text = this.item.mess;
+            let old = /.+images.intim?.(.{32})\.(jpg)/i;
+            let now = /\[\[IMG:(.{32})\]\]/i;
+            result = old.test(text) ? old.exec(text) : false;
+            result = (!result && now.test(text)) ? now.exec(text) : result;
+            if (result) {
+                result = result[1];
+            }
+            return result;
+        },
+        image() {
+            let server = this.$store.state.photoServer;
+            let image = this.pathName(this.alias);
+            return image ? `http://${server}/res/photo/preview/${image}.png` : false;
+        },
+        previous() {
+            let p = prev;
+            prev = this.item.from;
+            return (!p || p == prev) ? true : false;
+        }
+    }
+});
+
 Vue.component('modal-dialog', {
     props: ['show', 'data'],
     methods: {
@@ -350,6 +593,32 @@ Vue.component('modal-dialog', {
     template: '#modal-dialog',
 });
 
+
+///
+// Модальное окно настроек OptionDialog - контейнер
+///
+Vue.component('option-dialog', {
+    template: '#option-static__dialog-window',
+    methods: {
+        close() {
+            this.$emit('close');
+        }
+    },
+    created: function() {
+        // Close the modal when the `escape` key is pressed.
+        var self = this;
+        document.addEventListener('keydown', function() {
+            if (self.show && event.keyCode === 27) {
+                self.close();
+            }
+        });
+    },
+    updated() {
+        if (this.show) {
+            $("html, body").animate({ scrollTop: 0 }, "slow");
+        }
+    }
+});
 
 Vue.directive('resized', {
   bind: function (el) {
@@ -379,7 +648,7 @@ Vue.component('quick-reply', {
             return this.$store.state.search.human;
         },
         tags() {
-            return 'tags' in this.human ? this.human.tags : [];
+            return ('tags' in this.human) ? this.human.tags : [];
         },
         hold() {
             return this.ignore ? 0 : this.human.hold;
@@ -397,6 +666,9 @@ Vue.component('quick-reply', {
     },
     methods: {
         reload() {
+            if (!this.show) {
+                return false;
+            }
             this.loading = true;
             setTimeout(() => this.loading = false, 30 * 1000);
             store.dispatch('human', this.item.human_id).then((response) => {
@@ -416,10 +688,14 @@ Vue.component('quick-reply', {
             this.$emit('bun');
         },
         remove() {
-            // store.dispatch('initial/DELETE', {uid: '10336', cont_id: contact}).then((response) => {
+            // store.dispatch('initial/DELETE', {uid: '1001', cont_id: contact}).then((response) => {
             //     this.loaded();
             // });
-            console.log('conf:',{uid: '10336', cont_id: this.item.id} )
+            //
+            //  :href="'/' + item.human_id"
+            //
+            //
+            console.log('conf:',{uid: '1001', cont_id: this.item.id} )
             this.$emit('remove');
         },
         cancel() {
@@ -439,9 +715,9 @@ Vue.component('quick-reply', {
                 captcha_code: this.code
             };
             api.messages.send(data).then((response) => {
-                this.handler(response.data);
+                this.onMessageSend(response.data);
             }).catch((error) => {
-                this.error(error);
+                this.onError(error);
             });
             //  this.sended();
             this.inProcess(5);
@@ -450,22 +726,24 @@ Vue.component('quick-reply', {
             this.code = code;
             this.send();
         },
-        handler(response) {
+        onMessageSend(response) {
             if (!response.saved && response.error) {
                 if (response.error == 'need_captcha') {
                     this.captcha = true;
                 }
-                this.error();
+                this.onError();
             } else {
                 this.sended();
             }
             this.process = false;
         },
         sended() {
-            console.log('send');
             this.$emit('sended');
         },
-        error() {
+        anketa() {
+            window.location = '/' + this.item.human_id;
+        },
+        onError() {
             this.process = false;
         }
     },
@@ -474,7 +752,7 @@ Vue.component('quick-reply', {
 
 
 
-Vue.component('remove-confirm', {
+var RemoveConfirm = Vue.component('remove-confirm', {
     props: ['show', 'item'],
     data() {
         return {
@@ -488,9 +766,8 @@ Vue.component('remove-confirm', {
                 },
                 must: {
                     caption: 'Может стоит наказать?',
-                    text: `Нажмите "Дизлайк" у сообщения, которое вызвало негативные эмоции.
-                    Наказание действует сразу же. Мы никогда не узнаем о нарушениях
-                    собеседника, если удалить без наказания.`,
+                    text: `Нажмите "Дизлайк" у сообщения или контакта, которое вызвало негативные эмоции.
+                    Наказание действует сразу же. Мы никогда не узнаем о нарушениях, если удалить без наказания.`,
                     action: 'Удалить и забыть'
                 },
                 some: {
@@ -532,3 +809,30 @@ Vue.component('remove-confirm', {
     template: '#remove-confirm',
 });
 
+
+
+Vue.component('remove-contact', {
+    extends: RemoveConfirm,
+    data() {
+        return {
+            content: {
+                some: {
+                    caption: 'Удалить навсегда',
+                    text: `Контакт будет удален без возможности восстановить. Дальнейшее общение с собеседником станет невозможно.
+                    Обменивайтесь реальными контактами с теми кто вам интересен всегда.`,
+                    action: 'Удалить навсегда'
+                }
+            }
+        }
+    },
+    computed: {
+
+    },
+    methods: {
+        remove() {
+            this.$emit('remove');
+            this.close();
+        },
+    },
+    template: '#remove-confirm',
+});

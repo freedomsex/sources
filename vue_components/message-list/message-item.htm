@@ -1,0 +1,47 @@
+
+<script type="text/x-template" id="messages-item">
+<div class="message-item" @mouseleave="showOption = false">
+  <div class="message-item__date" v-if="date">
+    <span>{{date}}</span>
+  </div>
+  <div class="message-item__spliter" v-show="!previous"></div>
+  <div :class="[sent ? 'message-item__sent' : 'message-item__received']">
+    <div class="message-item__balloon" @mouseover="showOption = true" @click="fix">
+      <div v-if="image" class="message-image" :style="{ backgroundImage: 'url('+image+')' }">
+        <div class="message-image__play" @click="play">
+          <img src="/static/img/icon/play.png">
+        </div>
+        <span class="message-image__info">
+          <span class="message-image__status" v-show="!read"></span>
+          <span class="message-image__time">{{time}}</span>
+        </span>
+      </div>
+      <span v-else>
+        <span v-html="item.mess"></span>
+        <span class="message-info">
+          <span class="message-info__status" v-show="!read"></span>
+          <span class="message-info__time">{{time}}</span>
+        </span>
+
+      </span>
+
+
+    </div>
+    <span :class="attention ? 'message-item__bunn-alert' : 'message-item__bunn'"
+      v-show="!sent && option" @click="showDialog = sent ? 'some' : 'doit'">
+      <span aria-hidden="true" class="glyphicon glyphicon-thumbs-down"></span>
+    </span>
+    <span class="message-item__remove" v-show="option" @click="showDialog = sent ? 'some' : 'must'">
+      <span aria-hidden="true" class="glyphicon glyphicon-remove"></span>
+    </span>
+  </div>
+  <remove-confirm
+    :show="showDialog"
+    :data="item"
+    @bun="bun"
+    @close="cancel"
+    @remove="remove"
+  ></remove-confirm>
+</div>
+</script>
+

@@ -4,8 +4,8 @@
     <div class="contact-list__item-content" @click.stop="show">
       <div class="contact-list__item-info">
         <span class="user-list__name">{{name}}</span><span v-show="age || city">,</span>
-        <span class="user-list__age">{{age}}</span>
-        <span class="user-list__city">{{city}}</span>
+        <span class="user-list__age" v-show="age">{{age}}</span>
+        <span class="user-list__city" v-show="city">{{city}}</span>
       </div>
       <div class="contact-list__item-message">{{message}}</div>
     </div>
@@ -19,14 +19,12 @@
       </span>
     </div>
 
-    <remove-confirm :show="confirm"
+    <remove-contact :show="confirm"
       @bun="bun"
       @close="cancel"
       @remove="remove"/>
-    <quick-reply :show="detail" :item="item"
-      @bun="bun"
-      @close="close"
-      @sended="splice"
-      @remove="remove"/>
+    <quick-reply v-if="detail" :show="detail" :item="item"
+      @sended="sended"
+      @close="close"/>
   </div>
 </script>

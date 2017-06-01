@@ -1,5 +1,5 @@
 
-Vue.component('remove-confirm', {
+var RemoveConfirm = Vue.component('remove-confirm', {
     props: ['show', 'item'],
     data() {
         return {
@@ -13,9 +13,8 @@ Vue.component('remove-confirm', {
                 },
                 must: {
                     caption: 'Может стоит наказать?',
-                    text: `Нажмите "Дизлайк" у сообщения, которое вызвало негативные эмоции.
-                    Наказание действует сразу же. Мы никогда не узнаем о нарушениях
-                    собеседника, если удалить без наказания.`,
+                    text: `Нажмите "Дизлайк" у сообщения или контакта, которое вызвало негативные эмоции.
+                    Наказание действует сразу же. Мы никогда не узнаем о нарушениях, если удалить без наказания.`,
                     action: 'Удалить и забыть'
                 },
                 some: {
@@ -57,3 +56,30 @@ Vue.component('remove-confirm', {
     template: '#remove-confirm',
 });
 
+
+
+Vue.component('remove-contact', {
+    extends: RemoveConfirm,
+    data() {
+        return {
+            content: {
+                some: {
+                    caption: 'Удалить навсегда',
+                    text: `Контакт будет удален без возможности восстановить. Дальнейшее общение с собеседником станет невозможно.
+                    Обменивайтесь реальными контактами с теми кто вам интересен всегда.`,
+                    action: 'Удалить навсегда'
+                }
+            }
+        }
+    },
+    computed: {
+
+    },
+    methods: {
+        remove() {
+            this.$emit('remove');
+            this.close();
+        },
+    },
+    template: '#remove-confirm',
+});

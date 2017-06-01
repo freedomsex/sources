@@ -11,6 +11,7 @@
         </div>
         <div class="option_loader">
           <div class="option_loader__label" v-show="loader"></div>
+          <div class="option_loader__alert" v-show="alert"></div>
         </div>
         <slot></slot>
         <div class="hint_context" v-show="hint">

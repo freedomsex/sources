@@ -7,12 +7,13 @@ const store = new Vuex.Store({
     modules: {
         user,
         search,
-        contacts
+        contacts,
+        modals
     },
     state: {
         apiToken: '',
         //photoServer: '127.0.0.1:8888',
-        photoServer: '195.154.54.70',
+        photoServer: '@@API-PHOTO',
         count: 0,
         optionStatic: {
             view: null

@@ -38,19 +38,15 @@
 }
 
 #option-static__wrapper {
-    bottom: 0px;
-    left: 0px;
-    padding: 10px 10px;
-    position: absolute;
-    right: 0px;
-    top: 0px;
+    background: @white;
+    margin: @indent-md @indent-md;
+    position: relative;
 }
 .option-dialog__wrapper {
     #option-static__wrapper;
 }
 
 #option-static__container {
-    background: @white;
     padding: 20px 10px 25px;
 }
 .option-dialog__container {
@@ -62,10 +58,10 @@
     color: @gray-dark;
     cursor: pointer;
     font-size: 15px;
-    padding: 5px 10px;
+    padding: 10px 10px;
     position: absolute;
-    right: 10px;
-    top: 10px;
+    right: 0px;
+    top: 0px;
 }
 .option-dialog__close {
     #option-static__close;
@@ -105,7 +101,8 @@
     text-align: center;
     position: relative;
     height: 15px;
-    &__label {
+
+    .circle-label() {
       padding: 2px;
       margin-top: 1px;
       font-size: 12px;
@@ -116,10 +113,19 @@
       box-shadow: 0 0 2px 1px rgba(0, 0, 0, .1);
       display: inline-block;
       background-color: @white;
-      background-image: url('/static/img/loader.gif');
-      background-position: center;
+      background-position: center center;
       background-repeat: no-repeat;
       position: relative;
       z-index: 1000;
+    }
+
+    &__label {
+      .circle-label;
+      background-image: url('/static/img/loader.gif');
+    }
+    &__alert {
+      .circle-label;
+      border: 0px solid @gray;
+      background-image: url('/static/img/icon/error-outline.png');
     }
 }

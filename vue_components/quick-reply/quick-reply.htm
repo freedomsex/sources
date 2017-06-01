@@ -3,35 +3,21 @@
   <modal-dialog :show="show" @close="close">
     <div class="human-dialog__caption">
       Быстрый ответ
-      <div class="human-dialog__option">
-        <span aria-hidden="true" class="glyphicon glyphicon-thumbs-down" @click="confirm = 'doit'"></span>
-        <span aria-hidden="true" class="human-dialog__option-remove glyphicon glyphicon-trash" @click="confirm = 'must'"></span>
-      </div>
     </div>
     <div class="human-dialog__body">
-      <div class="human-dialog__desire" v-show="human">
-        <span class="link_simple" v-for="(tag, index) in tags" :key="index">{{tag}} &#8226; </span>
+      <div class="human-dialog__desire" v-show="tags.length">
+        <span class="link_simple" v-for="(tag, index) in tags" :key="index" v-show="tag">{{tag}} &#8226; </span>
       </div>
-      <div class="human-dialog__message">
+      <div class="human-dialog__message" v-show="message">
         {{message}}
       </div>
     </div>
 
 
     <div class="message-input">
-    <table border="0" style="width: 100%;">
-        <tr>
-          <td style="width: 40px;">
-            <a :href="'/' + item.human_id" class="message-input__button-account" style=""></a>
-          </td>
-          <td>
-            <textarea class="message-input__texarea" rows="1" placeholder="Введите текст" v-model="text" v-resized></textarea>
-          </td>
-          <td style="width: 40px;">
-            <div class="message-input__button-send" @click="send"></div>
-          </td>
-        </tr>
-      </table>
+      <textarea class="message-input__texarea" rows="1" placeholder="Введите текст" v-model="text" v-resized></textarea>
+        <button class="btn btn-primary" @click="send()">Отправить</button>
+        <button class="btn btn-link" @click="anketa()">Читать полностью...</button>
     </div>
     <attention-wall :show="hold" @close="cancel" @remove="remove"/>
     <loading-wall :show="loading"/>

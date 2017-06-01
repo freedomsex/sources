@@ -51,9 +51,44 @@ ul.menu_user {
         }
     }
 }
-li.menu_user_link a,
-li.menu_user_link_search a,
-li.menu_user_link_exit span,
+
+.menu-user {
+    &__item {
+        list-style:none;
+        display: inline-block;
+        float: left;
+        margin: 0;
+        padding: 0;
+
+        &:hover {
+            background: @menu-hover;
+        }
+    }
+}
+
+.menu-button {
+    color: @white;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 15px;
+    height: @height8;
+    line-height: @height8;
+    padding: 0px 10px;
+
+    img {
+        bottom: 1px;
+        position: relative;
+        vertical-align: middle;
+    }
+    .glyphicon {
+        top: -1px;
+        position: relative;
+        display: inline-block;
+        vertical-align: middle;
+    }
+}
+
+li.menu_user_link,
 li.menu_user_link_shop a  {
     color: @white;
     cursor: pointer;
@@ -63,6 +98,9 @@ li.menu_user_link_shop a  {
     line-height: @height8;
     padding: 0px 10px;
 }
+
+
+
 li.menu_user_link {
     img {
         bottom: 1px;

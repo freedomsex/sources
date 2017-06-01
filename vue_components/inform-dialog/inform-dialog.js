@@ -2,6 +2,7 @@
 Vue.component('inform-dialog', {
     props: [
       'loader',
+      'alert',
       'hint',
     ],
     methods: {

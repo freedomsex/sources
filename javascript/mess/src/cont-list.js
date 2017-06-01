@@ -27,8 +27,9 @@ var cont_list = {
         load: function ()
         {
             simple_hash();
+            setTimeout(function() {
             $.get( '/contact/list/'+ cont_list.acttab +'/', { inlist: cont_list.count, hash: hash }, cont_list.ajax.success)
-             .fail(cont_list.ajax.error);
+             .fail(cont_list.ajax.error); }, 2000);
         } ,
 
         success: function (data)

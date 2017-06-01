@@ -1,7 +1,5 @@
 'use strict';
 
-var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -47,13 +45,44 @@ Vue.component('attention-wall', {
     template: '#attention-wall'
 });
 
+Vue.component('captcha-dialog', {
+    props: ['show'],
+    data: function data() {
+        return {
+            code: '',
+            inc: 0
+        };
+    },
+
+    computed: {
+        src: function src() {
+            return '/secret_pic.php?inc=' + this.inc;
+        }
+    },
+    methods: {
+        close: function close() {
+            this.$emit('cancel');
+        },
+        send: function send() {
+            this.$emit('send', this.code);
+            this.update();
+            this.close();
+        },
+        update: function update() {
+            this.inc++;
+        }
+    },
+    template: '#captcha-dialog'
+});
+
 var ContactDialog = {
     props: ['quick'],
     data: function data() {
         return {
             response: false,
             slow: false,
-            next: 0,
+            error: false,
+            offset: 0,
             batch: 10
         };
     },
@@ -61,6 +90,9 @@ var ContactDialog = {
     computed: {
         showLoader: function showLoader() {
             return this.slow && !this.response;
+        },
+        showAlert: function showAlert() {
+            return this.error && this.response;
         },
         showHint: function showHint() {
             return this.count < 1;
@@ -74,6 +106,11 @@ var ContactDialog = {
         close: function close() {
             this.$emit('close');
         },
+        reset: function reset() {
+            this.response = false;
+            this.error = false;
+            this.slow = false;
+        },
         hope: function hope() {
             var _this = this;
 
@@ -81,37 +118,32 @@ var ContactDialog = {
             setTimeout(function () {
                 return _this.slow = true;
             }, sec * 1000);
-            this.response = false;
+            this.reset();
         },
         loaded: function loaded(result) {
             //this.received = result ? result.length : 0;
             // if (this.received) {
             //     this.contacts = _.union(this.contacts, result);
             // }
-            //this.next += this.batch;
+            this.offset += this.batch;
             this.response = true;
             this.slow = false;
-        },
-        remove: function remove(index) {
-            this.splice(index);
-            this.close();
         },
         bun: function bun(index) {
             console.log('bun');
             var item = this.contacts[index];
-            var data = {
+            this.remove(index);return;
+            api.bun.send({
                 id: item.cont_id,
                 tid: item.from
-            };
-            api.bun.send(data);
-            this.splice(index);
-            this.close();
+            });
         },
         splice: function splice(index) {
-            this.contacts.splice(index, 1);
-            console.log('remove');
+            this.$store.commit('delete', index);
         },
         error: function error(_error) {
+            this.response = true;
+            this.error = true;
             console.log(_error);
         }
     },
@@ -130,6 +162,7 @@ var InitialDialog = Vue.component('initial-dialog', {
             return true;
         },
         contacts: function contacts() {
+            //console.log(this.$store);
             return this.$store.state.contacts.initial.list;
         }
     },
@@ -137,15 +170,25 @@ var InitialDialog = Vue.component('initial-dialog', {
         load: function load() {
             var _this2 = this;
 
-            store.dispatch('initial/LOAD').then(function (response) {
+            this.$store.dispatch('initial/LOAD').then(function (response) {
                 _this2.loaded();
             });
             this.hope();
         },
+        next: function next() {
+            var _this3 = this;
+
+            this.$store.dispatch('initial/NEXT', this.offset).then(function (response) {
+                _this3.loaded();
+            });
+            this.reset();
+        },
         remove: function remove(index) {
-            console.log('remove');
-            //apiContact.ignore({ tid: this.contacts[index].cont_id });
-            this.splice();
+            this.$store.dispatch('initial/DELETE', index);
+        },
+        splice: function splice(index) {
+            //console.log(this.$store); return;
+            this.$store.commit('initial/delete', index);
         }
     },
     template: '#initial-dialog'
@@ -166,18 +209,28 @@ var IntimateDialog = Vue.component('intimate-dialog', {
     },
     methods: {
         load: function load() {
-            var _this3 = this;
+            var _this4 = this;
 
-            store.dispatch('intimate/LOAD').then(function (response) {
-                _this3.loaded();
+            this.$store.dispatch('intimate/LOAD', this.next).then(function (response) {
+                _this4.loaded();
+            }).catch(function (error) {
+                return _this4.error(error);
+            });
+            this.hope();
+        },
+        next: function next() {
+            var _this5 = this;
+
+            this.$store.dispatch('intimate/NEXT', this.offset).then(function (response) {
+                _this5.loaded();
             });
             this.hope();
         },
         remove: function remove(index) {
-            console.log('remove');
-            //apiContact.remove({ tid: this.contacts[index].cont_id });
-            //this.$emit('remove', this.index);
-            this.splice();
+            this.$store.dispatch('intimate/DELETE', index);
+        },
+        splice: function splice(index) {
+            this.$store.commit('intimate/delete', index);
         }
     },
     template: '#intimate-dialog'
@@ -198,12 +251,26 @@ var SendsDialog = Vue.component('sends-dialog', {
     },
     methods: {
         load: function load() {
-            var _this4 = this;
+            var _this6 = this;
 
-            store.dispatch('sends/LOAD').then(function (response) {
-                _this4.loaded();
+            this.$store.dispatch('sends/LOAD', this.next).then(function (response) {
+                _this6.loaded();
             });
             this.hope();
+        },
+        next: function next() {
+            var _this7 = this;
+
+            this.$store.dispatch('sends/NEXT', this.offset).then(function (response) {
+                _this7.loaded();
+            });
+            this.reset();
+        },
+        remove: function remove(index) {
+            this.$store.dispatch('sends/DELETE', index);
+        },
+        splice: function splice(index) {
+            this.$store.commit('sends/delete', index);
         }
     },
     template: '#initial-dialog'
@@ -253,13 +320,13 @@ Vue.component('contact-item', {
             }
         },
         confirmBun: function confirmBun() {
-            console.log(this.initial);
-            this.confirm = !this.initial ? 'some' : 'doit';
+            //console.log(this.initial);
+            this.confirm = 'doit';
         },
         confirmRemove: function confirmRemove() {
             //this.$emit('remove');
-            console.log('initial-item REMOVE');
-            this.confirm = !this.initial ? 'some' : 'must';
+            //console.log('initial-item REMOVE');
+            this.confirm = !this.quick ? 'some' : 'must';
         },
         reply: function reply() {
             this.detail = true;
@@ -267,7 +334,6 @@ Vue.component('contact-item', {
         },
         anketa: function anketa() {
             window.location = '/' + this.item.human_id;
-            console.log('anketa');
         },
         close: function close() {
             this.detail = false;
@@ -277,39 +343,29 @@ Vue.component('contact-item', {
             this.$emit('bun', this.index);
         },
         remove: function remove() {
+            console.log('remove=remove', this.index);
             this.$emit('remove', this.index);
-        },
-        splice: function splice() {
-            this.$emit('splice', this.index);
         },
         cancel: function cancel() {
             this.confirm = false;
             console.log('cancel');
+        },
+        sended: function sended() {
+            this.$emit('sended', this.index);
+            this.close();
         }
     },
     template: '#contact-item'
 });
 
-var ContactSection = new Vue({
-    el: '#contact-section',
-    store: store,
-    data: {},
+Vue.component('inform-dialog', {
+    props: ['loader', 'alert', 'hint'],
     methods: {
-        push: function push(name) {
-            if (router.name != name) {
-                router.push({ name: name });
-            }
-        },
-        openSends: function openSends() {
-            this.push('sends');
-        },
-        openInit: function openInit() {
-            this.push('initial');
-        },
-        openIntim: function openIntim() {
-            this.push('intimate');
+        close: function close() {
+            this.$emit('close');
         }
-    }
+    },
+    template: '#inform-dialog'
 });
 
 Vue.component('loading-cover', {
@@ -336,15 +392,202 @@ Vue.component('loading-wall', {
         }
     },
     mounted: function mounted() {
-        var _this5 = this;
+        var _this8 = this;
 
         this.hope = false;
         setTimeout(function () {
-            return _this5.hope = true;
+            return _this8.hope = true;
         }, 3000);
     },
 
     template: '#loading-wall'
+});
+
+var MenuUser = new Vue({
+    methods: {
+        initial: function initial() {
+            console.log('MenuUser');
+            store.commit('showInitial', 1);
+        },
+        intimate: function intimate() {
+            store.commit('showIntimate', 1);
+        }
+    },
+    store: store,
+    data: {
+        text: 'yyy'
+    },
+    el: '#menu-user'
+});
+var fdate = null;
+var prev = null;
+
+Vue.component('message-item', {
+    props: ['item', 'index', 'count', 'alert', 'uid', 'first_date'],
+    template: '#messages-item',
+    data: function data() {
+        return {
+            showOption: false,
+            fixOption: false,
+            alertOption: false,
+            showDialog: false
+        };
+    },
+
+    methods: {
+        fix: function fix() {
+            this.showOption = true;
+            this.alertOption = false;
+            if (!this.alert) {
+                this.fixOption = this.alert ? false : !this.fixOption;
+            } else {
+                this.$emit('admit');
+            }
+        },
+        bun: function bun() {
+            var _this9 = this;
+
+            var config = {
+                headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken }
+            };
+            var data = {
+                id: this.item.id,
+                tid: this.item.from
+            };
+            axios.post('/mess/bun/', data, config).then(function (response) {
+                _this9.$emit('remove', _this9.index);
+            }).catch(function (error) {
+                console.log('error');
+            });
+        },
+        cancel: function cancel() {
+            this.showDialog = false;
+            console.log('cancel');
+        },
+        remove: function remove() {
+            var _this10 = this;
+
+            var config = {
+                headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken }
+            };
+            var data = {
+                id: this.item.id
+            };
+            axios.post('/mess/delete/', data, config).then(function (response) {
+                _this10.$emit('remove', _this10.index);
+            }).catch(function (error) {
+                console.log(error);
+            });
+            console.log('remove');
+        },
+        play: function play() {
+            var _this11 = this;
+
+            var config = {
+                headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
+                params: { tid: tid }
+            };
+            var server = this.$store.state.photoServer;
+            var url = 'http://' + server + '/api/v1/users/' + uid + '/sends/' + this.alias + '.jpg';
+            axios.get(url, config).then(function (response) {
+                _this11.photo(response.data.photo);
+            }).catch(function (error) {
+                console.log('error');
+            });
+        },
+        photo: function photo(_photo) {
+            //console.log(photo);
+            var links = _photo._links;
+            if (links.origin.href) {
+                var _data = {
+                    thumb: links.thumb.href,
+                    photo: links.origin.href,
+                    alias: _photo.alias,
+                    height: _photo.height,
+                    width: _photo.width
+                };
+                store.commit('viewPhoto', _data);
+            }
+        },
+        pathName: function pathName(name) {
+            if (!name || name.length < 10) {
+                return null;
+            }
+            var path = [name.substr(0, 2), name.substr(2, 2), name.substr(4, 3)];
+            return path.join('/') + '/' + name;
+        }
+    },
+    mounted: function mounted() {
+        if (!this.sent && !this.index && this.count < 5) {
+            this.fix();
+            this.alertOption = true;
+        }
+        if (!this.sent && !this.read) {
+            this.$emit('set-new');
+        }
+    },
+    beforeUpdate: function beforeUpdate() {
+        //this.attention();
+    },
+
+    computed: {
+        attention: function attention() {
+            return this.alert || this.alertOption ? 1 : 0;
+        },
+        option: function option() {
+            if (!this.index && this.alert) {
+                return true;
+            }
+            return this.showOption || this.fixOption ? 1 : 0;
+        },
+        sent: function sent() {
+            return !uid || uid == this.item.from ? 1 : 0;
+        },
+        read: function read() {
+            return this.item.read == 0 ? false : true;
+        },
+        time: function time() {
+            return moment(this.item.date).format('HH:mm');
+        },
+        date: function date() {
+            var mdate = moment(this.item.date);
+            var date = mdate.date();
+            var first_date = fdate;
+            fdate = date;
+            date = fdate == first_date ? '' : fdate;
+            var today = moment().date();
+            var yestd = moment().subtract(1, 'day').date();
+
+            date = date === today ? 'Сегодня' : date;
+            date = date === yestd ? 'Вчера' : date;
+
+            mdate = mdate.date() + ' ' + mdate.format('MMMM').substring(0, 3);
+            date = _.isString(date) ? date : mdate;
+            return date;
+        },
+        alias: function alias() {
+            var result = false;
+            var text = this.item.mess;
+            var old = /.+images.intim?.(.{32})\.(jpg)/i;
+            var now = /\[\[IMG:(.{32})\]\]/i;
+            result = old.test(text) ? old.exec(text) : false;
+            result = !result && now.test(text) ? now.exec(text) : result;
+            if (result) {
+                result = result[1];
+            }
+            return result;
+        },
+        image: function image() {
+            var server = this.$store.state.photoServer;
+            var image = this.pathName(this.alias);
+            return image ? 'http://' + server + '/res/photo/preview/' + image + '.png' : false;
+        },
+        previous: function previous() {
+            var p = prev;
+            prev = this.item.from;
+            return !p || p == prev ? true : false;
+        }
+    }
 });
 
 Vue.component('modal-dialog', {
@@ -365,6 +608,32 @@ Vue.component('modal-dialog', {
     },
 
     template: '#modal-dialog'
+});
+
+///
+// Модальное окно настроек OptionDialog - контейнер
+///
+Vue.component('option-dialog', {
+    template: '#option-static__dialog-window',
+    methods: {
+        close: function close() {
+            this.$emit('close');
+        }
+    },
+    created: function created() {
+        // Close the modal when the `escape` key is pressed.
+        var self = this;
+        document.addEventListener('keydown', function () {
+            if (self.show && event.keyCode === 27) {
+                self.close();
+            }
+        });
+    },
+    updated: function updated() {
+        if (this.show) {
+            $("html, body").animate({ scrollTop: 0 }, "slow");
+        }
+    }
 });
 
 Vue.directive('resized', {
@@ -414,14 +683,17 @@ Vue.component('quick-reply', {
 
     methods: {
         reload: function reload() {
-            var _this6 = this;
+            var _this12 = this;
 
+            if (!this.show) {
+                return false;
+            }
             this.loading = true;
             setTimeout(function () {
-                return _this6.loading = false;
+                return _this12.loading = false;
             }, 30 * 1000);
             store.dispatch('human', this.item.human_id).then(function (response) {
-                _this6.loaded();
+                _this12.loaded();
             });
         },
         loaded: function loaded() {
@@ -437,10 +709,14 @@ Vue.component('quick-reply', {
             this.$emit('bun');
         },
         remove: function remove() {
-            // store.dispatch('initial/DELETE', {uid: '10336', cont_id: contact}).then((response) => {
+            // store.dispatch('initial/DELETE', {uid: '1001', cont_id: contact}).then((response) => {
             //     this.loaded();
             // });
-            console.log('conf:', { uid: '10336', cont_id: this.item.id });
+            //
+            //  :href="'/' + item.human_id"
+            //
+            //
+            console.log('conf:', { uid: '1001', cont_id: this.item.id });
             this.$emit('remove');
         },
         cancel: function cancel() {
@@ -450,15 +726,15 @@ Vue.component('quick-reply', {
             console.log('cancel');
         },
         inProcess: function inProcess(sec) {
-            var _this7 = this;
+            var _this13 = this;
 
             this.process = true;
             setTimeout(function () {
-                return _this7.process = false;
+                return _this13.process = false;
             }, sec * 1000);
         },
         send: function send() {
-            var _this8 = this;
+            var _this14 = this;
 
             var data = {
                 id: this.item.human_id,
@@ -466,9 +742,9 @@ Vue.component('quick-reply', {
                 captcha_code: this.code
             };
             api.messages.send(data).then(function (response) {
-                _this8.handler(response.data);
+                _this14.onMessageSend(response.data);
             }).catch(function (error) {
-                _this8.error(error);
+                _this14.onError(error);
             });
             //  this.sended();
             this.inProcess(5);
@@ -477,29 +753,31 @@ Vue.component('quick-reply', {
             this.code = code;
             this.send();
         },
-        handler: function handler(response) {
+        onMessageSend: function onMessageSend(response) {
             if (!response.saved && response.error) {
                 if (response.error == 'need_captcha') {
                     this.captcha = true;
                 }
-                this.error();
+                this.onError();
             } else {
                 this.sended();
             }
             this.process = false;
         },
         sended: function sended() {
-            console.log('send');
             this.$emit('sended');
         },
-        error: function error() {
+        anketa: function anketa() {
+            window.location = '/' + this.item.human_id;
+        },
+        onError: function onError() {
             this.process = false;
         }
     },
     template: '#quick-reply'
 });
 
-Vue.component('remove-confirm', {
+var RemoveConfirm = Vue.component('remove-confirm', {
     props: ['show', 'item'],
     data: function data() {
         return {
@@ -511,7 +789,7 @@ Vue.component('remove-confirm', {
                 },
                 must: {
                     caption: 'Может стоит наказать?',
-                    text: '\u041D\u0430\u0436\u043C\u0438\u0442\u0435 "\u0414\u0438\u0437\u043B\u0430\u0439\u043A" \u0443 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u044F, \u043A\u043E\u0442\u043E\u0440\u043E\u0435 \u0432\u044B\u0437\u0432\u0430\u043B\u043E \u043D\u0435\u0433\u0430\u0442\u0438\u0432\u043D\u044B\u0435 \u044D\u043C\u043E\u0446\u0438\u0438.\n                    \u041D\u0430\u043A\u0430\u0437\u0430\u043D\u0438\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u0435\u0442 \u0441\u0440\u0430\u0437\u0443 \u0436\u0435. \u041C\u044B \u043D\u0438\u043A\u043E\u0433\u0434\u0430 \u043D\u0435 \u0443\u0437\u043D\u0430\u0435\u043C \u043E \u043D\u0430\u0440\u0443\u0448\u0435\u043D\u0438\u044F\u0445\n                    \u0441\u043E\u0431\u0435\u0441\u0435\u0434\u043D\u0438\u043A\u0430, \u0435\u0441\u043B\u0438 \u0443\u0434\u0430\u043B\u0438\u0442\u044C \u0431\u0435\u0437 \u043D\u0430\u043A\u0430\u0437\u0430\u043D\u0438\u044F.',
+                    text: '\u041D\u0430\u0436\u043C\u0438\u0442\u0435 "\u0414\u0438\u0437\u043B\u0430\u0439\u043A" \u0443 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u044F \u0438\u043B\u0438 \u043A\u043E\u043D\u0442\u0430\u043A\u0442\u0430, \u043A\u043E\u0442\u043E\u0440\u043E\u0435 \u0432\u044B\u0437\u0432\u0430\u043B\u043E \u043D\u0435\u0433\u0430\u0442\u0438\u0432\u043D\u044B\u0435 \u044D\u043C\u043E\u0446\u0438\u0438.\n                    \u041D\u0430\u043A\u0430\u0437\u0430\u043D\u0438\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u0435\u0442 \u0441\u0440\u0430\u0437\u0443 \u0436\u0435. \u041C\u044B \u043D\u0438\u043A\u043E\u0433\u0434\u0430 \u043D\u0435 \u0443\u0437\u043D\u0430\u0435\u043C \u043E \u043D\u0430\u0440\u0443\u0448\u0435\u043D\u0438\u044F\u0445, \u0435\u0441\u043B\u0438 \u0443\u0434\u0430\u043B\u0438\u0442\u044C \u0431\u0435\u0437 \u043D\u0430\u043A\u0430\u0437\u0430\u043D\u0438\u044F.',
                     action: 'Удалить и забыть'
                 },
                 some: {
@@ -553,70 +831,28 @@ Vue.component('remove-confirm', {
     template: '#remove-confirm'
 });
 
-Vue.component('captcha-dialog', {
-    props: ['show'],
+Vue.component('remove-contact', {
+    extends: RemoveConfirm,
     data: function data() {
         return {
-            code: '',
-            inc: 0
+            content: {
+                some: {
+                    caption: 'Удалить навсегда',
+                    text: '\u041A\u043E\u043D\u0442\u0430\u043A\u0442 \u0431\u0443\u0434\u0435\u0442 \u0443\u0434\u0430\u043B\u0435\u043D \u0431\u0435\u0437 \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0441\u0442\u0438 \u0432\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C. \u0414\u0430\u043B\u044C\u043D\u0435\u0439\u0448\u0435\u0435 \u043E\u0431\u0449\u0435\u043D\u0438\u0435 \u0441 \u0441\u043E\u0431\u0435\u0441\u0435\u0434\u043D\u0438\u043A\u043E\u043C \u0441\u0442\u0430\u043D\u0435\u0442 \u043D\u0435\u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E.\n                    \u041E\u0431\u043C\u0435\u043D\u0438\u0432\u0430\u0439\u0442\u0435\u0441\u044C \u0440\u0435\u0430\u043B\u044C\u043D\u044B\u043C\u0438 \u043A\u043E\u043D\u0442\u0430\u043A\u0442\u0430\u043C\u0438 \u0441 \u0442\u0435\u043C\u0438 \u043A\u0442\u043E \u0432\u0430\u043C \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u0435\u043D \u0432\u0441\u0435\u0433\u0434\u0430.',
+                    action: 'Удалить навсегда'
+                }
+            }
         };
     },
 
-    computed: {
-        src: function src() {
-            return '/secret_pic.php?inc=' + this.inc;
-        }
-    },
+    computed: {},
     methods: {
-        close: function close() {
-            this.$emit('cancel');
-        },
-        send: function send() {
-            this.$emit('send', this.code);
-            this.update();
+        remove: function remove() {
+            this.$emit('remove');
             this.close();
-        },
-        update: function update() {
-            this.inc++;
         }
     },
-    template: '#captcha-dialog'
-});
-
-Vue.component('inform-dialog', {
-    props: ['loader', 'hint'],
-    methods: {
-        close: function close() {
-            this.$emit('close');
-        }
-    },
-    template: '#inform-dialog'
-});
-
-///
-// Модальное окно настроек OptionDialog - контейнер
-///
-Vue.component('option-dialog', {
-    template: '#option-static__dialog-window',
-    methods: {
-        close: function close() {
-            this.$emit('close');
-        }
-    },
-    created: function created() {
-        // Close the modal when the `escape` key is pressed.
-        var self = this;
-        document.addEventListener('keydown', function () {
-            if (self.show && event.keyCode === 27) {
-                self.close();
-            }
-        });
-    },
-    updated: function updated() {
-        if (this.show) {
-            $("html, body").animate({ scrollTop: 0 }, "slow");
-        }
-    }
+    template: '#remove-confirm'
 });
 
 Vue.component('photo-dialog', {
@@ -668,7 +904,7 @@ Vue.component('upload-dialog', {
     },
     methods: {
         loadPhoto: function loadPhoto() {
-            var _this9 = this;
+            var _this15 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
@@ -677,7 +913,7 @@ Vue.component('upload-dialog', {
             axios.get('http://' + this.server + '/api/v1/users/' + uid + '/photos', config).then(function (response) {
                 var result = response.data.photos;
                 if (result && result.length) {
-                    _this9.photos = response.data.photos;
+                    _this15.photos = response.data.photos;
                 }
                 //console.log(this.photos);
             }).catch(function (error) {
@@ -694,14 +930,14 @@ Vue.component('upload-dialog', {
         preview: function preview(photo) {
             var links = photo._links;
             if (links.origin.href) {
-                var _data = {
+                var _data2 = {
                     photo: links.origin.href,
                     thumb: links.thumb.href,
                     alias: photo.alias,
                     height: photo.height,
                     width: photo.width
                 };
-                store.commit('sendPhoto', _data);
+                store.commit('sendPhoto', _data2);
                 //console.log('sendPhoto');
                 //console.log(data);
             }
@@ -757,19 +993,14 @@ $(document).ready(function () {
 });
 
 var mutations = {
-    mutations: {
-        load: function load(state, data) {
-            console.log('initial-contacts');
-            // console.log('!!! 8888 !!!');
-            console.log(data);
-            if (data && data.length > 0) {
-                state.list = data;
-            }
-        },
-        add: function add(state, data) {
-            if (data && data instanceof Array && data.length > 0) {
-                _.extend(state.list, data);
-            }
+    load: function load(state, data) {
+        if (data && data instanceof Array && data.length > 0) {
+            state.list = data;
+        }
+    },
+    add: function add(state, data) {
+        if (data && data instanceof Array && data.length > 0) {
+            state.list = _.union(state.list, data);
         }
     }
 };
@@ -781,29 +1012,51 @@ var initial = _.extend({
         list: []
     },
     actions: {
-        LOAD: function LOAD(_ref, next) {
-            var commit = _ref.commit;
+        LOAD: function LOAD(_ref) {
+            var state = _ref.state,
+                commit = _ref.commit,
+                rootState = _ref.rootState;
 
             commit('load', ls.get('initial-contacts'));
-            var promise = api.contacts.initial.cget('10336', next);
-            promise.then(function (response) {
+            return api.contacts.initial.cget({
+                uid: rootState.user.uid,
+                offset: 0
+            }).then(function (response) {
                 commit('load', response.data);
-                ls.set('initial-contacts', response.data);
+                ls.set('initial-contacts', state.list);
             });
-            return promise;
         },
-        DELETE: function DELETE(_ref2, params) {
-            var commit = _ref2.commit;
+        NEXT: function NEXT(_ref2, offset) {
+            var state = _ref2.state,
+                commit = _ref2.commit,
+                rootState = _ref2.rootState;
 
-            var promise = api.contacts.initial.delete(params);
-            promise.then(function (response) {
-                commit('load', response.data);
-                ls.set('initial-contacts', response.data);
+            return api.contacts.initial.cget({
+                uid: rootState.user.uid,
+                offset: offset
+            }).then(function (response) {
+                commit('add', response.data);
             });
-            return promise;
+        },
+        DELETE: function DELETE(_ref3, index) {
+            var state = _ref3.state,
+                commit = _ref3.commit,
+                rootState = _ref3.rootState;
+
+            commit('delete', index);
+            return api.contacts.intimate.delete({
+                uid: rootState.user.uid,
+                resource_id: state.list[index].id
+            });
         }
-    }
-}, mutations);
+    },
+    mutations: _.extend({
+        delete: function _delete(state, index) {
+            state.list.splice(index, 1);
+            ls.set('initial-contacts', state.list);
+        }
+    }, mutations)
+});
 
 var intimate = _.extend({
     namespaced: true,
@@ -811,19 +1064,51 @@ var intimate = _.extend({
         list: []
     },
     actions: {
-        LOAD: function LOAD(_ref3, next) {
-            var commit = _ref3.commit;
+        LOAD: function LOAD(_ref4) {
+            var state = _ref4.state,
+                commit = _ref4.commit,
+                rootState = _ref4.rootState;
 
             commit('load', ls.get('intimate-contacts'));
-            var promise = api.contacts.intimate.cget('10336', next);
-            promise.then(function (response) {
+            return api.contacts.intimate.cget({
+                uid: rootState.user.uid,
+                offset: 0
+            }).then(function (response) {
                 commit('load', response.data);
-                ls.set('intimate-contacts', response.data);
+                ls.set('intimate-contacts', state.list);
             });
-            return promise;
+        },
+        NEXT: function NEXT(_ref5, offset) {
+            var state = _ref5.state,
+                commit = _ref5.commit,
+                rootState = _ref5.rootState;
+
+            return api.contacts.intimate.cget({
+                uid: rootState.user.uid,
+                offset: offset
+            }).then(function (response) {
+                commit('add', response.data);
+            });
+        },
+        DELETE: function DELETE(_ref6, index) {
+            var state = _ref6.state,
+                commit = _ref6.commit,
+                rootState = _ref6.rootState;
+
+            commit('delete', index);
+            return api.contacts.intimate.delete({
+                uid: rootState.user.uid,
+                resource_id: state.list[index].id
+            });
         }
-    }
-}, mutations);
+    },
+    mutations: _.extend({
+        delete: function _delete(state, index) {
+            state.list.splice(index, 1);
+            ls.set('intimate-contacts', state.list);
+        }
+    }, mutations)
+});
 
 var sends = _.extend({
     namespaced: true,
@@ -831,19 +1116,51 @@ var sends = _.extend({
         list: []
     },
     actions: {
-        LOAD: function LOAD(_ref4, next) {
-            var commit = _ref4.commit;
+        LOAD: function LOAD(_ref7) {
+            var state = _ref7.state,
+                commit = _ref7.commit,
+                rootState = _ref7.rootState;
 
             commit('load', ls.get('sends-contacts'));
-            var promise = api.contacts.sends.cget('10336', next);
-            promise.then(function (response) {
+            return api.contacts.sends.cget({
+                uid: rootState.user.uid,
+                offset: 0
+            }).then(function (response) {
                 commit('load', response.data);
-                //ls.set('intimate-contacts', state.contacts.intimate);
+                ls.set('sends-contacts', state.list);
             });
-            return promise;
+        },
+        NEXT: function NEXT(_ref8, offset) {
+            var state = _ref8.state,
+                commit = _ref8.commit,
+                rootState = _ref8.rootState;
+
+            return api.contacts.sends.cget({
+                uid: rootState.user.uid,
+                offset: offset
+            }).then(function (response) {
+                commit('add', response.data);
+            });
+        },
+        DELETE: function DELETE(_ref9, index) {
+            var state = _ref9.state,
+                commit = _ref9.commit,
+                rootState = _ref9.rootState;
+
+            commit('delete', index);
+            return api.contacts.sends.delete({
+                uid: rootState.user.uid,
+                resource_id: state.list[index].id
+            });
         }
-    }
-}, mutations);
+    },
+    mutations: _.extend({
+        delete: function _delete(state, index) {
+            state.list.splice(index, 1);
+            ls.set('sends-contacts', state.list);
+        }
+    }, mutations)
+});
 
 var contacts = {
     modules: {
@@ -861,13 +1178,21 @@ var modals = {
     },
     mutations: {
         showInitial: function showInitial(state, data) {
+            store.commit('closeAll');
             state.initial = data == true;
         },
         showIntimate: function showIntimate(state, data) {
+            store.commit('closeAll');
             state.intimate = data == true;
         },
         showSends: function showSends(state, data) {
+            store.commit('closeAll');
             state.sends = data == true;
+        },
+        closeAll: function closeAll(state) {
+            state.initial = false;
+            state.intimate = false;
+            state.sends = false;
         }
     }
 };
@@ -878,8 +1203,8 @@ var search = {
         human: {}
     },
     actions: {
-        human: function human(_ref5, tid) {
-            var commit = _ref5.commit;
+        human: function human(_ref10, tid) {
+            var commit = _ref10.commit;
 
             //commit('load', ls.get('initial-contacts'));
             commit('resetHuman', tid);
@@ -910,22 +1235,31 @@ var user = {
         sex: 0
     },
     actions: {
-        LOAD_USER: function LOAD_USER(_ref6) {
-            var commit = _ref6.commit;
+        LOAD_USER: function LOAD_USER(_ref11) {
+            var commit = _ref11.commit;
 
-            if (typeof user_sex != 'undefined') {
-                commit('loadUser', {
-                    sex: user_sex,
-                    uid: uid
-                });
+            if (uid) {
+                commit('loadUser', { uid: uid });
             }
-            console.log('LOAD_USER');
+            if (typeof user_sex != 'undefined') {
+                commit('loadUser', { sex: user_sex });
+            }
+        },
+        SAVE_SEX: function SAVE_SEX(_ref12, sex) {
+            var commit = _ref12.commit;
+
+            var promise = api.user.saveSex(sex);
+            promise.then(function (response) {
+                if (response.data.sex) {
+                    store.commit('loadUser', { sex: response.data.sex });
+                }
+            });
+            return promise;
         }
     },
     mutations: {
         loadUser: function loadUser(state, data) {
             _.extend(state, data);
-            console.log(state);
         }
     }
 };
@@ -938,7 +1272,8 @@ var store = new Vuex.Store({
     modules: {
         user: user,
         search: search,
-        contacts: contacts
+        contacts: contacts,
+        modals: modals
     },
     state: {
         apiToken: '',
@@ -974,13 +1309,13 @@ var store = new Vuex.Store({
         }
     },
     actions: {
-        LOAD_API_TOKEN: function LOAD_API_TOKEN(_ref7) {
-            var commit = _ref7.commit;
+        LOAD_API_TOKEN: function LOAD_API_TOKEN(_ref13) {
+            var commit = _ref13.commit;
 
             commit('setApiToken', { apiToken: get_cookie('jwt') });
         },
-        LOAD_ACCEPTS: function LOAD_ACCEPTS(_ref8) {
-            var commit = _ref8.commit;
+        LOAD_ACCEPTS: function LOAD_ACCEPTS(_ref14) {
+            var commit = _ref14.commit;
 
             var accepts = ls.get('accepts');
             if (accepts && accepts.photo) {
@@ -1030,7 +1365,7 @@ var Api = function () {
         _classCallCheck(this, Api);
 
         // Delay requests sec
-        var delay = 4;
+        var delay = '0'; // [!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]
 
         var ver = version ? 'v' + version + '/' : '';
         this.root = host + ver;
@@ -1043,16 +1378,16 @@ var Api = function () {
         this.routing = {
             route: '',
             load: '',
-            get: '',
+            get: '{resource_id}',
             cget: '',
             send: '',
             post: '',
             save: '',
             remove: '',
-            delete: '',
-            put: '',
-            patch: '',
-            option: ''
+            delete: '{resource_id}',
+            put: '{resource_id}',
+            patch: '{resource_id}',
+            option: '{resource_id}'
         };
         _.extend(this.routing, routing);
     }
@@ -1124,8 +1459,18 @@ var Api = function () {
         }
     }, {
         key: 'delete',
-        value: function _delete(data, params, url) {
-            return this.delay(axios.post(this.setUrl('delete', params, url), data, this.config), 0);
+        value: function _delete(params, url) {
+            return this.delay(axios.delete(this.setUrl('delete', params, url), this.config), 0);
+        }
+    }, {
+        key: 'put',
+        value: function put(params, url) {
+            return this.delay(axios.put(this.setUrl('put', params, url), this.config), 0);
+        }
+    }, {
+        key: 'patch',
+        value: function patch(params, url) {
+            return this.delay(axios.patch(this.setUrl('patch', params, url), this.config), 0);
         }
     }, {
         key: 'request',
@@ -1141,12 +1486,6 @@ var Api = function () {
                 return this.delay(axios[method](this.setUrl(action, params, url), this.config), 0);
             }
         }
-    }, {
-        key: 'put',
-        value: function put() {}
-    }, {
-        key: 'patch',
-        value: function patch() {}
     }, {
         key: 'option',
         value: function option() {}
@@ -1206,8 +1545,7 @@ var ApiMessages = function (_Api2) {
     _createClass(ApiMessages, [{
         key: 'send',
         value: function send(data) {
-            //console.log(this);
-            return axios.post('mailer/post/', data, this.config);
+            return this.post(data, null, 'mailer/post/');
         }
     }]);
 
@@ -1225,19 +1563,13 @@ var ApiUser = function (_Api3) {
         var routing = {
             post: 'option/sex'
         };
-        return _possibleConstructorReturn(this, (ApiUser.__proto__ || Object.getPrototypeOf(ApiUser)).call(this, host, key));
+        return _possibleConstructorReturn(this, (ApiUser.__proto__ || Object.getPrototypeOf(ApiUser)).call(this, host, key, null, routing));
     }
 
     _createClass(ApiUser, [{
         key: 'saveSex',
-        value: function saveSex(data) {
-            return this.post(data).then(function (response) {
-                if (response.data.sex) {
-                    store.commit('loadUser', { sex: response.data.sex });
-                }
-            }).catch(function (e) {
-                console.log(e);
-            });
+        value: function saveSex(sex) {
+            return this.post({ sex: sex });
         }
     }]);
 
@@ -1251,7 +1583,7 @@ var ApiSearch = function (_Api4) {
         _classCallCheck(this, ApiSearch);
 
         var key = '1234';
-        var host = 'http://127.0.0.1:9000/';
+        var host = 'http://212.83.162.58/';
         var routing = {
             route: 'users',
             get: '{tid}'
@@ -1269,29 +1601,9 @@ var ApiContact = function (_Api5) {
         _classCallCheck(this, ApiContact);
 
         var key = store.state.apiToken;
-        var host = 'http://127.0.0.1:8000/';
+        var host = 'http://212.83.134.89:9000/';
         return _possibleConstructorReturn(this, (ApiContact.__proto__ || Object.getPrototypeOf(ApiContact)).call(this, host, key, null, routing));
     }
-
-    _createClass(ApiContact, [{
-        key: 'ignore',
-        value: function ignore(data) {
-            console.log('contact ignored');
-            return _get(ApiContact.prototype.__proto__ || Object.getPrototypeOf(ApiContact.prototype), 'request', this).call(this, 'post', 'ignore', data);
-            //return super.post(data);
-        }
-    }, {
-        key: 'remove',
-        value: function remove(data) {
-            console.log('contact removed');
-            return _get(ApiContact.prototype.__proto__ || Object.getPrototypeOf(ApiContact.prototype), 'remove', this).call(this, data);
-        }
-    }, {
-        key: 'cget',
-        value: function cget(uid, next) {
-            return _get(ApiContact.prototype.__proto__ || Object.getPrototypeOf(ApiContact.prototype), 'cget', this).call(this, { uid: uid, next: next });
-        }
-    }]);
 
     return ApiContact;
 }(Api);
@@ -1396,6 +1708,27 @@ var auto_gen = {
     }
 
 };
+
+var ContactLists = new Vue({
+    computed: {
+        initial: function initial() {
+            return this.$store.state.modals.initial;
+        },
+        intimate: function intimate() {
+            return this.$store.state.modals.intimate;
+        },
+        sends: function sends() {
+            return this.$store.state.modals.sends;
+        }
+    },
+    methods: {
+        close: function close() {
+            this.$store.commit('closeAll');
+        }
+    },
+    store: store,
+    el: '#contact-lists'
+});
 
 var cookie_storage = {
 
@@ -3275,30 +3608,43 @@ var result_list = {
 // РОУТЕР ==========================================================
 ////
 
-var routes = [{ path: '/sends-contacts', name: 'sends', component: SendsDialog, props: { quick: false } }, { path: '/initial-contacts', name: 'initial', component: InitialDialog, props: { quick: true } }, { path: '/intimate-contacts', name: 'intimate', component: IntimateDialog, props: { quick: false }
-}];
+// const routes = [
+//     { path: '/sends-contacts', name: 'sends', component: SendsDialog, props: { quick: false } },
+//     { path: '/initial-contacts', name: 'initial', component: InitialDialog, props: { quick: true } },
+//     { path: '/intimate-contacts',  name: 'intimate', component: IntimateDialog, props: { quick: false },
+//         // children: [
+//         //     {
+//         //         path: 'quick-reply',
+//         //         component: HumanDialog,
+//         //         props: {
+//         //             show : true
+//         //         }
+//         //     },
+//         // ]
+//     }
+// ];
 
-// 3. Создаём инстанс роутера с опцией `routes`
-// Можно передать и другие опции, но пока не будем усложнять
-var router = new VueRouter({
-    //mode: 'history',
-    routes: routes // сокращение от routes: routes
-});
+// // 3. Создаём инстанс роутера с опцией `routes`
+// // Можно передать и другие опции, но пока не будем усложнять
+// const router = new VueRouter({
+//   //mode: 'history',
+//   routes // сокращение от routes: routes
+// })
 
-var RouterView = new Vue({
-    el: '#router-view',
-    store: store,
-    router: router,
-    created: function created() {
-        console.log('routerView created');
-    },
+// const RouterView = new Vue({
+//     el: '#router-view',
+//     store,
+//     router,
+//     created() {
+//         console.log('routerView created');
+//     },
+//     methods: {
+//         close() {
+//             router.go(-1);
+//         }
+//     }
+// });
 
-    methods: {
-        close: function close() {
-            router.go(-1);
-        }
-    }
-});
 
 // -- Слайдер, главная ---
 var slider = {

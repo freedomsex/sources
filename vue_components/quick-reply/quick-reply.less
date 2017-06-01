@@ -5,7 +5,7 @@
   color: @white;
   font-weight: bold;
   font-size: 16px;
-  padding: @indent-sm @indent-md;
+  padding: (@indent-sm + @indent-sm * 0.2) @indent-md @indent-sm;
 
 }
 
@@ -21,16 +21,16 @@
   border-width: 0px;
 }
 .human-dialog__body {
-  padding: @indent-md @indent-md 0;
+  padding: @indent-sm @indent-md 0;
 }
 .human-dialog__desire {
-  margin-bottom: @indent-md;
+  margin-bottom: @indent-sm;
   font-size: 14px;
 }
 .human-dialog__message {
   padding: @indent-sm @indent-sm;
-  background: @gray-light;
-  margin-bottom: @indent-sm;
+  background: @light;
+  margin-bottom: @indent-xs;
 }
 
 .human-dialog__form {

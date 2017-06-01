@@ -1,28 +1,18 @@
-<div id="router-view">
-  <router-view @close="close"></router-view>
+
+<div id="contact-lists">
+  <initial-dialog v-if="initial" quick="true" @close="close"></initial-dialog>
+  <intimate-dialog v-if="intimate" @close="close"></intimate-dialog>
+  <sends-dialog v-if="sends" @close="close"></sends-dialog>
 </div>
+
+<!--<div id="router-view">
+  <router-view @close="close"></router-view>
+</div>-->
 
 <div id="option-static__viewer">
   <upload-dialog  @close="close" v-if="view == 'upload'"></upload-dialog>
   <photo-dialog   @close="close" v-if="view == 'photo'"></photo-dialog>
 </div>
-
-<script type="text/x-template" id="option-static__dialog-window">
-  <div class="option-dialog">
-    <div class="option-dialog__cover">
-      <div class="option-dialog__loader"></div>
-    </div>
-    <div class="option-dialog__wrapper" @click="close">
-      <div class="option-dialog__container" @click.stop>
-        <slot></slot>
-      </div>
-      <div class="option-dialog__close" @click.stop="close">
-        Закрыть
-        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-      </div>
-    </div>
-  </div>
-</script>
 
 <!-- Статические опции, absolute -->
  <div id="option-static" style="display: none;">

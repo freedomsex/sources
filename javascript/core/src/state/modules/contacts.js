@@ -1,19 +1,14 @@
 
 const mutations = {
-    mutations: {
-        load(state, data) {
-            console.log('initial-contacts');
-            // console.log('!!! 8888 !!!');
-            console.log(data);
-            if (data && data.length > 0) {
-                state.list = data;
-            }
-        },
-        add(state, data) {
-            if (data && data instanceof Array && data.length > 0) {
-                _.extend(state.list, data);
-            }
-        },
+    load(state, data) {
+        if (data && data instanceof Array && data.length > 0) {
+            state.list = data;
+        }
+    },
+    add(state, data) {
+        if (data && data instanceof Array && data.length > 0) {
+            state.list = _.union(state.list, data);
+        }
     }
 }
 // // //
@@ -24,25 +19,39 @@ const initial = _.extend({
         list: []
     },
     actions: {
-        LOAD({ commit }, next) {
+        LOAD({ state, commit, rootState }) {
             commit('load', ls.get('initial-contacts'));
-            let promise = api.contacts.initial.cget('10336', next);
-            promise.then((response) => {
+            return api.contacts.initial.cget({
+                uid: rootState.user.uid,
+                offset: 0
+            }).then((response) => {
                 commit('load', response.data);
-                ls.set('initial-contacts', response.data);
+                ls.set('initial-contacts', state.list);
             });
-            return promise;
         },
-        DELETE({ commit }, params) {
-            let promise = api.contacts.initial.delete(params);
-            promise.then((response) => {
-                commit('load', response.data);
-                ls.set('initial-contacts', response.data);
+        NEXT({ state, commit, rootState }, offset) {
+            return api.contacts.initial.cget({
+                uid: rootState.user.uid,
+                offset
+            }).then((response) => {
+                commit('add', response.data);
             });
-            return promise;
         },
-    }
-}, mutations);
+        DELETE({ state, commit, rootState }, index) {
+            commit('delete', index);
+            return api.contacts.intimate.delete({
+                uid: rootState.user.uid,
+                resource_id: state.list[index].id
+            });
+        },
+    },
+    mutations: _.extend({
+        delete(state, index) {
+            state.list.splice(index, 1);
+            ls.set('initial-contacts', state.list);
+        }
+    }, mutations)
+});
 
 const intimate = _.extend({
     namespaced: true,
@@ -50,17 +59,39 @@ const intimate = _.extend({
         list: []
     },
     actions: {
-        LOAD({ commit }, next) {
+        LOAD({ state, commit, rootState }) {
             commit('load', ls.get('intimate-contacts'));
-            let promise = api.contacts.intimate.cget('10336', next);
-            promise.then((response) => {
+            return api.contacts.intimate.cget({
+                uid: rootState.user.uid,
+                offset: 0
+            }).then((response) => {
                 commit('load', response.data);
-                ls.set('intimate-contacts', response.data);
+                ls.set('intimate-contacts', state.list);
             });
-            return promise;
+        },
+        NEXT({ state, commit, rootState }, offset) {
+            return api.contacts.intimate.cget({
+                uid: rootState.user.uid,
+                offset
+            }).then((response) => {
+                commit('add', response.data);
+            });
+        },
+        DELETE({ state, commit, rootState }, index) {
+            commit('delete', index);
+            return api.contacts.intimate.delete({
+                uid: rootState.user.uid,
+                resource_id: state.list[index].id
+            });
+        },
+    },
+    mutations: _.extend({
+        delete(state, index) {
+            state.list.splice(index, 1);
+            ls.set('intimate-contacts', state.list);
         }
-    }
-}, mutations);
+    }, mutations)
+});
 
 const sends = _.extend({
     namespaced: true,
@@ -68,17 +99,39 @@ const sends = _.extend({
         list: []
     },
     actions: {
-        LOAD({ commit }, next) {
+        LOAD({ state, commit, rootState }) {
             commit('load', ls.get('sends-contacts'));
-            let promise = api.contacts.sends.cget('10336', next);
-            promise.then((response) => {
+            return api.contacts.sends.cget({
+                uid: rootState.user.uid,
+                offset: 0
+            }).then((response) => {
                 commit('load', response.data);
-                //ls.set('intimate-contacts', state.contacts.intimate);
+                ls.set('sends-contacts', state.list);
             });
-            return promise;
+        },
+        NEXT({ state, commit, rootState }, offset) {
+            return api.contacts.sends.cget({
+                uid: rootState.user.uid,
+                offset
+            }).then((response) => {
+                commit('add', response.data);
+            });
+        },
+        DELETE({ state, commit, rootState }, index) {
+            commit('delete', index);
+            return api.contacts.sends.delete({
+                uid: rootState.user.uid,
+                resource_id: state.list[index].id
+            });
+        },
+    },
+    mutations: _.extend({
+        delete(state, index) {
+            state.list.splice(index, 1);
+            ls.set('sends-contacts', state.list);
         }
-    }
-}, mutations);
+    }, mutations)
+});
 
 
 const contacts = {

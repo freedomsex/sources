@@ -77,24 +77,24 @@ var FormMess = new Vue({
                 data['re'] = this.reply;
             }
             api.messages.send(data).then((response) => {
-                this.handler(response.data);
+                this.onMessageSend(response.data);
             });
             this.process = true;
         },
         sendSex(sex) {
-            api.user.saveSex({ sex }).then((response) => {
-                this.sendMessage(response.data);
+            this.$store.dispatch('SAVE_SEX', sex).then((response) => {
+                this.sendMessage();
             }).catch((error) => {
-                this.error(error);
+                this.onError(error);
             });
             this.process = true;
         },
-        handler(response) {
+        onMessageSend(response) {
         	if (!response.saved && response.error) {
         		if (response.error == 'need_captcha') {
                     this.captcha();
         		}
-                this.error();
+                this.onError();
         	} else {
                 this.sended(response);
         	}
@@ -107,14 +107,12 @@ var FormMess = new Vue({
             $('#mess_shab_text_block').hide();
             giper_chat.timer_cut();
             this.reset();
-            //console.log(response);
-            this.cancelPhoto();
         },
         captcha() {
             $('.form-message__captcha-img').get(0).src = '/secret_pic.php?hash='+hash;
             this.approve = false;
         },
-        error() {
+        onError() {
             this.process = false;
         }
     },

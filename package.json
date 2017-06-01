@@ -15,6 +15,7 @@
     "grunt-image-resize": "^1.0.0",
     "grunt-newer": "^1.2.0",
     "grunt-processhtml": "^0.4.1",
+    "grunt-replace": "^1.0.1",
     "grunt-responsive-images": "^1.10.1"
   },
   "author": "tebaly",

@@ -46,13 +46,13 @@ Vue.component('contact-item', {
             }
         },
         confirmBun() {
-            console.log(this.initial);
-            this.confirm = !this.initial ? 'some' : 'doit';
+            //console.log(this.initial);
+            this.confirm = 'doit';
         },
         confirmRemove() {
             //this.$emit('remove');
-            console.log('initial-item REMOVE');
-            this.confirm = !this.initial ? 'some' : 'must';
+            //console.log('initial-item REMOVE');
+            this.confirm = !this.quick ? 'some' : 'must';
         },
         reply() {
             this.detail = true;
@@ -60,7 +60,6 @@ Vue.component('contact-item', {
         },
         anketa() {
             window.location = '/' + this.item.human_id;
-            console.log('anketa');
         },
         close() {
             this.detail = false;
@@ -70,14 +69,16 @@ Vue.component('contact-item', {
             this.$emit('bun', this.index);
         },
         remove() {
+            console.log('remove=remove', this.index);
             this.$emit('remove', this.index);
-        },
-        splice() {
-            this.$emit('splice', this.index);
         },
         cancel() {
             this.confirm = false;
             console.log('cancel');
+        },
+        sended() {
+            this.$emit('sended', this.index);
+            this.close();
         }
     },
     template: '#contact-item'

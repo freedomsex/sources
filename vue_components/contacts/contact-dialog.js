@@ -7,13 +7,17 @@ var ContactDialog = {
         return {
             response: false,
             slow: false,
-            next: 0,
+            error: false,
+            offset: 0,
             batch: 10
         }
     },
     computed: {
         showLoader() {
             return this.slow && !this.response;
+        },
+        showAlert() {
+            return this.error && this.response;
         },
         showHint() {
             return this.count < 1;
@@ -27,42 +31,42 @@ var ContactDialog = {
         close() {
             this.$emit('close');
         },
+        reset() {
+            this.response = false;
+            this.error  = false;
+            this.slow = false;
+        },
         hope() {
             let sec = 2;
             setTimeout(() => this.slow = true,  sec * 1000);
-            this.response = false;
+            this.reset();
         },
         loaded(result) {
             //this.received = result ? result.length : 0;
             // if (this.received) {
             //     this.contacts = _.union(this.contacts, result);
             // }
-            //this.next += this.batch;
+            this.offset += this.batch;
             this.response = true;
             this.slow = false;
-        },
-        remove(index) {
-            this.splice(index);
-            this.close();
         },
         bun(index) {
             console.log('bun');
             let item = this.contacts[index];
-            let data = {
+            this.remove(index); return;
+            api.bun.send({
                 id: item.cont_id,
                 tid: item.from,
                 //text: this.item.message,
                 //token: 'super secret token'
-            };
-            api.bun.send(data);
-            this.splice(index);
-            this.close();
+            });
         },
         splice(index) {
-            this.contacts.splice(index, 1);
-            console.log('remove');
+            this.$store.commit('delete', index);
         },
         error(error) {
+            this.response = true;
+            this.error = true;
             console.log(error);
         }
     },
@@ -78,20 +82,29 @@ const InitialDialog = Vue.component('initial-dialog', {
         initial: () => true,
         simple:  () => true,
         contacts() {
+            //console.log(this.$store);
             return this.$store.state.contacts.initial.list;
         }
     },
     methods: {
         load() {
-            store.dispatch('initial/LOAD').then((response) => {
+            this.$store.dispatch('initial/LOAD').then((response) => {
                 this.loaded();
             });
             this.hope();
         },
+        next() {
+            this.$store.dispatch('initial/NEXT', this.offset).then((response) => {
+                this.loaded();
+            });
+            this.reset();
+        },
         remove(index) {
-            console.log('remove');
-            //apiContact.ignore({ tid: this.contacts[index].cont_id });
-            this.splice();
+            this.$store.dispatch('initial/DELETE', index);
+        },
+        splice(index) {
+            //console.log(this.$store); return;
+            this.$store.commit('initial/delete', index);
         },
     },
     template: '#initial-dialog'
@@ -108,16 +121,22 @@ const IntimateDialog = Vue.component('intimate-dialog', {
     },
     methods: {
         load() {
-            store.dispatch('intimate/LOAD').then((response) => {
+            this.$store.dispatch('intimate/LOAD', this.next).then((response) => {
+                this.loaded();
+            }).catch((error) => this.error(error));
+            this.hope();
+        },
+        next() {
+            this.$store.dispatch('intimate/NEXT', this.offset).then((response) => {
                 this.loaded();
             });
             this.hope();
         },
         remove(index) {
-            console.log('remove');
-            //apiContact.remove({ tid: this.contacts[index].cont_id });
-            //this.$emit('remove', this.index);
-            this.splice();
+            this.$store.dispatch('intimate/DELETE', index);
+        },
+        splice(index) {
+            this.$store.commit('intimate/delete', index);
         },
     },
     template: '#intimate-dialog'
@@ -134,10 +153,22 @@ const SendsDialog = Vue.component('sends-dialog', {
     },
     methods: {
         load() {
-            store.dispatch('sends/LOAD').then((response) => {
+            this.$store.dispatch('sends/LOAD', this.next).then((response) => {
                 this.loaded();
             });
             this.hope();
+        },
+        next() {
+            this.$store.dispatch('sends/NEXT', this.offset).then((response) => {
+                this.loaded();
+            });
+            this.reset();
+        },
+        remove(index) {
+            this.$store.dispatch('sends/DELETE', index);
+        },
+        splice(index) {
+            this.$store.commit('sends/delete', index);
         },
     },
     template: '#initial-dialog'

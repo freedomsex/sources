@@ -5,19 +5,26 @@ const user = {
     },
     actions: {
         LOAD_USER({ commit }) {
-            if (typeof user_sex != 'undefined') {
-                commit('loadUser', {
-                    sex: user_sex,
-                    uid: uid
-                });
+            if (uid) {
+                commit('loadUser', {uid});
             }
-            console.log('LOAD_USER');
+            if (typeof user_sex != 'undefined') {
+                commit('loadUser', {sex: user_sex});
+            }
+        },
+        SAVE_SEX({ commit }, sex) {
+            let promise = api.user.saveSex(sex);
+            promise.then((response) => {
+                if (response.data.sex) {
+                    store.commit('loadUser', { sex: response.data.sex });
+                }
+            });
+            return promise;
         },
     },
     mutations: {
         loadUser(state, data) {
             _.extend(state, data);
-            console.log(state);
         },
     }
 }
