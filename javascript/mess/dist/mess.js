@@ -820,6 +820,7 @@ var incoming_photo = new Vue({
                     width: photo.width
                 };
                 store.commit('viewPhoto', data);
+                store.commit('optionDialog', 'photo');
             }
             //console.log(this.photos[index].height);
         }
