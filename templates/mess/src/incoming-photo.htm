@@ -13,30 +13,6 @@
   </option-dialog>
 </script>
 
-<script type="text/x-template" id="photo-view">
-  <div class="photo-view" :style="{ backgroundImage: 'url('+thumb+')', minHeight: height + 'px'}">
-    <div class="photo-view__accept" v-if="!accept">
-      <div class="photo-view__accept-caption">
-        Контроль содержания отсутствует
-      </div>
-      <div class="photo-view__accept-text">
-        У администраторов нет доступа к загружаемым фото.
-        Внимание! Изображения могут иметь возрастные ограничения. Пожалуйста, подтвердите
-        что вы имеете право продолжить просмотр.
-      </div>
-      <div class="photo-view__accept-option">
-        <button class="btn btn-success btn-sm" @click="approve">
-          <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-          Подтверждаю
-        </button>
-      </div>
-    </div>
-    <div v-else>
-      <img :src="photo" :style="{ maxWidth: width +'px' }">
-    </div>
-  </div>
-</script>
-
 <script type="text/x-template" id="upload-dialog">
   <option-dialog @close="close">
     <div class="option_tab">

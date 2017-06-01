@@ -140,7 +140,7 @@ module.exports = function (grunt) {
                     {
                         json: {
                             "NET-DELAY": 2,
-                            "API-PHOTO": "127.0.0.1:9000",
+                            "API-PHOTO": "127.0.0.1:8888",
                             "API-SEARCH": "127.0.0.1:9000",
                             "API-CONTACT": "127.0.0.1:8000",
                         }

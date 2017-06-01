@@ -71,11 +71,11 @@ Vue.component('message-item', {
             axios.get(url, config).then((response) => {
                 this.photo(response.data.photo)
             }).catch((error) => {
-                console.log('error');
+                console.log(error);
             });
         },
         photo(photo) {
-            //console.log(photo);
+            console.log('photo', photo);
             let links = photo._links;
             if (links.origin.href) {
                 let data = {
@@ -85,7 +85,8 @@ Vue.component('message-item', {
                     height: photo.height,
                     width:  photo.width,
                 }
-                store.commit('viewPhoto', data);
+                this.$store.commit('viewPhoto', data);
+                this.$store.commit('optionDialog', 'photo');
             }
         },
         pathName(name) {

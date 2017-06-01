@@ -988,10 +988,10 @@ a.name:hover {
   position: relative;
 }
 #option-static__container {
-  padding: 20px 10px 25px;
+  padding: 35px 10px 15px;
 }
 .option-dialog__container {
-  padding: 20px 10px 25px;
+  padding: 35px 10px 15px;
 }
 #option-static__close {
   background: #ffffff;
@@ -1776,6 +1776,29 @@ a.name:hover {
 .modal-enter .modal-dialog__container,
 .modal-leave .modal-dialog__container {
   transform: scale(1.1);
+}
+.photo-view {
+  text-align: center;
+  background: #f5f5f5;
+  background-size: cover;
+  background-position: center;
+  border: 2px solid #f5f5f5;
+}
+.photo-view__accept {
+  border: 1px solid #f5f5f5;
+  padding: 20px 20px;
+  max-width: 400px;
+  background-color: #ffffff;
+  text-align: left;
+  margin: 25px auto;
+}
+.photo-view__accept-caption {
+  font-size: 16px;
+  font-weight: bold;
+}
+.photo-view__accept-text {
+  padding: 15px 0 15px;
+  font-size: 14px;
 }
 .human-dialog__caption {
   background: #3A5795;

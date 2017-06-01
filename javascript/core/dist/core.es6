@@ -475,11 +475,11 @@ Vue.component('message-item', {
             axios.get(url, config).then((response) => {
                 this.photo(response.data.photo)
             }).catch((error) => {
-                console.log('error');
+                console.log(error);
             });
         },
         photo(photo) {
-            //console.log(photo);
+            console.log('photo', photo);
             let links = photo._links;
             if (links.origin.href) {
                 let data = {
@@ -489,7 +489,8 @@ Vue.component('message-item', {
                     height: photo.height,
                     width:  photo.width,
                 }
-                store.commit('viewPhoto', data);
+                this.$store.commit('viewPhoto', data);
+                this.$store.commit('optionDialog', 'photo');
             }
         },
         pathName(name) {
@@ -620,6 +621,32 @@ Vue.component('option-dialog', {
             $("html, body").animate({ scrollTop: 0 }, "slow");
         }
     }
+});
+
+
+Vue.component('photo-view', {
+    props: [
+        'show',
+        'photo',
+        'thumb',
+        'width',
+        'height',
+        'bypass'
+    ],
+    methods: {
+        approve() {
+            this.$store.commit('approveViewPhoto');
+        },
+        close() {
+            this.$emit('close');
+        }
+    },
+    computed: {
+        accept() {
+            return (this.$store.state.accepts.photo || this.bypass) ? true : false;
+        }
+    },
+    template: '#photo-view'
 });
 
 Vue.directive('resized', {
@@ -840,42 +867,6 @@ Vue.component('remove-contact', {
     template: '#remove-confirm',
 });
 
-Vue.component('photo-dialog', {
-    methods: {
-        close() {
-            this.$emit('close');
-            store.commit('viewPhoto', { photo: null });
-        }
-    },
-    computed: Vuex.mapState({
-        config: state => state.photoView
-    }),
-    template: '#photo-dialog'
-})
-
-
-Vue.component('photo-view', {
-    props: [
-        'photo',
-        'thumb',
-        'width',
-        'height',
-        'bypass'
-    ],
-    methods: {
-        approve() {
-            store.commit('approveViewPhoto');
-        }
-    },
-    computed: Vuex.mapState({
-        accept(state) {
-            return (state.accepts.photo || this.bypass) ? true : false;
-        }
-    }),
-    template: '#photo-view'
-});
-
-
 Vue.component('upload-dialog', {
     template: '#upload-dialog',
     data() {
@@ -924,7 +915,7 @@ Vue.component('upload-dialog', {
                     height: photo.height,
                     width:  photo.width,
                 }
-                store.commit('sendPhoto', data);
+                this.$store.commit('sendPhoto', data);
                 //console.log('sendPhoto');
                 //console.log(data);
             }
@@ -952,6 +943,20 @@ Vue.component('upload-dialog', {
 })
 
 
+
+
+Vue.component('photo-dialog', {
+    methods: {
+        close() {
+            this.$emit('close');
+            store.commit('viewPhoto', { photo: null });
+        }
+    },
+    computed: Vuex.mapState({
+        config: state => state.photoView
+    }),
+    template: '#photo-dialog'
+})
 
 
 $(document).ready(function()
@@ -1291,6 +1296,7 @@ const store = new Vuex.Store({
             state.uploadView.show = (data === true);
         },
         sendPhoto(state, data) {
+            console.log('sendPhoto');
             _.extend(state.formMess.sendPhoto, data);
         },
         approveViewPhoto(state) {

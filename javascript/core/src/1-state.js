@@ -304,6 +304,7 @@ const store = new Vuex.Store({
             state.uploadView.show = (data === true);
         },
         sendPhoto(state, data) {
+            console.log('sendPhoto');
             _.extend(state.formMess.sendPhoto, data);
         },
         approveViewPhoto(state) {

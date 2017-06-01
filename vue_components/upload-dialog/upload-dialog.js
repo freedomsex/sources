@@ -47,7 +47,7 @@ Vue.component('upload-dialog', {
                     height: photo.height,
                     width:  photo.width,
                 }
-                store.commit('sendPhoto', data);
+                this.$store.commit('sendPhoto', data);
                 //console.log('sendPhoto');
                 //console.log(data);
             }

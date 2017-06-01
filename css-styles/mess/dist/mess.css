@@ -1041,30 +1041,6 @@ div.alert_block_mess b {
   height: 48px;
   margin: 0 1px 1px 0;
 }
-.photo-view {
-  text-align: center;
-  margin-top: 15px;
-  background: #f5f5f5;
-  background-size: cover;
-  background-position: center;
-  border: 1px solid #f5f5f5;
-}
-.photo-view__accept {
-  border: 1px solid #f5f5f5;
-  padding: 20px 20px;
-  max-width: 400px;
-  background-color: #ffffff;
-  text-align: left;
-  margin: 25px auto;
-}
-.photo-view__accept-caption {
-  font-size: 16px;
-  font-weight: bold;
-}
-.photo-view__accept-text {
-  padding: 15px 0 15px;
-  font-size: 14px;
-}
 #fileupload {
   position: absolute;
   left: -99999px;
