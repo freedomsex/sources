@@ -699,15 +699,18 @@ Vue.component('quick-reply', {
                 return false;
             }
             this.loading = true;
-            setTimeout(() => this.loading = false, 30 * 1000);
+            setTimeout(() => this.loading = false, 4 * 1000);
             store.dispatch('human', this.item.human_id).then((response) => {
                 this.loaded();
+            }).catch((error) => {
+                console.log(error);
+                this.loading = false;
             });
         },
         loaded() {
             this.loading = false;
-            console.log('hold:', this.human.hold);
-            console.log('tags:', this.human);
+            //console.log('hold:', this.human.hold);
+            //console.log('tags:', this.human);
             //this.process = false;
         },
         close() {

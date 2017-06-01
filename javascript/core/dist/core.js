@@ -712,15 +712,18 @@ Vue.component('quick-reply', {
             this.loading = true;
             setTimeout(function () {
                 return _this12.loading = false;
-            }, 30 * 1000);
+            }, 4 * 1000);
             store.dispatch('human', this.item.human_id).then(function (response) {
                 _this12.loaded();
+            }).catch(function (error) {
+                console.log(error);
+                _this12.loading = false;
             });
         },
         loaded: function loaded() {
             this.loading = false;
-            console.log('hold:', this.human.hold);
-            console.log('tags:', this.human);
+            //console.log('hold:', this.human.hold);
+            //console.log('tags:', this.human);
             //this.process = false;
         },
         close: function close() {
