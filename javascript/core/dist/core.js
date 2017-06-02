@@ -1081,7 +1081,7 @@ var initial = _.extend({
                 uid: rootState.user.uid,
                 resource_id: state.list[index].id
             });
-            //commit('delete', index);
+            commit('read', index);
             return result;
         }
     },
@@ -1091,7 +1091,7 @@ var initial = _.extend({
             ls.set('initial-contacts', state.list);
         },
         read: function read(state, index) {
-            state.list[index].message.read = 0;
+            state.list[index].message.unread = 0;
             ls.set('initial-contacts', state.list);
         }
     }, mutations)
@@ -1160,7 +1160,7 @@ var intimate = _.extend({
             ls.set('intimate-contacts', state.list);
         },
         read: function read(state, index) {
-            state.list[index].message.read = 0;
+            state.list[index].message.unread = 0;
             ls.set('intimate-contacts', state.list);
         }
     }, mutations)
