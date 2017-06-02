@@ -173,6 +173,10 @@ const InitialDialog = Vue.component('initial-dialog', {
         remove(index) {
             this.$store.dispatch('initial/DELETE', index);
         },
+        read(index) {
+            console.log('imm=read', index);
+            this.$store.dispatch('initial/READ', index);
+        },
         splice(index) {
             //console.log(this.$store); return;
             this.$store.commit('initial/delete', index);
@@ -206,6 +210,10 @@ const IntimateDialog = Vue.component('intimate-dialog', {
         remove(index) {
             console.log('imm=remove', index);
             this.$store.dispatch('intimate/DELETE', index);
+        },
+        read(index) {
+            console.log('imm=read', index);
+            this.$store.dispatch('intimate/READ', index);
         },
         splice(index) {
             this.$store.commit('intimate/delete', index);
@@ -261,9 +269,6 @@ Vue.component('contact-item', {
         }
     },
     computed: {
-        sent() {
-            return this.item.user_id == this.$store.state.user.uid;
-        },
         name() {
             var result = 'Парень или девушка';
             if (this.item.user) {
@@ -282,7 +287,13 @@ Vue.component('contact-item', {
         },
         message() {
             return this.item.message ? this.item.message.text : '';
-        }
+        },
+        unread() {
+            return this.item.message ? this.item.message.unread : 0;
+        },
+        sent() {
+            return this.item.message ? (this.item.message.sender == this.$store.state.user.uid) : 0;
+        },
     },
     methods: {
         show() {
@@ -305,6 +316,7 @@ Vue.component('contact-item', {
         },
         reply() {
             this.detail = true;
+            this.$emit('read', this.index);
             console.log('quick');
         },
         anketa() {
@@ -1040,10 +1052,22 @@ const initial = _.extend({
             commit('delete', index);
             return result;
         },
+        READ({ state, commit, rootState }, index) {
+            let result = api.contacts.initial.put(null, {
+                uid: rootState.user.uid,
+                resource_id: state.list[index].id
+            });
+            //commit('delete', index);
+            return result;
+        },
     },
     mutations: _.extend({
         delete(state, index) {
             state.list.splice(index, 1);
+            ls.set('initial-contacts', state.list);
+        },
+        read(state, index) {
+            state.list[index].message.read = 0;
             ls.set('initial-contacts', state.list);
         }
     }, mutations)
@@ -1081,10 +1105,22 @@ const intimate = _.extend({
             commit('delete', index);
             return result;
         },
+        READ({ state, commit, rootState }, index) {
+            let result = api.contacts.initial.put(null, {
+                uid: rootState.user.uid,
+                resource_id: state.list[index].id
+            });
+            commit('read', index);
+            return result;
+        },
     },
     mutations: _.extend({
         delete(state, index) {
             state.list.splice(index, 1);
+            ls.set('intimate-contacts', state.list);
+        },
+        read(state, index) {
+            state.list[index].message.read = 0;
             ls.set('intimate-contacts', state.list);
         }
     }, mutations)
@@ -1405,11 +1441,11 @@ class Api {
     delete(params, url) {
         return this.delay(axios.delete(this.setUrl('delete', params, url), this.config), 0);
     }
-    put(params, url) {
-        return this.delay(axios.put(this.setUrl('put', params, url), this.config), 0);
+    put(data, params, url) {
+        return this.delay(axios.put(this.setUrl('put', params, url), data, this.config), 0);
     }
-    patch(params, url) {
-        return this.delay(axios.patch(this.setUrl('patch', params, url), this.config), 0);
+    patch(data, params, url) {
+        return this.delay(axios.patch(this.setUrl('patch', params, url), data, this.config), 0);
     }
     request(method, action, data, params, url) {
         // this.config.method = method;

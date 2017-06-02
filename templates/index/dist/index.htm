@@ -179,6 +179,7 @@
         :index="index"
         :quick="quick"
         @bun="bun"
+        @read="read"
         @close="close"
         @sended="splice"
         @remove="remove"/>
@@ -202,6 +203,7 @@
         :index="index"
         :quick="quick"
         @bun="bun"
+        @read="read"
         @close="close"
         @sended="splice"
         @remove="remove"/>
@@ -221,14 +223,20 @@
         <span class="user-list__age" v-show="age">{{age}}</span>
         <span class="user-list__city" v-show="city">{{city}}</span>
       </div>
-      <div class="contact-list__item-message">{{message}}</div>
+      <div class="contact-list__item-preview">
+
+        <span class="contact-item__status-read" v-if="unread"></span>
+        <span aria-hidden="true" class="glyphicon glyphicon-chevron-left contact-item__status-send" v-else v-show="sent"></span>
+
+        <span class="contact-item__message">{{message}}</span>
+      </div>
     </div>
     <div class="contact-list__item-option">
       <span :class="0 ? 'message-item__bunn-alert' : 'message-item__bunn'"
-        v-show="sent" @click="confirmBun">
+        v-show="!sent" @click="confirmBun">
         <span aria-hidden="true" class="glyphicon glyphicon-thumbs-down"></span>
       </span>
-      <span class="message-item__remove" v-show="sent" @click="confirmRemove">
+      <span class="message-item__remove" @click="confirmRemove">
         <span aria-hidden="true" class="glyphicon glyphicon-remove"></span>
       </span>
     </div>

@@ -79,11 +79,11 @@ class Api {
     delete(params, url) {
         return this.delay(axios.delete(this.setUrl('delete', params, url), this.config), 0);
     }
-    put(params, url) {
-        return this.delay(axios.put(this.setUrl('put', params, url), this.config), 0);
+    put(data, params, url) {
+        return this.delay(axios.put(this.setUrl('put', params, url), data, this.config), 0);
     }
-    patch(params, url) {
-        return this.delay(axios.patch(this.setUrl('patch', params, url), this.config), 0);
+    patch(data, params, url) {
+        return this.delay(axios.patch(this.setUrl('patch', params, url), data, this.config), 0);
     }
     request(method, action, data, params, url) {
         // this.config.method = method;

@@ -173,6 +173,10 @@ const InitialDialog = Vue.component('initial-dialog', {
         remove(index) {
             this.$store.dispatch('initial/DELETE', index);
         },
+        read(index) {
+            console.log('imm=read', index);
+            this.$store.dispatch('initial/READ', index);
+        },
         splice(index) {
             //console.log(this.$store); return;
             this.$store.commit('initial/delete', index);
@@ -206,6 +210,10 @@ const IntimateDialog = Vue.component('intimate-dialog', {
         remove(index) {
             console.log('imm=remove', index);
             this.$store.dispatch('intimate/DELETE', index);
+        },
+        read(index) {
+            console.log('imm=read', index);
+            this.$store.dispatch('intimate/READ', index);
         },
         splice(index) {
             this.$store.commit('intimate/delete', index);
@@ -261,9 +269,6 @@ Vue.component('contact-item', {
         }
     },
     computed: {
-        sent() {
-            return this.item.user_id == this.$store.state.user.uid;
-        },
         name() {
             var result = 'Парень или девушка';
             if (this.item.user) {
@@ -282,7 +287,13 @@ Vue.component('contact-item', {
         },
         message() {
             return this.item.message ? this.item.message.text : '';
-        }
+        },
+        unread() {
+            return this.item.message ? this.item.message.unread : 0;
+        },
+        sent() {
+            return this.item.message ? (this.item.message.sender == this.$store.state.user.uid) : 0;
+        },
     },
     methods: {
         show() {
@@ -305,6 +316,7 @@ Vue.component('contact-item', {
         },
         reply() {
             this.detail = true;
+            this.$emit('read', this.index);
             console.log('quick');
         },
         anketa() {

@@ -186,6 +186,10 @@ var InitialDialog = Vue.component('initial-dialog', {
         remove: function remove(index) {
             this.$store.dispatch('initial/DELETE', index);
         },
+        read: function read(index) {
+            console.log('imm=read', index);
+            this.$store.dispatch('initial/READ', index);
+        },
         splice: function splice(index) {
             //console.log(this.$store); return;
             this.$store.commit('initial/delete', index);
@@ -229,6 +233,10 @@ var IntimateDialog = Vue.component('intimate-dialog', {
         remove: function remove(index) {
             console.log('imm=remove', index);
             this.$store.dispatch('intimate/DELETE', index);
+        },
+        read: function read(index) {
+            console.log('imm=read', index);
+            this.$store.dispatch('intimate/READ', index);
         },
         splice: function splice(index) {
             this.$store.commit('intimate/delete', index);
@@ -287,9 +295,6 @@ Vue.component('contact-item', {
     },
 
     computed: {
-        sent: function sent() {
-            return this.item.user_id == this.$store.state.user.uid;
-        },
         name: function name() {
             var result = 'Парень или девушка';
             if (this.item.user) {
@@ -308,6 +313,12 @@ Vue.component('contact-item', {
         },
         message: function message() {
             return this.item.message ? this.item.message.text : '';
+        },
+        unread: function unread() {
+            return this.item.message ? this.item.message.unread : 0;
+        },
+        sent: function sent() {
+            return this.item.message ? this.item.message.sender == this.$store.state.user.uid : 0;
         }
     },
     methods: {
@@ -331,6 +342,7 @@ Vue.component('contact-item', {
         },
         reply: function reply() {
             this.detail = true;
+            this.$emit('read', this.index);
             console.log('quick');
         },
         anketa: function anketa() {
@@ -1059,11 +1071,27 @@ var initial = _.extend({
             });
             commit('delete', index);
             return result;
+        },
+        READ: function READ(_ref4, index) {
+            var state = _ref4.state,
+                commit = _ref4.commit,
+                rootState = _ref4.rootState;
+
+            var result = api.contacts.initial.put(null, {
+                uid: rootState.user.uid,
+                resource_id: state.list[index].id
+            });
+            //commit('delete', index);
+            return result;
         }
     },
     mutations: _.extend({
         delete: function _delete(state, index) {
             state.list.splice(index, 1);
+            ls.set('initial-contacts', state.list);
+        },
+        read: function read(state, index) {
+            state.list[index].message.read = 0;
             ls.set('initial-contacts', state.list);
         }
     }, mutations)
@@ -1075,10 +1103,10 @@ var intimate = _.extend({
         list: []
     },
     actions: {
-        LOAD: function LOAD(_ref4) {
-            var state = _ref4.state,
-                commit = _ref4.commit,
-                rootState = _ref4.rootState;
+        LOAD: function LOAD(_ref5) {
+            var state = _ref5.state,
+                commit = _ref5.commit,
+                rootState = _ref5.rootState;
 
             commit('load', ls.get('intimate-contacts'));
             return api.contacts.intimate.cget({
@@ -1089,10 +1117,10 @@ var intimate = _.extend({
                 ls.set('intimate-contacts', state.list);
             });
         },
-        NEXT: function NEXT(_ref5, offset) {
-            var state = _ref5.state,
-                commit = _ref5.commit,
-                rootState = _ref5.rootState;
+        NEXT: function NEXT(_ref6, offset) {
+            var state = _ref6.state,
+                commit = _ref6.commit,
+                rootState = _ref6.rootState;
 
             return api.contacts.intimate.cget({
                 uid: rootState.user.uid,
@@ -1101,10 +1129,10 @@ var intimate = _.extend({
                 commit('add', response.data);
             });
         },
-        DELETE: function DELETE(_ref6, index) {
-            var state = _ref6.state,
-                commit = _ref6.commit,
-                rootState = _ref6.rootState;
+        DELETE: function DELETE(_ref7, index) {
+            var state = _ref7.state,
+                commit = _ref7.commit,
+                rootState = _ref7.rootState;
 
             var result = api.contacts.intimate.delete({
                 uid: rootState.user.uid,
@@ -1112,11 +1140,27 @@ var intimate = _.extend({
             });
             commit('delete', index);
             return result;
+        },
+        READ: function READ(_ref8, index) {
+            var state = _ref8.state,
+                commit = _ref8.commit,
+                rootState = _ref8.rootState;
+
+            var result = api.contacts.initial.put(null, {
+                uid: rootState.user.uid,
+                resource_id: state.list[index].id
+            });
+            commit('read', index);
+            return result;
         }
     },
     mutations: _.extend({
         delete: function _delete(state, index) {
             state.list.splice(index, 1);
+            ls.set('intimate-contacts', state.list);
+        },
+        read: function read(state, index) {
+            state.list[index].message.read = 0;
             ls.set('intimate-contacts', state.list);
         }
     }, mutations)
@@ -1128,10 +1172,10 @@ var sends = _.extend({
         list: []
     },
     actions: {
-        LOAD: function LOAD(_ref7) {
-            var state = _ref7.state,
-                commit = _ref7.commit,
-                rootState = _ref7.rootState;
+        LOAD: function LOAD(_ref9) {
+            var state = _ref9.state,
+                commit = _ref9.commit,
+                rootState = _ref9.rootState;
 
             commit('load', ls.get('sends-contacts'));
             return api.contacts.sends.cget({
@@ -1142,10 +1186,10 @@ var sends = _.extend({
                 ls.set('sends-contacts', state.list);
             });
         },
-        NEXT: function NEXT(_ref8, offset) {
-            var state = _ref8.state,
-                commit = _ref8.commit,
-                rootState = _ref8.rootState;
+        NEXT: function NEXT(_ref10, offset) {
+            var state = _ref10.state,
+                commit = _ref10.commit,
+                rootState = _ref10.rootState;
 
             return api.contacts.sends.cget({
                 uid: rootState.user.uid,
@@ -1154,10 +1198,10 @@ var sends = _.extend({
                 commit('add', response.data);
             });
         },
-        DELETE: function DELETE(_ref9, index) {
-            var state = _ref9.state,
-                commit = _ref9.commit,
-                rootState = _ref9.rootState;
+        DELETE: function DELETE(_ref11, index) {
+            var state = _ref11.state,
+                commit = _ref11.commit,
+                rootState = _ref11.rootState;
 
             var result = api.contacts.sends.delete({
                 uid: rootState.user.uid,
@@ -1216,8 +1260,8 @@ var search = {
         human: {}
     },
     actions: {
-        human: function human(_ref10, tid) {
-            var commit = _ref10.commit;
+        human: function human(_ref12, tid) {
+            var commit = _ref12.commit;
 
             //commit('load', ls.get('initial-contacts'));
             commit('resetHuman', tid);
@@ -1248,8 +1292,8 @@ var user = {
         sex: 0
     },
     actions: {
-        LOAD_USER: function LOAD_USER(_ref11) {
-            var commit = _ref11.commit;
+        LOAD_USER: function LOAD_USER(_ref13) {
+            var commit = _ref13.commit;
 
             if (uid) {
                 commit('loadUser', { uid: uid });
@@ -1258,8 +1302,8 @@ var user = {
                 commit('loadUser', { sex: user_sex });
             }
         },
-        SAVE_SEX: function SAVE_SEX(_ref12, sex) {
-            var commit = _ref12.commit;
+        SAVE_SEX: function SAVE_SEX(_ref14, sex) {
+            var commit = _ref14.commit;
 
             var promise = api.user.saveSex(sex);
             promise.then(function (response) {
@@ -1322,13 +1366,13 @@ var store = new Vuex.Store({
         }
     },
     actions: {
-        LOAD_API_TOKEN: function LOAD_API_TOKEN(_ref13) {
-            var commit = _ref13.commit;
+        LOAD_API_TOKEN: function LOAD_API_TOKEN(_ref15) {
+            var commit = _ref15.commit;
 
             commit('setApiToken', { apiToken: get_cookie('jwt') });
         },
-        LOAD_ACCEPTS: function LOAD_ACCEPTS(_ref14) {
-            var commit = _ref14.commit;
+        LOAD_ACCEPTS: function LOAD_ACCEPTS(_ref16) {
+            var commit = _ref16.commit;
 
             var accepts = ls.get('accepts');
             if (accepts && accepts.photo) {
@@ -1478,13 +1522,13 @@ var Api = function () {
         }
     }, {
         key: 'put',
-        value: function put(params, url) {
-            return this.delay(axios.put(this.setUrl('put', params, url), this.config), 0);
+        value: function put(data, params, url) {
+            return this.delay(axios.put(this.setUrl('put', params, url), data, this.config), 0);
         }
     }, {
         key: 'patch',
-        value: function patch(params, url) {
-            return this.delay(axios.patch(this.setUrl('patch', params, url), this.config), 0);
+        value: function patch(data, params, url) {
+            return this.delay(axios.patch(this.setUrl('patch', params, url), data, this.config), 0);
         }
     }, {
         key: 'request',

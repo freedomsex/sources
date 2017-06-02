@@ -45,10 +45,22 @@ const initial = _.extend({
             commit('delete', index);
             return result;
         },
+        READ({ state, commit, rootState }, index) {
+            let result = api.contacts.initial.put(null, {
+                uid: rootState.user.uid,
+                resource_id: state.list[index].id
+            });
+            //commit('delete', index);
+            return result;
+        },
     },
     mutations: _.extend({
         delete(state, index) {
             state.list.splice(index, 1);
+            ls.set('initial-contacts', state.list);
+        },
+        read(state, index) {
+            state.list[index].message.read = 0;
             ls.set('initial-contacts', state.list);
         }
     }, mutations)
@@ -86,10 +98,22 @@ const intimate = _.extend({
             commit('delete', index);
             return result;
         },
+        READ({ state, commit, rootState }, index) {
+            let result = api.contacts.initial.put(null, {
+                uid: rootState.user.uid,
+                resource_id: state.list[index].id
+            });
+            commit('read', index);
+            return result;
+        },
     },
     mutations: _.extend({
         delete(state, index) {
             state.list.splice(index, 1);
+            ls.set('intimate-contacts', state.list);
+        },
+        read(state, index) {
+            state.list[index].message.read = 0;
             ls.set('intimate-contacts', state.list);
         }
     }, mutations)

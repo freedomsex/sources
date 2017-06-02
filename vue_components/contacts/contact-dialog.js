@@ -102,6 +102,10 @@ const InitialDialog = Vue.component('initial-dialog', {
         remove(index) {
             this.$store.dispatch('initial/DELETE', index);
         },
+        read(index) {
+            console.log('imm=read', index);
+            this.$store.dispatch('initial/READ', index);
+        },
         splice(index) {
             //console.log(this.$store); return;
             this.$store.commit('initial/delete', index);
@@ -135,6 +139,10 @@ const IntimateDialog = Vue.component('intimate-dialog', {
         remove(index) {
             console.log('imm=remove', index);
             this.$store.dispatch('intimate/DELETE', index);
+        },
+        read(index) {
+            console.log('imm=read', index);
+            this.$store.dispatch('intimate/READ', index);
         },
         splice(index) {
             this.$store.commit('intimate/delete', index);

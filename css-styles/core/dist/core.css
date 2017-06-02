@@ -1416,12 +1416,8 @@ a.name:hover {
   padding: 10px 5px;
   white-space: nowrap;
 }
-.contact-list__item-message {
-  color: #999999;
-  overflow: hidden;
-  font-style: italic;
-  white-space: nowrap;
-  padding: 10px 5px 0;
+.contact-list__item-preview {
+  padding: 10px 0 0;
 }
 .contact-list__item-option {
   position: absolute;
@@ -1436,6 +1432,27 @@ a.name:hover {
   content: '';
   display: block;
   clear: both;
+}
+.contact-item__status-read {
+  background-color: #6F92D8;
+  width: 8px;
+  height: 8px;
+  display: inline-block;
+  border-radius: 10px;
+  vertical-align: middle;
+}
+.contact-item__status-send {
+  color: #cccccc;
+  font-size: 12px;
+}
+.contact-item__message {
+  color: #999999;
+  overflow: hidden;
+  display: inline-block;
+  font-style: italic;
+  white-space: nowrap;
+  margin-left: 5px;
+  vertical-align: middle;
 }
 #captcha-dialog {
   max-width: 400px;

@@ -527,22 +527,24 @@ var cont_list = {
     }
 };
 
-var ContactSection = new Vue({
-    methods: {
-        openInit: function openInit() {
-            store.commit('showInitial', 1);
-        },
-        openIntim: function openIntim() {
-            console.log(111);
-            store.commit('showIntimate', 1);
-        },
-        openSends: function openSends() {
-            store.commit('showSends', 1);
-        }
-    },
-    store: store,
-    el: '#contact-section'
-});
+//
+//var ContactSection = new Vue({
+//    methods: {
+//        openInit() {
+//            store.commit('showInitial', 1);
+//        },
+//        openIntim() {
+//            console.log(111)
+//            store.commit('showIntimate', 1);
+//        },
+//        openSends() {
+//            store.commit('showSends', 1);
+//        },
+//    },
+//    store,
+//    el: '#contact-section',
+//});
+
 
 // -- Время свиданий ---
 var dating_time = {

@@ -12,9 +12,6 @@ Vue.component('contact-item', {
         }
     },
     computed: {
-        sent() {
-            return this.item.user_id == this.$store.state.user.uid;
-        },
         name() {
             var result = 'Парень или девушка';
             if (this.item.user) {
@@ -33,7 +30,13 @@ Vue.component('contact-item', {
         },
         message() {
             return this.item.message ? this.item.message.text : '';
-        }
+        },
+        unread() {
+            return this.item.message ? this.item.message.unread : 0;
+        },
+        sent() {
+            return this.item.message ? (this.item.message.sender == this.$store.state.user.uid) : 0;
+        },
     },
     methods: {
         show() {
@@ -56,6 +59,7 @@ Vue.component('contact-item', {
         },
         reply() {
             this.detail = true;
+            this.$emit('read', this.index);
             console.log('quick');
         },
         anketa() {
