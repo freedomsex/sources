@@ -1392,7 +1392,7 @@ class Api {
         this.setDelay('@@NET-DELAY');
         // [!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]
         this.setRoot(host, version);
-        this.setAuthKey(key);
+        this.setConfig(this.root, key);
         this.setRouting(routing);
     }
 
@@ -1419,11 +1419,21 @@ class Api {
     setRoot(host, version) {
         let ver = version ? 'v' + version + '/' : '';
         this.root = host + ver;
-        this.setBaseURL(this.root);
+    }
+
+    setConfig(url, key) {
+        this.config = {
+            baseURL: url,
+            headers: {
+                'Authorization': 'Bearer ' + key
+            }
+        };
     }
 
     setBaseURL(url) {
-        this.config.baseURL = url;
+        _.extend(this.config, {
+            baseURL: url
+        });
     }
 
     setAuthKey(key) {

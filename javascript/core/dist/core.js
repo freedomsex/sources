@@ -1453,7 +1453,7 @@ var Api = function () {
         this.setDelay('0');
         // [!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]
         this.setRoot(host, version);
-        this.setAuthKey(key);
+        this.setConfig(this.root, key);
         this.setRouting(routing);
     }
 
@@ -1486,12 +1486,23 @@ var Api = function () {
         value: function setRoot(host, version) {
             var ver = version ? 'v' + version + '/' : '';
             this.root = host + ver;
-            this.setBaseURL(this.root);
+        }
+    }, {
+        key: 'setConfig',
+        value: function setConfig(url, key) {
+            this.config = {
+                baseURL: url,
+                headers: {
+                    'Authorization': 'Bearer ' + key
+                }
+            };
         }
     }, {
         key: 'setBaseURL',
         value: function setBaseURL(url) {
-            this.config.baseURL = url;
+            _.extend(this.config, {
+                baseURL: url
+            });
         }
     }, {
         key: 'setAuthKey',
