@@ -1450,34 +1450,58 @@ var Api = function () {
         _classCallCheck(this, Api);
 
         // Delay requests sec
-        var delay = '0'; // [!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]
-
-        var ver = version ? 'v' + version + '/' : '';
-        this.root = host + ver;
-        this.key = key;
-        this.config = {
-            baseURL: this.root,
-            headers: { 'Authorization': 'Bearer ' + key }
-        };
-        this.wait = delay * 1000; //
-        this.routing = {
-            route: '',
-            load: '',
-            get: '{resource_id}',
-            cget: '',
-            send: '',
-            post: '',
-            save: '',
-            remove: '',
-            delete: '{resource_id}',
-            put: '{resource_id}',
-            patch: '{resource_id}',
-            option: '{resource_id}'
-        };
-        _.extend(this.routing, routing);
+        this.setDelay('0');
+        // [!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]
+        this.setRoot(host, version);
+        this.setAuthKey(key);
+        this.setRouting(routing);
     }
 
     _createClass(Api, [{
+        key: 'setDelay',
+        value: function setDelay(sec) {
+            this.wait = sec * 1000; //
+        }
+    }, {
+        key: 'setRouting',
+        value: function setRouting(routing) {
+            this.routing = {
+                route: '',
+                load: '',
+                get: '{resource_id}',
+                cget: '',
+                send: '',
+                post: '',
+                save: '',
+                remove: '',
+                delete: '{resource_id}',
+                put: '{resource_id}',
+                patch: '{resource_id}',
+                option: '{resource_id}'
+            };
+            _.extend(this.routing, routing);
+        }
+    }, {
+        key: 'setRoot',
+        value: function setRoot(host, version) {
+            var ver = version ? 'v' + version + '/' : '';
+            this.root = host + ver;
+            this.setBaseURL(this.root);
+        }
+    }, {
+        key: 'setBaseURL',
+        value: function setBaseURL(url) {
+            this.config.baseURL = url;
+        }
+    }, {
+        key: 'setAuthKey',
+        value: function setAuthKey(key) {
+            _.extend(this.config.headers, {
+                'Authorization': 'Bearer ' + key
+            });
+            this.key = key;
+        }
+    }, {
         key: 'setParams',
         value: function setParams(params, url) {
             var result = url.replace(/\{(.*?)\}/ig, function (match, token) {
@@ -1492,6 +1516,7 @@ var Api = function () {
     }, {
         key: 'setUrl',
         value: function setUrl(method, params, url) {
+            this.refresh();
             var route = this.routing.route;
             if (url) {
                 result = url;
@@ -1505,9 +1530,6 @@ var Api = function () {
                 }
             }
             result = this.setParams(params, result);
-
-            store.dispatch('LOAD_API_TOKEN');
-
             return this.root + result;
         }
     }, {
@@ -1590,6 +1612,11 @@ var Api = function () {
             return new Promise(function (resolve, reject) {
                 _.delay(resolve, msec, result);
             });
+        }
+    }, {
+        key: 'refresh',
+        value: function refresh() {
+            store.dispatch('LOAD_API_TOKEN');
         }
     }]);
 
@@ -1692,6 +1719,14 @@ var ApiContact = function (_Api5) {
         var host = 'http://212.83.134.89:9000/';
         return _possibleConstructorReturn(this, (ApiContact.__proto__ || Object.getPrototypeOf(ApiContact)).call(this, host, key, null, routing));
     }
+
+    _createClass(ApiContact, [{
+        key: 'refresh',
+        value: function refresh() {
+            store.dispatch('LOAD_API_TOKEN');
+            this.setAuthKey(store.state.apiToken);
+        }
+    }]);
 
     return ApiContact;
 }(Api);

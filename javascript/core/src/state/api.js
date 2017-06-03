@@ -2,16 +2,17 @@
 class Api {
     constructor(host, key, version, routing) {
         // Delay requests sec
-        let delay = '@@NET-DELAY';         // [!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]
+        this.setDelay('@@NET-DELAY');
+        // [!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]
+        this.setRoot(host, version);
+        this.setAuthKey(key);
+        this.setRouting(routing);
+    }
 
-        let ver = version ? 'v' + version + '/' : '';
-        this.root = host + ver;
-        this.key = key;
-        this.config = {
-            baseURL: this.root,
-            headers: {'Authorization': 'Bearer ' + key}
-        }
-        this.wait = delay * 1000; //
+    setDelay(sec) {
+        this.wait = sec * 1000; //
+    }
+    setRouting(routing) {
         this.routing = {
             route: '',
             load: '',
@@ -28,6 +29,23 @@ class Api {
         };
         _.extend(this.routing, routing);
     }
+    setRoot(host, version) {
+        let ver = version ? 'v' + version + '/' : '';
+        this.root = host + ver;
+        this.setBaseURL(this.root);
+    }
+
+    setBaseURL(url) {
+        this.config.baseURL = url;
+    }
+
+    setAuthKey(key) {
+        _.extend(this.config.headers, {
+            'Authorization': 'Bearer ' + key
+        });
+        this.key = key;
+    }
+
     setParams(params, url) {
         let result = url.replace(/\{(.*?)\}/ig, (match, token) => {
             let slug = params[token];
@@ -39,6 +57,7 @@ class Api {
         return result;
     }
     setUrl(method, params, url) {
+        this.refresh();
         let route = this.routing.route;
         if (url) {
             result = url;
@@ -52,9 +71,6 @@ class Api {
             }
         }
         result = this.setParams(params, result);
-
-        store.dispatch('LOAD_API_TOKEN');
-
         return this.root + result;
     }
 
@@ -113,6 +129,10 @@ class Api {
         return new Promise((resolve, reject) => {
             _.delay(resolve, msec, result);
         });
+    }
+
+    refresh() {
+        store.dispatch('LOAD_API_TOKEN');
     }
 }
 
@@ -175,6 +195,11 @@ class ApiContact extends Api {
         let key = store.state.apiToken;
         let host = 'http://@@API-CONTACT/';
         super(host, key, null, routing);
+    }
+
+    refresh() {
+        store.dispatch('LOAD_API_TOKEN');
+        this.setAuthKey(store.state.apiToken);
     }
 }
 
