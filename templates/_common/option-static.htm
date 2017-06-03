@@ -12,6 +12,7 @@
 <div id="option-static__viewer">
   <upload-dialog  @close="close" v-if="view == 'upload'"></upload-dialog>
   <photo-dialog   @close="close" v-if="view == 'photo'"></photo-dialog>
+  <api-key-update></api-key-update>
 </div>
 
 <!-- Статические опции, absolute -->

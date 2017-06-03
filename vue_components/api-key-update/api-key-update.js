@@ -8,25 +8,17 @@ Vue.component('api-key-update', {
         }
     },
     methods: {
-        // upKey() {
-        //     console.log('upKey');
-        // },
+        upKey() {
+            console.log('upKey');
+            axios.get('/sync/sess/').then((response) => {
+                store.dispatch('LOAD_API_TOKEN');
+            });
+        },
     },
     mounted() {
-        //let self setInterval
-        // setTimeout(() => {
-        //     this.upKey();
-        // }, 2000);
-    },
-    beforeUpdate() {
-        //this.attention();
-    },
-    computed: {
-        attention() {
-            //return (this.alert || this.alertOption) ? 1 : 0;
-        },
+        setTimeout(() => {
+            this.upKey();
+        }, 1000 * 600);
     },
     template: '#api-key-update'
 });
-
-// <api-key-update></api-key-update>

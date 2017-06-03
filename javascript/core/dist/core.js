@@ -17,30 +17,23 @@ Vue.component('api-key-update', {
     },
 
     methods: {
-        // upKey() {
-        //     console.log('upKey');
-        // },
-    },
-    mounted: function mounted() {
-        //let self setInterval
-        // setTimeout(() => {
-        //     this.upKey();
-        // }, 2000);
-    },
-    beforeUpdate: function beforeUpdate() {
-        //this.attention();
-    },
-
-    computed: {
-        attention: function attention() {
-            //return (this.alert || this.alertOption) ? 1 : 0;
+        upKey: function upKey() {
+            console.log('upKey');
+            axios.get('/sync/sess/').then(function (response) {
+                store.dispatch('LOAD_API_TOKEN');
+            });
         }
     },
+    mounted: function mounted() {
+        var _this = this;
+
+        setTimeout(function () {
+            _this.upKey();
+        }, 1000 * 600);
+    },
+
     template: '#api-key-update'
 });
-
-// <api-key-update></api-key-update>
-
 
 Vue.component('attention-wall', {
     props: ['show', 'text'],
@@ -146,11 +139,11 @@ var ContactDialog = {
             this.slow = false;
         },
         hope: function hope() {
-            var _this = this;
+            var _this2 = this;
 
             var sec = 2;
             setTimeout(function () {
-                return _this.slow = true;
+                return _this2.slow = true;
             }, sec * 1000);
             this.reset();
         },
@@ -202,18 +195,18 @@ var InitialDialog = Vue.component('initial-dialog', {
     },
     methods: {
         load: function load() {
-            var _this2 = this;
+            var _this3 = this;
 
             this.$store.dispatch('initial/LOAD').then(function (response) {
-                _this2.loaded();
+                _this3.loaded();
             });
             this.hope();
         },
         next: function next() {
-            var _this3 = this;
+            var _this4 = this;
 
             this.$store.dispatch('initial/NEXT', this.offset).then(function (response) {
-                _this3.loaded();
+                _this4.loaded();
             });
             this.reset();
         },
@@ -247,20 +240,20 @@ var IntimateDialog = Vue.component('intimate-dialog', {
     },
     methods: {
         load: function load() {
-            var _this4 = this;
+            var _this5 = this;
 
             this.$store.dispatch('intimate/LOAD', this.next).then(function (response) {
-                _this4.loaded();
+                _this5.loaded();
             }).catch(function (error) {
-                return _this4.error(error);
+                return _this5.error(error);
             });
             this.hope();
         },
         next: function next() {
-            var _this5 = this;
+            var _this6 = this;
 
             this.$store.dispatch('intimate/NEXT', this.offset).then(function (response) {
-                _this5.loaded();
+                _this6.loaded();
             });
             this.hope();
         },
@@ -294,18 +287,18 @@ var SendsDialog = Vue.component('sends-dialog', {
     },
     methods: {
         load: function load() {
-            var _this6 = this;
+            var _this7 = this;
 
             this.$store.dispatch('sends/LOAD', this.next).then(function (response) {
-                _this6.loaded();
+                _this7.loaded();
             });
             this.hope();
         },
         next: function next() {
-            var _this7 = this;
+            var _this8 = this;
 
             this.$store.dispatch('sends/NEXT', this.offset).then(function (response) {
-                _this7.loaded();
+                _this8.loaded();
             });
             this.reset();
         },
@@ -440,11 +433,11 @@ Vue.component('loading-wall', {
         }
     },
     mounted: function mounted() {
-        var _this8 = this;
+        var _this9 = this;
 
         this.hope = false;
         setTimeout(function () {
-            return _this8.hope = true;
+            return _this9.hope = true;
         }, 3000);
     },
 
@@ -493,7 +486,7 @@ Vue.component('message-item', {
             }
         },
         bun: function bun() {
-            var _this9 = this;
+            var _this10 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken }
@@ -503,7 +496,7 @@ Vue.component('message-item', {
                 tid: this.item.from
             };
             axios.post('/mess/bun/', data, config).then(function (response) {
-                _this9.$emit('remove', _this9.index);
+                _this10.$emit('remove', _this10.index);
             }).catch(function (error) {
                 console.log('error');
             });
@@ -513,7 +506,7 @@ Vue.component('message-item', {
             console.log('cancel');
         },
         remove: function remove() {
-            var _this10 = this;
+            var _this11 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken }
@@ -522,14 +515,14 @@ Vue.component('message-item', {
                 id: this.item.id
             };
             axios.post('/mess/delete/', data, config).then(function (response) {
-                _this10.$emit('remove', _this10.index);
+                _this11.$emit('remove', _this11.index);
             }).catch(function (error) {
                 console.log(error);
             });
             console.log('remove');
         },
         play: function play() {
-            var _this11 = this;
+            var _this12 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
@@ -538,7 +531,7 @@ Vue.component('message-item', {
             var server = this.$store.state.photoServer;
             var url = 'http://' + server + '/api/v1/users/' + uid + '/sends/' + this.alias + '.jpg';
             axios.get(url, config).then(function (response) {
-                _this11.photo(response.data.photo);
+                _this12.photo(response.data.photo);
             }).catch(function (error) {
                 console.log(error);
             });
@@ -750,20 +743,20 @@ Vue.component('quick-reply', {
 
     methods: {
         reload: function reload() {
-            var _this12 = this;
+            var _this13 = this;
 
             if (!this.show) {
                 return false;
             }
             this.loading = true;
             setTimeout(function () {
-                return _this12.loading = false;
+                return _this13.loading = false;
             }, 4 * 1000);
             store.dispatch('human', this.item.human_id).then(function (response) {
-                _this12.loaded();
+                _this13.loaded();
             }).catch(function (error) {
                 console.log(error);
-                _this12.loading = false;
+                _this13.loading = false;
             });
         },
         loaded: function loaded() {
@@ -796,15 +789,15 @@ Vue.component('quick-reply', {
             console.log('cancel');
         },
         inProcess: function inProcess(sec) {
-            var _this13 = this;
+            var _this14 = this;
 
             this.process = true;
             setTimeout(function () {
-                return _this13.process = false;
+                return _this14.process = false;
             }, sec * 1000);
         },
         send: function send() {
-            var _this14 = this;
+            var _this15 = this;
 
             var data = {
                 id: this.item.human_id,
@@ -812,9 +805,9 @@ Vue.component('quick-reply', {
                 captcha_code: this.code
             };
             api.messages.send(data).then(function (response) {
-                _this14.onMessageSend(response.data);
+                _this15.onMessageSend(response.data);
             }).catch(function (error) {
-                _this14.onError(error);
+                _this15.onError(error);
             });
             //  this.sended();
             this.inProcess(5);
@@ -945,7 +938,7 @@ Vue.component('upload-dialog', {
     },
     methods: {
         loadPhoto: function loadPhoto() {
-            var _this15 = this;
+            var _this16 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
@@ -954,7 +947,7 @@ Vue.component('upload-dialog', {
             axios.get('http://' + this.server + '/api/v1/users/' + uid + '/photos', config).then(function (response) {
                 var result = response.data.photos;
                 if (result && result.length) {
-                    _this15.photos = response.data.photos;
+                    _this16.photos = response.data.photos;
                 }
                 //console.log(this.photos);
             }).catch(function (error) {
@@ -1369,7 +1362,7 @@ var store = new Vuex.Store({
     state: {
         apiToken: '',
         //photoServer: '127.0.0.1:8888',
-        photoServer: '195.154.54.70',
+        photoServer: '127.0.0.1:8888',
         count: 0,
         optionStatic: {
             view: null
@@ -1457,7 +1450,7 @@ var Api = function () {
         _classCallCheck(this, Api);
 
         // Delay requests sec
-        var delay = '0'; // [!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]
+        var delay = '2'; // [!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]
 
         var ver = version ? 'v' + version + '/' : '';
         this.root = host + ver;
@@ -1678,7 +1671,7 @@ var ApiSearch = function (_Api4) {
         _classCallCheck(this, ApiSearch);
 
         var key = '1234';
-        var host = 'http://212.83.162.58/';
+        var host = 'http://127.0.0.1:9000/';
         var routing = {
             route: 'users',
             get: '{tid}'
@@ -1696,7 +1689,7 @@ var ApiContact = function (_Api5) {
         _classCallCheck(this, ApiContact);
 
         var key = store.state.apiToken;
-        var host = 'http://212.83.134.89:9000/';
+        var host = 'http://127.0.0.1:8000/';
         return _possibleConstructorReturn(this, (ApiContact.__proto__ || Object.getPrototypeOf(ApiContact)).call(this, host, key, null, routing));
     }
 
