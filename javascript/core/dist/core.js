@@ -8,6 +8,40 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+Vue.component('api-key-update', {
+    props: ['item'],
+    data: function data() {
+        return {
+            showOption: false
+        };
+    },
+
+    methods: {
+        // upKey() {
+        //     console.log('upKey');
+        // },
+    },
+    mounted: function mounted() {
+        //let self setInterval
+        // setTimeout(() => {
+        //     this.upKey();
+        // }, 2000);
+    },
+    beforeUpdate: function beforeUpdate() {
+        //this.attention();
+    },
+
+    computed: {
+        attention: function attention() {
+            //return (this.alert || this.alertOption) ? 1 : 0;
+        }
+    },
+    template: '#api-key-update'
+});
+
+// <api-key-update></api-key-update>
+
+
 Vue.component('attention-wall', {
     props: ['show', 'text'],
     data: function data() {
@@ -1478,6 +1512,9 @@ var Api = function () {
                 }
             }
             result = this.setParams(params, result);
+
+            store.dispatch('LOAD_API_TOKEN');
+
             return this.root + result;
         }
     }, {

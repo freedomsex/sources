@@ -407,6 +407,9 @@ class Api {
             }
         }
         result = this.setParams(params, result);
+
+        store.dispatch('LOAD_API_TOKEN');
+
         return this.root + result;
     }
 
