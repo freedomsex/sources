@@ -27,7 +27,7 @@ Vue.component('api-key-update', {
     mounted: function mounted() {
         var _this = this;
 
-        setTimeout(function () {
+        setInterval(function () {
             _this.upKey();
         }, 1000 * 600);
     },
