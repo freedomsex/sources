@@ -1362,7 +1362,7 @@ var store = new Vuex.Store({
     state: {
         apiToken: '',
         //photoServer: '127.0.0.1:8888',
-        photoServer: '127.0.0.1:8888',
+        photoServer: '195.154.54.70',
         count: 0,
         optionStatic: {
             view: null
@@ -1450,7 +1450,7 @@ var Api = function () {
         _classCallCheck(this, Api);
 
         // Delay requests sec
-        var delay = '2'; // [!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]
+        var delay = '0'; // [!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]
 
         var ver = version ? 'v' + version + '/' : '';
         this.root = host + ver;
@@ -1671,7 +1671,7 @@ var ApiSearch = function (_Api4) {
         _classCallCheck(this, ApiSearch);
 
         var key = '1234';
-        var host = 'http://127.0.0.1:9000/';
+        var host = 'http://212.83.162.58/';
         var routing = {
             route: 'users',
             get: '{tid}'
@@ -1689,7 +1689,7 @@ var ApiContact = function (_Api5) {
         _classCallCheck(this, ApiContact);
 
         var key = store.state.apiToken;
-        var host = 'http://127.0.0.1:8000/';
+        var host = 'http://212.83.134.89:9000/';
         return _possibleConstructorReturn(this, (ApiContact.__proto__ || Object.getPrototypeOf(ApiContact)).call(this, host, key, null, routing));
     }
 
