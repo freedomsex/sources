@@ -112,7 +112,7 @@ var ContactDialog = {
             amount: 0,
             offset: 0,
             batch: 10,
-            max: 30
+            max: 100
         };
     },
 
@@ -189,12 +189,6 @@ var ContactDialog = {
 
 var InitialDialog = Vue.component('initial-dialog', {
     extends: ContactDialog,
-    data: function data() {
-        return {
-            max: 30
-        };
-    },
-
     computed: {
         initial: function initial() {
             return true;
@@ -242,6 +236,12 @@ var InitialDialog = Vue.component('initial-dialog', {
 
 var IntimateDialog = Vue.component('intimate-dialog', {
     extends: ContactDialog,
+    data: function data() {
+        return {
+            max: 100
+        };
+    },
+
     computed: {
         initial: function initial() {
             return true;
