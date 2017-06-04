@@ -1567,6 +1567,17 @@ a.name:hover {
   top: -10px;
   z-index: 1000;
 }
+.menu-user__status {
+  background-color: rgba(0, 0, 0, 0);
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+  border-radius: 10px;
+  vertical-align: middle;
+}
+.menu-user__status.active {
+  background-color: #ffffff;
+}
 .message-item__info {
   padding: 10px 10px;
 }

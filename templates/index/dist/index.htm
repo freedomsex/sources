@@ -191,7 +191,7 @@
         @remove="remove"/>
     </div>
     <div style="text-align: center;">
-      <div class="btn btn-default btn-xs" @click="next()" :disabled="response == false" v-show="count >= 10"> Следующие </div>
+      <div class="btn btn-default btn-xs" @click="next()" :disabled="response == false" v-show="more"> Следующие </div>
     </div>
   </inform-dialog>
 </script>
@@ -215,7 +215,7 @@
         @remove="remove"/>
     </div>
     <div style="text-align: center;">
-      <div class="btn btn-default btn-xs" @click="next()" :disabled="response == false" v-show="count >= 10"> Следующие </div>
+      <div class="btn btn-default btn-xs" @click="next()" :disabled="response == false" v-show="more"> Следующие </div>
     </div>
   </inform-dialog>
 </script>

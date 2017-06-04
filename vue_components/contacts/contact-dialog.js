@@ -8,8 +8,10 @@ var ContactDialog = {
             response: false,
             slow: false,
             error: false,
+            amount: 0,
             offset: 0,
-            batch: 10
+            batch: 10,
+            max: 30
         }
     },
     computed: {
@@ -25,6 +27,11 @@ var ContactDialog = {
         count() {
             let result = this.contacts ? this.contacts.length : 0;
             return result;
+        },
+        more() {
+            let max = this.offset <= this.max - this.batch;
+            let min = this.amount >= this.batch;
+            return (min && max);
         }
     },
     methods: {
@@ -47,6 +54,7 @@ var ContactDialog = {
             //     this.contacts = _.union(this.contacts, result);
             // }
             this.offset += this.batch;
+            this.amount = this.count;
             this.response = true;
             this.slow = false;
         },
@@ -78,6 +86,11 @@ var ContactDialog = {
 
 const InitialDialog = Vue.component('initial-dialog', {
     extends: ContactDialog,
+    data() {
+        return {
+            max: 30
+        }
+    },
     computed: {
         initial: () => true,
         simple:  () => true,
@@ -91,6 +104,7 @@ const InitialDialog = Vue.component('initial-dialog', {
             this.$store.dispatch('initial/LOAD').then((response) => {
                 this.loaded();
             });
+            this.amount = this.count;
             this.hope();
         },
         next() {
@@ -128,6 +142,7 @@ const IntimateDialog = Vue.component('intimate-dialog', {
             this.$store.dispatch('intimate/LOAD', this.next).then((response) => {
                 this.loaded();
             }).catch((error) => this.error(error));
+            this.amount = this.count;
             this.hope();
         },
         next() {
@@ -165,6 +180,7 @@ const SendsDialog = Vue.component('sends-dialog', {
             this.$store.dispatch('sends/LOAD', this.next).then((response) => {
                 this.loaded();
             });
+            this.amount = this.count;
             this.hope();
         },
         next() {

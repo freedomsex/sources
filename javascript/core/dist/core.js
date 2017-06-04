@@ -109,8 +109,10 @@ var ContactDialog = {
             response: false,
             slow: false,
             error: false,
+            amount: 0,
             offset: 0,
-            batch: 10
+            batch: 10,
+            max: 30
         };
     },
 
@@ -127,6 +129,11 @@ var ContactDialog = {
         count: function count() {
             var result = this.contacts ? this.contacts.length : 0;
             return result;
+        },
+        more: function more() {
+            var max = this.offset <= this.max - this.batch;
+            var min = this.amount >= this.batch;
+            return min && max;
         }
     },
     methods: {
@@ -153,6 +160,7 @@ var ContactDialog = {
             //     this.contacts = _.union(this.contacts, result);
             // }
             this.offset += this.batch;
+            this.amount = this.count;
             this.response = true;
             this.slow = false;
         },
@@ -181,6 +189,12 @@ var ContactDialog = {
 
 var InitialDialog = Vue.component('initial-dialog', {
     extends: ContactDialog,
+    data: function data() {
+        return {
+            max: 30
+        };
+    },
+
     computed: {
         initial: function initial() {
             return true;
@@ -200,6 +214,7 @@ var InitialDialog = Vue.component('initial-dialog', {
             this.$store.dispatch('initial/LOAD').then(function (response) {
                 _this3.loaded();
             });
+            this.amount = this.count;
             this.hope();
         },
         next: function next() {
@@ -247,6 +262,7 @@ var IntimateDialog = Vue.component('intimate-dialog', {
             }).catch(function (error) {
                 return _this5.error(error);
             });
+            this.amount = this.count;
             this.hope();
         },
         next: function next() {
@@ -292,6 +308,7 @@ var SendsDialog = Vue.component('sends-dialog', {
             this.$store.dispatch('sends/LOAD', this.next).then(function (response) {
                 _this7.loaded();
             });
+            this.amount = this.count;
             this.hope();
         },
         next: function next() {
@@ -445,19 +462,55 @@ Vue.component('loading-wall', {
 });
 
 var MenuUser = new Vue({
-    methods: {
-        initial: function initial() {
-            console.log('MenuUser');
-            store.commit('showInitial', 1);
+    data: {
+        message: 8,
+        contact: 8
+    },
+    computed: {
+        newMessage: function newMessage() {
+            return this.message == false || this.message < 8;
         },
-        intimate: function intimate() {
-            store.commit('showIntimate', 1);
+        newContact: function newContact() {
+            return this.contact == false || this.contact < 8;
         }
     },
-    store: store,
-    data: {
-        text: 'yyy'
+    methods: {
+        initial: function initial() {
+            var _this10 = this;
+
+            store.commit('showInitial', 1);
+            axios.get('/mailer/check_contact').then(function () {
+                _this10.contact = 8;
+            });
+        },
+        intimate: function intimate() {
+            var _this11 = this;
+
+            store.commit('showIntimate', 1);
+            axios.get('/mailer/check_message').then(function () {
+                _this11.message = 8;
+            });
+        },
+        loadStatus: function loadStatus() {
+            var _this12 = this;
+
+            axios.get('/mailer/status').then(function (response) {
+                _this12.message = response.data.message;
+                _this12.contact = response.data.contact;
+            });
+        }
     },
+    mounted: function mounted() {
+        var _this13 = this;
+
+        var delay = 15;
+        this.loadStatus();
+        setInterval(function () {
+            _this13.loadStatus();
+        }, delay * 1000);
+    },
+
+    store: store,
     el: '#menu-user'
 });
 var fdate = null;
@@ -486,7 +539,7 @@ Vue.component('message-item', {
             }
         },
         bun: function bun() {
-            var _this10 = this;
+            var _this14 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken }
@@ -496,7 +549,7 @@ Vue.component('message-item', {
                 tid: this.item.from
             };
             axios.post('/mess/bun/', data, config).then(function (response) {
-                _this10.$emit('remove', _this10.index);
+                _this14.$emit('remove', _this14.index);
             }).catch(function (error) {
                 console.log('error');
             });
@@ -506,7 +559,7 @@ Vue.component('message-item', {
             console.log('cancel');
         },
         remove: function remove() {
-            var _this11 = this;
+            var _this15 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken }
@@ -515,14 +568,14 @@ Vue.component('message-item', {
                 id: this.item.id
             };
             axios.post('/mess/delete/', data, config).then(function (response) {
-                _this11.$emit('remove', _this11.index);
+                _this15.$emit('remove', _this15.index);
             }).catch(function (error) {
                 console.log(error);
             });
             console.log('remove');
         },
         play: function play() {
-            var _this12 = this;
+            var _this16 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
@@ -531,7 +584,7 @@ Vue.component('message-item', {
             var server = this.$store.state.photoServer;
             var url = 'http://' + server + '/api/v1/users/' + uid + '/sends/' + this.alias + '.jpg';
             axios.get(url, config).then(function (response) {
-                _this12.photo(response.data.photo);
+                _this16.photo(response.data.photo);
             }).catch(function (error) {
                 console.log(error);
             });
@@ -743,20 +796,20 @@ Vue.component('quick-reply', {
 
     methods: {
         reload: function reload() {
-            var _this13 = this;
+            var _this17 = this;
 
             if (!this.show) {
                 return false;
             }
             this.loading = true;
             setTimeout(function () {
-                return _this13.loading = false;
+                return _this17.loading = false;
             }, 4 * 1000);
             store.dispatch('human', this.item.human_id).then(function (response) {
-                _this13.loaded();
+                _this17.loaded();
             }).catch(function (error) {
                 console.log(error);
-                _this13.loading = false;
+                _this17.loading = false;
             });
         },
         loaded: function loaded() {
@@ -789,15 +842,15 @@ Vue.component('quick-reply', {
             console.log('cancel');
         },
         inProcess: function inProcess(sec) {
-            var _this14 = this;
+            var _this18 = this;
 
             this.process = true;
             setTimeout(function () {
-                return _this14.process = false;
+                return _this18.process = false;
             }, sec * 1000);
         },
         send: function send() {
-            var _this15 = this;
+            var _this19 = this;
 
             var data = {
                 id: this.item.human_id,
@@ -805,9 +858,9 @@ Vue.component('quick-reply', {
                 captcha_code: this.code
             };
             api.messages.send(data).then(function (response) {
-                _this15.onMessageSend(response.data);
+                _this19.onMessageSend(response.data);
             }).catch(function (error) {
-                _this15.onError(error);
+                _this19.onError(error);
             });
             //  this.sended();
             this.inProcess(5);
@@ -938,7 +991,7 @@ Vue.component('upload-dialog', {
     },
     methods: {
         loadPhoto: function loadPhoto() {
-            var _this16 = this;
+            var _this20 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
@@ -947,7 +1000,7 @@ Vue.component('upload-dialog', {
             axios.get('http://' + this.server + '/api/v1/users/' + uid + '/photos', config).then(function (response) {
                 var result = response.data.photos;
                 if (result && result.length) {
-                    _this16.photos = response.data.photos;
+                    _this20.photos = response.data.photos;
                 }
                 //console.log(this.photos);
             }).catch(function (error) {
