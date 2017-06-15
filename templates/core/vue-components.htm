@@ -1,0 +1,336 @@
+
+<script type="text/x-template" id="api-key-update">
+  <div></div>
+</script>
+
+
+<script type="text/x-template" id="attention-wall">
+  <modal-dialog :show="show" @close="close">
+    <div class="attention-wall" v-if="show">
+      <div class="attention-wall__content">
+        <div class="attention-wall__caption">{{caption}}</div>
+        <div class="attention-wall__text">{{text}}</div>
+        <div class="attention-wall__option">
+          <button class="btn btn-primary btn-sm" @click="remove">Удалить контакт</button>
+          <button class="btn btn-link btn-sm" @click="close">Продолжить просмотр</button>
+        </div>
+      </div>
+    </div>
+  </modal-dialog>
+</script>
+
+<script type="text/x-template" id="captcha-dialog">
+  <modal-dialog :show="show" @close="close">
+    <div class="captcha-dialog__caption">
+      Подтвердите
+      <a href="/блог/простые-проверки/" target="_blank" aria-hidden="true" class="glyphicon glyphicon-info-sign"></a>
+    </div>
+    <div class="captcha-dialog__body">
+      <div class="human-dialog__desire">
+        Введите код с картинки
+      </div>
+      <div class="input-group" style="max-width: 300px;">
+        <span class="captcha-dialog__addon input-group-addon captcha-img__addon">
+          <span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span>
+        </span>
+        <span class="captcha-dialog__addon input-group-addon captcha-img__addon">
+          <img class="form-message__captcha-img" :src="src" width="48" height="20" @click="update">
+        </span>
+        <input class="form-control" type="text" autocomplete="off" v-model="code">
+      </div>
+    </div>
+
+    <div class="captcha-dialog__option">
+      <button class="btn btn-default" @click="close">
+        Вернуться
+      </button>
+      <button class="btn btn-warning" @click="send">
+        Отправить
+      </button>
+    </div>
+
+    <div class="human-dialog__form">
+
+    </div>
+  </modal-dialog>
+</script>
+
+
+<script type="text/x-template" id="initial-dialog">
+  <inform-dialog :loader="showLoader" :alert="showAlert" :hint="showHint" @close="close">
+    <span slot="caption"><b>Предложения знакомства</b></span>
+    <span slot="context">Когда вы отправляете или вам отправляют самое первое сообщение, это считается предложением знакомства.</span>
+    <span slot="hint">Здесь будет список ваших предложений знакомства.</span>
+
+    <div class="" v-if="count">
+      <contact-item v-for="(item, index) in contacts" :key="index"
+        :item="item"
+        :index="index"
+        :quick="quick"
+        @bun="bun"
+        @read="read"
+        @close="close"
+        @sended="splice"
+        @remove="remove"/>
+    </div>
+    <div style="text-align: center;">
+      <div class="btn btn-default btn-xs" @click="next()" :disabled="response == false" v-show="more"> Следующие </div>
+    </div>
+  </inform-dialog>
+</script>
+
+
+<script type="text/x-template" id="intimate-dialog">
+  <inform-dialog :loader="showLoader" :alert="showAlert" :hint="showHint" @close="close">
+    <span slot="caption"><b>Общение, диалоги и контакты</b></span>
+    <span slot="context">Отвечайте на предложения знакомства. Ваши активные диалоги сохраняются здесь, отдельно от предложений знакомства.</span>
+    <span slot="hint">Здесь будет список ваших контактов, сообщений, диалогов.</span>
+
+    <div class="" v-if="count">
+      <contact-item v-for="(item, index) in contacts" :key="index"
+        :item="item"
+        :index="index"
+        :quick="quick"
+        @bun="bun"
+        @read="read"
+        @close="close"
+        @sended="splice"
+        @remove="remove"/>
+    </div>
+    <div style="text-align: center;">
+      <div class="btn btn-default btn-xs" @click="next()" :disabled="response == false" v-show="more"> Следующие </div>
+    </div>
+  </inform-dialog>
+</script>
+
+
+<script type="text/x-template" id="contact-item">
+  <div class="contact-list__item">
+    <div class="contact-list__item-content" @click.stop="show">
+      <div class="contact-list__item-info">
+        <span class="user-list__name">{{name}}</span><span v-show="age || city">,</span>
+        <span class="user-list__age" v-show="age">{{age}}</span>
+        <span class="user-list__city" v-show="city">{{city}}</span>
+      </div>
+      <div class="contact-list__item-preview">
+
+        <span class="contact-item__status-read" v-if="unread"></span>
+        <span aria-hidden="true" class="glyphicon glyphicon-chevron-left contact-item__status-send" v-else v-show="sent"></span>
+
+        <span class="contact-item__message">{{message}}</span>
+      </div>
+    </div>
+    <div class="contact-list__item-option">
+      <span :class="0 ? 'message-item__bunn-alert' : 'message-item__bunn'"
+        v-show="!sent" @click="confirmBun">
+        <span aria-hidden="true" class="glyphicon glyphicon-thumbs-down"></span>
+      </span>
+      <span class="message-item__remove" @click="confirmRemove">
+        <span aria-hidden="true" class="glyphicon glyphicon-remove"></span>
+      </span>
+    </div>
+
+    <remove-contact :show="confirm"
+      @bun="bun"
+      @close="cancel"
+      @remove="remove"/>
+    <quick-reply v-if="detail" :show="detail" :item="item"
+      @sended="sended"
+      @close="close"/>
+  </div>
+</script>
+
+
+<script type="text/x-template" id="inform-dialog">
+  <option-dialog @close="close">
+    <div class="contact-dialog">
+      <div class="option_tab">
+        <div align="left" class="option_cap">
+          <slot name="caption">Заголовок</slot>
+        </div>
+        <div class="tab_context">
+          <slot name="context">Описание</slot>
+        </div>
+        <div class="option_loader">
+          <div class="option_loader__label" v-show="loader"></div>
+          <div class="option_loader__alert" v-show="alert"></div>
+        </div>
+        <slot></slot>
+        <div class="hint_context" v-show="hint">
+          <slot name="hint">Подсказка</slot>
+        </div>
+      </div>
+    </div>
+  </option-dialog>
+</script>
+
+
+<script type="text/x-template" id="loading-cover">
+  <div class="loading-cover" v-if="show">
+    <div class="loading-cover__wrapper">
+      <div class="loading-cover__loader">{{loader}}...</div>
+    </div>
+  </div>
+</script>
+
+
+
+<script type="text/x-template" id="loading-wall">
+  <div class="loading-wall" v-if="show">
+    <div class="loading-wall__wrapper">
+      <div class="loading-wall__loader" v-show="hope">{{loader}}...</div>
+    </div>
+  </div>
+</script>
+
+
+
+<script type="text/x-template" id="messages-item">
+<div class="message-item" @mouseleave="showOption = false">
+  <div class="message-item__date" v-if="date">
+    <span>{{date}}</span>
+  </div>
+  <div class="message-item__spliter" v-show="!previous"></div>
+  <div :class="[sent ? 'message-item__sent' : 'message-item__received']">
+    <div class="message-item__balloon" @mouseover="showOption = true" @click="fix">
+      <div v-if="image" class="message-image" :style="{ backgroundImage: 'url('+image+')' }">
+        <div class="message-image__play" @click="play">
+          <img src="/static/img/icon/play.png">
+        </div>
+        <span class="message-image__info">
+          <span class="message-image__status" v-show="!read"></span>
+          <span class="message-image__time">{{time}}</span>
+        </span>
+      </div>
+      <span v-else>
+        <span v-html="item.mess"></span>
+        <span class="message-info">
+          <span class="message-info__status" v-show="!read"></span>
+          <span class="message-info__time">{{time}}</span>
+        </span>
+
+      </span>
+
+
+    </div>
+    <span :class="attention ? 'message-item__bunn-alert' : 'message-item__bunn'"
+      v-show="!sent && option" @click="showDialog = sent ? 'some' : 'doit'">
+      <span aria-hidden="true" class="glyphicon glyphicon-thumbs-down"></span>
+    </span>
+    <span class="message-item__remove" v-show="option" @click="showDialog = sent ? 'some' : 'must'">
+      <span aria-hidden="true" class="glyphicon glyphicon-remove"></span>
+    </span>
+  </div>
+  <remove-confirm
+    :show="showDialog"
+    :data="item"
+    @bun="bun"
+    @close="cancel"
+    @remove="remove"
+  ></remove-confirm>
+</div>
+</script>
+
+
+<script type="text/x-template" id="modal-dialog">
+  <div class="modal-dialog__mask" v-if="show" transition="modal" @click="close">
+    <div class="modal-dialog__container" @click.stop>
+      <slot></slot>
+    </div>
+  </div>
+</script>
+
+
+<script type="text/x-template" id="option-static__dialog-window">
+  <div class="option-dialog">
+    <div class="option-dialog__cover">
+      <div class="option-dialog__loader"></div>
+    </div>
+    <div class="option-dialog__wrapper" @click="close">
+      <div class="option-dialog__container" @click.stop>
+        <slot></slot>
+      </div>
+      <div class="option-dialog__close" @click.stop="close">
+        Закрыть
+        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+      </div>
+    </div>
+  </div>
+</script>
+
+
+
+<script type="text/x-template" id="photo-view">
+    <div class="photo-view" :style="{ backgroundImage: 'url('+thumb+')', minHeight: height + 'px'}">
+      <div class="photo-view__accept" v-if="!accept">
+        <div class="photo-view__accept-caption">
+          Контроль содержания отсутствует
+        </div>
+        <div class="photo-view__accept-text">
+          У администраторов нет доступа к загружаемым фото.
+          Внимание! Изображения могут иметь возрастные ограничения. Пожалуйста, подтвердите
+          что вы имеете право продолжить просмотр.
+        </div>
+        <div class="photo-view__accept-option">
+          <button class="btn btn-success btn-sm" @click="approve">
+            <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+            Подтверждаю
+          </button>
+        </div>
+      </div>
+      <div v-else>
+        <img :src="photo" :style="{ maxWidth: width +'px' }">
+      </div>
+    </div>
+</script>
+
+
+
+<script type="text/x-template" id="quick-reply">
+  <modal-dialog :show="show" @close="close">
+    <div class="human-dialog__caption">
+      Быстрый ответ
+    </div>
+    <div class="human-dialog__body">
+      <div class="human-dialog__desire" v-show="tags.length">
+        <span class="link_simple" v-for="(tag, index) in tags" :key="index" v-show="tag">{{tag}} &#8226; </span>
+      </div>
+      <div class="human-dialog__message" v-show="message">
+        {{message}}
+      </div>
+    </div>
+
+
+    <div class="message-input">
+      <textarea class="message-input__texarea" rows="1" placeholder="Введите текст" v-model="text" v-resized></textarea>
+        <button class="btn btn-primary" @click="send()">Отправить</button>
+        <button class="btn btn-link" @click="anketa()">Читать полностью...</button>
+    </div>
+    <attention-wall :show="hold" @close="cancel" @remove="remove"/>
+    <loading-wall :show="loading"/>
+    <loading-cover :show="process"/>
+
+    <remove-confirm :show="confirm" @bun="bun" @close="cancel" @remove="remove"/>
+    <captcha-dialog :show="captcha" @close="close" @cancel="cancel" @send="setCode"/>
+  </modal-dialog>
+</script>
+
+
+<script type="text/x-template" id="remove-confirm">
+  <modal-dialog :show="show" @close="close">
+    <div class="modal-dialog__wrapper">
+      <div class="modal-dialog__caption">
+        {{caption}}
+      </div>
+      <div class="modal-dialog__body">
+        {{text}}
+      </div>
+      <div class="modal-dialog__footer">
+        <button class="btn btn-primary" @click="bun()" v-if="show == 'doit'">{{action}}</button>
+        <button class="btn btn-danger" @click="remove()" v-else>{{action}}</button>
+        <button class="btn btn-default" @click="close()">Отмена</button>
+      </div>
+    </div>
+  </modal-dialog>
+</script>
+

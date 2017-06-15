@@ -13,7 +13,7 @@ var desire_clip = {
         },
         parse: function (data) {
             data = json.parse(data);
-            if (data.id != undefined) {
+            if (data) {
                 if (data.id && user_tag.sync != data.id) {
                     user_tag.sync = data.id;
                     user_tag.action.store();

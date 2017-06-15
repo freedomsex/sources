@@ -1,0 +1,68 @@
+
+
+.human-dialog__caption {
+  background: @menu-color;
+  color: @white;
+  font-weight: bold;
+  font-size: 16px;
+  padding: (@indent-sm + @indent-sm * 0.2) @indent-md @indent-sm;
+
+}
+
+.human-dialog__option {
+    float: right;
+    &-remove {
+      margin-left: @indent-sm;
+    }
+}
+
+
+.human-dialog__input {
+  border-width: 0px;
+}
+.human-dialog__body {
+  padding: @indent-sm @indent-md 0;
+}
+.human-dialog__desire {
+  margin-bottom: @indent-sm;
+  font-size: 14px;
+}
+.human-dialog__message {
+  padding: @indent-sm @indent-sm;
+  background: @light;
+  margin-bottom: @indent-xs;
+}
+
+.human-dialog__form {
+  position: relative;
+  padding-bottom: @indent-sm;
+  &-send {
+    .btn-circle;
+    background: @menu-color;
+    position: absolute;
+    padding: @indent-sm;
+    right: @indent-sm;
+    bottom: @indent-sm;
+    .glyphicon {
+      position: relative;
+      left: -2px;
+    }
+  }
+  &-anketa {
+    width: 40px;
+    position: absolute;
+    left: @indent-sm;
+    bottom: @indent-sm;
+  }
+  &-input {
+    margin: 0 55px 0 45px;
+    padding: @indent-sm @indent-sm;
+    &:empty:not(:focus):before {
+      color: @gray-dark;
+      content: attr(placeholder);
+      display: block;
+    }
+  }
+}
+
+

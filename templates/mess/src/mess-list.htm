@@ -1,0 +1,97 @@
+
+
+
+<div id="user-dialog" v-show="!error">
+  <div class="messages__new" v-on:click="load">
+    <span class="messages__new-lamp" v-show="newCount" style="display: none;">Новые
+    +<b>{{newCount}}</b>
+    </span>
+  </div>
+  <div class="messages">
+    <message-item v-for="(item, index) in messages"
+      :item="item"
+      :index="index"
+      :count="messages.length"
+      :alert="attention"
+      :uid="uid"
+      :key="index"
+      @admit="admit"
+      @remove="remove"
+      @set-new="setNew"
+    ></message-item>
+  </div>
+  <div class="messages__next" v-on:click="load" v-show="more" style="display: none;">
+    <span class="btn btn-default btn-xs">Следующие</span>
+  </div>
+  <div class="messages__loader" v-show="!error && !response">
+    <span>
+      <img src="/static/img/icon/mess_loader.gif" v-show="toSlow" style="display: none;">
+      Загружаем
+    </span>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+     <div id="message_block_ex" class="_____message_list_block" style="display: none;">
+      <div class="message_list_title unread">
+        <span class="user_name"></span>
+        <span class="message_list_save bunned_mess" data-number="8973758"
+         style="margin-left: 3px; vertical-align: bottom; ">Удалить и наказать</span>
+        <div class="message_list_time unread">
+         <span class="message_list_save remove_mess" data-number="8973758">Удалить</span>
+         <span class="mess_time"></span>
+        </div>
+      </div>
+      <div class="message_list_body"></div>
+      <div style="clear: both;"></div>
+     </div>
+
+
+
+
+
+
+     <div id="mail_bad_text_alert" style="display: none;">
+      <span class="text"></span>
+      <div style="margin-top: 5px;">
+       <input type="button" value="Посмотреть сообщения" style="font-size: 11px;">  &nbsp;
+       <span class="link_underline">Игнорировать и удалить</span>
+      </div>
+
+     </div>
+
+
+
+      <div id="mail_pages" style="display: none;">
+       <span id="mail_pages_next" class="link_underline">следующие »</span>
+       <div class="save_notice">
+         Ненужные сообщения удаляются автоматически.
+         <a href="/блог/сохраняйте-только-важное">Подробнее...</a>
+       </div>
+      </div>
+
+     <div id="mess_option_hint" style="display: none;">
+      <div style="display: inline-block; padding: 5px 0px 1px 0px; color: #888;
+       font-size: 9px;">
+       Для отображения опций кликните по сообщению или наведите курсор мыши</div>
+     </div>
+
+
+    <div id="recover_mess_block_ex" class="mail_confirm_block" style="display: none;">
+     Сообщение удалено.
+     <span class="link_underline">Восстановить</span>
+    </div>
+
+
+
+<!-- build:include no-js-alert.htm -->
+Не работает JS
+<!-- /build -->
+
+<!-- float: right; ===================================================== -->

@@ -386,9 +386,7 @@ label {
     top: 150px;
 }
 
-#mess_text_val {
-    max-width: 429px;
-}
+
 .she_chat_inline {
     background: @white;
     border: 1px solid @gray;
@@ -596,55 +594,9 @@ label {
     top: 3px;
     width: 20px;
 }
-#option_static_block {
-    bottom: 0px;
-    display: none;
-    left: 0px;
-    position: absolute;
-    right: 0px;
-    top: 0px;
-    z-index: 100;
-}
-#option_static_cover {
-    background: @gray;
-    bottom: 0px;
-    left: 0px;
-    opacity: 0.5;
-    position: absolute;
-    right: 0px;
-    top: 0px;
-}
-#static_loader {
-    background: url(/static/img/icon/loader_static96.png) center center no-repeat;
-    bottom: 0px;
-    display: none;
-    left: 0px;
-    position: absolute;
-    right: 0px;
-    top: 0px;
-}
-#option_static_wrapper {
-    bottom: 0px;
-    left: 0px;
-    padding: 10px 10px;
-    position: absolute;
-    right: 0px;
-    top: 0px;
-}
-#option_static_container {
-    background: @white;
-    padding: 20px 10px 25px;
-}
-#option_static_close {
-    background: @white;
-    color: @gray-dark;
-    cursor: pointer;
-    font-size: 15px;
-    padding: 5px 10px;
-    position: absolute;
-    right: 10px;
-    top: 10px;
-}
+
+@import "option-static.less";
+
 .tab_right {
     color: @dark-light;
     padding: 5px 10px 5px 5px;
@@ -666,30 +618,6 @@ label {
 .cap_link {
     font-size: 13px;
     margin-left: 10px;
-}
-.option_tab {
-    font-size: 13px;
-    padding: 0 25px 10px;
-    text-align: left;
-}
-.tab_context {
-    font-size: 14px;
-    max-width: 500px;
-    padding: 10px 0px;
-}
-.hint_context {
-    background: @light;
-    border: 1px solid @gray-light;
-    color: @dark-light;
-    font-size: 12px;
-    margin-bottom: 10px;
-    padding: 10px 15px;
-}
-.tab_input {
-    font-size: 14px;
-    padding: 5px 0px;
-}
-.table_opt {
 }
 .desire_caption {
     color: @dark;
@@ -758,3 +686,5 @@ label {
 @import "index.less";
 @import "profile.less";
 @import "details.less";
+
+@import "../vue-components.less";

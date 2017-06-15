@@ -2,7 +2,35 @@
 // -- Информация о пользователе ---
 var userinfo = {
 
-    data: {},
+    data: {
+        uid:      0,
+        sex:      0,
+        age:      0,
+        name:     '',
+        city:     '',
+        city_id:  0,
+        verify:   0,
+        name_mod: 0,
+        apromt:   0,
+        daily:    0,
+
+        town:     '',
+        who:      0,
+        years_up: 0,
+        years_to: 0,
+        virt:     0,
+        close:    0,
+
+        dating:   '',
+        setting:  0,
+        assist:   0,
+        intim:    0,
+
+        second:   0,
+        time:     0,
+        email:    ''
+    },
+
     init: function () {
         userinfo.ajax.load();
     } ,
@@ -17,7 +45,9 @@ var userinfo = {
                 userinfo.action.set_data(data);
                 master_info.init();
             } else {
-                storage.save('auth',0); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                storage.save('auth',0);
+                user_menu.option.act.show_reg();
+                userinfo.action.set_string();
             }
         } ,
         save: {
@@ -32,7 +62,7 @@ var userinfo = {
             } ,
             city: function (func) {
                 $.post('/option/city/', { city: userinfo.data.city }, func);
-            }  
+            }
         }
     } ,
     action: {
@@ -50,7 +80,7 @@ var userinfo = {
             userinfo.action.set_string(); /**/
         } ,
         set_name: function () {
-            if (userinfo.data.name.length > 2) {
+            if (userinfo.data.name && userinfo.data.name.length > 2) {
                 $('.user_name_option').text(userinfo.data.name);
                 $('.name_suggest').val(userinfo.data.name);
             }
@@ -64,7 +94,7 @@ var userinfo = {
             userinfo.action.set_string();
         } ,
         set_city: function () {
-            if (userinfo.data.city.length > 3) {
+            if (userinfo.data.city && userinfo.data.city.length > 3) {
                 $('.user_city_option').text(userinfo.data.city);
                 $('.city_suggest').val(userinfo.data.city);
             }
@@ -86,7 +116,7 @@ var userinfo = {
             $('.user_sex_option').text(say);
         } ,
         set_string: function () {
-            var str = userinfo.data.name;
+            var str = userinfo.data.name ? userinfo.data.name : '';
             if (!userinfo.data.name) {
                 if (userinfo.data.sex == 1) {
                     str = 'Парень';
@@ -96,14 +126,18 @@ var userinfo = {
                 }
             }
 
-            if (userinfo.data.age > 10 || userinfo.data.city.length > 3)
+            var cityLen = userinfo.data.city ? userinfo.data.city.length : 0;
+            if (userinfo.data.age > 10 || cityLen > 3) {
                 str = str + ', ';
+            }
             if (userinfo.data.age > 10)
                 str = str + userinfo.data.age + ' ';
-            if ((20 - str.length - userinfo.data.city.length) >= 0)
+            if ((20 - str.length - cityLen) >= 0) {
                 str = str + userinfo.data.city;
-            if (!str)
+            }
+            if (!str) {
                 str = 'Кто вы?';
+            }
             if (userinfo.data.uid) {
                 $('.user_string_option').text(str);
                 storage.save('user_string_print', str);

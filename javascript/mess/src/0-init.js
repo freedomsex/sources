@@ -7,8 +7,7 @@ $( document ).ready(function()
       return results[1] || 0;
     }
 
-    cont_list.init();
-    mess_list.init();
+    //cont_list.init();
 
     lock_user.init();
     confirm_block_dn.init();

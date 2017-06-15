@@ -1,0 +1,36 @@
+
+<script type="text/x-template" id="captcha-dialog">
+  <modal-dialog :show="show" @close="close">
+    <div class="captcha-dialog__caption">
+      Подтвердите
+      <a href="/блог/простые-проверки/" target="_blank" aria-hidden="true" class="glyphicon glyphicon-info-sign"></a>
+    </div>
+    <div class="captcha-dialog__body">
+      <div class="human-dialog__desire">
+        Введите код с картинки
+      </div>
+      <div class="input-group" style="max-width: 300px;">
+        <span class="captcha-dialog__addon input-group-addon captcha-img__addon">
+          <span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span>
+        </span>
+        <span class="captcha-dialog__addon input-group-addon captcha-img__addon">
+          <img class="form-message__captcha-img" :src="src" width="48" height="20" @click="update">
+        </span>
+        <input class="form-control" type="text" autocomplete="off" v-model="code">
+      </div>
+    </div>
+
+    <div class="captcha-dialog__option">
+      <button class="btn btn-default" @click="close">
+        Вернуться
+      </button>
+      <button class="btn btn-warning" @click="send">
+        Отправить
+      </button>
+    </div>
+
+    <div class="human-dialog__form">
+
+    </div>
+  </modal-dialog>
+</script>

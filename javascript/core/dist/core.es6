@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 // -- Хранилище ---
 var storage = {
@@ -182,6 +183,1698 @@ $(document).ready(function()
 });
 
 
+=======
+Vue.component('api-key-update', {
+    props: [
+      'item',
+    ],
+    data() {
+        return {
+            showOption:  false,
+        }
+    },
+    methods: {
+        upKey() {
+            console.log('upKey');
+            axios.get('/sync/sess/').then((response) => {
+                store.dispatch('LOAD_API_TOKEN');
+            });
+        },
+    },
+    mounted() {
+        setInterval(() => {
+            this.upKey();
+        }, 1000 * 600);
+    },
+    template: '#api-key-update'
+});
+
+
+Vue.component('attention-wall', {
+    props: ['show', 'text'],
+    data() {
+        return {
+            content: {
+                1: {
+                    caption: 'Предупреждение',
+                    text: `На сообщения от этого пользователя поступают жалобы. Возможно его сообщения имеют грубый тон,
+                    могут оскорбить, содержат интим фотографии, бессмысленные или резкие предложения.`
+                },
+                8: {
+                    caption: 'Внимание',
+                    text: `Действия пользователя нарушают правила. Сообщения пользователя намеренно оскорбительны,
+                    имеют противоправное содержание, обман или предложение оплаты услуг.`
+                }
+            }
+        }
+    },
+    computed: {
+        caption() {
+            return this.content[this.show].caption;
+        },
+        text() {
+            return this.content[this.show].text;
+        },
+    },
+    methods: {
+        close() {
+            this.$emit('close');
+        },
+        remove() {
+            this.$emit('remove');
+            this.close();
+        },
+    },
+    template: '#attention-wall',
+});
+
+
+
+
+Vue.component('captcha-dialog', {
+    props: ['show'],
+    data() {
+        return {
+            code: '',
+            inc: 0
+        }
+    },
+    computed: {
+        src() {
+            return '/secret_pic.php?inc=' + this.inc;
+        }
+    },
+    methods: {
+        close() {
+            this.$emit('cancel');
+        },
+        send() {
+            this.$emit('send', this.code);
+            this.update();
+            this.close();
+        },
+        update() {
+            this.inc++;
+        },
+    },
+    template: '#captcha-dialog',
+});
+
+
+var ContactDialog = {
+    props: [
+      'quick',
+    ],
+    data() {
+        return {
+            response: false,
+            slow: false,
+            error: false,
+            amount: 0,
+            offset: 0,
+            batch: 10,
+            max: 100
+        }
+    },
+    computed: {
+        showLoader() {
+            return this.slow && !this.response;
+        },
+        showAlert() {
+            return this.error && this.response;
+        },
+        showHint() {
+            return this.count < 1;
+        },
+        count() {
+            let result = this.contacts ? this.contacts.length : 0;
+            return result;
+        },
+        more() {
+            let max = this.offset <= this.max - this.batch;
+            let min = this.amount >= this.batch;
+            return (min && max);
+        }
+    },
+    methods: {
+        close() {
+            this.$emit('close');
+        },
+        reset() {
+            this.response = false;
+            this.error  = false;
+            this.slow = false;
+        },
+        hope() {
+            let sec = 2;
+            setTimeout(() => this.slow = true,  sec * 1000);
+            this.reset();
+        },
+        loaded(result) {
+            //this.received = result ? result.length : 0;
+            // if (this.received) {
+            //     this.contacts = _.union(this.contacts, result);
+            // }
+            this.offset += this.batch;
+            this.amount = this.count;
+            this.response = true;
+            this.slow = false;
+        },
+        bun(index) {
+            let item = this.contacts[index];
+            console.log('bun', item);
+            this.remove(index); return;
+            api.bun.send({
+                id: item.cont_id,
+                tid: item.from,
+                //text: this.item.message,
+                //token: 'super secret token'
+            });
+        },
+        splice(index) {
+            this.$store.commit('delete', index);
+        },
+        error(error) {
+            this.response = true;
+            this.error = true;
+            console.log(error);
+        }
+    },
+    mounted() {
+        this.load();
+    }
+};
+
+
+const InitialDialog = Vue.component('initial-dialog', {
+    extends: ContactDialog,
+    computed: {
+        initial: () => true,
+        simple:  () => true,
+        contacts() {
+            //console.log(this.$store);
+            return this.$store.state.contacts.initial.list;
+        }
+    },
+    methods: {
+        load() {
+            this.$store.dispatch('initial/LOAD').then((response) => {
+                this.loaded();
+            });
+            this.amount = this.count;
+            this.hope();
+        },
+        next() {
+            this.$store.dispatch('initial/NEXT', this.offset).then((response) => {
+                this.loaded();
+            });
+            this.reset();
+        },
+        remove(index) {
+            this.$store.dispatch('initial/DELETE', index);
+        },
+        read(index) {
+            console.log('imm=read', index);
+            this.$store.dispatch('initial/READ', index);
+        },
+        splice(index) {
+            //console.log(this.$store); return;
+            this.$store.commit('initial/delete', index);
+        },
+    },
+    template: '#initial-dialog'
+});
+
+const IntimateDialog = Vue.component('intimate-dialog', {
+    extends: ContactDialog,
+    data() {
+        return {
+            max: 100
+        }
+    },
+    computed: {
+        initial: () => true,
+        simple:  () => false,
+        contacts() {
+            return this.$store.state.contacts.intimate.list;
+        }
+    },
+    methods: {
+        load() {
+            this.$store.dispatch('intimate/LOAD', this.next).then((response) => {
+                this.loaded();
+            }).catch((error) => this.error(error));
+            this.amount = this.count;
+            this.hope();
+        },
+        next() {
+            this.$store.dispatch('intimate/NEXT', this.offset).then((response) => {
+                this.loaded();
+            });
+            this.hope();
+        },
+        remove(index) {
+            console.log('imm=remove', index);
+            this.$store.dispatch('intimate/DELETE', index);
+        },
+        read(index) {
+            console.log('imm=read', index);
+            this.$store.dispatch('intimate/READ', index);
+        },
+        splice(index) {
+            this.$store.commit('intimate/delete', index);
+        },
+    },
+    template: '#intimate-dialog'
+});
+
+const SendsDialog = Vue.component('sends-dialog', {
+    extends: ContactDialog,
+    computed: {
+        initial: () => false,
+        simple:  () => false,
+        contacts() {
+            return this.$store.state.contacts.sends.list;
+        }
+    },
+    methods: {
+        load() {
+            this.$store.dispatch('sends/LOAD', this.next).then((response) => {
+                this.loaded();
+            });
+            this.amount = this.count;
+            this.hope();
+        },
+        next() {
+            this.$store.dispatch('sends/NEXT', this.offset).then((response) => {
+                this.loaded();
+            });
+            this.reset();
+        },
+        remove(index) {
+            this.$store.dispatch('sends/DELETE', index);
+        },
+        splice(index) {
+            this.$store.commit('sends/delete', index);
+        },
+    },
+    template: '#initial-dialog'
+});
+
+
+
+Vue.component('contact-item', {
+    props: [
+      'item',
+      'index',
+      'quick',
+    ],
+    data() {
+        return {
+            detail:  false,
+            confirm: false
+        }
+    },
+    computed: {
+        name() {
+            var result = 'Парень или девушка';
+            if (this.item.user) {
+                result = this.item.user.sex == 2 ? 'Девушка' : 'Парень';
+                if (this.item.user.name) {
+                    result = this.item.user.name;
+                }
+            }
+            return result;
+        },
+        age() {
+            return this.item.user ? this.item.user.age : null;
+        },
+        city() {
+            return this.item.user ? this.item.user.city : '';
+        },
+        message() {
+            return this.item.message ? this.item.message.text : '';
+        },
+        unread() {
+            return this.item.message ? this.item.message.unread : 0;
+        },
+        sent() {
+            return this.item.message ? (this.item.message.sender == this.$store.state.user.uid) : 0;
+        },
+    },
+    methods: {
+        show() {
+            //this.$emit('show');
+            console.log('show = initial-item');
+            if (this.quick) {
+                this.reply();
+            } else {
+                this.anketa();
+            }
+        },
+        confirmBun() {
+            //console.log(this.initial);
+            this.confirm = 'doit';
+        },
+        confirmRemove() {
+            //this.$emit('remove');
+            //console.log('initial-item REMOVE');
+            this.confirm = !this.quick ? 'some' : 'must';
+        },
+        reply() {
+            this.detail = true;
+            this.$emit('read', this.index);
+            console.log('quick');
+        },
+        anketa() {
+            window.location = '/' + this.item.human_id;
+        },
+        close() {
+            this.detail = false;
+            console.log('close');
+        },
+        bun() {
+            console.log('bun1', this.index);
+            this.$emit('bun', this.index);
+        },
+        remove() {
+            console.log('remove=remove', this.index);
+            this.$emit('remove', this.index);
+        },
+        cancel() {
+            this.confirm = false;
+            console.log('cancel');
+        },
+        sended() {
+            this.$emit('sended', this.index);
+            this.close();
+        }
+    },
+    template: '#contact-item'
+});
+
+
+
+Vue.component('inform-dialog', {
+    props: [
+      'loader',
+      'alert',
+      'hint',
+    ],
+    methods: {
+        close() {
+            this.$emit('close');
+        },
+    },
+    template: '#inform-dialog'
+});
+
+
+Vue.component('loading-cover', {
+    props: ['show', 'text'],
+    computed: {
+        loader() {
+            return this.text ? this.text : 'Отправляю';
+        }
+    },
+    template: '#loading-cover',
+});
+
+
+
+
+Vue.component('loading-wall', {
+    props: ['show', 'text'],
+    data() {
+        return {
+            hope: false
+        }
+    },
+    computed: {
+        loader() {
+            return this.text ? this.text : 'Загружаем';
+        }
+    },
+    mounted() {
+        this.hope = false;
+        setTimeout(() => this.hope = true, 3000);
+    },
+    template: '#loading-wall',
+});
+
+
+
+
+var MenuUser = new Vue({
+    data: {
+        message: 8,
+        contact: 8
+    },
+    computed: {
+        newMessage() {
+            return (this.message == false) || this.message < 8;
+        },
+        newContact() {
+            return (this.contact == false) || this.contact < 8;
+        },
+    },
+    methods: {
+        initial() {
+            store.commit('showInitial', 1);
+            axios.get('/mailer/check_contact').then(() => {
+                this.contact = 8;
+            });
+        },
+        intimate() {
+            store.commit('showIntimate', 1);
+            axios.get('/mailer/check_message').then(() => {
+                this.message = 8;
+            });
+        },
+        loadStatus() {
+            axios.get('/mailer/status').then((response) => {
+                this.message = response.data.message;
+                this.contact = response.data.contact;
+            });
+        },
+    },
+    mounted() {
+        let delay = 15;
+        this.loadStatus();
+        setInterval(() => {
+            this.loadStatus();
+        }, delay * 1000);
+    },
+    store,
+    el: '#menu-user',
+});
+var fdate = null;
+var prev  = null;
+
+Vue.component('message-item', {
+    props: [
+      'item',
+      'index',
+      'count',
+      'alert',
+      'uid',
+      'first_date'
+    ],
+    template: '#messages-item',
+    data() {
+        return {
+            showOption:  false,
+            fixOption:   false,
+            alertOption: false,
+            showDialog: false,
+        }
+    },
+    methods: {
+        fix() {
+            this.showOption = true;
+            this.alertOption = false;
+            if (!this.alert) {
+                this.fixOption = this.alert ? false : !this.fixOption;
+            } else {
+                this.$emit('admit');
+            }
+        },
+        bun() {
+            let config = {
+                headers: {'Authorization': 'Bearer ' + this.$store.state.apiToken}
+            };
+            let data = {
+                id:  this.item.id,
+                tid: this.item.from
+            };
+            axios.post('/mess/bun/', data, config).then((response) => {
+                this.$emit('remove', this.index);
+            }).catch((error) => {
+                console.log('error');
+            });
+        },
+        cancel() {
+            this.showDialog = false;
+            console.log('cancel');
+        },
+        remove() {
+            let config = {
+                headers: {'Authorization': 'Bearer ' + this.$store.state.apiToken}
+            };
+            let data = {
+                id:  this.item.id
+            };
+            axios.post('/mess/delete/', data, config).then((response) => {
+                this.$emit('remove', this.index);
+            }).catch((error) => {
+                console.log(error);
+            });
+            console.log('remove');
+        },
+        play() {
+            let config = {
+                headers: {'Authorization': 'Bearer ' + this.$store.state.apiToken},
+                params: {tid}
+            };
+            let server = this.$store.state.photoServer;
+            let url = `http://${server}/api/v1/users/${uid}/sends/${this.alias}.jpg`;
+            axios.get(url, config).then((response) => {
+                this.photo(response.data.photo)
+            }).catch((error) => {
+                console.log(error);
+            });
+        },
+        photo(photo) {
+            console.log('photo', photo);
+            let links = photo._links;
+            if (links.origin.href) {
+                let data = {
+                    thumb: links.thumb.href,
+                    photo: links.origin.href,
+                    alias:  photo.alias,
+                    height: photo.height,
+                    width:  photo.width,
+                }
+                this.$store.commit('viewPhoto', data);
+                this.$store.commit('optionDialog', 'photo');
+            }
+        },
+        pathName(name) {
+            if (!name || name.length < 10) {
+                return null;
+            }
+            let path = [
+                name.substr(0, 2),
+                name.substr(2, 2),
+                name.substr(4, 3),
+            ];
+            return path.join('/')+'/'+name;
+        },
+    },
+    mounted() {
+        if (!this.sent && !this.index && this.count < 5) {
+            this.fix();
+            this.alertOption = true;
+        }
+        if (!this.sent && !this.read) {
+            this.$emit('set-new');
+        }
+    },
+    beforeUpdate() {
+        //this.attention();
+    },
+    computed: {
+        attention() {
+            return (this.alert || this.alertOption) ? 1 : 0;
+        },
+        option() {
+            if (!this.index && this.alert) {
+                return true;
+            }
+            return (this.showOption || this.fixOption) ? 1 : 0;
+        },
+        sent() {
+            return (!uid || uid == this.item.from) ? 1 : 0;
+        },
+        read() {
+            return (this.item.read == 0) ? false : true;
+        },
+        time() {
+            return moment(this.item.date).format('HH:mm');
+        },
+        date() {
+            let mdate = moment(this.item.date);
+            let date = mdate.date();
+            let first_date = fdate;
+            fdate = date;
+            date = (fdate == first_date) ? '' : fdate;
+            let today = moment().date();
+            let yestd = moment().subtract(1, 'day').date();
+
+            date = (date === today) ? 'Сегодня' : date;
+            date = (date === yestd) ? 'Вчера' : date;
+
+            mdate = mdate.date() + ' ' + mdate.format('MMMM').substring(0,3);
+            date = _.isString(date) ? date : mdate;
+            return date;
+        },
+        alias() {
+            let result = false;
+            let text = this.item.mess;
+            let old = /.+images.intim?.(.{32})\.(jpg)/i;
+            let now = /\[\[IMG:(.{32})\]\]/i;
+            result = old.test(text) ? old.exec(text) : false;
+            result = (!result && now.test(text)) ? now.exec(text) : result;
+            if (result) {
+                result = result[1];
+            }
+            return result;
+        },
+        image() {
+            let server = this.$store.state.photoServer;
+            let image = this.pathName(this.alias);
+            return image ? `http://${server}/res/photo/preview/${image}.png` : false;
+        },
+        previous() {
+            let p = prev;
+            prev = this.item.from;
+            return (!p || p == prev) ? true : false;
+        }
+    }
+});
+
+Vue.component('modal-dialog', {
+    props: ['show', 'data'],
+    methods: {
+        close() {
+            this.$emit('close');
+        },
+    },
+    mounted() {
+        // Close the modal when the escape key is pressed.
+        var self = this;
+        document.addEventListener('keydown', function() {
+            if (self.show && event.keyCode === 27) {
+                self.close();
+            }
+        });
+    },
+    template: '#modal-dialog',
+});
+
+
+///
+// Модальное окно настроек OptionDialog - контейнер
+///
+Vue.component('option-dialog', {
+    template: '#option-static__dialog-window',
+    methods: {
+        close() {
+            this.$emit('close');
+        }
+    },
+    created: function() {
+        // Close the modal when the `escape` key is pressed.
+        var self = this;
+        document.addEventListener('keydown', function() {
+            if (self.show && event.keyCode === 27) {
+                self.close();
+            }
+        });
+    },
+    updated() {
+        if (this.show) {
+            $("html, body").animate({ scrollTop: 0 }, "slow");
+        }
+    }
+});
+
+
+Vue.component('photo-view', {
+    props: [
+        'show',
+        'photo',
+        'thumb',
+        'width',
+        'height',
+        'bypass'
+    ],
+    methods: {
+        approve() {
+            this.$store.commit('approveViewPhoto');
+        },
+        close() {
+            this.$emit('close');
+        }
+    },
+    computed: {
+        accept() {
+            return (this.$store.state.accepts.photo || this.bypass) ? true : false;
+        }
+    },
+    template: '#photo-view'
+});
+
+Vue.directive('resized', {
+  bind: function (el) {
+    el.style.height = (el.scrollHeight) + 'px';
+    $(el).on('input', function () {
+      this.style.height = 'auto';
+      this.style.height = (this.scrollHeight) + 'px';
+    });
+  }
+})
+
+Vue.component('quick-reply', {
+    props: ['show', 'item'],
+    data() {
+        return {
+            text: '',
+            captcha: false,
+            process: false,
+            loading: false,
+            confirm: false,
+            ignore: false,
+            code: null
+        }
+    },
+    computed: {
+        human() {
+            return this.$store.state.search.human;
+        },
+        tags() {
+            return ('tags' in this.human) ? this.human.tags : [];
+        },
+        hold() {
+            return this.ignore ? 0 : this.human.hold;
+        },
+        message() {
+            return this.item.message ? this.item.message.text : '';
+        }
+    },
+    mounted() {
+        this.reload();
+    },
+    updated() {
+        if (this.show) {
+        }
+    },
+    methods: {
+        reload() {
+            if (!this.show) {
+                return false;
+            }
+            this.loading = true;
+            setTimeout(() => this.loading = false, 4 * 1000);
+            store.dispatch('human', this.item.human_id).then((response) => {
+                this.loaded();
+            }).catch((error) => {
+                console.log(error);
+                this.loading = false;
+            });
+        },
+        loaded() {
+            this.loading = false;
+            //console.log('hold:', this.human.hold);
+            //console.log('tags:', this.human);
+            //this.process = false;
+        },
+        close() {
+            this.$emit('close');
+        },
+        bun() {
+            this.$emit('bun');
+        },
+        remove() {
+            // store.dispatch('initial/DELETE', {uid: '1001', cont_id: contact}).then((response) => {
+            //     this.loaded();
+            // });
+            //
+            //  :href="'/' + item.human_id"
+            //
+            //
+            console.log('conf:',{uid: '1001', cont_id: this.item.id} )
+            this.$emit('remove');
+        },
+        cancel() {
+            this.captcha = false;
+            this.confirm = false;
+            this.ignore = true;
+            console.log('cancel');
+        },
+        inProcess(sec) {
+            this.process = true;
+            setTimeout(() => this.process = false, sec*1000);
+        },
+        send() {
+            let data = {
+                id: this.item.human_id,
+                mess: this.text,
+                captcha_code: this.code
+            };
+            api.messages.send(data).then((response) => {
+                this.onMessageSend(response.data);
+            }).catch((error) => {
+                this.onError(error);
+            });
+            //  this.sended();
+            this.inProcess(5);
+        },
+        setCode(code) {
+            this.code = code;
+            this.send();
+        },
+        onMessageSend(response) {
+            if (!response.saved && response.error) {
+                if (response.error == 'need_captcha') {
+                    this.captcha = true;
+                }
+                this.onError();
+            } else {
+                this.sended();
+            }
+            this.process = false;
+        },
+        sended() {
+            this.$emit('sended');
+        },
+        anketa() {
+            window.location = '/' + this.item.human_id;
+        },
+        onError() {
+            this.process = false;
+        }
+    },
+    template: '#quick-reply',
+});
+
+
+
+var RemoveConfirm = Vue.component('remove-confirm', {
+    props: ['show', 'item'],
+    data() {
+        return {
+            content: {
+                doit: {
+                    caption: 'Наказывайте как следует',
+                    text: `За резкие слова, за оскорбления или хамство,
+                    за фотографии не в тему или бессмысленные сообщения, наказывайте всех, кого
+                    считаете нужным. Наказание действует сразу.`,
+                    action: 'Удалить и наказать'
+                },
+                must: {
+                    caption: 'Может стоит наказать?',
+                    text: `Нажмите "Дизлайк" у сообщения или контакта, которое вызвало негативные эмоции.
+                    Наказание действует сразу же. Мы никогда не узнаем о нарушениях, если удалить без наказания.`,
+                    action: 'Удалить и забыть'
+                },
+                some: {
+                    caption: 'Удалить навсегда',
+                    text: `Ваше сообщение будет удалено отовсюду, без возможности восстановить. Сообщение
+                    пропадет как из вашей истории переписки, так и из переписки вашего собеседника.`,
+                    action: 'Удалить навсегда'
+                }
+            }
+        }
+    },
+    computed: {
+        variant() {
+            return this.show ? this.show : 'some';
+        },
+        caption() {
+            return this.content[this.variant].caption;
+        },
+        text() {
+            return this.content[this.variant].text;
+        },
+        action() {
+            return this.content[this.variant].action;
+        },
+    },
+    methods: {
+        close() {
+            this.$emit('close');
+        },
+        bun() {
+            console.log('bun0');
+            this.$emit('bun');
+            this.close();
+        },
+        remove() {
+            this.$emit('remove');
+            this.close();
+        },
+    },
+    template: '#remove-confirm',
+});
+
+
+
+Vue.component('remove-contact', {
+    extends: RemoveConfirm,
+    data() {
+        return {
+            content: {
+                some: {
+                    caption: 'Удалить навсегда',
+                    text: `Контакт будет удален без возможности восстановить. Дальнейшее общение с собеседником станет невозможно.
+                    Обменивайтесь реальными контактами с теми кто вам интересен всегда.`,
+                    action: 'Удалить навсегда'
+                }
+            }
+        }
+    },
+    computed: {
+
+    },
+    methods: {
+        remove() {
+            this.$emit('remove');
+            this.close();
+        },
+    },
+    template: '#remove-confirm',
+});
+
+Vue.component('upload-dialog', {
+    template: '#upload-dialog',
+    data() {
+        return {
+            photos: [],
+            server: null,
+        }
+        // file: {
+        //     data: null,
+        //     name: '',
+        //     size: 0
+        // }
+    },
+    created: function () {
+        this.server = this.$store.state.photoServer;
+    },
+    methods: {
+        loadPhoto() {
+            let config = {
+                headers: {'Authorization': 'Bearer ' + this.$store.state.apiToken},
+                params: {hash}
+            };
+            axios.get(`http://${this.server}/api/v1/users/${uid}/photos`, config).then((response) => {
+                let result = response.data.photos;
+                if (result && result.length) {
+                    this.photos = response.data.photos;
+                }
+                //console.log(this.photos);
+            }).catch((error) => {
+                console.log(error);
+            });
+        },
+        upload(e) {
+            $('#fileupload').click();
+        },
+        show: function (index) {
+            this.preview(this.photos[index]);
+        },
+        preview(photo) {
+            let links = photo._links;
+            if (links.origin.href) {
+                let data = {
+                    photo: links.origin.href,
+                    thumb: links.thumb.href,
+                    alias:  photo.alias,
+                    height: photo.height,
+                    width:  photo.width,
+                }
+                this.$store.commit('sendPhoto', data);
+                //console.log('sendPhoto');
+                //console.log(data);
+            }
+            this.close();
+        },
+        close() {
+            this.$emit('close');
+        }
+    },
+    mounted() {
+        console.log('fileupload');
+        var self = this;
+        $('#fileupload').fileupload({
+            dataType: 'json',
+            add(e, data) {
+                data.url = `http://${self.server}/api/v1/users/${uid}/photos?jwt=` + self.$store.state.apiToken;
+                data.submit();
+            },
+            done(e, data) {
+                self.preview(data.result.photo);
+            }
+        });
+        this.loadPhoto();
+    }
+})
+
+
+
+
+Vue.component('photo-dialog', {
+    methods: {
+        close() {
+            this.$emit('close');
+            store.commit('viewPhoto', { photo: null });
+        }
+    },
+    computed: Vuex.mapState({
+        config: state => state.photoView
+    }),
+    template: '#photo-dialog'
+})
+
+
+$(document).ready(function()
+{
+
+    userinfo.init();
+    slider.init();
+    storage.init();
+    giper_chat.init();
+    notepad.init();
+
+    mailsett.init();
+    report.init();
+    navigate.init();
+
+    name_suggest.init();
+    city_suggest.init();
+
+    option_static.init();
+    option_sex.init();
+    option_email.init();
+    profile_alert.init();
+    profile_option.init();
+
+    user_tag.init();
+    desire_clip.init();
+
+    result_list.init();
+    visited.init();
+
+});
+
+
+
+const mutations = {
+    load(state, data) {
+        if (data && data instanceof Array && data.length > 0) {
+            state.list = data;
+        }
+    },
+    add(state, data) {
+        if (data && data instanceof Array && data.length > 0) {
+            state.list = _.union(state.list, data);
+        }
+    }
+}
+// // //
+
+const initial = _.extend({
+    namespaced: true,
+    state: {
+        list: []
+    },
+    actions: {
+        LOAD({ state, commit, rootState }) {
+            commit('load', ls.get('initial-contacts'));
+            return api.contacts.initial.cget({
+                uid: rootState.user.uid,
+                offset: 0
+            }).then((response) => {
+                commit('load', response.data);
+                ls.set('initial-contacts', state.list);
+            });
+        },
+        NEXT({ state, commit, rootState }, offset) {
+            return api.contacts.initial.cget({
+                uid: rootState.user.uid,
+                offset
+            }).then((response) => {
+                commit('add', response.data);
+            });
+        },
+        DELETE({ state, commit, rootState }, index) {
+            let result = api.contacts.initial.delete({
+                uid: rootState.user.uid,
+                resource_id: state.list[index].id
+            });
+            commit('delete', index);
+            return result;
+        },
+        READ({ state, commit, rootState }, index) {
+            let result = api.contacts.initial.put(null, {
+                uid: rootState.user.uid,
+                resource_id: state.list[index].id
+            });
+            commit('read', index);
+            return result;
+        },
+    },
+    mutations: _.extend({
+        delete(state, index) {
+            state.list.splice(index, 1);
+            ls.set('initial-contacts', state.list);
+        },
+        read(state, index) {
+            state.list[index].message.unread = 0;
+            ls.set('initial-contacts', state.list);
+        }
+    }, mutations)
+});
+
+const intimate = _.extend({
+    namespaced: true,
+    state: {
+        list: []
+    },
+    actions: {
+        LOAD({ state, commit, rootState }) {
+            commit('load', ls.get('intimate-contacts'));
+            return api.contacts.intimate.cget({
+                uid: rootState.user.uid,
+                offset: 0
+            }).then((response) => {
+                commit('load', response.data);
+                ls.set('intimate-contacts', state.list);
+            });
+        },
+        NEXT({ state, commit, rootState }, offset) {
+            return api.contacts.intimate.cget({
+                uid: rootState.user.uid,
+                offset
+            }).then((response) => {
+                commit('add', response.data);
+            });
+        },
+        DELETE({ state, commit, rootState }, index) {
+            let result = api.contacts.intimate.delete({
+                uid: rootState.user.uid,
+                resource_id: state.list[index].id
+            });
+            commit('delete', index);
+            return result;
+        },
+        READ({ state, commit, rootState }, index) {
+            let result = api.contacts.initial.put(null, {
+                uid: rootState.user.uid,
+                resource_id: state.list[index].id
+            });
+            commit('read', index);
+            return result;
+        },
+    },
+    mutations: _.extend({
+        delete(state, index) {
+            state.list.splice(index, 1);
+            ls.set('intimate-contacts', state.list);
+        },
+        read(state, index) {
+            state.list[index].message.unread = 0;
+            ls.set('intimate-contacts', state.list);
+        }
+    }, mutations)
+});
+
+const sends = _.extend({
+    namespaced: true,
+    state: {
+        list: []
+    },
+    actions: {
+        LOAD({ state, commit, rootState }) {
+            commit('load', ls.get('sends-contacts'));
+            return api.contacts.sends.cget({
+                uid: rootState.user.uid,
+                offset: 0
+            }).then((response) => {
+                commit('load', response.data);
+                ls.set('sends-contacts', state.list);
+            });
+        },
+        NEXT({ state, commit, rootState }, offset) {
+            return api.contacts.sends.cget({
+                uid: rootState.user.uid,
+                offset
+            }).then((response) => {
+                commit('add', response.data);
+            });
+        },
+        DELETE({ state, commit, rootState }, index) {
+            let result = api.contacts.sends.delete({
+                uid: rootState.user.uid,
+                resource_id: state.list[index].id
+            });
+            commit('delete', index);
+            return result;
+        },
+    },
+    mutations: _.extend({
+        delete(state, index) {
+            state.list.splice(index, 1);
+            ls.set('sends-contacts', state.list);
+        }
+    }, mutations)
+});
+
+
+const contacts = {
+    modules: {
+        initial,
+        intimate,
+        sends
+    }
+}
+
+const modals = {
+    state: {
+        initial: false,
+        intimate: false,
+        sends: false,
+    },
+    mutations: {
+        showInitial(state, data) {
+            store.commit('closeAll');
+            state.initial = data == true;
+        },
+        showIntimate(state, data) {
+            store.commit('closeAll');
+            state.intimate = data == true;
+        },
+        showSends(state, data) {
+            store.commit('closeAll');
+            state.sends = data == true;
+        },
+        closeAll(state) {
+            state.initial  = false;
+            state.intimate = false;
+            state.sends    = false;
+        }
+    }
+}
+
+const search = {
+    state: {
+        list: [],
+        human: {}
+    },
+    actions: {
+        human({ commit }, tid) {
+            //commit('load', ls.get('initial-contacts'));
+            commit('resetHuman', tid);
+            let promise = api.search.get({tid});
+            promise.then((response) => {
+                commit('setHuman', response.data);
+                //ls.set('initial-contacts', response.data);
+            });
+            return promise;
+        },
+    },
+    mutations: {
+        resetHuman(state, tid) {
+            if (state.human && state.human.id != tid) {
+                state.human = {};
+            }
+        },
+        setHuman(state, data) {
+            //console.log(data);
+            state.human = data;
+        },
+    }
+};
+
+const user = {
+    state: {
+        uid: 0,
+        sex: 0,
+    },
+    actions: {
+        LOAD_USER({ commit }) {
+            if (uid) {
+                commit('loadUser', {uid});
+            }
+            if (typeof user_sex != 'undefined') {
+                commit('loadUser', {sex: user_sex});
+            }
+        },
+        SAVE_SEX({ commit }, sex) {
+            let promise = api.user.saveSex(sex);
+            promise.then((response) => {
+                if (response.data.sex) {
+                    store.commit('loadUser', { sex: response.data.sex });
+                }
+            });
+            return promise;
+        },
+    },
+    mutations: {
+        loadUser(state, data) {
+            _.extend(state, data);
+        },
+    }
+}
+
+
+moment.locale('ru');
+
+var ls = lscache;
+
+const store = new Vuex.Store({
+    modules: {
+        user,
+        search,
+        contacts,
+        modals
+    },
+    state: {
+        apiToken: '',
+        //photoServer: '127.0.0.1:8888',
+        photoServer: '@@API-PHOTO',
+        count: 0,
+        optionStatic: {
+            view: null
+        },
+        photoView: {
+            thumb:  null,
+            photo:  null,
+            height: null,
+        },
+        uploadView: {
+            show: false
+        },
+        contactView: {
+            show: false
+        },
+        formMess: {
+            sendTo: null,
+            sendPhoto: {
+                thumb:  null,
+                photo:  null,
+                height: null,
+                width:  null,
+            },
+            intimate: true,
+        },
+        accepts: {
+            photo: false
+        },
+    },
+    actions: {
+        LOAD_API_TOKEN({ commit }) {
+            commit('setApiToken', { apiToken: get_cookie('jwt') });
+        },
+        LOAD_ACCEPTS({ commit }) {
+            let accepts = ls.get('accepts');
+            if (accepts && accepts.photo) {
+                commit('approveViewPhoto');
+            }
+            //console.log(ls.get('accepts'));
+        },
+    },
+    mutations: {
+        setApiToken (state, data) {
+            if (data) {
+                _.extend(state, data);
+            }
+            //console.log(state)
+        },
+        viewPhoto(state, data) {
+            _.extend(state.photoView, data);
+        },
+        viewUpload(state, data) {
+            state.uploadView.show = (data === true);
+        },
+        sendPhoto(state, data) {
+            console.log('sendPhoto');
+            _.extend(state.formMess.sendPhoto, data);
+        },
+        approveViewPhoto(state) {
+            state.accepts.photo = true;
+            ls.set('accepts', _.extend(state.accepts, {photo: true}));
+        },
+        intimated(state, data) {
+            state.formMess.intimate = (data === true);
+        },
+        optionDialog(state, data) {
+            state.optionStatic.view = data ? data : null;
+        },
+    },
+    getters: {
+        accept() {
+
+        }
+    }
+});
+
+store.dispatch('LOAD_API_TOKEN');
+store.dispatch('LOAD_ACCEPTS');
+store.dispatch('LOAD_USER');
+
+
+class Api {
+    constructor(host, key, version, routing) {
+        // Delay requests sec
+        this.setDelay('@@NET-DELAY');
+        // [!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]
+        this.setRoot(host, version);
+        this.setConfig(this.root, key);
+        this.setRouting(routing);
+    }
+
+    setDelay(sec) {
+        this.wait = sec * 1000; //
+    }
+    setRouting(routing) {
+        this.routing = {
+            route: '',
+            load: '',
+            get: '{resource_id}',
+            cget: '',
+            send: '',
+            post: '',
+            save: '',
+            remove: '',
+            delete: '{resource_id}',
+            put: '{resource_id}',
+            patch: '{resource_id}',
+            option: '{resource_id}'
+        };
+        _.extend(this.routing, routing);
+    }
+    setRoot(host, version) {
+        let ver = version ? 'v' + version + '/' : '';
+        this.root = host + ver;
+    }
+
+    setConfig(url, key) {
+        this.config = {
+            baseURL: url,
+            headers: {
+                'Authorization': 'Bearer ' + key
+            }
+        };
+    }
+
+    setBaseURL(url) {
+        _.extend(this.config, {
+            baseURL: url
+        });
+    }
+
+    setAuthKey(key) {
+        _.extend(this.config.headers, {
+            'Authorization': 'Bearer ' + key
+        });
+        this.key = key;
+    }
+
+    setParams(params, url) {
+        let result = url.replace(/\{(.*?)\}/ig, (match, token) => {
+            let slug = params[token];
+            delete params[token];
+            return slug;
+        });
+        //console.log('url: ', [this.root, result, params]);
+        this.config.params = params ? params : {};
+        return result;
+    }
+    setUrl(method, params, url) {
+        this.refresh();
+        let route = this.routing.route;
+        if (url) {
+            result = url;
+        } else {
+            let action = this.routing[method];
+            result = route ? route : '';
+            if (result && action) {
+                result = result + '/' + action;
+            } else if(action) {
+                result = action;
+            }
+        }
+        result = this.setParams(params, result);
+        return this.root + result;
+    }
+
+    get(params, url) {
+        return this.delay(axios.get(this.setUrl('get', params, url), this.config), 0);
+    }
+    load(params, url) {
+        return this.delay(axios.get(this.setUrl('load', params, url), this.config), 0);
+    }
+    cget(params, url) {
+        return this.delay(axios.get(this.setUrl('cget', params, url), this.config), 0);
+    }
+    send(params, url) {
+        return this.delay(axios.get(this.setUrl('send', params, url), this.config), 0);
+    }
+    post(data, params, url) {
+        return this.delay(axios.post(this.setUrl('post', params, url), data, this.config), 0);
+    }
+    save(data, params, url) {
+        return this.delay(axios.post(this.setUrl('save', params, url), data, this.config), 0);
+    }
+    remove(data, params, url) {
+        return this.delay(axios.post(this.setUrl('remove', params, url), data, this.config), 0);
+    }
+    delete(params, url) {
+        return this.delay(axios.delete(this.setUrl('delete', params, url), this.config), 0);
+    }
+    put(data, params, url) {
+        return this.delay(axios.put(this.setUrl('put', params, url), data, this.config), 0);
+    }
+    patch(data, params, url) {
+        return this.delay(axios.patch(this.setUrl('patch', params, url), data, this.config), 0);
+    }
+    request(method, action, data, params, url) {
+        // this.config.method = method;
+        // this.config.url = this.setUrl(action, url);
+        // this.config.data = data;
+        // this.config.params = params;
+        // return this.delay(axios.request(this.config), 0);
+        if (data) {
+            return this.delay(axios[method](this.setUrl(action, params, url), data, this.config), 0);
+        } else {
+            return this.delay(axios[method](this.setUrl(action, params, url), this.config), 0);
+        }
+    }
+    option() {}
+
+    delay(result, wait) {
+        let msec = wait ? wait : this.wait;
+        if (msec < this.wait) {
+            msec = this.wait;
+        }
+        if(msec == 0 || typeof Promise == "undefined") {
+            return result;
+        }
+        return new Promise((resolve, reject) => {
+            _.delay(resolve, msec, result);
+        });
+    }
+
+    refresh() {
+        store.dispatch('LOAD_API_TOKEN');
+    }
+}
+
+class ApiBun extends Api {
+    constructor() {
+        let key = '1234';
+        let host = '/';
+        super(host, key);
+    }
+    send(data) {
+
+        return axios.post('mess/bun/', data, this.config);
+        console.log('ApiBun Bun-Bun');
+    }
+}
+
+
+class ApiMessages extends Api {
+    constructor() {
+        let key = '1234';
+        let host = '/';
+        super(host, key);
+    }
+    send(data) {
+        return this.post(data, null, 'mailer/post/');
+    }
+}
+
+class ApiUser extends Api {
+    constructor() {
+        let key = '1234';
+        let host = '/';
+        let routing = {
+            post: 'option/sex',
+        };
+        super(host, key, null, routing);
+    }
+    saveSex(sex) {
+        return this.post({sex});
+    }
+}
+
+class ApiSearch extends Api {
+    constructor() {
+        let key = '1234';
+        let host = 'http://@@API-SEARCH/';
+        let routing = {
+            route: 'users',
+            get: '{tid}',
+        };
+        super(host, key, null, routing);
+    }
+}
+
+
+
+
+class ApiContact extends Api {
+    constructor(routing) {
+        let key = store.state.apiToken;
+        let host = 'http://@@API-CONTACT/';
+        super(host, key, null, routing);
+    }
+
+    refresh() {
+        store.dispatch('LOAD_API_TOKEN');
+        this.setAuthKey(store.state.apiToken);
+    }
+}
+
+class ApiInitial extends ApiContact {
+    constructor() {
+        let routing = {
+            route:  'users/{uid}/initials',
+        };
+        super(routing);
+    }
+}
+
+class ApiIntimate extends ApiContact {
+    constructor() {
+        let routing = {
+            route: 'users/{uid}/intimates',
+        };
+        super(routing);
+    }
+}
+
+class ApiSends extends ApiContact {
+    constructor() {
+        let routing = {
+            route: 'users/{uid}/sends',
+        };
+        super(routing);
+    }
+}
+
+
+
+var api = {
+    user: new ApiUser(),
+    search: new ApiSearch(),
+    bun: new ApiBun(),
+    contacts: {
+        initial: new ApiInitial(),
+        intimate: new ApiIntimate(),
+        sends: new ApiSends(),
+    },
+    messages: new ApiMessages(),
+};
+
+
+
+//ApiMessages.send();
+
+>>>>>>> master
 
 // -- Получить новый хэш ---
 var hash; 
@@ -230,6 +1923,31 @@ var auto_gen = {
 
 
 
+<<<<<<< HEAD
+=======
+var ContactLists = new Vue({
+    computed: {
+        initial() {
+            return this.$store.state.modals.initial;
+        },
+        intimate() {
+            return this.$store.state.modals.intimate;
+        },
+        sends() {
+            return this.$store.state.modals.sends;
+        }
+    },
+    methods: {
+        close() {
+            this.$store.commit('closeAll');
+        },
+    },
+    store,
+    el: '#contact-lists',
+});
+
+
+>>>>>>> master
 var cookie_storage = {
          
     enabled: 0, 
@@ -250,17 +1968,29 @@ var cookie_storage = {
      
     del_cookie: function (name) 
     {              
+<<<<<<< HEAD
         expires = new Date(); // получаем текущую дату 
+=======
+        let expires = new Date(); // получаем текущую дату 
+>>>>>>> master
         expires.setTime( expires.getTime() - 1000 ); 
          document.cookie = name + "=; expires=" + expires.toGMTString() +  "; path=/";  
     } ,    
     
+<<<<<<< HEAD
     set_cookie: function (name,val,time) 
     {      
         expires = new Date(); 
         expires.setTime( expires.getTime() + (1000 * 60 * time ) ); // минут
          document.cookie = name + "="+ val +"; expires=" + expires.toGMTString() +  "; path=/";
 
+=======
+    set_cookie: function (name, val, time) 
+    {      
+        let expires = new Date(); 
+        expires.setTime( expires.getTime() + (1000 * 60 * time ) ); // минут
+        document.cookie = name + "="+ val +"; expires=" + expires.toGMTString() +  "; path=/";
+>>>>>>> master
     } ,  
     
     get_data: function (name) 
@@ -297,6 +2027,7 @@ function get_cookie ( cookie_name )
     return ( unescape ( results[2] ) );
   else
     return null;
+<<<<<<< HEAD
 }   
 
 function del_cookie ( name ) {    
@@ -310,6 +2041,21 @@ function set_cookie ( name, val, time ) {
    document.cookie = name + "="+ val +"; expires=" + expires.toGMTString() +  "; path=/";
 } 
  
+=======
+}
+
+function del_cookie ( name ) {
+  let expires = new Date(); // получаем текущую дату
+  expires.setTime( expires.getTime() - 1000 );
+   document.cookie = name + "=; expires=" + expires.toGMTString() +  "; path=/";
+}
+function set_cookie ( name, val, time ) {
+  let expires = new Date();
+  expires.setTime( expires.getTime() + (1000 * 60 * time ) ); // минут
+   document.cookie = name + "="+ val +"; expires=" + expires.toGMTString() +  "; path=/";
+}
+
+>>>>>>> master
 
 
 var desire_clip = {
@@ -326,7 +2072,11 @@ var desire_clip = {
         },
         parse: function (data) {
             data = json.parse(data);
+<<<<<<< HEAD
             if (data.id != undefined) {
+=======
+            if (data) {
+>>>>>>> master
                 if (data.id && user_tag.sync != data.id) {
                     user_tag.sync = data.id;
                     user_tag.action.store();
@@ -410,6 +2160,7 @@ var device = {
 }
   
 
+<<<<<<< HEAD
               
 var active_textarea ;             ////////////////////////////////////////////////////////
 var giper_chat = {    
@@ -462,6 +2213,60 @@ var giper_chat = {
     } , 
   
     on_timer: function () 
+=======
+
+var active_textarea ;             ////////////////////////////////////////////////////////
+var giper_chat = {
+
+    open_mess:  0,
+    idle_round: 0,
+
+    count_unread: 0,
+    cascade: 0,
+
+    round_time: 0,
+    round_open: 1,
+
+    timer_id:   null,
+    mess_block: null,
+
+    mess_stock: [],
+
+    prev_title: null,
+
+    init: function ()
+    {
+        if (device.width() > 1200) {
+            giper_chat.mess_stock = storage.array.load('mess_stock');
+            giper_chat.remind();
+        }
+            $('<div id="block_timer" class="timer">').appendTo('body');
+        giper_chat.timer_set();
+        giper_chat.new_round();
+
+        $('#giper_reply .post').on('click', giper_chat.reply_show);
+        // Установка текста по умолчанию
+        if (storage.load('reply_all'))
+            $('#giper_reply textarea').val(storage.load('reply_all'));
+        giper_chat.prev_title = document.title;
+    } ,
+
+    set_unread: function ()
+    {
+        if (giper_chat.count_unread > 0)
+        {
+            $('#menu_message_unread b').text(giper_chat.count_unread);
+            $('#menu_message_unread').show();
+            $('#menu_message').attr('title','Новых сообщений ' + giper_chat.count_unread);
+        } else {
+            $('#menu_message_unread').text('');
+            $('#menu_message_unread').hide();
+            $('#menu_message').attr('title','Новых сообщений нет');
+        }
+    } ,
+
+    on_timer: function ()
+>>>>>>> master
     {
         giper_chat.title_blink ();
 
@@ -469,6 +2274,7 @@ var giper_chat = {
             giper_chat.round_time--
 
         //if (giper_chat.cascade != 0)console.log('on_timer cascade: ' +giper_chat.cascade)
+<<<<<<< HEAD
   
         giper_chat.trace();
         
@@ -494,10 +2300,38 @@ var giper_chat = {
          
         $.get('/ajax/new_mess.php',{ hash: hash }, giper_chat.on_load) 
           .always( function() { giper_chat.round_open = 1; } );    
+=======
+
+        giper_chat.trace();
+
+        if (giper_chat.round_time < 1)
+            giper_chat.new_round();
+    } ,
+
+    new_round: function ()
+    {
+        giper_chat.timer_stop();
+        giper_chat.ajax_new();
+    } ,
+
+    trace: function ()
+    {
+        $('#block_timer').text(giper_chat.round_time);
+    } ,
+
+    ajax_new: function ()
+    {
+        simple_hash();
+        giper_chat.round_open = 0;
+
+        $.get('/ajax/new_mess.php',{ hash: hash }, giper_chat.on_load)
+          .always( function() { giper_chat.round_open = 1; } );
+>>>>>>> master
     } ,
 
     on_load: function (data)
     {
+<<<<<<< HEAD
         if (data) {    
             var mess = json.parse(data); 
             giper_chat.route_xz(mess); 
@@ -688,10 +2522,201 @@ var giper_chat = {
              $('.sound',new_block).remove(); 
              $('.title',new_block).text( val.reply );  
              $('.bunn',new_block).remove();  
+=======
+        if (data) {
+            var mess = json.parse(data);
+            giper_chat.route_xz(mess);
+            giper_chat.count_unread = mess.count_unread          ////////////////////////////////////
+            giper_chat.set_unread();                             ////////////////////////////////////
+        }
+        setTimeout( function (){ giper_chat.timer_set(); },5000 );
+    } ,
+
+    route_xz: function (mess)
+    {
+        if (device.width() > 1200 && mess.type && giper_chat.open_mess < 9) {                               /* */
+            if (mess.type == 'air_user' || mess.type == 'new_client') {
+                visited.action.load_cache();
+                if (visited.list.length) {
+                    if (visited.list.indexOf(mess.user+'') >= 0) {
+                        giper_chat.reply_enable();
+                        giper_chat.idle_round = 0;
+                        setTimeout( function (){ giper_chat.timer_set(); },5000 );
+                        return 0;
+                    }
+                }
+            }
+            giper_chat.mess_stock.push(mess);
+            giper_chat.stock.store();
+            giper_chat.new_message(mess);
+        }
+    } ,
+
+    reply_enable: function ()
+    {
+        if (giper_chat.cascade == 0)
+        {
+            if (giper_chat.open_mess > 2)
+                $('#giper_reply').show('blind');
+            if (giper_chat.open_mess > 5)
+                $('#giper_reply textarea').show('blind');
+        }
+
+        if (giper_chat.open_mess < 3)
+            $('#giper_reply').hide('blind');
+        if (giper_chat.open_mess == 0)
+            giper_chat.cascade = 0;
+
+                // console.log('re cascade: ' +giper_chat.cascade)
+
+    } ,
+
+    reply_show: function ()
+    {
+        var textarea = $('#giper_reply textarea');
+        if (!$(textarea).is(":visible"))
+        {
+            active_textarea = textarea;
+            textarea.show('blind');
+            textarea.focus();
+            notepad.show();                                          ////////////////////////////////////
+        }
+        else
+            giper_chat.reply_all();
+
+    } ,
+
+    reply_all: function ()
+    {
+        var textarea = $('#giper_reply textarea');
+        var text = textarea.val();
+
+        if (text)
+        {
+            var block_mess = $('#giper_stock').children().filter(':first');
+            giper_chat.cascade = text;
+            storage.save('reply_all',text);
+            $('textarea',block_mess).val(text);
+            $('.post',block_mess).click();
+            textarea.hide('blind');
+        }
+        giper_chat.reply_enable();
+    } ,
+
+    new_message: function (val)
+    {                              //  elem.appendChild();
+        giper_chat.open_mess++
+        giper_chat.reply_enable();
+
+        let new_block = giper_chat.create_message(val);
+
+        new_block.prependTo($('#giper_stock'));
+
+        new_block.show('blind');
+
+        setTimeout( function (){ $('.sound',new_block).show(); },500 );
+
+        giper_chat.idle_round = 0;
+               // giper_chat.mess_stock.push(val);
+               // giper_chat.stock.store();
+
+    } ,
+
+    remind: function ()
+    {
+        jQuery.each (giper_chat.mess_stock,function(i,val)
+        {
+            giper_chat.new_message(val);
+        });
+    } ,
+
+    stock: {
+
+        store: function ()
+        {
+             storage.array.save('mess_stock',giper_chat.mess_stock);
+        } ,
+
+        remove: function (num)
+        {
+            var del = null;
+            jQuery.each (giper_chat.mess_stock,function(i,val)
+            {
+                if (val.mess_id == num)
+                    del = i;
+            });
+
+            if(del || del == 0)
+            {                               //alert($('.new_message').length + '  <> ' + giper_chat.mess_stock.length)
+                giper_chat.mess_stock.splice(del,1);
+                if ((giper_chat.mess_stock.length - $('.new_message').length) > 1)
+                    giper_chat.mess_stock = [];
+                giper_chat.stock.store();
+            }
+        }
+
+    } ,
+
+
+    create_message: function (val)
+    {
+        if (!val.reply) val.reply = '';
+
+        //return 0;
+
+        var new_block = $('#new_message_ex').clone()
+         .attr( 'id', val.type+'_'+val.mess_id )  //.css("display","none")
+         .data('number',val.mess_id)
+         .data('user',val.user)
+         .addClass( val.type );
+
+         $('.mess_text',new_block).html(val.text);       // click( function (){ location.href =  });
+         $('.close',new_block).click(
+             function ()
+             {
+                 giper_chat.close_message($(new_block));
+             }
+         );
+
+         if( val.type == 'new_message' || val.type == 'old_message' )
+         {
+             if( val.type == 'old_message' )
+             {
+                 $('.title',new_block).text('Есть сообщение без ответа');
+                 $('.sound',new_block).remove();
+             }
+
+             $('.post',new_block).click( function (){ giper_chat.post_mess(val); });
+
+             $('textarea',new_block).val( val.reply );
+             $('.user_name',new_block).text(val.name+':');
+             $('.history',new_block).click(
+             function ()
+             {
+                 giper_chat.follow_message(val.user,val.mess_id);
+             });
+
+             $('.bunn',new_block).click( function ()
+             {
+                 giper_chat.ajax_bun(val.user,val.mess_id,val.type);
+                 giper_chat.open_mess--;
+             });
+
+             if( val.type == 'new_message' )
+                 $('#contact_update').show('fade');
+         }
+
+         if( val.type == 'server_mess' )
+         {
+             $('.sound',new_block).remove();
+             $('.title',new_block).text( val.reply );
+             $('.bunn',new_block).remove();
+>>>>>>> master
              $('.post',new_block).val('Хорошо');
 
              $('.post',new_block).click(
                  function ()
+<<<<<<< HEAD
                  { 
                      send_serv_mess($('#'+val.type+'_'+val.mess_id ),'tip_user_bun_close')  
                  }
@@ -749,11 +2774,71 @@ var giper_chat = {
              } 
          });  /**/ 
   
+=======
+                 {
+                     send_serv_mess($('#'+val.type+'_'+val.mess_id ),'tip_user_bun_close')
+                 }
+              );
+
+              $('.history',new_block).text( 'Подробнее...' ) ;
+              $('.history',new_block).attr( 'href','/блог/наказывайте-кого-следует/' ) ;
+              $('.history',new_block).attr( 'target','_blank' ) ;
+         }
+
+         if( val.type == 'air_user' || val.type == 'new_client' )
+         {
+             if( val.type == 'air_user' )
+                 $('.title',new_block).text('Сейчас на сайте');
+             if( val.type == 'new_client' )
+                 $('.title',new_block).text('Зарегистрировалась сегодня');
+
+             $('.mess_text',new_block).html(val.age + ' ' + val.city + ' ' + val.text);
+
+             $('.sound',new_block).remove();
+             // var timer_air = setTimeout( function (){ close_message( $(new_block) ); open_mess--; },30000 );
+             //$('.title',new_block).text( val.reply );
+             $('.bunn',new_block).remove();
+             $('.user_name',new_block).text(val.name+',');
+             $('.user_name',new_block).text(val.name+',');
+             $('.post',new_block).val('Написать');
+
+             $('.post',new_block).click( function () { giper_chat.post_mess(val); });
+
+             $('.history',new_block).text( 'Смотреть анкету' ) ;
+             $('.history',new_block).click(
+             function ()
+             {
+                 giper_chat.follow_message(val.user,val.mess_id);
+             });
+
+             if( val.type == 'new_client' ) {
+
+             }
+         }
+
+         $(new_block).draggable( {
+             handle:'.title',
+             stop: function(event, ui)
+             {
+                 $('.sound',new_block).remove();
+
+                 //alert ($(this).offset().left)
+
+                 var topOff  = $(this).offset().top - $(window).scrollTop()
+                 var leftOff = $(this).offset().left
+                  $(this).css("top",topOff).css("left",leftOff).css("position","fixed")
+
+                 $(this).appendTo( 'body' );
+             }
+         });  /**/
+
+>>>>>>> master
          return new_block;
 
     } ,
 
     close_message: function (elem)
+<<<<<<< HEAD
     {      
         $('.sound',elem).remove(); 
         elem.hide('blind');       
@@ -767,12 +2852,28 @@ var giper_chat = {
         $('#giper_stock div').
         $('.sound',elem).remove(); 
         elem.hide('blind');       
+=======
+    {
+        $('.sound',elem).remove();
+        elem.hide('blind');
+        giper_chat.open_mess--;
+        giper_chat.stock.remove(elem.data('number'));
+        setTimeout( function (){ elem.remove(); },500 );
+    } ,
+
+    close_all: function (user)
+    {                                          /*
+        $('#giper_stock div').
+        $('.sound',elem).remove();
+        elem.hide('blind');
+>>>>>>> master
         giper_chat.open_mess--;
         giper_chat.stock.remove(elem.data('number'));
         setTimeout( function (){ elem.remove(); },500 ); */
     } ,
 
     follow_message: function (user,mess_id)
+<<<<<<< HEAD
     {       
         giper_chat.stock.remove(mess_id); 
         location.href = '/'+user;
@@ -787,6 +2888,22 @@ var giper_chat = {
 
     timer_set: function () 
     { 
+=======
+    {
+        giper_chat.stock.remove(mess_id);
+        location.href = '/'+user;
+    } ,
+
+    ajax_bun: function (user,mess_id,type)
+    {
+        giper_chat.close_message( $('#'+type+'_'+mess_id ) );
+        $.post( "/mess/bun/", { id: mess_id, tid: user } );
+
+    } ,
+
+    timer_set: function ()
+    {
+>>>>>>> master
         giper_chat.timer_stop();
         if (giper_chat.idle_round == 0) { giper_chat.round_time = 10;  } else
         if (giper_chat.idle_round == 1) { giper_chat.round_time = 10;  } else
@@ -794,6 +2911,7 @@ var giper_chat = {
         if (giper_chat.idle_round == 3) { giper_chat.round_time = 25;  } else
         if (giper_chat.idle_round == 4) { giper_chat.round_time = 35;  } else
         if (giper_chat.idle_round > 11) { giper_chat.round_time = 300; } else
+<<<<<<< HEAD
         if (giper_chat.idle_round > 4 ) { giper_chat.round_time = 60;  } 
         
         giper_chat.idle_round++   
@@ -820,11 +2938,40 @@ var giper_chat = {
         var textarea   = $('textarea',giper_chat.mess_block); 
         var text_value = $(textarea).val(); 
         if (!$(textarea).is(":visible")) 
+=======
+        if (giper_chat.idle_round > 4 ) { giper_chat.round_time = 60;  }
+
+        giper_chat.idle_round++
+        giper_chat.timer_id = window.setInterval ( 'giper_chat.on_timer()', 1000 );
+        //console.log('таймер запущен: ' +giper_chat.round_time)
+
+    } ,
+
+    timer_stop: function ()
+    {
+        window.clearInterval(giper_chat.timer_id);
+        //console.log('таймер остановлен: ' +giper_chat.cascade)
+    } ,
+
+    timer_cut: function ()
+    {
+        if (giper_chat.idle_round > 0 && giper_chat.round_time > 10)
+            giper_chat.round_time = 10;
+        giper_chat.idle_round = 0;
+    } ,
+
+    toggle_text: function ()
+    {
+        var textarea   = $('textarea',giper_chat.mess_block);
+        var text_value = $(textarea).val();
+        if (!$(textarea).is(":visible"))
+>>>>>>> master
         {
             active_textarea = textarea;            ///////////////////////////////////////
             $(textarea).show('blind');
             $(textarea).focus();
             notepad.show();                        ///////////////////////////////////////
+<<<<<<< HEAD
             return 0;     
         } 
         
@@ -838,12 +2985,28 @@ var giper_chat = {
  
         var text, repl 
         
+=======
+            return 0;
+        }
+
+        return text_value
+
+    } ,
+
+    post_mess: function (val)
+    {
+        giper_chat.mess_block = $('#'+val.type+'_'+val.mess_id);     // alert( user )
+
+        var text, repl
+
+>>>>>>> master
         if (giper_chat.cascade != 0)
         {
             text = giper_chat.cascade;
             repl = '';
         }
         else
+<<<<<<< HEAD
         {      
             text = giper_chat.toggle_text();
             repl = text 
@@ -937,6 +3100,101 @@ var giper_chat = {
      
 }
  
+=======
+        {
+            text = giper_chat.toggle_text();
+            repl = text
+        }
+
+        if (text)
+        {
+            simple_hash();
+
+            $.post
+            (
+                "/mailer/post/",
+                {
+                    mess: text,
+                    id:   val.user,
+                    re:   repl,
+                    captcha_code: $('.code',giper_chat.mess_block).val(),
+                    hash: hash
+                 },
+                 giper_chat.on_post
+             );
+
+            disabled_with_timeout( $('.post',giper_chat.mess_block), 5);
+            giper_chat.timer_cut();
+        }
+
+    } ,
+
+    on_post: function (data)
+    {                                // alert (data)
+        if( !data ) return 0;
+        var mess = JSON.parse( data );
+
+        if( mess.error == 'captcha' )
+        {
+            $('textarea',giper_chat.mess_block).show('blind');
+            $('.captcha_block',giper_chat.mess_block).show('blind');
+            $('.captcha',giper_chat.mess_block).get(0).src = '/secret_pic.php?hash='+hash;
+        }
+
+        if( mess.saved == '1' )
+        {
+            giper_chat.idle_round = 0;
+
+            $('#contact_update').show('fade');
+            giper_chat.close_message(giper_chat.mess_block);
+
+            notepad.hide();                 //////////////////////////////////////////////
+            visited.action.save(giper_chat.mess_block.data('user'));
+
+            setTimeout( function ()
+            {
+               if (giper_chat.cascade != 0)
+                   giper_chat.reply_all();
+            },700 );
+        }
+
+        if( mess.error == 'reload' )
+        {
+            giper_chat.idle_round = 0;
+            location.href = '/'+user+'?text='+text; //alert ('reload')
+        }
+
+        disabled_with_timeout( $('.post',giper_chat.mess_block), 0.05);
+
+    } ,
+
+    title_blink: function ()
+    {
+        if (giper_chat.count_unread == 0)
+        {
+            document.title = giper_chat.prev_title;
+            return false ;
+        }
+
+        if( document.title != 'Вам сообщение!' )
+        {
+            document.title = 'Вам сообщение!' ;
+        }
+        else
+            document.title = ' * * * * * * * * * * * * ' ;
+    } ,
+
+    post_serv: function (elem,value)
+    {
+        giper_chat.close_message( $(elem) );                   /*
+        var param = {}; param[value] = 1;
+         $.get( "/ajax/messages_load.php", param ); */
+        set_cookie( 'user_bun', '1', 259200 );
+    }
+
+}
+
+>>>>>>> master
 
 
   $( document ).ready(function() {   
@@ -1082,6 +3340,7 @@ var master_info = {
 }
 
 
+<<<<<<< HEAD
  
 // Навигация с помошью клавиатуры 
 var navigate = {    
@@ -1114,11 +3373,42 @@ var navigate = {
     // Навигация с помошью стрелок + CTRL
     through: function (event) 
     {  
+=======
+
+// Навигация с помошью клавиатуры
+var navigate = {
+
+    enable:  0,
+
+    init: function ()
+    {
+        $(document).on('keydown', function() {
+            navigate.through(event);
+        });
+
+    } ,
+
+    // Отправка сообщения по CTRL + Enter
+    post_form: function (event, formElem)
+    {
+        if((event.ctrlKey) && ((event.keyCode == 10)||(event.keyCode == 13))) {
+            formElem.submit();
+        }
+    } ,
+
+    // Навигация с помошью стрелок + CTRL
+    through: function (event)
+    {
+>>>>>>> master
         if (window.event)
             event = window.event;
 
         if (event.ctrlKey)
+<<<<<<< HEAD
         {                           
+=======
+        {
+>>>>>>> master
             var link = null;
             var href = null;
             switch (event.keyCode ? event.keyCode : event.which ? event.which : null)
@@ -1138,6 +3428,7 @@ var navigate = {
                 case 0x24:
                     link = '#home_page';
                     break;
+<<<<<<< HEAD
             }                
             if($('a').is(link))  // alert($(link).attr('href')); return false;
                 document.location = $(link).attr('href');
@@ -1163,6 +3454,33 @@ var notepad = {
             notepad.disibled = 1;                                                            
         }              
         
+=======
+            }
+            if($('a').is(link))  // alert($(link).attr('href')); return false;
+                document.location = $(link).attr('href');
+        }
+    }
+
+}
+
+
+
+// -- Блокнот ---
+var notepad = {
+
+    note_block: null,
+    last_click: null,
+    disibled:   0,
+    create:     0,
+
+    init: function ()
+    {
+        if (device.width() < 1000)
+        {
+            notepad.disibled = 1;
+        }
+
+>>>>>>> master
         notepad.disibled = get_cookie ('note_vis')*1 ? 1 : 0;   //////////////////////////
 
         active_textarea = $('#mess_text_val');
@@ -1170,6 +3488,7 @@ var notepad = {
 
 
         $('textarea').click( function ()
+<<<<<<< HEAD
         { 
             active_textarea = this; 
             notepad.show();  
@@ -1245,10 +3564,97 @@ var notepad = {
                    function ()
                    { 
                        $(active_textarea).val( $(this).text() ); 
+=======
+        {
+            active_textarea = this;
+            notepad.show();
+        });
+
+        $('#notepad_on').click( function (){ notepad.toggle_disable('on'); notepad.show('force'); });
+
+        $('.close',notepad.note_block).click( function (){ notepad.hide(); });
+        $('.post',notepad.note_block).click( function (){ notepad.toggle_disable('off'); notepad.hide(); });
+        $('.bunn',notepad.note_block).click( function (){ notepad.toggle_disable('off'); notepad.hide(); });
+
+    } ,
+
+    hide: function ()
+    {
+        notepad.note_block.hide('fade');
+    } ,
+
+    show: function (force)
+    {
+        if (!notepad.disibled)
+        if (force || (active_textarea && notepad.last_click != active_textarea))
+        {
+            if (notepad.create)
+            {
+                notepad.note_block.show('fade');
+                notepad.last_click = active_textarea;        /////////////////////////////
+            }
+            else
+                notepad.ajax_load();
+        }
+    } ,
+
+    toggle_disable: function (vset)
+    {
+        if (vset == 'off') notepad.disibled = 1;
+        if (vset == 'on' ) notepad.disibled = 0;
+
+        if (vset)
+        {
+            set_cookie ('note_vis', notepad.disibled, 259200);   /////////////////////////
+        }
+    } ,
+
+    ajax_load: function ()
+    {
+         simple_hash();
+         $.get( '/ajax/load_notepad.php', { hash: hash }, notepad.on_load);
+    } ,
+
+    remind: function ()
+    {
+        var top  = storage.load('notepad_top');
+        var left = storage.load('notepad_left');
+
+        if (top  && top  < 40) top  = 50;
+        if (left && left < 10) left = 10;
+        if (top  > (device.height()-300)) top  = 0;
+        if (left > (device.width()-300))  left = 0;
+
+        if (top)  notepad.note_block.css("top",top+'px');
+        if (left) notepad.note_block.css("left",left+'px');
+
+    } ,
+
+    on_load: function (data)
+    {
+           if( data.indexOf('div') > 0 )
+           {
+               notepad.create = 1;
+               $('.notes',notepad.note_block).html( data );
+               $('.note_line',notepad.note_block).click(
+                   function ()
+                   {
+                        let text = $(this).text();
+                        $(active_textarea).val(text).focus();
+                        if ($(active_textarea).attr('id') == 'mess-text-area') {
+                            FormMess.message = text;
+                        } // TODO: жэсточайшы костыль для блокнота
+
+//                        // Trigger a DOM 'input' event
+//                        var evt = document.createEvent('HTMLEvents');
+//                        evt.initEvent('input', false, true);
+//                        elt.dispatchEvent(evt);
+>>>>>>> master
                    }
                );
 
                notepad.remind();
+<<<<<<< HEAD
                                   
                notepad.note_block.draggable
                ( 
@@ -1274,6 +3680,33 @@ var notepad = {
 
 
      
+=======
+
+               notepad.note_block.draggable
+               (
+                   {
+                       handle:'.title',
+                       stop: function(event, ui)
+                       {
+                           var topOff = $(this).offset().top - $(window).scrollTop();
+                           notepad.note_block.css("top",topOff);
+                           storage.save('notepad_top',topOff);
+                           storage.save('notepad_left',$(this).offset().left);
+                       }
+                   }
+               );
+
+               notepad.show();
+           }
+
+    }
+
+
+
+
+
+
+>>>>>>> master
 }
 
 
@@ -1514,6 +3947,7 @@ var option_contact = {
 }          
 
 
+<<<<<<< HEAD
  
 var option_email = { 
   
@@ -1553,6 +3987,47 @@ var option_email = {
         }                                   
     }    
 }       
+=======
+
+var option_email = {
+
+    init: function () {
+        $('.option_email_button').off('click');
+        $('.option_email_button').on('click',option_email.action.send_email);
+        if (userinfo.data.email)
+            $('.option_email_value').val(userinfo.data.email);
+        option_email.ajax.load();
+    } ,
+    ajax: {
+        load: function () {
+            $.post('/sync/email/', option_email.ajax.on_load);
+        },
+        post: function (email) {
+            $.post('/option/email/', { email: email }, option_email.ajax.on_save);
+            userinfo.data.email = data.email;
+            userinfo.action.set_email();
+            option_static.action.close();
+        },
+        on_save: function (data) {
+            profile_alert.option.show(json.parse(data));
+        },
+        on_load: function (data) {
+            data = json.parse(data);
+            if (data) {
+                if (data.email != '') {
+                    userinfo.data.email = data.email;
+                    userinfo.action.set_email();
+                }
+            }
+        }
+    } ,
+    action: {
+        send_email: function () {
+            option_email.ajax.post($('.option_email_value').val());
+        }
+    }
+}
+>>>>>>> master
 
 
       
@@ -1819,14 +4294,35 @@ var option_sex = {
 
 
 
+<<<<<<< HEAD
 // -- Статический блок опций ---
 var option_static = {    
         
+=======
+var OptionStaticViewer = new Vue({
+    el: '#option-static__viewer',
+    store,
+    computed: Vuex.mapState({
+        view: state => state.optionStatic.view
+    }),
+    methods: {
+        close() {
+            store.commit('optionDialog', false);
+        }
+    }
+});
+
+
+// -- Статический блок опций ---
+var option_static = {
+
+>>>>>>> master
     click_enable: null,
     active_elem: null,
     timer_id: null,
     form: null,
 
+<<<<<<< HEAD
     init: function () 
     {                                          
         if (!$('.option_static').length)
@@ -2045,10 +4541,231 @@ var option_tag = {
             $(this).on('click',option_tag.action.add);                 
         }, 
         ids: function () {    
+=======
+    init: function ()
+    {
+        if (!$('.option_static').length)
+            return null;
+
+        $('.option_static').each( function (i,elem) {
+            elem = $(elem);
+            if (!elem.data('active')) {
+                elem.on('click',option_static.action.preload);
+                elem.data('active',1);
+            }
+        });                    // alert(1)
+        $('#option-static__close').on('click',option_static.action.close);
+    } ,
+
+    ajax: {
+        load: function (option) {
+            option_static.option.form.trash();
+            $('#option-static__container')
+                .load( '/static/htm/option_' + option + '.html',option_static.ajax.on_load);
+        } ,
+        on_load: function (data) {           // alert(visited.list)
+            if (data) {
+                option_static.action.router();
+                option_static.action.show_form();
+                $("html, body").animate({ scrollTop: 0 }, "slow");
+            }
+        } ,
+        save: function (tid) {
+            //$.get( '/contact/addvisit/'+ uid +'/', { tid: tid }, visited.ajax.parse_save);
+        }
+    } ,
+
+    option: {
+        loader: {
+            show: function () {
+                $('#option-static__loader').delay(1000).show('fade');
+            } ,
+            hide: function () {
+                $('#option-static__loader').clearQueue();
+                $('#option-static__loader').hide('fade');
+            }
+        } ,
+        form: {
+            show: function () {
+                $('#option-static__container').show('fade');
+            } ,
+            hide: function () {
+                $('#option-static__container').hide('fade');
+            } ,
+            trash: function () {
+                $('#option-static__container').empty();
+            }
+        } ,
+        block: {
+            show: function () {
+                $('#option-static').show('fade');
+            } ,
+            hide: function () {
+                $('#option-static').hide('fade');
+            }
+        }
+    } ,
+
+    action: {
+        show_form: function () {
+           option_static.option.form.show();
+           option_static.option.loader.hide();
+        } ,
+        preload: function () {
+            var option = $(this).data('option');
+            option_static.form = option;
+            if (option) {
+               option_static.ajax.load(option);
+               option_static.option.block.show();
+               option_static.option.loader.show();
+            }
+        } ,
+        close: function () {
+           option_static.option.form.hide();
+           option_static.option.loader.hide();
+           option_static.option.block.hide();
+        } ,
+        router: function () {
+           if (option_static.form == 'login') {
+               option_login.init();
+           }
+           if (option_static.form == 'contact') {
+               option_contact.init();
+           }
+           if (option_static.form == 'age') {
+               option_age.init();
+           }
+           if (option_static.form == 'name') {
+               option_name.init();
+               name_suggest.init();
+               city_suggest.init();
+           }
+           if (option_static.form == 'city') {
+               option_city.init();
+               city_suggest.init();
+           }
+           if (option_static.form == 'hidepass') {
+               option_email.init();
+           }
+           if (option_static.form == 'anketa') {
+               option_anketa.init();
+               name_suggest.init();
+               city_suggest.init();
+           }
+           if (option_static.form == 'chlogin') {
+               option_chlogin.init();
+           }
+           if (option_static.form == 'introduce') {
+               option_intro.init();
+               name_suggest.init();
+               city_suggest.init();
+           }
+           if (option_static.form == 'desire') {
+               option_tag.init();
+               tag_suggest.init();
+           }
+        }
+    }
+}
+
+
+
+var option_tag = {
+
+    loaded:   0,
+
+    init: function () {
+        $('#option_tag input').prop('disabled',true);
+        $('#option_tag_button').on('click',option_tag.action.send);
+        option_tag.action.remind();
+        option_tag.ajax.load();
+    } ,
+    ajax: {
+        load: function () {
+            $.get('/tag/user/', option_tag.ajax.on_load);
+        },
+        on_load: function (data) {
+            data = json.parse(data);
+            if (data.tags.length > 0) {
+                option_tag.action.print(data.tags);
+                user_tag.list = data.tags;
+                user_tag.action.store();
+            }
+            $('#option_tag input').prop('disabled',false);
+            //
+            //option_static.action.close();
+        },
+        add: function (tag) {
+            $.post('/tag/add/', { tag: tag }, option_tag.ajax.on_save);
+        },
+        on_save: function (data) {
+            data = json.parse(data);
+            if (data.id) {
+                user_tag.list[user_tag.list.length-1].id = data.id;
+                user_tag.option.set_count();
+                option_tag.action.remind();
+            } else {
+                option_tag.option.error(option_tag.loaded);
+            }
+            $('#option_tag_value').val('');
+            user_tag.action.store();
+        },
+        del: function (id) {
+            $.post('/tag/del/', { id: id });
+        }
+    } ,
+    action: {
+        remind: function () {
+            if (user_tag.list.length > 0) {
+                option_tag.action.print(user_tag.list);
+            }
+        },
+        send: function () {
+            var tag = $('#option_tag_value').val();
+            var data = {"tag":tag,"id":0};
+            user_tag.list.push(data);
+            option_tag.action.remind();
+            option_tag.ajax.add(tag);
+        },
+        set: function () {
+            userinfo.data.contact[$(this).data('val')] = $(this).prop('checked')*1;
+        } ,
+        print: function (tags) {
+            $('#option_tag_list').empty();
+            for (var i = 0; i < tags.length; i++) {
+                var style = '';
+                let block_line = $('<i class="desire_tag">').text(tags[i].tag);
+                if (!tags[i].id)
+                    block_line.addClass('desire_onload');
+                block_line.data('id',tags[i].id);
+                block_line.data('num',i);
+                block_line.data('tag',tags[i].tag);
+                block_line.attr('id','utag'+i);
+                block_line.on('click',option_tag.action.del);
+                $('#option_tag_list').append(block_line);
+            }
+        },
+        add: function () {
+            option_tag.ajax.add($(this).data('tag'));
+            option_tag.option.toggle(this);
+            $(this).on('click',option_tag.action.del);
+            var data = {"tag":$(this).data('tag'),"id":$(this).data('id')};
+            user_tag.list.splice($(this).data('num'),0,data);
+        },
+        del: function () {
+            option_tag.ajax.del($(this).data('id'));
+            option_tag.option.toggle(this);
+            user_tag.list.splice($(this).data('num'),1);
+            user_tag.option.set_count();
+            $(this).on('click',option_tag.action.add);
+        },
+        ids: function () {
+>>>>>>> master
             user_tag.idls = [];
             for (var i=0; i<user_tag.list; i++) {
                 if (user_tag.list[i].id)
                     user_tag.idls.push(user_tag.list[i].id);
+<<<<<<< HEAD
             }  
             return user_tag.idls;              
         }                                      
@@ -2064,6 +4781,23 @@ var option_tag = {
         } 
     }     
 }          
+=======
+            }
+            return user_tag.idls;
+        }
+    },
+    option: {
+        toggle: function (elem) {
+            $(elem).off('click');
+            $(elem).toggleClass('deleted_tag');
+        },
+        error: function (i) {
+            $('#utag'+[i]).off('click');
+            $('#utag'+[i]).toggleClass('error_tag');
+        }
+    }
+}
+>>>>>>> master
 
 
       
@@ -2321,6 +5055,7 @@ var result_list = {
 
 
 
+<<<<<<< HEAD
 var abuse_list = new Vue({
     el: '#search-form',
     store,
@@ -2379,6 +5114,77 @@ var slider = {
     } ,  
 
     slide: function (num,st) 
+=======
+////
+// РОУТЕР ==========================================================
+////
+
+// const routes = [
+//     { path: '/sends-contacts', name: 'sends', component: SendsDialog, props: { quick: false } },
+//     { path: '/initial-contacts', name: 'initial', component: InitialDialog, props: { quick: true } },
+//     { path: '/intimate-contacts',  name: 'intimate', component: IntimateDialog, props: { quick: false },
+//         // children: [
+//         //     {
+//         //         path: 'quick-reply',
+//         //         component: HumanDialog,
+//         //         props: {
+//         //             show : true
+//         //         }
+//         //     },
+//         // ]
+//     }
+// ];
+
+// // 3. Создаём инстанс роутера с опцией `routes`
+// // Можно передать и другие опции, но пока не будем усложнять
+// const router = new VueRouter({
+//   //mode: 'history',
+//   routes // сокращение от routes: routes
+// })
+
+// const RouterView = new Vue({
+//     el: '#router-view',
+//     store,
+//     router,
+//     created() {
+//         console.log('routerView created');
+//     },
+//     methods: {
+//         close() {
+//             router.go(-1);
+//         }
+//     }
+// });
+
+
+
+// -- Слайдер, главная ---
+var slider = {
+
+    timer: null,
+    context: 0,
+    next: 0,
+
+    init: function ()
+    {
+        if(!$('div').is('#top_intro_info_block'))
+            return null;
+
+        $('#top_intro_info_block').on('mouseover',slider.stop);
+        $('#top_intro_info_block').on('mouseout',slider.start);
+
+        // Предзагрузка картинок
+        setInterval(function()
+        {
+            var nn = ( slider.next + 1 < 5 ) ? slider.next + 1 : 0;
+            let a1 = new Image;
+            a1.src = "/img/board/top_intro_info_" + nn + ".jpg";
+        }, 10000);
+
+    } ,
+
+    slide: function (num,st)
+>>>>>>> master
     {
         var top_intro_caption = []
         var top_intro_context = []
@@ -2392,18 +5198,29 @@ var slider = {
          top_intro_context[3] = 'То что вы хотели спросить, то о чём вы хотели поговорить. Получайте прямо сейчас. Комфортное онлайн общение, интимные беседы, уютная обстановка и приятные собеседники уже ждут вас';
          top_intro_caption[4] = 'Секс знакомства бесплатно';
          top_intro_context[4] = 'Здесь всё бесплатно. Вам доступны все сервисы сайта полностью, уже сейчас. Ваша анкета всегда наверху. Vip аккаунтов нет, открытый доступ ко всем анкетам и безграничные возможности';
+<<<<<<< HEAD
  
         if( num > 4 ) num = 0;
         for (var i = 0; i<5; i++) 
+=======
+
+        if( num > 4 ) num = 0;
+        for (var i = 0; i<5; i++)
+>>>>>>> master
         {
             $('#board_img_'+i).removeClass('show');
             $('#board_img_'+i).attr('src','');
         }
+<<<<<<< HEAD
  
+=======
+
+>>>>>>> master
         $('#board_img_' + num).addClass('show active');
         $('#board_img_' + num).attr('src','/img/board/top_intro_info_'+num+'.jpg');
 
         if (slider.context)
+<<<<<<< HEAD
         {         
             $('#top_intro_info_block_caption').text(top_intro_caption[num]);
             $('#top_intro_info_block_context').text(top_intro_context[num]); 
@@ -2448,11 +5265,58 @@ var storage = {
             return 'localStorage' in window && window['localStorage'] !== null;
         }
         catch (e)
+=======
+        {
+            $('#top_intro_info_block_caption').text(top_intro_caption[num]);
+            $('#top_intro_info_block_context').text(top_intro_context[num]);
+        }
+
+        slider.next = num
+    } ,
+
+    start: function ()
+    {
+        slider.timer = setInterval( function(){ slider.slide(++slider.next,0)}, 20000);
+    } ,
+
+    stop: function ()
+    {
+        clearTimeout(slider.timer);
+    }
+
+
+}
+
+
+
+// -- Хранилище ---  
+var storage = {    
+        
+    enable:  0,   
+        
+    init: function () 
+    {                           
+        if (storage.is_enable())
+        {
+            storage.enable = 1;
+        } 
+                                     
+    } ,
+
+    is_enable: function () 
+    {
+        try 
+        {
+            return 'localStorage' in window && window['localStorage'] !== null;
+        } 
+        catch (e) 
+>>>>>>> master
         {
             return false;
         }
     } ,
 
+<<<<<<< HEAD
     save: function (key,val)
     {
         if (storage.enable)
@@ -2501,6 +5365,57 @@ var storage = {
 }
 
 storage.init();
+=======
+    save: function (key,val) 
+    {
+        if (storage.enable) 
+        {                             
+            localStorage.setItem(key,val);
+        }  
+    } ,
+
+    load: function (key,def) 
+    {
+        var result = def ? def : null;
+   
+        if (storage.enable && localStorage.getItem(key)) 
+        {                  
+            result = localStorage.getItem(key);
+        }  
+        
+        return result;
+    } ,
+
+    array: {  
+      
+        load: function (key) 
+        {  
+            var result = [];
+            var value = null;
+                                
+            value = storage.load(key);       
+            value = json.parse(value);
+            if (value)
+                result = value;
+           
+            return result;
+        } ,
+        
+        save: function (key,val) 
+        {   
+            storage.save(key,json.encode(val)); 
+        } ,
+        
+        add: function (key,val) 
+        {   
+              
+        } 
+    }
+
+
+}
+   
+>>>>>>> master
 
   
 // -- Города, подсказки, поиск названия ---
@@ -2753,12 +5668,56 @@ var tag_suggest = {
 } 
 
 
+<<<<<<< HEAD
 
 var user_menu = { init: function () {},
     ajax: {},
     action: {sets: {search: function () { },contact: function () {}}},
     option: {act: { }, se: function () {}}
 }
+=======
+                                 
+var user_menu = { 
+  
+    init: function () {              
+                       
+    },    
+    ajax: {  
+                  
+    },  
+    action: {     
+        sets: {            
+            search: function () {
+                var str = '/index.php?view=simple&town='+userinfo.data.town+
+                   '&years_up='+userinfo.data.years_up+'&years_to='+userinfo.data.years_to+''+
+                   '&who='+userinfo.data.who+''; // alert(userinfo.data.years_up)
+                $('#menu_user_button_search').attr('href',str);  
+            },            
+            contact: function () {       
+                //storage.save('contact',0);
+                //storage.load('contact');
+                var str = '/mail.php'; 
+                $('#menu_message').attr('href',str);  
+            } 
+        }                               
+    },  
+    option: {     
+        act: {     
+            show_reg: function () {  
+                $('#menu_user_action_new').show();  
+                $('#menu_user_action_block').hide(); 
+            },   
+            show_opt: function () { 
+                $('#menu_user_action_new').hide();  
+                $('#menu_user_action_block').show();
+            }  
+        },    
+        se: function () {  
+          
+        }                                   
+    }    
+}          
+>>>>>>> master
 
 
       
@@ -2798,6 +5757,7 @@ var user_tag = {
 }          
 
 
+<<<<<<< HEAD
 Vue.component('abuse-form', {
     template: '#abuse-form',
     props: [
@@ -2864,6 +5824,41 @@ var menu_user_top = new Vue({
 var userinfo = {
 
     data: {},
+=======
+
+// -- Информация о пользователе ---
+var userinfo = {
+
+    data: {
+        uid:      0,
+        sex:      0,
+        age:      0,
+        name:     '',
+        city:     '',
+        city_id:  0,
+        verify:   0,
+        name_mod: 0,
+        apromt:   0,
+        daily:    0,
+
+        town:     '',
+        who:      0,
+        years_up: 0,
+        years_to: 0,
+        virt:     0,
+        close:    0,
+
+        dating:   '',
+        setting:  0,
+        assist:   0,
+        intim:    0,
+
+        second:   0,
+        time:     0,
+        email:    ''
+    },
+
+>>>>>>> master
     init: function () {
         userinfo.ajax.load();
     } ,
@@ -2878,7 +5873,13 @@ var userinfo = {
                 userinfo.action.set_data(data);
                 master_info.init();
             } else {
+<<<<<<< HEAD
                 storage.save('auth',0); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+=======
+                storage.save('auth',0);
+                user_menu.option.act.show_reg();
+                userinfo.action.set_string();
+>>>>>>> master
             }
         } ,
         save: {
@@ -2893,7 +5894,11 @@ var userinfo = {
             } ,
             city: function (func) {
                 $.post('/option/city/', { city: userinfo.data.city }, func);
+<<<<<<< HEAD
             }  
+=======
+            }
+>>>>>>> master
         }
     } ,
     action: {
@@ -2911,7 +5916,11 @@ var userinfo = {
             userinfo.action.set_string(); /**/
         } ,
         set_name: function () {
+<<<<<<< HEAD
             if (userinfo.data.name.length > 2) {
+=======
+            if (userinfo.data.name && userinfo.data.name.length > 2) {
+>>>>>>> master
                 $('.user_name_option').text(userinfo.data.name);
                 $('.name_suggest').val(userinfo.data.name);
             }
@@ -2925,7 +5934,11 @@ var userinfo = {
             userinfo.action.set_string();
         } ,
         set_city: function () {
+<<<<<<< HEAD
             if (userinfo.data.city.length > 3) {
+=======
+            if (userinfo.data.city && userinfo.data.city.length > 3) {
+>>>>>>> master
                 $('.user_city_option').text(userinfo.data.city);
                 $('.city_suggest').val(userinfo.data.city);
             }
@@ -2947,7 +5960,11 @@ var userinfo = {
             $('.user_sex_option').text(say);
         } ,
         set_string: function () {
+<<<<<<< HEAD
             var str = userinfo.data.name;
+=======
+            var str = userinfo.data.name ? userinfo.data.name : '';
+>>>>>>> master
             if (!userinfo.data.name) {
                 if (userinfo.data.sex == 1) {
                     str = 'Парень';
@@ -2957,6 +5974,7 @@ var userinfo = {
                 }
             }
 
+<<<<<<< HEAD
             if (userinfo.data.age > 10 || userinfo.data.city.length > 3)
                 str = str + ', ';
             if (userinfo.data.age > 10)
@@ -2965,6 +5983,20 @@ var userinfo = {
                 str = str + userinfo.data.city;
             if (!str)
                 str = 'Кто вы?';
+=======
+            var cityLen = userinfo.data.city ? userinfo.data.city.length : 0;
+            if (userinfo.data.age > 10 || cityLen > 3) {
+                str = str + ', ';
+            }
+            if (userinfo.data.age > 10)
+                str = str + userinfo.data.age + ' ';
+            if ((20 - str.length - cityLen) >= 0) {
+                str = str + userinfo.data.city;
+            }
+            if (!str) {
+                str = 'Кто вы?';
+            }
+>>>>>>> master
             if (userinfo.data.uid) {
                 $('.user_string_option').text(str);
                 storage.save('user_string_print', str);

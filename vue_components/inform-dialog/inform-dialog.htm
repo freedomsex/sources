@@ -1,0 +1,23 @@
+
+<script type="text/x-template" id="inform-dialog">
+  <option-dialog @close="close">
+    <div class="contact-dialog">
+      <div class="option_tab">
+        <div align="left" class="option_cap">
+          <slot name="caption">Заголовок</slot>
+        </div>
+        <div class="tab_context">
+          <slot name="context">Описание</slot>
+        </div>
+        <div class="option_loader">
+          <div class="option_loader__label" v-show="loader"></div>
+          <div class="option_loader__alert" v-show="alert"></div>
+        </div>
+        <slot></slot>
+        <div class="hint_context" v-show="hint">
+          <slot name="hint">Подсказка</slot>
+        </div>
+      </div>
+    </div>
+  </option-dialog>
+</script>

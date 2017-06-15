@@ -1,0 +1,63 @@
+<div id="incoming-photo">
+  <div class="incoming-photo__list" v-show="photos.length" style="display: none;">
+    <img class="incoming-photo__item-photo" :src="item._links.thumb.href" v-for="(item, index) in photos" @click="show(index)">
+  </div>
+  <div class="incoming-photo__placeholder" v-show="!photos.length">
+    Присланные фотографии будут здесь
+  </div>
+</div>
+
+<script type="text/x-template" id="photo-dialog">
+  <option-dialog @close="close">
+    <photo-view :photo="config.photo" :thumb="config.thumb" :height="config.height" :width="1000"/>
+  </option-dialog>
+</script>
+
+<script type="text/x-template" id="upload-dialog">
+  <option-dialog @close="close">
+    <div class="option_tab">
+      <div align="left" class="option_cap">
+        <b>Выберите фотографию</b><a href="/блог/как-отправить-фотографию/" class="cap_link">Подробнее...</a>
+      </div>
+      <div class="tab_context">
+       Загрузив фотографию из компьютера или флэшки
+       один раз, её можно безгранично отправлять кому угодно и сколько угодно.
+      </div>
+      <div id="upload_photo">
+        <div id="hint" style="padding: 5px 0px 5px ; color: #ccc; font-size: 11px;">
+          Размер фотографии не должен превышать 8Mb
+        </div>
+        <div class="upload_photo__add">
+          <button class="btn btn-primary" @click="upload">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            Добавить фотографию
+          </button>
+          <input id="fileupload" type="file" name="file" data-form-data='{"script": "true"}'>
+        </div>
+
+        <div class="galery-photo__list" v-show="photos.length" style="display: none;">
+          <img class="galery-photo__item-photo" :src="item._links.galery.href" v-for="(item, index) in photos" @click="show(index)">
+        </div>
+        <div class="galery-photo__placeholder" v-show="!photos.length">
+          Фотографии которые вы загрузите будут здесь
+        </div>
+        <div class="upload_photo__rules" v-show="photos.length < 5" style="display: none;">
+          <p>- Вы можете загружать и отправлять любые фотографии, в том числе и эротические фото. Премодерации фотографий нет, в
+          содержании фотографий вы контролируете себя сами</p>
+          <p>- Интимные или эротические фотографии отправлять можно, если ваш собеседник
+          согласился получить такую фотографию, и в данный момент ждёт её от вас</p>
+          <p>- Рассылать интимные фотографии всем подряд, или отправлять их, когда вас об этом не просят,
+          запрещено. Поступит много жалоб, и это грозит блокировкой</p>
+          <p>
+          <a href="/блог/не-настоящие-фотографии/" target="_blank">
+            Избегайте использования чужих интим фото, скаченных из интернета (!) Это очень легко проверить. Ваш собеседник оставит публичное замечание к вашей анкете, обнаружив обман.</a>
+          </p>
+          <p style="padding: 3px 17px 3px; margin: 10px 0; background: url(/img/icon/burn_photo.png) no-repeat left top;">
+            Фотографии, которые долго не использовались, удалятся автоматически.
+            <a href="/блог/сгорание-фотографий/" target="_blank">Подробнее...</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </option-dialog>
+</script>

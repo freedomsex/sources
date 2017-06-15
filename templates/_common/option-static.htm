@@ -1,11 +1,27 @@
-           
+
+<div id="contact-lists">
+  <initial-dialog v-if="initial" quick="true" @close="close"></initial-dialog>
+  <intimate-dialog v-if="intimate" @close="close"></intimate-dialog>
+  <sends-dialog v-if="sends" @close="close"></sends-dialog>
+</div>
+
+<!--<div id="router-view">
+  <router-view @close="close"></router-view>
+</div>-->
+
+<div id="option-static__viewer">
+  <upload-dialog  @close="close" v-if="view == 'upload'"></upload-dialog>
+  <photo-dialog   @close="close" v-if="view == 'photo'"></photo-dialog>
+  <api-key-update></api-key-update>
+</div>
+
 <!-- Статические опции, absolute -->
- <div id="option_static_block">
-   <div id="option_static_cover"> 
-     <div id="static_loader"></div>
+ <div id="option-static" style="display: none;">
+   <div id="option-static__cover">
+     <div id="option-static__loader"></div>
    </div>
-   <div id="option_static_wrapper">        
-     <div id="option_static_container"></div>  
-     <div id="option_static_close">Закрыть</div> 
-   </div> 
+   <div id="option-static__wrapper">
+     <div id="option-static__container"></div>
+     <div id="option-static__close">Закрыть</div>
+   </div>
  </div>

@@ -17,7 +17,7 @@
   background: #f9ecbf;
 }
 .bg_gra {
-  background: #f2f2f2;
+  background: #f5f5f5;
 }
 .bg_blu {
   background: #CCCCFF;
@@ -38,7 +38,7 @@
   background: #fff5cc !important;
 }
 .bg_ogra {
-  background: #f2f2f2 !important;
+  background: #f5f5f5 !important;
 }
 .bg_oblu {
   background: #CCCCFF !important;
@@ -145,6 +145,19 @@
 }
 .radius {
   border-radius: 3px;
+}
+.clear-fix {
+  content: '';
+  display: block;
+  clear: both;
+}
+.btn-circle {
+  cursor: pointer;
+  text-decoration: none;
+  color: #ffffff;
+  padding: 7px;
+  display: inline-block;
+  border-radius: 50px;
 }
 .btn-virt {
   color: #ffffff;
@@ -367,6 +380,48 @@ table.users {
   font-size: 14px;
   margin-bottom: 15px;
 }
+.review-list {
+  margin-bottom: 30px;
+  position: relative;
+}
+.review-item {
+  margin-bottom: 5px;
+  padding-top: 10px;
+  color: #333333;
+}
+.review-item table {
+  width: 100%;
+}
+.review-item__voting {
+  width: 40px;
+  padding-right: 5px;
+  text-align: center;
+  vertical-align: top;
+}
+.review-item__voting button {
+  min-width: 35px;
+}
+.review-item__content {
+  vertical-align: top;
+  background: #f5f5f5;
+}
+.review__text {
+  border-bottom: 1px solid #ffffff;
+  color: #333333;
+  font-size: 14px;
+  font-style: italic;
+  padding: 15px 15px 10px;
+}
+.review__info {
+  color: #666666;
+  padding: 5px 20px 15px;
+  font-size: 12px;
+}
+.review__summary {
+  color: #666666;
+  padding: 5px 20px 15px;
+  font-size: 11px;
+}
 .btn_rating {
   text-align: center;
 }
@@ -377,24 +432,24 @@ table.users {
   height: 12px;
   width: 22px;
 }
-.revs_up {
-  background-position: 0 -24px;
-}
-.revs_up:hover {
-  background-position: 0 0px;
-}
+/*.revs_up {
+    background-position: 0 -24px;
+    &:hover {
+        background-position: 0 0px;
+    }
+}*/
 .rating_up {
   background-position: 0 -24px;
 }
 .rating_up:hover {
   background-position: 0 0px;
 }
-.revs_down {
-  background-position: 0 -36px;
-}
-.revs_down:hover {
-  background-position: 0 -12px;
-}
+/*.revs_down {
+    background-position: 0 -36px;
+    &:hover {
+        background-position: 0 -12px;
+    }
+}*/
 .rating_down {
   background-position: 0 -36px;
 }
@@ -429,19 +484,19 @@ table.users {
 .comm_down:hover {
   background-position: 0 -57px;
 }
-.idea {
-  background: #fff5cc;
-  border-top: 1px solid #cccccc;
-  color: #333333;
-  font-size: 14px;
-  margin-bottom: 10px;
-  padding: 10px 10px 12px;
-}
 .review {
   background: #f2f2f2;
   border-top: 1px solid #cccccc;
   color: #333333;
   font-size: 13px;
+  margin-bottom: 10px;
+  padding: 10px 10px 12px;
+}
+.idea {
+  background: #fff5cc;
+  border-top: 1px solid #cccccc;
+  color: #333333;
+  font-size: 14px;
   margin-bottom: 10px;
   padding: 10px 10px 12px;
 }
@@ -544,7 +599,7 @@ table.users {
   background: #e5e5e5;
 }
 .extra_button {
-  background: #f2f2f2;
+  background: #f5f5f5;
   border: 1px solid #e5e5e5;
   color: #cccccc;
   display: block;
@@ -657,7 +712,7 @@ table.users {
   vertical-align: middle;
   color: #666666;
   font-size: 14px;
-  background: #f2f2f2;
+  background: #f5f5f5;
   padding-left: 10px;
   border-top-right-radius: 35px;
   border-bottom-right-radius: 35px;
@@ -750,7 +805,7 @@ table.users {
   top: 10px;
 }
 .profile-status__present {
-  background: #f2f2f2;
+  background: #f5f5f5;
   padding: 15px 15px 0;
   position: relative;
   border-radius: 3px;

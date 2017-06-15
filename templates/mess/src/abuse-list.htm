@@ -13,14 +13,12 @@
     <span>Опубликовать замечание</span>
     <a href="/блог/анонимное-замечание-к-анкете/" class="abuse_info" target="_blank"></a>
   </div>
-  <div style=" padding-bottom: 10px;"></div>
 </div>
 
 
 
 
-
-<template id="abuse-form">
+<script type="text/x-template" id="abuse-form">
   <div id="abuse-form" style="display: none;" v-show="show">
     <div class="abuse-form__caption">
       Отправьте замечание  &nbsp;
@@ -50,4 +48,4 @@
       <a class="list-group-item abuse-form__suggest-item" v-for="item in suggest" @click="choiceText">{{ item }}</a>
     </div>
   </div>
-</template>
+</script>

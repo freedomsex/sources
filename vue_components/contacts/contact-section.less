@@ -1,0 +1,148 @@
+#contact-section {
+  border-top: 1px solid @gray;
+}
+
+.contact-section {
+  &__item {
+    .link_simple;
+    padding: @indent-sm @indent-sm;
+    font-size: 14px;
+  }
+}
+
+.contact-list__item {
+  border-top: 1px solid @gray-light;
+  position: relative;
+  background: @white;
+  overflow: hidden;
+    font-size: 14px;
+  &-info {
+    margin-right: @indent-xs;
+    .user-list__name {
+      color: @dark;
+    }
+    .user-list__age {
+      color: @red;
+    }
+    .user-list__city {
+      color: @link-color;
+    }
+  }
+  &-content {
+    .link;
+    padding: @indent-sm @indent-xs;
+    white-space: nowrap;
+  }
+  &-preview {
+    padding: @indent-sm 0 0;
+  }
+  &-option {
+    position: absolute;
+    right: 0;
+    top: 2px;
+    bottom: 0;
+    text-align: right;
+    width: 100px;
+    background: linear-gradient(to right, transparent, @white 15%);
+  }
+    &:after {
+      .clear-fix;
+    }
+}
+
+
+.contact-item__status-read {
+  background-color: @purpur-dark;
+  width: 8px;
+  height: 8px;
+  display: inline-block;
+  border-radius: 10px;
+  vertical-align: middle;
+}
+.contact-item__status-send {
+  color: @gray;
+  font-size: 12px;
+}
+
+.contact-item__message {
+    color: @gray-dark;
+    overflow: hidden;
+    display: inline-block;
+    font-style: italic;
+    white-space: nowrap;
+    margin-left: @indent-xs;
+    vertical-align: middle;
+}
+
+
+
+#captcha-dialog {
+  max-width: 400px;
+}
+
+.captcha-dialog__caption {
+  background: @orange;
+  color: @white;
+  font-weight: bold;
+  font-size: 16px;
+  padding: @indent-sm @indent-md;
+  .glyphicon {
+    float: right;
+    color: @white;
+  }
+}
+
+.captcha-dialog__body {
+  padding: @indent-md @indent-md 0;
+}
+
+.captcha-dialog__option {
+  padding: @indent-md @indent-md 0;
+  text-align: right;
+}
+
+.captcha-dialog__addon {
+    padding: 2px @indent-md;
+    background: @white;
+}
+
+
+
+.message-input {
+  min-height: 40px;
+  table {
+    position: relative;
+  }
+  margin: 0 @indent-md @indent-md;
+}
+
+.message-input__texarea {
+  overflow: auto;
+  min-height: 36px;
+  padding: 10px 5px;
+  font-size: 14px;
+  margin: 0 0 10px;
+  overflow-y: hidden;
+  resize: vertical;
+}
+
+.message-input__button() {
+  position: absolute;
+  bottom: 1px;
+  display: block;
+  width: 36px;
+  height: 36px;
+  margin: 2px;
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.message-input__button-account {
+  .message-input__button();
+  background-image: url('/static/img/icon/account.png');
+}
+
+.message-input__button-send {
+  .message-input__button();
+  background-image: url('/static/img/icon/send.png');
+}

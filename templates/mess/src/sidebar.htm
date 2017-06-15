@@ -51,37 +51,11 @@ border-radius: 3px;">Сохранено</span>
   </div>
 
 
-      <div id="contact_load_menu">
-        <span id="list_load_inline" class="listbox_tab active">Список</span>
-        <span id="list_load_faline" class="listbox_tab">Фавориты</span>
-        <span id="list_load_deline" class="listbox_tab">Удалено</span>
-
-        <div id="contact_update"></div>
-      </div>
-
-      <div id="contact_block">
-        <div id="list_contact_block" style=""></div>
-      </div>
-
-      <div id="listbox_line_ex" class="message_listbox_line">
-       <div class="message_listbox_link">
-        <span class="icon_list"></span>
-        <span class="user_name"></span>
-        <span class="unread_count"></span>
-        <span class="cont_list_fav_user"><i></i></span>
-        <span class="cont_list_del_user touch_option">X</span>
-        <img src="" class="photo_list" style="position: absolute; display: none; right: 25px; top: 7px; width: 24px; height: 24px;">
-      </div>
-       <div class="listbox_recover">Восстановить</div>
-       </div>
-
       <!--// Альтернативный текст в списке контактов //-->
 
       <div id="tip_list_users_block">
         <div id="tip_list_users">
-          Список сохранит всех
-          с кем вы начнёте общаться.
-          Пишите прямо сейчас.
+         Пишите прямо сейчас.
         </div>
 
         <div id="tip_list_green_text">
@@ -107,20 +81,6 @@ border-radius: 3px;">Сохранено</span>
         </div>
       </div>
 
-      <div id="contact_block_menu" style="margin: 5px 5px 5px;">
-        <span id="list_load_next" class="link_simple">Следующие</span>
-        <span id="list_show_optn" class="">Редактировать</span>
-      </div>
-
-      <script>
-
-        if( get_cookie('list_count') > 2 ) {
-         document.getElementById('tip_list_users_block').style.display = 'none';
-         document.getElementById('list_contact_block').style.display = 'block';
-         document.getElementById('list_contact_block').style.minHeight="195px";
-        }
-
-      </script>
 
       <!--// Настнойки почты под списком контактов //-->
 

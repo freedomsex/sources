@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
+<<<<<<< HEAD
 
   <title>%%PAGE_TITLE%%</title>
+=======
+<title>%%PAGE_TITLE%%</title>
+>>>>>>> master
  
  <META http-equiv="content-type" content="text/html; charset=UTF-8">
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -53,7 +57,9 @@
       <div id="index_cent">
 %%ALERT_BLOCK_TOP_GEN%%
 <div style="border-bottom: 1px solid #E5E5E5;">
-<iframe style="position: relative; background-color: transparent; border: none; overflow: hidden; height: 90px;width: 728px;" src="//data.freedomsex.me/din_new6.php?code=c1b2082d1105d784218299f23aa44f93&bid=35225&w=728&h=90&linkdest=model&modelnick=&clickurl=&refresh=1&meffect=random&einterval=none&logo=black&bbgcolor=none&bg_none=none&btextcolor=222222&mbordercolor=000000&mhovercolor=F7941D&mbordertype=solid&shad=0&bfontfamily=Arial&mtextalign=right&id=28644&server=runetki.com&langs=ru&campaign=655683&size=728x90&header=1&modelname=1&modelicon=1&modelinfo=1&geoflag=1&geoheader=1&selgeoheader=0&mediagroup=0&mediatype=2&skins=def&no_ab=1&no_ab_sub_data=1&no_ab_sub_media=2&category=all&srv=0&no_ab=1&no_ab_sub_data=1&no_ab_sub_media=2&no_ab_domain=freedomsex.me"></iframe>
+<!-- build:remove:dev -->
+<iframe id="frame-id-01" style="position: relative; background-color: transparent; border: none; overflow: hidden;  height: 89px; width: 728px; " src="//data.freedomsex.me/din_new8.php?code=c1b2082d1105d784218299f23aa44f93&bid=35225&w=728&h=89&linkdest=&modelnick=&clickurl=&refresh=1&meffect=random&einterval=none&logo=black&bbgcolor=none&bg_none=none&btextcolor=222222&mbordercolor=000000&mhovercolor=F7941D&mbordertype=solid&shad=0&bfontfamily=Arial&mtextalign=right&id=28644&server=runetki.com&langs=ru&campaign=655683&size=728x89&header=1&modelname=1&modelicon=1&modelinfo=1&geoflag=1&geoheader=1&selgeoheader=0&mediagroup=0&mediatype=2&skins=def&no_ab=1&no_ab_sub_data=1&no_ab_sub_media=2&category=all&srv=0&no_ab=1&no_ab_sub_data=1&no_ab_sub_media=2&no_ab_domain=freedomsex.me"></iframe>
+<!-- /build -->
 </div>
 
 %%BLOCK_STATIC_TIP%%
@@ -75,9 +81,6 @@
        <div id="human_data_block">
           <div id="human_data_print">
             <span id="human_print_name" class="human_name %%HUMAN_STATUS%%">%%HUMAN_NAME%%</span>
-            <a href="%%HUMAN_ORIGIN%%" style="text-decoration: none;" target="_blank">
-              <img id="human_photo_min" src="%%HUMAN_PHOTO%%">
-            </a>
             <span id="human_print_age">%%HUMAN_AGE%%</span> %%HUMAN_AGE_SAY%%
             <img id="edit_cont_btn" src="/img/edit_icon.png" alt="">
           </div>
@@ -148,7 +151,69 @@
         </div>
      </div>
 
+  <div id="incoming-photo">
+  <div class="incoming-photo__list" v-show="photos.length" style="display: none;">
+    <img class="incoming-photo__item-photo" :src="item._links.thumb.href" v-for="(item, index) in photos" @click="show(index)">
+  </div>
+  <div class="incoming-photo__placeholder" v-show="!photos.length">
+    Присланные фотографии будут здесь
+  </div>
+</div>
 
+<script type="text/x-template" id="photo-dialog">
+  <option-dialog @close="close">
+    <photo-view :photo="config.photo" :thumb="config.thumb" :height="config.height" :width="1000"/>
+  </option-dialog>
+</script>
+
+<script type="text/x-template" id="upload-dialog">
+  <option-dialog @close="close">
+    <div class="option_tab">
+      <div align="left" class="option_cap">
+        <b>Выберите фотографию</b><a href="/блог/как-отправить-фотографию/" class="cap_link">Подробнее...</a>
+      </div>
+      <div class="tab_context">
+       Загрузив фотографию из компьютера или флэшки
+       один раз, её можно безгранично отправлять кому угодно и сколько угодно.
+      </div>
+      <div id="upload_photo">
+        <div id="hint" style="padding: 5px 0px 5px ; color: #ccc; font-size: 11px;">
+          Размер фотографии не должен превышать 8Mb
+        </div>
+        <div class="upload_photo__add">
+          <button class="btn btn-primary" @click="upload">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            Добавить фотографию
+          </button>
+          <input id="fileupload" type="file" name="file" data-form-data='{"script": "true"}'>
+        </div>
+
+        <div class="galery-photo__list" v-show="photos.length" style="display: none;">
+          <img class="galery-photo__item-photo" :src="item._links.galery.href" v-for="(item, index) in photos" @click="show(index)">
+        </div>
+        <div class="galery-photo__placeholder" v-show="!photos.length">
+          Фотографии которые вы загрузите будут здесь
+        </div>
+        <div class="upload_photo__rules" v-show="photos.length < 5" style="display: none;">
+          <p>- Вы можете загружать и отправлять любые фотографии, в том числе и эротические фото. Премодерации фотографий нет, в
+          содержании фотографий вы контролируете себя сами</p>
+          <p>- Интимные или эротические фотографии отправлять можно, если ваш собеседник
+          согласился получить такую фотографию, и в данный момент ждёт её от вас</p>
+          <p>- Рассылать интимные фотографии всем подряд, или отправлять их, когда вас об этом не просят,
+          запрещено. Поступит много жалоб, и это грозит блокировкой</p>
+          <p>
+          <a href="/блог/не-настоящие-фотографии/" target="_blank">
+            Избегайте использования чужих интим фото, скаченных из интернета (!) Это очень легко проверить. Ваш собеседник оставит публичное замечание к вашей анкете, обнаружив обман.</a>
+          </p>
+          <p style="padding: 3px 17px 3px; margin: 10px 0; background: url(/img/icon/burn_photo.png) no-repeat left top;">
+            Фотографии, которые долго не использовались, удалятся автоматически.
+            <a href="/блог/сгорание-фотографий/" target="_blank">Подробнее...</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </option-dialog>
+</script>
   %%MAIL_FORM_MESSAGE_POST%%
   <script>
       if (anketa_collaps) {
@@ -171,14 +236,12 @@
     <span>Опубликовать замечание</span>
     <a href="/блог/анонимное-замечание-к-анкете/" class="abuse_info" target="_blank"></a>
   </div>
-  <div style=" padding-bottom: 10px;"></div>
 </div>
 
 
 
 
-
-<template id="abuse-form">
+<script type="text/x-template" id="abuse-form">
   <div id="abuse-form" style="display: none;" v-show="show">
     <div class="abuse-form__caption">
       Отправьте замечание  &nbsp;
@@ -208,7 +271,7 @@
       <a class="list-group-item abuse-form__suggest-item" v-for="item in suggest" @click="choiceText">{{ item }}</a>
     </div>
   </div>
-</template>
+</script>
 
 
 %%MAIL_CONFIRM_BLOCK_DN%%
@@ -242,7 +305,44 @@
 
 
 
-     <div id="mail_messages_block" style="display: none;"></div>
+
+
+<div id="user-dialog" v-show="!error">
+  <div class="messages__new" v-on:click="load">
+    <span class="messages__new-lamp" v-show="newCount" style="display: none;">Новые
+    +<b>{{newCount}}</b>
+    </span>
+  </div>
+  <div class="messages">
+    <message-item v-for="(item, index) in messages"
+      :item="item"
+      :index="index"
+      :count="messages.length"
+      :alert="attention"
+      :uid="uid"
+      :key="index"
+      @admit="admit"
+      @remove="remove"
+      @set-new="setNew"
+    ></message-item>
+  </div>
+  <div class="messages__next" v-on:click="load" v-show="more" style="display: none;">
+    <span class="btn btn-default btn-xs">Следующие</span>
+  </div>
+  <div class="messages__loader" v-show="!error && !response">
+    <span>
+      <img src="/static/img/icon/mess_loader.gif" v-show="toSlow" style="display: none;">
+      Загружаем
+    </span>
+  </div>
+</div>
+
+
+
+
+
+
+
 
      <div id="message_block_ex" class="_____message_list_block" style="display: none;">
       <div class="message_list_title unread">
@@ -261,6 +361,8 @@
 
 
 
+
+
      <div id="mail_bad_text_alert" style="display: none;">
       <span class="text"></span>
       <div style="margin-top: 5px;">
@@ -270,17 +372,6 @@
 
      </div>
 
-
-  <div id="mess_loader" class="message_list_title_date">
-    <span><img src="/ajax/mess_loader.gif" style="display: none;"> Загружаем</span>
-  </div>
-
-  <div id="no_js" style="padding: 15px 0; font-size: 15px; ">
-    Для работы сайта необходимо включить JavaScript в вашем браузере.
-    Иногда нарушить работу могут блокировщики рекламы и скриптов или антивирус. <br><br>
-    <b>support@freedomsex.net</b> - служба поддержки.
-  </div>
-  <script> document.getElementById('no_js').style.display = 'none'; </script>
 
 
       <div id="mail_pages" style="display: none;">
@@ -302,13 +393,22 @@
      Сообщение удалено.
      <span class="link_underline">Восстановить</span>
     </div>
-    <!-- float: right; ===================================================== -->
+
+
+
+
+  <div id="no-js" style="padding: 15px 0; font-size: 15px; ">
+    Для работы сайта необходимо включить JavaScript в вашем браузере.
+    Иногда нарушить работу могут блокировщики рекламы и скриптов или антивирус. <br><br>
+    <b>support@freedomsex.net</b> - служба поддержки.
+  </div>
+  <script> document.getElementById('no-js').style.display = 'none'; </script>
+
+
+<!-- float: right; ===================================================== -->
 
 
    </div>
-
-
-
  </div>
  <!-- Cent -->
 
@@ -364,37 +464,11 @@ border-radius: 3px;">Сохранено</span>
   </div>
 
 
-      <div id="contact_load_menu">
-        <span id="list_load_inline" class="listbox_tab active">Список</span>
-        <span id="list_load_faline" class="listbox_tab">Фавориты</span>
-        <span id="list_load_deline" class="listbox_tab">Удалено</span>
-
-        <div id="contact_update"></div>
-      </div>
-
-      <div id="contact_block">
-        <div id="list_contact_block" style=""></div>
-      </div>
-
-      <div id="listbox_line_ex" class="message_listbox_line">
-       <div class="message_listbox_link">
-        <span class="icon_list"></span>
-        <span class="user_name"></span>
-        <span class="unread_count"></span>
-        <span class="cont_list_fav_user"><i></i></span>
-        <span class="cont_list_del_user touch_option">X</span>
-        <img src="" class="photo_list" style="position: absolute; display: none; right: 25px; top: 7px; width: 24px; height: 24px;">
-      </div>
-       <div class="listbox_recover">Восстановить</div>
-       </div>
-
       <!--// Альтернативный текст в списке контактов //-->
 
       <div id="tip_list_users_block">
         <div id="tip_list_users">
-          Список сохранит всех
-          с кем вы начнёте общаться.
-          Пишите прямо сейчас.
+         Пишите прямо сейчас.
         </div>
 
         <div id="tip_list_green_text">
@@ -420,20 +494,6 @@ border-radius: 3px;">Сохранено</span>
         </div>
       </div>
 
-      <div id="contact_block_menu" style="margin: 5px 5px 5px;">
-        <span id="list_load_next" class="link_simple">Следующие</span>
-        <span id="list_show_optn" class="">Редактировать</span>
-      </div>
-
-      <script>
-
-        if( get_cookie('list_count') > 2 ) {
-         document.getElementById('tip_list_users_block').style.display = 'none';
-         document.getElementById('list_contact_block').style.display = 'block';
-         document.getElementById('list_contact_block').style.minHeight="195px";
-        }
-
-      </script>
 
       <!--// Настнойки почты под списком контактов //-->
 
@@ -578,19 +638,28 @@ border-radius: 3px;">Сохранено</span>
 </div>
 
 <div id="footer">
-    <table id="nav-table">
+    <table class="nav-table">
       <tr>
-        <td>
-          <a class="nav-table_git-link" href="https://github.com/freedomsex/freedomsex" target="_blank" rel="nofollow"></a>  
-        </td> 
+        <td rowspan="2">
+          <a class="nav-table_git-link" href="https://github.com/freedomsex/freedomsex" target="_blank" rel="nofollow"></a>
+        </td>
+        <td style="padding-bottom: 10px;">
+          <div id="bug-tracker">
+            <a class="bug-tracker__btn btn btn-xs btn-danger" href="/envelope.htm" target="_blank">Написать разработчикам</a>
+            <a class="bug-tracker__btn btn btn-xs btn-link" href="/rules.php" target="_blank">Правила сайта</a>
+          </div>
+        </td>
+      </tr>
+      <tr>
         <td>
           <a class="nav-table_link" href="/">%%DRAFT_LINK_MAIL_0%%</a> -
           <a class="nav-table_link" href="/%%TOWN%%">%%DRAFT_LINK_MAIL_1%% %%TOWN%%</a> -
           <a class="nav-table_link" href="/%%LINK_WHO%%">%%LINK_WHO%% %%DRAFT_LINK_MAIL_2%%</a>
+
         </td>
       </tr>
     </table>
-    
+
 
 <div style="display: none;">
   <img src="http://sexoo.ru/l3iBKfzTJS4s/image.png?jk=%%UNIQ_USER_KEY%%" width="1" height="1" alt="" border="0">
@@ -605,31 +674,379 @@ border-radius: 3px;">Сохранено</span>
 </div>
 </div>
 
-           
+
+<div id="contact-lists">
+  <initial-dialog v-if="initial" quick="true" @close="close"></initial-dialog>
+  <intimate-dialog v-if="intimate" @close="close"></intimate-dialog>
+  <sends-dialog v-if="sends" @close="close"></sends-dialog>
+</div>
+
+<!--<div id="router-view">
+  <router-view @close="close"></router-view>
+</div>-->
+
+<div id="option-static__viewer">
+  <upload-dialog  @close="close" v-if="view == 'upload'"></upload-dialog>
+  <photo-dialog   @close="close" v-if="view == 'photo'"></photo-dialog>
+  <api-key-update></api-key-update>
+</div>
+
 <!-- Статические опции, absolute -->
- <div id="option_static_block">
-   <div id="option_static_cover"> 
-     <div id="static_loader"></div>
+ <div id="option-static" style="display: none;">
+   <div id="option-static__cover">
+     <div id="option-static__loader"></div>
    </div>
-   <div id="option_static_wrapper">        
-     <div id="option_static_container"></div>  
-     <div id="option_static_close">Закрыть</div> 
-   </div> 
+   <div id="option-static__wrapper">
+     <div id="option-static__container"></div>
+     <div id="option-static__close">Закрыть</div>
+   </div>
  </div>
 </div>
-   <div id="giper_chat">                  
-     <div id="giper_reply" style="display: none;"> 
-       <textarea></textarea>  
-       <input class="post btn btn-default" type="submit" style="font-size: 10px; margin-right: 10px;" value="Написать всем">
-       <a href="/блог/ответить-сразу-всем/" target="_blank">Скоростное общение..</a>
-     </div>
-     <div id="giper_stock">  
-     </div> 
-   </div>
+
       </div>
     </div>
   </div>
 </div>
+
+
+<script type="text/x-template" id="api-key-update">
+  <div></div>
+</script>
+
+
+<script type="text/x-template" id="attention-wall">
+  <modal-dialog :show="show" @close="close">
+    <div class="attention-wall" v-if="show">
+      <div class="attention-wall__content">
+        <div class="attention-wall__caption">{{caption}}</div>
+        <div class="attention-wall__text">{{text}}</div>
+        <div class="attention-wall__option">
+          <button class="btn btn-primary btn-sm" @click="remove">Удалить контакт</button>
+          <button class="btn btn-link btn-sm" @click="close">Продолжить просмотр</button>
+        </div>
+      </div>
+    </div>
+  </modal-dialog>
+</script>
+
+<script type="text/x-template" id="captcha-dialog">
+  <modal-dialog :show="show" @close="close">
+    <div class="captcha-dialog__caption">
+      Подтвердите
+      <a href="/блог/простые-проверки/" target="_blank" aria-hidden="true" class="glyphicon glyphicon-info-sign"></a>
+    </div>
+    <div class="captcha-dialog__body">
+      <div class="human-dialog__desire">
+        Введите код с картинки
+      </div>
+      <div class="input-group" style="max-width: 300px;">
+        <span class="captcha-dialog__addon input-group-addon captcha-img__addon">
+          <span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span>
+        </span>
+        <span class="captcha-dialog__addon input-group-addon captcha-img__addon">
+          <img class="form-message__captcha-img" :src="src" width="48" height="20" @click="update">
+        </span>
+        <input class="form-control" type="text" autocomplete="off" v-model="code">
+      </div>
+    </div>
+
+    <div class="captcha-dialog__option">
+      <button class="btn btn-default" @click="close">
+        Вернуться
+      </button>
+      <button class="btn btn-warning" @click="send">
+        Отправить
+      </button>
+    </div>
+
+    <div class="human-dialog__form">
+
+    </div>
+  </modal-dialog>
+</script>
+
+
+<script type="text/x-template" id="initial-dialog">
+  <inform-dialog :loader="showLoader" :alert="showAlert" :hint="showHint" @close="close">
+    <span slot="caption"><b>Предложения знакомства</b></span>
+    <span slot="context">Когда вы отправляете или вам отправляют самое первое сообщение, это считается предложением знакомства.</span>
+    <span slot="hint">Здесь будет список ваших предложений знакомства.</span>
+
+    <div class="" v-if="count">
+      <contact-item v-for="(item, index) in contacts" :key="index"
+        :item="item"
+        :index="index"
+        :quick="quick"
+        @bun="bun"
+        @read="read"
+        @close="close"
+        @sended="splice"
+        @remove="remove"/>
+    </div>
+    <div style="text-align: center;">
+      <div class="btn btn-default btn-xs" @click="next()" :disabled="response == false" v-show="more"> Следующие </div>
+    </div>
+  </inform-dialog>
+</script>
+
+
+<script type="text/x-template" id="intimate-dialog">
+  <inform-dialog :loader="showLoader" :alert="showAlert" :hint="showHint" @close="close">
+    <span slot="caption"><b>Общение, диалоги и контакты</b></span>
+    <span slot="context">Отвечайте на предложения знакомства. Ваши активные диалоги сохраняются здесь, отдельно от предложений знакомства.</span>
+    <span slot="hint">Здесь будет список ваших контактов, сообщений, диалогов.</span>
+
+    <div class="" v-if="count">
+      <contact-item v-for="(item, index) in contacts" :key="index"
+        :item="item"
+        :index="index"
+        :quick="quick"
+        @bun="bun"
+        @read="read"
+        @close="close"
+        @sended="splice"
+        @remove="remove"/>
+    </div>
+    <div style="text-align: center;">
+      <div class="btn btn-default btn-xs" @click="next()" :disabled="response == false" v-show="more"> Следующие </div>
+    </div>
+  </inform-dialog>
+</script>
+
+
+<script type="text/x-template" id="contact-item">
+  <div class="contact-list__item">
+    <div class="contact-list__item-content" @click.stop="show">
+      <div class="contact-list__item-info">
+        <span class="user-list__name">{{name}}</span><span v-show="age || city">,</span>
+        <span class="user-list__age" v-show="age">{{age}}</span>
+        <span class="user-list__city" v-show="city">{{city}}</span>
+      </div>
+      <div class="contact-list__item-preview">
+
+        <span class="contact-item__status-read" v-if="unread"></span>
+        <span aria-hidden="true" class="glyphicon glyphicon-chevron-left contact-item__status-send" v-else v-show="sent"></span>
+
+        <span class="contact-item__message">{{message}}</span>
+      </div>
+    </div>
+    <div class="contact-list__item-option">
+      <span :class="0 ? 'message-item__bunn-alert' : 'message-item__bunn'"
+        v-show="!sent" @click="confirmBun">
+        <span aria-hidden="true" class="glyphicon glyphicon-thumbs-down"></span>
+      </span>
+      <span class="message-item__remove" @click="confirmRemove">
+        <span aria-hidden="true" class="glyphicon glyphicon-remove"></span>
+      </span>
+    </div>
+
+    <remove-contact :show="confirm"
+      @bun="bun"
+      @close="cancel"
+      @remove="remove"/>
+    <quick-reply v-if="detail" :show="detail" :item="item"
+      @sended="sended"
+      @close="close"/>
+  </div>
+</script>
+
+
+<script type="text/x-template" id="inform-dialog">
+  <option-dialog @close="close">
+    <div class="contact-dialog">
+      <div class="option_tab">
+        <div align="left" class="option_cap">
+          <slot name="caption">Заголовок</slot>
+        </div>
+        <div class="tab_context">
+          <slot name="context">Описание</slot>
+        </div>
+        <div class="option_loader">
+          <div class="option_loader__label" v-show="loader"></div>
+          <div class="option_loader__alert" v-show="alert"></div>
+        </div>
+        <slot></slot>
+        <div class="hint_context" v-show="hint">
+          <slot name="hint">Подсказка</slot>
+        </div>
+      </div>
+    </div>
+  </option-dialog>
+</script>
+
+
+<script type="text/x-template" id="loading-cover">
+  <div class="loading-cover" v-if="show">
+    <div class="loading-cover__wrapper">
+      <div class="loading-cover__loader">{{loader}}...</div>
+    </div>
+  </div>
+</script>
+
+
+
+<script type="text/x-template" id="loading-wall">
+  <div class="loading-wall" v-if="show">
+    <div class="loading-wall__wrapper">
+      <div class="loading-wall__loader" v-show="hope">{{loader}}...</div>
+    </div>
+  </div>
+</script>
+
+
+
+<script type="text/x-template" id="messages-item">
+<div class="message-item" @mouseleave="showOption = false">
+  <div class="message-item__date" v-if="date">
+    <span>{{date}}</span>
+  </div>
+  <div class="message-item__spliter" v-show="!previous"></div>
+  <div :class="[sent ? 'message-item__sent' : 'message-item__received']">
+    <div class="message-item__balloon" @mouseover="showOption = true" @click="fix">
+      <div v-if="image" class="message-image" :style="{ backgroundImage: 'url('+image+')' }">
+        <div class="message-image__play" @click="play">
+          <img src="/static/img/icon/play.png">
+        </div>
+        <span class="message-image__info">
+          <span class="message-image__status" v-show="!read"></span>
+          <span class="message-image__time">{{time}}</span>
+        </span>
+      </div>
+      <span v-else>
+        <span v-html="item.mess"></span>
+        <span class="message-info">
+          <span class="message-info__status" v-show="!read"></span>
+          <span class="message-info__time">{{time}}</span>
+        </span>
+
+      </span>
+
+
+    </div>
+    <span :class="attention ? 'message-item__bunn-alert' : 'message-item__bunn'"
+      v-show="!sent && option" @click="showDialog = sent ? 'some' : 'doit'">
+      <span aria-hidden="true" class="glyphicon glyphicon-thumbs-down"></span>
+    </span>
+    <span class="message-item__remove" v-show="option" @click="showDialog = sent ? 'some' : 'must'">
+      <span aria-hidden="true" class="glyphicon glyphicon-remove"></span>
+    </span>
+  </div>
+  <remove-confirm
+    :show="showDialog"
+    :data="item"
+    @bun="bun"
+    @close="cancel"
+    @remove="remove"
+  ></remove-confirm>
+</div>
+</script>
+
+
+<script type="text/x-template" id="modal-dialog">
+  <div class="modal-dialog__mask" v-if="show" transition="modal" @click="close">
+    <div class="modal-dialog__container" @click.stop>
+      <slot></slot>
+    </div>
+  </div>
+</script>
+
+
+<script type="text/x-template" id="option-static__dialog-window">
+  <div class="option-dialog">
+    <div class="option-dialog__cover">
+      <div class="option-dialog__loader"></div>
+    </div>
+    <div class="option-dialog__wrapper" @click="close">
+      <div class="option-dialog__container" @click.stop>
+        <slot></slot>
+      </div>
+      <div class="option-dialog__close" @click.stop="close">
+        Закрыть
+        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+      </div>
+    </div>
+  </div>
+</script>
+
+
+
+<script type="text/x-template" id="photo-view">
+    <div class="photo-view" :style="{ backgroundImage: 'url('+thumb+')', minHeight: height + 'px'}">
+      <div class="photo-view__accept" v-if="!accept">
+        <div class="photo-view__accept-caption">
+          Контроль содержания отсутствует
+        </div>
+        <div class="photo-view__accept-text">
+          У администраторов нет доступа к загружаемым фото.
+          Внимание! Изображения могут иметь возрастные ограничения. Пожалуйста, подтвердите
+          что вы имеете право продолжить просмотр.
+        </div>
+        <div class="photo-view__accept-option">
+          <button class="btn btn-success btn-sm" @click="approve">
+            <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+            Подтверждаю
+          </button>
+        </div>
+      </div>
+      <div v-else>
+        <img :src="photo" :style="{ maxWidth: width +'px' }">
+      </div>
+    </div>
+</script>
+
+
+
+<script type="text/x-template" id="quick-reply">
+  <modal-dialog :show="show" @close="close">
+    <div class="human-dialog__caption">
+      Быстрый ответ
+    </div>
+    <div class="human-dialog__body">
+      <div class="human-dialog__desire" v-show="tags.length">
+        <span class="link_simple" v-for="(tag, index) in tags" :key="index" v-show="tag">{{tag}} &#8226; </span>
+      </div>
+      <div class="human-dialog__message" v-show="message">
+        {{message}}
+      </div>
+    </div>
+
+
+    <div class="message-input">
+      <textarea class="message-input__texarea" rows="1" placeholder="Введите текст" v-model="text" v-resized></textarea>
+        <button class="btn btn-primary" @click="send()">Отправить</button>
+        <button class="btn btn-link" @click="anketa()">Читать полностью...</button>
+    </div>
+    <attention-wall :show="hold" @close="cancel" @remove="remove"/>
+    <loading-wall :show="loading"/>
+    <loading-cover :show="process"/>
+
+    <remove-confirm :show="confirm" @bun="bun" @close="cancel" @remove="remove"/>
+    <captcha-dialog :show="captcha" @close="close" @cancel="cancel" @send="setCode"/>
+  </modal-dialog>
+</script>
+
+
+<script type="text/x-template" id="remove-confirm">
+  <modal-dialog :show="show" @close="close">
+    <div class="modal-dialog__wrapper">
+      <div class="modal-dialog__caption">
+        {{caption}}
+      </div>
+      <div class="modal-dialog__body">
+        {{text}}
+      </div>
+      <div class="modal-dialog__footer">
+        <button class="btn btn-primary" @click="bun()" v-if="show == 'doit'">{{action}}</button>
+        <button class="btn btn-danger" @click="remove()" v-else>{{action}}</button>
+        <button class="btn btn-default" @click="close()">Отмена</button>
+      </div>
+    </div>
+  </modal-dialog>
+</script>
+
+<!-- build:include dialogs/inform-dialog.htm --><!-- /build -->
+
+<!-- build:include dialogs/captcha-dialog.htm --><!-- /build -->
 
 
    <script type="text/javascript">
@@ -676,8 +1093,15 @@ border-radius: 3px;">Сохранено</span>
   <input id="edit_human_name" type="text" placeholder="Имя" style="width: 150px;">
   <input id="edit_human_btn"  type="submit" value=" Сохранить ">
 </div>
+<<<<<<< HEAD
+=======
+<!-- build:[src]:dev /static/js/jquery/ -->
+>>>>>>> master
  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+ <!-- /build -->
+ <!-- build:[src]:dev /static/js/jquery-ui/ -->
  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<<<<<<< HEAD
 
 <script src="https://unpkg.com/json3@3.3.2/dist/json3.js"></script>
 <script src="https://unpkg.com/underscore@1.8.3/dist/underscore.js"></script>
@@ -685,8 +1109,12 @@ border-radius: 3px;">Сохранено</span>
 <script src="https://unpkg.com/vue@2.1.10/dist/vue.js"></script>
 <script src="https://unpkg.com/vuex@2.0.0/dist/vuex.js"></script>
 <script src="https://unpkg.com/vue-resource@1.0.3/dist/vue-resource.js"></script>
+=======
+ <!-- /build -->
+>>>>>>> master
 
 <script type="text/javascript" src="%%JS_FILE%%"></script>
+<!-- Исходники можно найти в репозитории. Тамже собранные не сжатые файлы -->
 <script type="text/javascript" src="%%JS_MESS%%"></script>
 </body>
 </html>

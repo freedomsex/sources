@@ -7,7 +7,8 @@ var profile_old = new Vue({
         normal:  0,
     },
     mounted: function () {
-        var day = 86400; console.log(this.old);
+        let day = 86400;
+        console.log(this.old);
         if (this.old < day / 2) {
             this.alert = 1;
         } else
@@ -25,7 +26,11 @@ var profile_old = new Vue({
     },
     computed: {
         old: function () {
-            return this.$el.attributes['data-old'].value;
+            let result = 0;
+            if (this.$el && this.$el.attributes['data-old']) {
+                result = this.$el.attributes['data-old'].value;
+            }
+            return result;
         },
     }
 });
@@ -39,7 +44,8 @@ var profile_last = new Vue({
         normal:  0,
     },
     mounted: function () {
-        var day = 86400; console.log(this.old);
+        var day = 86400;
+        console.log(this.old);
         if (this.old < 777) {
             this.alert = 1;
         } else
@@ -57,7 +63,11 @@ var profile_last = new Vue({
     },
     computed: {
         old: function () {
-            return this.$el.attributes['data-old'].value;
+            let result = 0;
+            if (this.$el && this.$el.attributes['data-old']) {
+                result = this.$el.attributes['data-old'].value;
+            }
+            return result;
         },
     }
 });

@@ -1,22 +1,31 @@
 #footer {
-    clear:      both; 
-    padding:    @indent-lg @indent-lg @indent-lg; 
-    color:      @dark; 
-    background: @alert-sand;  
+    clear:      both;
+    padding:    @indent-lg @indent-lg @indent-lg;
+    color:      @dark;
+    background: @alert-sand;
     border-top: 0px solid @gray-light;
 }
 
+#bug-tracker {
+    position: relative;
+    .bug-tracker__btn {
+      position: relative;
+      //top: -10px;
+    }
+}
+
+
 #footer-info {
-    background: @white; 
+    background: @white;
     border-top: 1px solid @gray-light;
-    padding: @indent-md @indent-lg 0 @indent-lg; 
-    color: @dark-light;  
+    padding: @indent-md @indent-lg 0 @indent-lg;
+    color: @dark-light;
     border-bottom: 1px solid @gray-light;
 }
 
 .footer-info__more-photo {
-    color:     @dark-light; 
-    font-size: @font-lg; 
+    color:     @dark-light;
+    font-size: @font-lg;
     text-decoration: none;
 }
 
@@ -30,42 +39,41 @@
 }
 
 .extra-count__link {
-    color: @dark-light; 
+    color: @dark-light;
     text-decoration: none;
 }
 
 .extra-count__count {
-    color: @orange; 
+    color: @orange;
     font-size: @font-xl;
     margin: 0px 10px;
 }
 
 
-#nav-table {
-    
+.nav-table {
+    td {
+        vertical-align: middle;
+        padding-right:  @indent-md;
+    }
 }
-#nav-table td {
-    vertical-align: middle; 
-    padding-right:  @indent-md;
-}
-
 .nav-table_git-link {
-    padding: 0px; 
-    background: url('/static/img/icon/github.png') no-repeat; 
-    display: inline-block; 
-    width: 100px; 
+    padding: 0px;
+    background: url('/static/img/icon/github.png') no-repeat;
+    display: inline-block;
+    width: 100px;
     height: 37px;
-    margin-right: @indent-md;
+    margin-right: 0;
 }
 
 .nav-table_link {
-    color:   @dark-light; 
-    padding: 0 @indent-xs @indent-sm 0; 
+    color:   @dark-light;
+    padding: 0 @indent-xs @indent-sm 0;
     text-decoration: none;
     &:hover {
         color: @dark;
     }
 }
+
 
 #info-table {
     margin: @indent-md 0;
