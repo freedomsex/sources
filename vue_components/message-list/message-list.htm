@@ -1,0 +1,33 @@
+
+
+<script type="text/x-template" id="message-list">
+  <div class="message-list" v-show="!error">
+    <div class="messages__new" v-on:click="load">
+      <span class="messages__new-lamp" v-show="newCount" style="display: none;">Новые
+      +<b>{{newCount}}</b>
+      </span>
+    </div>
+    <div class="messages">
+      <message-item v-for="(item, index) in messages"
+        :item="item"
+        :index="index"
+        :count="messages.length"
+        :alert="attention"
+        :uid="uid"
+        :key="index"
+        @admit="admit"
+        @remove="remove"
+        @set-new="setNew"
+      ></message-item>
+    </div>
+    <div class="messages__next" v-on:click="load" v-show="more" style="display: none;">
+      <span class="btn btn-default btn-xs">Следующие</span>
+    </div>
+    <div class="messages__loader" v-show="!error && !response">
+      <span>
+        <img src="/static/img/icon/mess_loader.gif" v-show="toSlow" style="display: none;">
+        Загружаем
+      </span>
+    </div>
+  </div>
+</script>

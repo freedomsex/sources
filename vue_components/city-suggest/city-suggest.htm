@@ -1,0 +1,10 @@
+
+<script type="text/x-template" id="city-suggest">
+  <div class="city-suggest-ed">
+    <input class="city-suggest-ed__input form-control" type="text" autocomplete="off"
+      v-model="query" @keyup="load()">
+    <ul class="dropdown-menu" v-show="suggested">
+      <li v-for="(item, index) in cities" :key="index" @click="select(item)"><a href="#" @click.prevent>{{item}}</a></li>
+    </ul>
+  </div>
+</script>

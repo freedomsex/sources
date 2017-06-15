@@ -1,11 +1,50 @@
 
 /*-- menu user ---------------------------------------------------------------*/
 
+#menu-user {
+    &.navbar {
+        margin-bottom: 0px;
+    }
+}
+
+.navbar {
+    border-radius: 0px;
+    &.navbar-inverse {
+      background: @menu-color;
+      border-width: 0px;
+    }
+}
+
+
+.navbar-inverse {
+    .navbar-nav {
+        font-size: 15px;
+        li {
+            a {
+                color: @white;
+            }
+            .material-icons {
+                line-height: 15px;
+                max-width: 24px;
+                vertical-align: middle;
+                position: relative;
+                bottom: 1px;
+            }
+            &:hover {
+                background: @menu-hover;
+            }
+        }
+    }
+    .navbar-text {
+        color: @white;
+        cursor: pointer;
+    }
+}
+
 div.menu_user_outer {
     background: @menu-color;
     height: @height8;
     margin: 0 0 0 0;
-    min-width: @width10; // !!! хак для мобильников
     padding: 0;
     text-align: center;
     a {
@@ -23,11 +62,11 @@ div.menu_user_inner {
     width: @width0;
 }
 #home_page {
-    display: inline-block;
-    float: left;
-    margin-left: 15px;
-    margin-top: 17px;
-    width: 35px;
+    //display: inline-block;
+    //float: left;
+    //margin-left: 15px;
+    //margin-top: 17px;
+    //width: 35px;
 }
 ul.menu_user,
 ul.menu_user li,

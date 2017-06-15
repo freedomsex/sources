@@ -1,0 +1,64 @@
+
+.message-dialog {
+    display: flex;
+    border: 0px solid gray;
+    flex-direction: column;
+    overflow: hidden;
+    height: 100%;
+    &__history {
+        flex: 1 1 auto;
+        overflow: hidden;
+        border: 0px solid blue;
+    }
+    &__tools {
+        flex: none;
+        border-top: 1px solid @gray;
+        background: @light;
+    }
+}
+
+.send-form {
+    position: relative;
+    display: flex;
+    width: 100%;
+    // min-height: 64px;
+    border: 0px solid red;
+    align-items: center;
+    &__textarea {
+        flex: 1;
+        border: 0px solid gray;
+        padding: 7px 0;
+        align-self: center;
+    }
+    &__message-text {
+        height: 0;
+        overflow: auto;
+        min-height: 36px;
+        padding: 10px 5px;
+        font-size: 14px;
+        margin: auto;
+        overflow-y: hidden;
+        resize: vertical;
+    }
+
+    &__button {
+        &-send {
+            cursor: pointer;
+            flex: 0;
+            color: @dark-light;
+            padding: 5px 10px;
+        }
+        &-account {
+            cursor: pointer;
+            flex: 0;
+            color: @dark-light;
+            padding: 5px 10px;
+        }
+    }
+
+    i {
+        vertical-align: middle;
+    }
+}
+
+

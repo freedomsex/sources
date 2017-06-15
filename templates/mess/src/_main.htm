@@ -8,18 +8,26 @@
 %%USER_MENUE_BLOCK%%
 %%JS_USER_VARS%%
 
-<div class="container-fluid">
+<div id="app" class="container">
   <div class="row">
-    <div class="col-md-1 hidden-xs hidden-sm">
-    </div>
-    <div class="col-md-11 col-xs-12 col-sm-12">
-      <div id="earlap">
+    <div class="col-md-12">
       <!-- build:include main.htm --><!-- /build -->
-      </div>
     </div>
   </div>
 </div>
 <!-- build:include ../../_common/footer.htm --><!-- /build -->
+
+
+<!-- build:include key-session.htm -->Мутная штука для простановки сессий на зеркалах<!-- /build -->
+%%BLOCK_COUNTER_ALL%% <!-- счетчики статистики -->
+<!-- build:include dev-info.htm -->Информация для отладки, если включено<!-- /build -->
 <script type="text/javascript" src="%%JS_MESS%%"></script>
+
+<script type="text/javascript">
+    // var addthis_config = {"data_track_addressbar":false};
+    //     addthis_config.data_track_addressbar = false;
+    //     addthis_config.data_track_clickback = false;
+</script>
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-593e8bd77e5130d5"></script>
 </body>
 </html>

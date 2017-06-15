@@ -26,15 +26,29 @@ html {
     width:@width14;
 }
 body {
-    background: @light;
+//    background: @light;
     color: @dark;
     font-family: Arial, Tahoma, Verdana, sans-serif;
-    font-size: 12px;
+//    font-size: 12px;
     height:@height4;
-    line-height: 1;
+//    line-height: 1;
     margin: 0;
     width:@width14;
 }
+
+.container {
+    max-width: 750px;
+/*    margin-left: 0;
+
+    @media (min-width: 992px) {
+        margin-left: 100px;
+    }
+
+    @media (min-width: 1170px) {
+        margin-left: 150px;
+    }*/
+}
+
 a {
     -moz-transition: color 0.2s ease;
     -o-transition: color 0.2s ease;
@@ -160,10 +174,6 @@ label {
     position: relative;
     width: @width10;
 }
-#earlap {
-    border: 0px solid blue;
-    width: @width0;
-}
 #giper_chat {
     float: right;
     margin-top: 0px;
@@ -183,23 +193,6 @@ label {
         margin-bottom: 5px;
         min-height: 30px;
     }
-}
-
-
-@media (max-width: 1200px) {
-    #earlap {
-        width: 728px;
-    }
-    #giper_chat {
-        display: none;
-    }
-    div.menu_user_inner {
-        width: 728px;
-    }
-    li.menu_user_link_ear {
-        width: 0px;
-    }
-
 }
 
 
@@ -616,50 +609,6 @@ a.name {
     right: 0px;
     text-align: left;
     z-index: 100;
-}
-.town_line {
-    color: @dark;
-    font-size: 11px;
-    padding: 3px 4px;
-    b {
-        font-size: 12px;
-    }
-    i {
-        font-size: 10px;
-    }
-    &:hover {
-        background: DodgerBlue;
-        color: White;
-    }
-}
-.suggest_wrap {
-    display: inline-block;
-    margin: 0px;
-    position: relative;
-}
-.suggest_block {
-    background: White;
-    border: 1px solid DarkGray;
-    cursor: pointer;
-    display: none;
-    left: 0px;
-    margin: 0px;
-    max-height: @height1;
-    overflow-x: hidden;
-    overflow-y: auto;
-    position: absolute;
-    right: 0px;
-    text-align: left;
-    z-index: 100;
-}
-.suggest_line {
-    color: @dark;
-    font-size: 11px;
-    padding: 3px 4px;
-    &:hover {
-        background: DodgerBlue;
-        color: White;
-    }
 }
 .small_loader {
     background: url('/img/ajax_clock_small.gif') no-repeat;

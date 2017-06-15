@@ -8,8 +8,8 @@ Vue.directive('resized', {
   }
 })
 
-Vue.component('quick-reply', {
-    props: ['show', 'item'],
+var QuickMessage = Vue.component('quick-message', {
+    props: ['humanId'],
     data() {
         return {
             text: '',
@@ -30,31 +30,22 @@ Vue.component('quick-reply', {
         },
         hold() {
             return this.ignore ? 0 : this.human.hold;
-        },
-        message() {
-            return this.item.message ? this.item.message.text : '';
         }
     },
     mounted() {
         this.reload();
     },
-    updated() {
-        if (this.show) {
-        }
-    },
     methods: {
         reload() {
-            if (!this.show) {
-                return false;
-            }
             this.loading = true;
             setTimeout(() => this.loading = false, 4 * 1000);
-            store.dispatch('human', this.item.human_id).then((response) => {
+            store.dispatch('HUMAN', this.humanId).then((response) => {
                 this.loaded();
             }).catch((error) => {
                 console.log(error);
                 this.loading = false;
             });
+                console.log('reload*reload');
         },
         loaded() {
             this.loading = false;
@@ -65,18 +56,8 @@ Vue.component('quick-reply', {
         close() {
             this.$emit('close');
         },
-        bun() {
-            this.$emit('bun');
-        },
         remove() {
-            // store.dispatch('initial/DELETE', {uid: '1001', cont_id: contact}).then((response) => {
-            //     this.loaded();
-            // });
-            //
-            //  :href="'/' + item.human_id"
-            //
-            //
-            console.log('conf:',{uid: '1001', cont_id: this.item.id} )
+            console.log('::remove:: (!)');
             this.$emit('remove');
         },
         cancel() {
@@ -91,7 +72,7 @@ Vue.component('quick-reply', {
         },
         send() {
             let data = {
-                id: this.item.human_id,
+                id: this.humanId,
                 mess: this.text,
                 captcha_code: this.code
             };
@@ -122,12 +103,12 @@ Vue.component('quick-reply', {
             this.$emit('sended');
         },
         anketa() {
-            window.location = '/' + this.item.human_id;
+            window.location = '/' + this.humanId;
         },
         onError() {
             this.process = false;
         }
     },
-    template: '#quick-reply',
+    template: '#quick-message',
 });
 

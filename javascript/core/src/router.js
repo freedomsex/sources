@@ -21,10 +21,10 @@
 
 // // 3. Создаём инстанс роутера с опцией `routes`
 // // Можно передать и другие опции, но пока не будем усложнять
-// const router = new VueRouter({
-//   //mode: 'history',
-//   routes // сокращение от routes: routes
-// })
+const router = new VueRouter({
+  mode: 'history',
+  routes: [] // сокращение от routes: routes
+})
 
 // const RouterView = new Vue({
 //     el: '#router-view',

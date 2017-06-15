@@ -17,9 +17,10 @@
     
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+ <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 <link rel="stylesheet" type="text/css" href="%%CSS_FILE%%">
-     
+
 
   <script type="text/javascript">  
     function get_cookie ( cookie_name )
@@ -43,30 +44,41 @@
 %%USER_MENUE_BLOCK%%
 %%JS_USER_VARS%%
 
-<div class="container-fluid">
+<div id="app" class="container">
   <div class="row">
-    <div class="col-md-1 hidden-xs hidden-sm">
-    </div>
-    <div class="col-md-11 col-xs-12 col-sm-12">
-      <div id="earlap">
-      <div id="index_cent">
+    <div class="col-md-12">
+      
 %%ALERT_BLOCK_TOP_GEN%%
-<div style="border-bottom: 1px solid #E5E5E5;">
-<!-- build:remove:dev -->
-<iframe id="frame-id-01" style="position: relative; background-color: transparent; border: none; overflow: hidden;  height: 89px; width: 728px; " src="//data.freedomsex.me/din_new8.php?code=c1b2082d1105d784218299f23aa44f93&bid=35225&w=728&h=89&linkdest=&modelnick=&clickurl=&refresh=1&meffect=random&einterval=none&logo=black&bbgcolor=none&bg_none=none&btextcolor=222222&mbordercolor=000000&mhovercolor=F7941D&mbordertype=solid&shad=0&bfontfamily=Arial&mtextalign=right&id=28644&server=runetki.com&langs=ru&campaign=655683&size=728x89&header=1&modelname=1&modelicon=1&modelinfo=1&geoflag=1&geoheader=1&selgeoheader=0&mediagroup=0&mediatype=2&skins=def&no_ab=1&no_ab_sub_data=1&no_ab_sub_media=2&category=all&srv=0&no_ab=1&no_ab_sub_data=1&no_ab_sub_media=2&no_ab_domain=freedomsex.me"></iframe>
-<!-- /build -->
-</div>
+<div style="border-bottom: 1px solid #E5E5E5;"></div>
 
 %%BLOCK_STATIC_TIP%%
 
- <div id="cent">
 
-    %%MAIL_TIPS_BLOCK_UP%%
+  <div id="search-wizard">
+    <div class="alert alert-warning" @click="openSearchSettings()">
+        <p>
+          <i class="material-icons">&#xE8B4;</i>
+          Вы ищете: знакомства и общение с кем угодно, из любого города &nbsp;
+          <button class="btn btn-default btn-sm" @click="openSearchSettings()">
+              <span aria-hidden="true" class="glyphicon glyphicon-cog"></span>
+              Настроить поиск
+          </button>
+      </p>
+    </div>
+  </div>
 
-    %%MAIL_CONFIRM_BLOCK_UP%%
 
-   <div id="anketa_master_info"></div>
-   <div id="human_cent_block">
+
+
+<div class="row">
+  <div class="col-sm-8">
+  
+  %%MAIL_TIPS_BLOCK_UP%%
+
+  %%MAIL_CONFIRM_BLOCK_UP%%
+
+  <div id="anketa_master_info"></div>
+  <div id="human_cent_block">
      <div id="anketa_first_info" style="margin-bottom: 5px;">
        <div id="human_labe_block">
            %%DATING_LABEL_BUTTON%%
@@ -77,25 +89,11 @@
           <div id="human_data_print">
             <span id="human_print_name" class="human_name %%HUMAN_STATUS%%">%%HUMAN_NAME%%</span>
             <span id="human_print_age">%%HUMAN_AGE%%</span> %%HUMAN_AGE_SAY%%
-            <img id="edit_cont_btn" src="/img/edit_icon.png" alt="">
           </div>
        </div>
      </div>
 
      <div id="anketa_second_info" style="margin-bottom: 15px;">
-       <script>
-           var anketa_collaps = 0;
-           try {
-               var result = localStorage.getItem('visitor_list');
-               if (result.indexOf(tid) >= 0) {
-                   document.getElementById('anketa_second_info').style.display = 'none';
-                   anketa_collaps = 1;
-               }
-           } catch (e) { }
-
-       </script>
-
-
        <span id="human_print_city" style="color: #aaa;">%%HUMAN_CITY%%</span>
 
        <div id="human_search_block" style="padding: 15px 0 5px;">
@@ -112,14 +110,8 @@
        </div>
 
        <div id="human_status_block">
-           <span class="%%TIME_STYLE%%" title="%%TIME_SAY%%">%%HUMAN_TIME%%</span>
-           <span id="lock_user_link" class="link_simple" style="display: none;"
-            title="Полная блокировка - потеряет возможность общаться с вами">
-            Заблокировать
-           </span>
-           <span style="padding: 0px 5px; display: none;">
-             <img src="/img/ajax_loader_gray.gif" style="vertical-align: middle;">
-           </span>
+         <div class="btn btn-primary" @click="newMessage">Написать сообщение</div>
+         <quick-message v-if="globalNew" :human-id="globalNew" @close="closeMessage"></quick-message>
        </div>
 
        <div id="human_anketa_block">
@@ -129,562 +121,63 @@
            %%ADDITIONAL_CONTACT%%
            %%DESIRE_TAG%%
        </div>
-
-
-        <div id="lock_inform_block" class="mail_confirm_block" style="display: none;">
-           Контакт заблокирован и удалён из списка.<br><br>
-
-           Пожалуйста, кликните "Удалить и наказать" у сообщения, послужившего причиной жалобы, можно несколько.
-           Наказание начинает действовать сразу.
-
-           <span id="link_lock_abuse" class="link_simple">Опубликовать замечание</span>
-
-        </div>
-        <div id="unlock_inform_block" class="mail_confirm_block" style="display: none;">
-           Просто напишите сообщение заблокированному пользователю, он будет автоматически
-           разблокирован и добавлен в ваш список контактов. В случае чего, его всегда можно найти в поиске.
-        </div>
      </div>
-
-  <div id="incoming-photo">
-  <div class="incoming-photo__list" v-show="photos.length" style="display: none;">
-    <img class="incoming-photo__item-photo" :src="item._links.thumb.href" v-for="(item, index) in photos" @click="show(index)">
-  </div>
-  <div class="incoming-photo__placeholder" v-show="!photos.length">
-    Присланные фотографии будут здесь
-  </div>
 </div>
-
-<script type="text/x-template" id="photo-dialog">
-  <option-dialog @close="close">
-    <photo-view :photo="config.photo" :thumb="config.thumb" :height="config.height" :width="1000"/>
-  </option-dialog>
-</script>
-
-<script type="text/x-template" id="upload-dialog">
-  <option-dialog @close="close">
-    <div class="option_tab">
-      <div align="left" class="option_cap">
-        <b>Выберите фотографию</b><a href="/блог/как-отправить-фотографию/" class="cap_link">Подробнее...</a>
-      </div>
-      <div class="tab_context">
-       Загрузив фотографию из компьютера или флэшки
-       один раз, её можно безгранично отправлять кому угодно и сколько угодно.
-      </div>
-      <div id="upload_photo">
-        <div id="hint" style="padding: 5px 0px 5px ; color: #ccc; font-size: 11px;">
-          Размер фотографии не должен превышать 8Mb
-        </div>
-        <div class="upload_photo__add">
-          <button class="btn btn-primary" @click="upload">
-            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-            Добавить фотографию
-          </button>
-          <input id="fileupload" type="file" name="file" data-form-data='{"script": "true"}'>
-        </div>
-
-        <div class="galery-photo__list" v-show="photos.length" style="display: none;">
-          <img class="galery-photo__item-photo" :src="item._links.galery.href" v-for="(item, index) in photos" @click="show(index)">
-        </div>
-        <div class="galery-photo__placeholder" v-show="!photos.length">
-          Фотографии которые вы загрузите будут здесь
-        </div>
-        <div class="upload_photo__rules" v-show="photos.length < 5" style="display: none;">
-          <p>- Вы можете загружать и отправлять любые фотографии, в том числе и эротические фото. Премодерации фотографий нет, в
-          содержании фотографий вы контролируете себя сами</p>
-          <p>- Интимные или эротические фотографии отправлять можно, если ваш собеседник
-          согласился получить такую фотографию, и в данный момент ждёт её от вас</p>
-          <p>- Рассылать интимные фотографии всем подряд, или отправлять их, когда вас об этом не просят,
-          запрещено. Поступит много жалоб, и это грозит блокировкой</p>
-          <p>
-          <a href="/блог/не-настоящие-фотографии/" target="_blank">
-            Избегайте использования чужих интим фото, скаченных из интернета (!) Это очень легко проверить. Ваш собеседник оставит публичное замечание к вашей анкете, обнаружив обман.</a>
-          </p>
-          <p style="padding: 3px 17px 3px; margin: 10px 0; background: url(/img/icon/burn_photo.png) no-repeat left top;">
-            Фотографии, которые долго не использовались, удалятся автоматически.
-            <a href="/блог/сгорание-фотографий/" target="_blank">Подробнее...</a>
-          </p>
-        </div>
-      </div>
-    </div>
-  </option-dialog>
-</script>
-  %%MAIL_FORM_MESSAGE_POST%%
-  <script>
-      if (anketa_collaps) {
-          document.getElementById('anketa_collaps_link').innerHTML = "Развернуть анкету";
-      }
-  </script>
-
-
-<div id="abuse-list-component">
-  <div class="abuse-indicator">
-    <span class="abuse-indicator__good" @click="showForm" v-show="!abuseStatus && !isButtonShow" style="display: none;">Замечаний нет</span>
-    <span class="abuse-indicator__bad" @click="showList" v-show="abuseStatus && !isButtonShow" style="display: none;">Есть замечания</span>
   </div>
+  <div class="col-sm-4">
+  <div style="border-left: 1px solid #e5e5e5; padding-left: 10px;">
+  <a class="btn btn-xs btn-link" href="/">%%DRAFT_LINK_MAIL_0%%</a>
+  <a class="btn btn-xs btn-link" href="/%%TOWN%%">%%DRAFT_LINK_MAIL_1%% %%TOWN%%</a>
+  <a class="btn btn-xs btn-link" href="/%%LINK_WHO%%">%%LINK_WHO%% %%DRAFT_LINK_MAIL_2%%</a>
 
-  <div class="abuse-list__list" style="display: none;" v-show="isListShow"></div>
-
-  <abuse-form :show="isFormShow" @cancel="hideForm"></abuse-form>
-
-  <div class="abuse-list__add-btn" @click="showForm" v-show="isButtonShow" style="display: none;">
-    <span>Опубликовать замечание</span>
-    <a href="/блог/анонимное-замечание-к-анкете/" class="abuse_info" target="_blank"></a>
+  <a class="btn btn-xs btn-link" href="/envelope.htm" target="_blank">Написать разработчикам</a>
+  <a class="btn btn-xs btn-link" href="/rules.php" target="_blank">Правила сайта</a>
+</div>
   </div>
 </div>
 
 
 
-
-<script type="text/x-template" id="abuse-form">
-  <div id="abuse-form" style="display: none;" v-show="show">
-    <div class="abuse-form__caption">
-      Отправьте замечание  &nbsp;
-      <a href="/блог/анонимное-замечание-к-анкете/" target="_blank" class="link_simple" style="font-size: 12px;">Это анонимно...</a>
-    </div>
-
-    <div class="abuse-form__editor" style="display: none;" v-show="isEditorShow && !isSuggestShow">
-      <textarea class="abuse-form__input" v-model="text"></textarea>
-
-      <div id="strong_captcha_block_abuse" style="display: none; margin: 0 0 5px; ">
-        <p style="padding: 0px 0 10px 0; margin: 0;">
-          - без оскорблений, клеветы и домыслов <br>
-          - только серьёзные и негативные замечания<br>
-          - описание обстоятельств приветствуется
-        </p>
-        <img src="" style="width: 122px; vertical-align: bottom; margin: 2px 0; border: 1px solid #AAA; ">
-        <input type="text" id="abuse_code_val" style="width: 120px;" placeholder="Введите код">
-      </div>
-      <button class="btn btn-sm btn-warning abuse-form__btn" type="button" @click="post">
-        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-        Отправить
-      </button>  &nbsp;
-      <span class="link_simple" @click="cancel">Не отправлять</span>
-    </div>
-
-    <div class=" list-group abuse-form__suggest" v-show="isSuggestShow">
-      <a class="list-group-item abuse-form__suggest-item" v-for="item in suggest" @click="choiceText">{{ item }}</a>
-    </div>
-  </div>
-</script>
-
-
-%%MAIL_CONFIRM_BLOCK_DN%%
-<div id="confirm_block_dn" class="mail_confirm_block" style="display: none;" ></div>
-
-
-
-     <div id="mess_shab_text_block" style="display: none;">
-
-      <div class="message_list_title_date">
-       <span>Здесь будет история вашей переписки</span>
-      </div>  <br />
-
-
-      <div id="mess_shab_text_caption">
-        Быстрые сообщения. Выберите чтобы отправить
-      </div>
-
-      <div id="mess_shab_text_link">
-        <span id="mess_shab_wrap"></span>
-        <span id="mess_shab_more" class="link_simple">Ещё..</span>
-      </div>
-
-      <div id="">
-        <span id="quick_tab_public" class="quick_mess_tab" data-tab="public">Познакомиться</span>
-        <span id="quick_tab_offer" class="quick_mess_tab" data-tab="offer">Реал секс</span>
-        <span id="quick_tab_virt" class="quick_mess_tab" data-tab="virt">Вирт секс</span>
-      </div>
-
-     </div>
-
-
-
-
-
-<div id="user-dialog" v-show="!error">
-  <div class="messages__new" v-on:click="load">
-    <span class="messages__new-lamp" v-show="newCount" style="display: none;">Новые
-    +<b>{{newCount}}</b>
-    </span>
-  </div>
-  <div class="messages">
-    <message-item v-for="(item, index) in messages"
-      :item="item"
-      :index="index"
-      :count="messages.length"
-      :alert="attention"
-      :uid="uid"
-      :key="index"
-      @admit="admit"
-      @remove="remove"
-      @set-new="setNew"
-    ></message-item>
-  </div>
-  <div class="messages__next" v-on:click="load" v-show="more" style="display: none;">
-    <span class="btn btn-default btn-xs">Следующие</span>
-  </div>
-  <div class="messages__loader" v-show="!error && !response">
-    <span>
-      <img src="/static/img/icon/mess_loader.gif" v-show="toSlow" style="display: none;">
-      Загружаем
-    </span>
-  </div>
-</div>
-
-
-
-
-
-
-
-
-     <div id="message_block_ex" class="_____message_list_block" style="display: none;">
-      <div class="message_list_title unread">
-        <span class="user_name"></span>
-        <span class="message_list_save bunned_mess" data-number="8973758"
-         style="margin-left: 3px; vertical-align: bottom; ">Удалить и наказать</span>
-        <div class="message_list_time unread">
-         <span class="message_list_save remove_mess" data-number="8973758">Удалить</span>
-         <span class="mess_time"></span>
-        </div>
-      </div>
-      <div class="message_list_body"></div>
-      <div style="clear: both;"></div>
-     </div>
-
-
-
-
-
-
-     <div id="mail_bad_text_alert" style="display: none;">
-      <span class="text"></span>
-      <div style="margin-top: 5px;">
-       <input type="button" value="Посмотреть сообщения" style="font-size: 11px;">  &nbsp;
-       <span class="link_underline">Игнорировать и удалить</span>
-      </div>
-
-     </div>
-
-
-
-      <div id="mail_pages" style="display: none;">
-       <span id="mail_pages_next" class="link_underline">следующие »</span>
-       <div class="save_notice">
-         Ненужные сообщения удаляются автоматически.
-         <a href="/блог/сохраняйте-только-важное">Подробнее...</a>
-       </div>
-      </div>
-
-     <div id="mess_option_hint" style="display: none;">
-      <div style="display: inline-block; padding: 5px 0px 1px 0px; color: #888;
-       font-size: 9px;">
-       Для отображения опций кликните по сообщению или наведите курсор мыши</div>
-     </div>
-
-
-    <div id="recover_mess_block_ex" class="mail_confirm_block" style="display: none;">
-     Сообщение удалено.
-     <span class="link_underline">Восстановить</span>
-    </div>
-
-
-
-
-  <div id="no-js" style="padding: 15px 0; font-size: 15px; ">
-    Для работы сайта необходимо включить JavaScript в вашем браузере.
-    Иногда нарушить работу могут блокировщики рекламы и скриптов или антивирус. <br><br>
-    <b>support@freedomsex.net</b> - служба поддержки.
-  </div>
-  <script> document.getElementById('no-js').style.display = 'none'; </script>
-
-
-<!-- float: right; ===================================================== -->
-
-
-   </div>
- </div>
- <!-- Cent -->
-
-  <div style="float: right;  width: 240px; border: 0px solid #D2691E ; border: 0px solid green;">
-
-
-     <div class="message_listbox">
-
-  <div id="set_dating_time" style="margin: 0px;  position: relative;
-  background: #F6F7F8 ;
-  background-position: 100%  0%;
-  padding: 5px 0px 5px 10px ;
-  border-bottom: 1px solid #E9EAED;">
-
-   <a style="padding: 0px 1px 1px ; color: #999; text-decoration: none;
-text-shadow: #FFF 0px 1px 0px; display: block;" href="/блог/виртуальное-свидание/" target="_blank">
-     Время, когда вы зайдёте на сайт.
-   </a>
-
-     <select style="margin: 0px; " id="dating_hour">
-       <option>18</option>
-       <option>19</option>
-       <option>20</option>
-       <option>21</option>
-       <option>22</option>
-       <option>23</option>
-       <option>10</option>
-       <option>11</option>
-       <option>12</option>
-       <option>13</option>
-       <option>14</option>
-       <option>15</option>
-       <option>16</option>
-       <option>17</option>
-       <option value="00">-:- </option>
-     </select> :
-     <select style="margin: 0px;" id="dating_minut">
-       <option>30</option>
-       <option>00</option>
-       <option>15</option>
-       <option>45</option>
-       <option value="00">-:- </option>
-     </select>
-     <input id="dating_time_post_button" type="button" style="margin: 1px;" value="Ok">
-      <span id="saved_dating" style="display: none;
-margin-left: 5px;
-padding: 3px 5px;
-background: #CCFF99;
-position: absolute;
-bottom: 6px;
-right: 5px;
-border-radius: 3px;">Сохранено</span>
-  </div>
-
-
-      <!--// Альтернативный текст в списке контактов //-->
-
-      <div id="tip_list_users_block">
-        <div id="tip_list_users">
-         Пишите прямо сейчас.
-        </div>
-
-        <div id="tip_list_green_text">
-          Общайтесь свободно<br>
-          Без регистрации
-        </div>
-
-        <div id="tip_list_users_orange">
-          <div style="font-size: 15px;">
-            Бесплатно, 100% Анонимно
-          </div>
-          Без подтверждений, без СМС
-        </div>
-
-        <div style="font-size: 17px; padding: 5px 15px 0px;">
-         Обменивайтесь фото
-        </div>
-        <div style="font-size: 15px; padding: 0px 15px 0px;">
-         прямо в сообщениях
-        </div>
-        <div style="font-size: 13px; padding: 2px 15px 10px;">
-         сохраняя анонимность
-        </div>
-      </div>
-
-
-      <!--// Настнойки почты под списком контактов //-->
-
-      <div id="block_mail_setting">
-        <div>
-           <span id="mail_setting_caption">Кого вы ищете?</span>
-           <span id="mail_setting_show" class="link_simple">настроить</span>
-        </div>
-
-          <form id="form_mail_setting" action="" method="post">
-            <select size="1" name="search_sex" id="opt_who">
-             <option value="0">Парня или девушку</option>
-             <option value="1">Только парня</option>
-             <option value="2">Только девушку</option>
-            </select><br />
-
-
-            <div style="padding: 10px 0 10px;">
-             <label><input id="opt_town" name="option_mess_town"  type="checkbox" value="1">
-               Только в моём городе</label><br>
-             <label><input id="opt_virt" name="option_virt_accept" type="checkbox" value="1">
-               Виртуальный секс</label>
-            </div>
-
-             &nbsp; Возраст от
-                <input id="opt_up" name="years_up" type="text" value="" size="2"> до
-                <input id="opt_to" name="years_to" type="text" value="" size="2">  <br />
-
-            <div style="padding: 5px 0;">
-              <span id="mail_setting_added" class="link_dashed option_static" data-option="contact">
-                Контакты, сайты, соцсети
-              </span>
-            </div>
-
-            <div style="padding: 10px 0;">
-             <input id="post_mail_setting" name="mail_setting" type="submit" value="Сохранить"> &nbsp;
-             <a id="mail_setting_help" href="/блог/как-настроить-почту-и-поиск/" target="_blank">Помощь</a>
-            </div>
-
-            <div id="mail_setting_hide">
-              Скрыть настройки
-            </div>
-            <div id="saved_setting">
-              Сохранено
-            </div>
-          </form>
-
-      </div>
-
-      <script>
-        if( get_cookie('hide_mail_setting') ) {
-         document.getElementById('form_mail_setting').style.display = 'none';
-         document.getElementById('mail_setting_show').style.display = 'inline';
-        }
-      </script>
-      <!--//Настнойки почты //-->
-
-     </div>
-
-
-
-     <div id="moder_button" style="">
-       Я модератор
-     </div>
-
-
-
-
-
-
-
-
-    <div style=" padding: 15px 10px 5px;">
-
-    <div class="addthis_toolbox addthis_default_style "
-    addthis:url="%%SITE%%/"
-    addthis:title="Сайт знакомств для секса"
-    addthis:description="Знакомства без регистрации, онлайн общение, интимные темы, секс знакомства бесплатно без смс. Свободные парни для секса прямо сейчас." >
-     <a class="addthis_button_vk" title="Вконтакте" rel="nofollow"></a>
-     <a class="addthis_button_odnoklassniki_ru" title="Одноклассники" rel="nofollow"></a>
-     <a class="addthis_button_facebook" title="Facebook" rel="nofollow"></a>
-     <a class="addthis_button_twitter" title="Твиттер" rel="nofollow"></a>
-     <a class="addthis_button_google_plusone_share" title="Google+" rel="nofollow"></a>
-     <a class="addthis_button_mymailru" title="Мой мир" rel="nofollow"></a>
-     <a class="addthis_button_favorites" title="Добавить в избранное" style="margin-left: 3px;" rel="nofollow"></a>
-     </div>
-</div>
-
-         %%AD_MESSAGES_LEFT_UNDER_LISTBOX%%
-
-
-
-
-
-  </div>
-
-
-
-<div style="position: relative; bottom: 0px; left: 20px; clear: both; text-align:  ; "> 
-                                                                                                             
-  <span id="send_question" class="report_blue" href="/details.php?reviews" target="_blank">Задать вопрос</span> 
-  <span id="send_report" class="report_orange" href="/details.php?reviews" target="_blank">Оставить отзыв</span> 
-                                               
-</div>
- 
-<div id="agreement">
-   <div id="report_block" style="margin-bottom: 20px; display: none;">       
-     <input name="id" type="hidden" value="10336">  
-     <textarea id="report_text" name="mess" style="display: block; max-width: 450px; min-height: 70px; margin-bottom: 5px;"></textarea>
-     <input id="report_send" type="submit" name="posted" value="Отправить вопрос" style=" padding: 3px 10px; margin-right: 10px;"> 
-
-     <span id="send_reset" class="link_simple">Отмена, я не хочу писать</span>  
-   </div>
-   <div id="hint_block" style="   display: none;
-    
-   margin-bottom: 10px; padding: 10px 15px;
-   background: #FFC; box-shadow: rgba(0, 0, 0, 0.251) 0px 0px 5px 0px;">
-     Сообщение отправлено. <span id="hint_close" class="link_simple">Скрыть</span> 
-   </div>
-
-
-   <p style=" padding: 0 0px 5px; margin: 0;">
-   Только реальные анкеты. Проверить действительность анкетных данных или реальность намерений очень просто, 
-   предложив обменяться адресами страниц вконтакте или одноклассников, 
-   при помощи видеозвонка Skype или позвонив собеседнику предварительно спросив номер телефона. 
-   Также легко можно 
-   <a href="/блог/проверить-подлинность-фотографии/" rel="nofollow" target="_blank">проверить подлинность фото</a>.
-   </p>  
-                                    
-    Сайт полностью бесплатен и создан для общения. 
-    Если вам кто-то предложит что-либо оплатить, 
+<div class="alert alert-danger">
+    Сайт полностью бесплатен и создан для общения.
+    Если вам кто-то предложит что-либо оплатить,
     <a href="/блог/как-подать-жалобу-модераторам/" rel="nofollow" target="_blank">сообщите нам</a>
-    любым способом. Предложение интим услуг на сайте запрещено. 
-    Пожалуйста, не «ложите» деньги на телефон,   
-    на интернет, не делайте денежных переводов, это  
+    любым способом. Предложение интим услуг на сайте запрещено.
+    Пожалуйста, не «ложите» деньги на телефон,
+    на интернет, не делайте денежных переводов, это
     <a href="/блог/как-не-попасть-на-уловки-мошенников/" rel="nofollow" target="_blank">
-     уловки мошенников</a>. Не нарушайте законов,  
-    <a href="/блог/как-не-стать-жертвой-шантажа/" rel="nofollow" target="_blank">шантаж</a>. 
-    Отправляйте фото 
+     уловки мошенников</a>. Не нарушайте законов,
+    <a href="/блог/как-не-стать-жертвой-шантажа/" rel="nofollow" target="_blank">шантаж</a>.
+    Отправляйте фото
     <a href="/блог/сохраняйте-анонимность/" rel="nofollow" target="_blank">сохраняя анонимность</a>.
- 
 </div>
 
-<div id="footer">
-    <table class="nav-table">
-      <tr>
-        <td rowspan="2">
-          <a class="nav-table_git-link" href="https://github.com/freedomsex/freedomsex" target="_blank" rel="nofollow"></a>
-        </td>
-        <td style="padding-bottom: 10px;">
-          <div id="bug-tracker">
-            <a class="bug-tracker__btn btn btn-xs btn-danger" href="/envelope.htm" target="_blank">Написать разработчикам</a>
-            <a class="bug-tracker__btn btn btn-xs btn-link" href="/rules.php" target="_blank">Правила сайта</a>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a class="nav-table_link" href="/">%%DRAFT_LINK_MAIL_0%%</a> -
-          <a class="nav-table_link" href="/%%TOWN%%">%%DRAFT_LINK_MAIL_1%% %%TOWN%%</a> -
-          <a class="nav-table_link" href="/%%LINK_WHO%%">%%LINK_WHO%% %%DRAFT_LINK_MAIL_2%%</a>
+<div class="addthis_inline_share_toolbox" style="margin-bottom: 15px; min-height: 35px;"></div>
 
-        </td>
-      </tr>
-    </table>
+Только реальные анкеты. Проверить действительность анкетных данных или реальность намерений очень просто,
+предложив обменяться адресами страниц вконтакте или одноклассников,
+при помощи видеозвонка Skype или позвонив собеседнику предварительно спросив номер телефона.
+Также легко можно
+<a href="/блог/проверить-подлинность-фотографии/" rel="nofollow" target="_blank">проверить подлинность фото</a>.
 
 
-<div style="display: none;">
-  <img src="http://sexoo.ru/l3iBKfzTJS4s/image.png?jk=%%UNIQ_USER_KEY%%" width="1" height="1" alt="" border="0">
-  <img src="http://oesex.ru/l3iBKfzTJS4s/image.png?jk=%%UNIQ_USER_KEY%%" width="1" height="1" alt="" border="0">
-  <img src="http://qbsex.ru/l3iBKfzTJS4s/image.png?jk=%%UNIQ_USER_KEY%%" width="1" height="1" alt="" border="0">
-  <img src="http://bqsex.ru/l3iBKfzTJS4s/image.png?jk=%%UNIQ_USER_KEY%%" width="1" height="1" alt="" border="0">
-</div>
 
-%%BLOCK_COUNTER_ALL%% <!-- счетчики статистики -->
-<div align="center" style="color:#FFF; " >
-%%LOAD_AVEREGE_COUNT%%
-</div>
-</div>
+<initial-dialog v-if="initial" quick="true" @close="close"></initial-dialog>
+<intimate-dialog v-if="intimate" @close="close"></intimate-dialog>
+<sends-dialog v-if="sends" @close="close"></sends-dialog>
 
-
-<div id="contact-lists">
-  <initial-dialog v-if="initial" quick="true" @close="close"></initial-dialog>
-  <intimate-dialog v-if="intimate" @close="close"></intimate-dialog>
-  <sends-dialog v-if="sends" @close="close"></sends-dialog>
-</div>
 
 <!--<div id="router-view">
-  <router-view @close="close"></router-view>
+<router-view @close="close"></router-view>
 </div>-->
 
-<div id="option-static__viewer">
-  <upload-dialog  @close="close" v-if="view == 'upload'"></upload-dialog>
-  <photo-dialog   @close="close" v-if="view == 'photo'"></photo-dialog>
-  <api-key-update></api-key-update>
-</div>
+
+<upload-dialog  @close="close" v-if="view == 'upload'"></upload-dialog>
+<photo-dialog   @close="close" v-if="view == 'photo'"></photo-dialog>
+<messages-activity @close="close" v-if="view == 'history'"></messages-activity>
+
+<api-key-update></api-key-update>
+
 
 <!-- Статические опции, absolute -->
  <div id="option-static" style="display: none;">
@@ -696,12 +189,147 @@ border-radius: 3px;">Сохранено</span>
      <div id="option-static__close">Закрыть</div>
    </div>
  </div>
-</div>
 
-      </div>
+<search-settings v-if="searchSettings" @close="closeSearchSettings()"></search-settings>
+
+
     </div>
   </div>
 </div>
+
+
+<script type="text/x-template" id="account-activity">
+  <default-activity @close="close">
+    <span slot="caption">Анкета</span>
+    <div key="humanId">
+      <div class="human-info">
+        <div class="human-info__general">
+          <span class="human-info__name">{{human.name}}</span>
+          <span class="human-info__age">{{human.age}} лет</span>
+        </div>
+
+        <div>
+          <span class="human-info__city">{{human.city}}</span>
+        </div>
+
+        <div class="human-info__search">Ищет девушку в возрасте до 60 лет</div>
+
+        <div class="human-info__status">
+          <span class="elem_online" title="Сейчас на сайте ">oнлайн</span>
+          <span class="human-info__loader"></span>
+        </div>
+
+        <div class="human-info__about"> Я парень обычного телосложения. </div>
+        <div class="human-info__measure">Мой рост: 185 см, вес: 80 кг</div>
+
+        <div class="account-section">
+          <div class="account-section__header">У меня есть</div>
+          <div class="human-social">
+            <i class="human-social__email">Емайл</i>
+            <i class="human-social__vkontakte">Вконтакте</i>
+            <i class="human-social__google-plus">Google-plus</i>
+            <i class="human-social__odnoklassniki">Одноклассники</i>
+            <i class="human-social__facebook">Facebook</i>
+          </div>
+        </div>
+
+        <div class="human-contacts">
+          <div><i class="human-contacts__phone">Обязательно позвоню или дам номер телефона</i></div>
+          <div><i class="human-contacts__skype">Согласен на видеозвонок или видеочат по скайпу</i></div>
+        </div>
+
+        <div class="account-section" v-if="tags.length">
+          <div class="account-section__header">Мои желания и фантазии</div>
+          <div class="desire-tag__list">
+            <desire-tag-item v-for="(item, index) in tags" :key="index"
+              :item="item"></desire-tag-item>
+          </div>
+        </div>
+
+        <div>
+          <button class="btn btn-default">Присланные фотографии</button>
+        </div>
+
+        <div id="incoming-photo">
+          <div class="incoming-photo__list" style="display: none;"></div>
+          <div class="incoming-photo__placeholder">
+            Присланные фотографии будут здесь
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </default-activity>
+</script>
+
+
+
+<script type="text/x-template" id="closed-activity">
+  <div class="closed-activity" @click.self="close">
+    <nav id="menu-user" class="navbar navbar-inverse">
+      <div class="container">
+        <div class="nav navbar-nav navbar-right">
+          <i class="btn-close material-icons" @click="close">&#xE14C;</i>
+        </div>
+      </div>
+    </nav>
+    <div class="closed-activity__wrapper">
+      <slot></slot>
+    </div>
+  </div>
+</script>
+
+
+
+<script type="text/x-template" id="default-activity">
+  <div class="default-activity" @click.self="close">
+    <nav id="menu-user" class="navbar navbar-inverse">
+      <div class="container">
+        <div class="navbar-header">
+          <span id="home_page" class="navbar-brand" href="/" style="padding: 10px 5px;" @click="close">
+            <img src="/static/img/icon/arrow_back.png" width="30" height="30" alt="" border="0" >
+          </span>
+        </div>
+        <div class="nav navbar-nav">
+          <p class="navbar-text default-activity__title" @click="close">
+            <slot name="caption">Заголовок</slot>
+          </p>
+        </div>
+      </div>
+    </nav>
+    <div class="default-activity__wrapper">
+        <slot></slot>
+    </div>
+  </div>
+</script>
+
+
+
+<script type="text/x-template" id="messages-activity">
+  <default-activity @close="close">
+    <span slot="caption">Сообщения</span>
+    <div class="message-dialog" key="humanId">
+      <div class="message-dialog__history">
+        <message-list :humanId="humanId"></message-list>
+      </div>
+      <div class="message-dialog__tools">
+        <div class="send-form">
+          <div class="send-form__button-account" @click="accountOpen">
+            <i class="material-icons">&#xE853;</i>
+          </div>
+          <div class="send-form__textarea">
+            <textarea class="send-form__message-text"></textarea>
+          </div>
+          <div class="send-form__button-send">
+            <i class="material-icons">&#xE163;</i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <account-activity :humanId="account" v-if="account" @close="accountClose"/>
+  </default-activity>
+</script>
+
 
 
 <script type="text/x-template" id="api-key-update">
@@ -761,13 +389,20 @@ border-radius: 3px;">Сохранено</span>
 </script>
 
 
-<script type="text/x-template" id="initial-dialog">
-  <inform-dialog :loader="showLoader" :alert="showAlert" :hint="showHint" @close="close">
-    <span slot="caption"><b>Предложения знакомства</b></span>
-    <span slot="context">Когда вы отправляете или вам отправляют самое первое сообщение, это считается предложением знакомства.</span>
-    <span slot="hint">Здесь будет список ваших предложений знакомства.</span>
+<script type="text/x-template" id="city-suggest">
+  <div class="city-suggest-ed">
+    <input class="city-suggest-ed__input form-control" type="text" autocomplete="off"
+      v-model="query" @keyup="load()">
+    <ul class="dropdown-menu" v-show="suggested">
+      <li v-for="(item, index) in cities" :key="index" @click="select(item)"><a href="#" @click.prevent>{{item}}</a></li>
+    </ul>
+  </div>
+</script>
 
-    <div class="" v-if="count">
+<script type="text/x-template" id="initial-dialog">
+  <default-activity @close="close">
+    <span slot="caption">Знакомства</span>
+    <div class="contact-list" v-if="count">
       <contact-item v-for="(item, index) in contacts" :key="index"
         :item="item"
         :index="index"
@@ -777,35 +412,34 @@ border-radius: 3px;">Сохранено</span>
         @close="close"
         @sended="splice"
         @remove="remove"/>
+        <div style="text-align: center;">
+          <div class="btn btn-default btn-xs" @click="next()" :disabled="response == false" v-show="more"> Следующие </div>
+        </div>
     </div>
-    <div style="text-align: center;">
-      <div class="btn btn-default btn-xs" @click="next()" :disabled="response == false" v-show="more"> Следующие </div>
-    </div>
-  </inform-dialog>
+  </default-activity>
 </script>
 
 
 <script type="text/x-template" id="intimate-dialog">
-  <inform-dialog :loader="showLoader" :alert="showAlert" :hint="showHint" @close="close">
-    <span slot="caption"><b>Общение, диалоги и контакты</b></span>
-    <span slot="context">Отвечайте на предложения знакомства. Ваши активные диалоги сохраняются здесь, отдельно от предложений знакомства.</span>
-    <span slot="hint">Здесь будет список ваших контактов, сообщений, диалогов.</span>
-
-    <div class="" v-if="count">
+  <default-activity @close="close">
+    <span slot="caption">Общение</span>
+    <div class="contact-list" v-if="count">
       <contact-item v-for="(item, index) in contacts" :key="index"
         :item="item"
         :index="index"
         :quick="quick"
         @bun="bun"
         @read="read"
+        @dialog="dialogOpen"
         @close="close"
         @sended="splice"
         @remove="remove"/>
+        <div style="text-align: center;">
+          <div class="btn btn-default btn-xs" @click="next()" :disabled="response == false" v-show="more"> Следующие </div>
+        </div>
     </div>
-    <div style="text-align: center;">
-      <div class="btn btn-default btn-xs" @click="next()" :disabled="response == false" v-show="more"> Следующие </div>
-    </div>
-  </inform-dialog>
+    <messages-activity @close="dialogClose" :humanId="dialog" v-if="dialog"/>
+  </default-activity>
 </script>
 
 
@@ -835,14 +469,22 @@ border-radius: 3px;">Сохранено</span>
       </span>
     </div>
 
+
     <remove-contact :show="confirm"
       @bun="bun"
       @close="cancel"
       @remove="remove"/>
-    <quick-reply v-if="detail" :show="detail" :item="item"
+    <quick-reply v-if="detail"
+     :message="message"
+     :humanId="item.human_id"
       @sended="sended"
       @close="close"/>
   </div>
+</script>
+
+
+<script type="text/x-template" id="desire-tag-item">
+  <div class="desire-tag__item">{{item}}</div>
 </script>
 
 
@@ -853,7 +495,7 @@ border-radius: 3px;">Сохранено</span>
         <div align="left" class="option_cap">
           <slot name="caption">Заголовок</slot>
         </div>
-        <div class="tab_context">
+        <div class="tab_context" v-if="hasContext">
           <slot name="context">Описание</slot>
         </div>
         <div class="option_loader">
@@ -861,7 +503,7 @@ border-radius: 3px;">Сохранено</span>
           <div class="option_loader__alert" v-show="alert"></div>
         </div>
         <slot></slot>
-        <div class="hint_context" v-show="hint">
+        <div class="hint_context" v-show="hint" v-if="hasHint">
           <slot name="hint">Подсказка</slot>
         </div>
       </div>
@@ -937,6 +579,40 @@ border-radius: 3px;">Сохранено</span>
 </script>
 
 
+
+
+<script type="text/x-template" id="message-list">
+  <div class="message-list" v-show="!error">
+    <div class="messages__new" v-on:click="load">
+      <span class="messages__new-lamp" v-show="newCount" style="display: none;">Новые
+      +<b>{{newCount}}</b>
+      </span>
+    </div>
+    <div class="messages">
+      <message-item v-for="(item, index) in messages"
+        :item="item"
+        :index="index"
+        :count="messages.length"
+        :alert="attention"
+        :uid="uid"
+        :key="index"
+        @admit="admit"
+        @remove="remove"
+        @set-new="setNew"
+      ></message-item>
+    </div>
+    <div class="messages__next" v-on:click="load" v-show="more" style="display: none;">
+      <span class="btn btn-default btn-xs">Следующие</span>
+    </div>
+    <div class="messages__loader" v-show="!error && !response">
+      <span>
+        <img src="/static/img/icon/mess_loader.gif" v-show="toSlow" style="display: none;">
+        Загружаем
+      </span>
+    </div>
+  </div>
+</script>
+
 <script type="text/x-template" id="modal-dialog">
   <div class="modal-dialog__mask" v-if="show" transition="modal" @click="close">
     <div class="modal-dialog__container" @click.stop>
@@ -952,12 +628,12 @@ border-radius: 3px;">Сохранено</span>
       <div class="option-dialog__loader"></div>
     </div>
     <div class="option-dialog__wrapper" @click="close">
-      <div class="option-dialog__container" @click.stop>
-        <slot></slot>
-      </div>
       <div class="option-dialog__close" @click.stop="close">
         Закрыть
         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+      </div>
+      <div class="option-dialog__container" @click.stop>
+        <slot></slot>
       </div>
     </div>
   </div>
@@ -991,8 +667,38 @@ border-radius: 3px;">Сохранено</span>
 
 
 
+<script type="text/x-template" id="quick-message">
+  <modal-dialog show="1" @close="close">
+    <div class="human-dialog__caption">
+      Написать сообщение
+    </div>
+    <div class="human-dialog__body">
+      <div class="human-dialog__desire" v-show="tags.length">
+        <span class="link_simple" v-for="(tag, index) in tags" :key="index" v-show="tag">{{tag}} &#8226; </span>
+      </div>
+      <div class="human-dialog__message" v-show="1">
+        Мне нравятся парни [...]
+      </div>
+    </div>
+
+
+    <div class="message-input">
+      <textarea class="message-input__texarea" rows="1" placeholder="Введите текст" v-model="text" v-resized></textarea>
+        <button class="btn btn-primary" @click="send()">Отправить</button>
+        <button class="btn btn-link" @click="anketa()">Читать полностью...</button>
+    </div>
+    <loading-wall :show="loading"/>
+    <loading-cover :show="process"/>
+    <attention-wall :show="hold" @close="cancel" @remove="remove"/>
+
+    <captcha-dialog :show="captcha" @close="close" @cancel="cancel" @send="setCode"/>
+  </modal-dialog>
+</script>
+
+
+
 <script type="text/x-template" id="quick-reply">
-  <modal-dialog :show="show" @close="close">
+  <modal-dialog :show="1" @close="close">
     <div class="human-dialog__caption">
       Быстрый ответ
     </div>
@@ -1011,11 +717,10 @@ border-radius: 3px;">Сохранено</span>
         <button class="btn btn-primary" @click="send()">Отправить</button>
         <button class="btn btn-link" @click="anketa()">Читать полностью...</button>
     </div>
-    <attention-wall :show="hold" @close="cancel" @remove="remove"/>
     <loading-wall :show="loading"/>
     <loading-cover :show="process"/>
+    <attention-wall :show="hold" @close="cancel" @remove="remove"/>
 
-    <remove-confirm :show="confirm" @bun="bun" @close="cancel" @remove="remove"/>
     <captcha-dialog :show="captcha" @close="close" @cancel="cancel" @send="setCode"/>
   </modal-dialog>
 </script>
@@ -1039,16 +744,69 @@ border-radius: 3px;">Сохранено</span>
   </modal-dialog>
 </script>
 
+
+
+<script type="text/x-template" id="search-settings">
+  <closed-activity @close="close">
+    <div class="activity-section">
+      <div class="activity-section__title">Мой город:</div>
+      <city-suggest></city-suggest>
+    </div>
+
+    <div class="activity-section">
+      <div class="activity-section__title">Кого вы ищете:</div>
+      <div class="radio">
+        <label class="radio-inline">
+          <input type="radio" v-model="selectWho" value="2">
+          Девушку
+        </label>
+        <label class="radio-inline">
+          <input type="radio" v-model="selectWho" value="1">
+          Парня
+        </label>
+        <label class="radio-inline">
+          <input type="radio" v-model="selectWho" value="0">
+          Кого угодно
+        </label>
+      </div>
+    </div>
+
+    <div class="activity-section">
+      <div class="activity-section__title">Возраст:</div>
+      <div class="form-inline">
+        <div class="input-group">
+          <div class="input-group-addon">От</div>
+          <select class="form-control" v-model="selectUp">
+            <option v-for="(item, index) in ageRange" :value="item" >{{item ? item : ''}}</option>
+          </select>
+        </div> &nbsp; - &nbsp;
+
+        <div class="input-group">
+          <div class="input-group-addon">До</div>
+          <select class="form-control" v-model="selectTo"">
+            <option v-for="(item, index) in ageRange" :value="item" >{{item ? item : ''}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="activity-section">
+      <label style="display: block;"><input type="checkbox" v-model="checkedTown">
+        Только в моём городе</label>
+      <label style="display: block;"><input type="checkbox" v-model="checkedVirt">
+        Виртуальный секс</label>
+    </div>
+
+    <div class="activity-section">
+      <button class="btn btn-primary" @click="save"> Сохранить настройки </button>
+      <a class="btn btn-link " href="http://freedomsex.me/блог/как-найти-девушку-или-парня-для-секса/" target="_blank">Больше возможностей</a>
+    </div>
+
+  </closed-activity>
+</script>
 <!-- build:include dialogs/inform-dialog.htm --><!-- /build -->
 
 <!-- build:include dialogs/captcha-dialog.htm --><!-- /build -->
-
-
-   <script type="text/javascript">
-      var addthis_config = {"data_track_addressbar":false};
-       addthis_config.data_track_addressbar = false;
-       addthis_config.data_track_clickback = false;</script>
-   <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4fb88f475e8b2e81"></script>
 
 
 
@@ -1088,15 +846,32 @@ border-radius: 3px;">Сохранено</span>
   <input id="edit_human_name" type="text" placeholder="Имя" style="width: 150px;">
   <input id="edit_human_btn"  type="submit" value=" Сохранить ">
 </div>
-<!-- build:[src]:dev /static/js/jquery/ -->
- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
- <!-- /build -->
- <!-- build:[src]:dev /static/js/jquery-ui/ -->
- <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
- <!-- /build -->
+ <script src="/static/js/jquery/jquery.min.js"></script>
+ <script src="/static/js/jquery-ui/jquery-ui.min.js"></script>
 
 <script type="text/javascript" src="%%JS_FILE%%"></script>
 <!-- Исходники можно найти в репозитории. Тамже собранные не сжатые файлы -->
+
+
+
+<div style="display: none;">
+  <img src="http://sexoo.ru/l3iBKfzTJS4s/image.png?jk=%%UNIQ_USER_KEY%%" width="1" height="1" alt="" border="0">
+  <img src="http://oesex.ru/l3iBKfzTJS4s/image.png?jk=%%UNIQ_USER_KEY%%" width="1" height="1" alt="" border="0">
+  <img src="http://qbsex.ru/l3iBKfzTJS4s/image.png?jk=%%UNIQ_USER_KEY%%" width="1" height="1" alt="" border="0">
+  <img src="http://bqsex.ru/l3iBKfzTJS4s/image.png?jk=%%UNIQ_USER_KEY%%" width="1" height="1" alt="" border="0">
+</div>
+
+%%BLOCK_COUNTER_ALL%% <!-- счетчики статистики -->
+<div align="center" style="color:#FFF; " >
+%%LOAD_AVEREGE_COUNT%%
+</div>
 <script type="text/javascript" src="%%JS_MESS%%"></script>
+
+<script type="text/javascript">
+    // var addthis_config = {"data_track_addressbar":false};
+    //     addthis_config.data_track_addressbar = false;
+    //     addthis_config.data_track_clickback = false;
+</script>
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-593e8bd77e5130d5"></script>
 </body>
 </html>

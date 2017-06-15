@@ -1,0 +1,29 @@
+
+<script type="text/x-template" id="quick-message">
+  <modal-dialog show="1" @close="close">
+    <div class="human-dialog__caption">
+      Написать сообщение
+    </div>
+    <div class="human-dialog__body">
+      <div class="human-dialog__desire" v-show="tags.length">
+        <span class="link_simple" v-for="(tag, index) in tags" :key="index" v-show="tag">{{tag}} &#8226; </span>
+      </div>
+      <div class="human-dialog__message" v-show="1">
+        Мне нравятся парни [...]
+      </div>
+    </div>
+
+
+    <div class="message-input">
+      <textarea class="message-input__texarea" rows="1" placeholder="Введите текст" v-model="text" v-resized></textarea>
+        <button class="btn btn-primary" @click="send()">Отправить</button>
+        <button class="btn btn-link" @click="anketa()">Читать полностью...</button>
+    </div>
+    <loading-wall :show="loading"/>
+    <loading-cover :show="process"/>
+    <attention-wall :show="hold" @close="cancel" @remove="remove"/>
+
+    <captcha-dialog :show="captcha" @close="close" @cancel="cancel" @send="setCode"/>
+  </modal-dialog>
+</script>
+

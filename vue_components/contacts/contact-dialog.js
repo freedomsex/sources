@@ -11,7 +11,8 @@ var ContactDialog = {
             amount: 0,
             offset: 0,
             batch: 10,
-            max: 100
+            max: 100,
+            dialog: false,
         }
     },
     computed: {
@@ -76,6 +77,13 @@ var ContactDialog = {
             this.response = true;
             this.error = true;
             console.log(error);
+        },
+        dialogOpen(id) {
+            console.log('dialog', id);
+            this.dialog = id;
+        },
+        dialogClose() {
+            this.dialog = false;
         }
     },
     mounted() {

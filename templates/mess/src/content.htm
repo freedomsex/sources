@@ -1,12 +1,10 @@
 
- <div id="cent">
+  %%MAIL_TIPS_BLOCK_UP%%
 
-    %%MAIL_TIPS_BLOCK_UP%%
+  %%MAIL_CONFIRM_BLOCK_UP%%
 
-    %%MAIL_CONFIRM_BLOCK_UP%%
-
-   <div id="anketa_master_info"></div>
-   <div id="human_cent_block">
+  <div id="anketa_master_info"></div>
+  <div id="human_cent_block">
      <div id="anketa_first_info" style="margin-bottom: 5px;">
        <div id="human_labe_block">
            %%DATING_LABEL_BUTTON%%
@@ -17,25 +15,11 @@
           <div id="human_data_print">
             <span id="human_print_name" class="human_name %%HUMAN_STATUS%%">%%HUMAN_NAME%%</span>
             <span id="human_print_age">%%HUMAN_AGE%%</span> %%HUMAN_AGE_SAY%%
-            <img id="edit_cont_btn" src="/img/edit_icon.png" alt="">
           </div>
        </div>
      </div>
 
      <div id="anketa_second_info" style="margin-bottom: 15px;">
-       <script>
-           var anketa_collaps = 0;
-           try {
-               var result = localStorage.getItem('visitor_list');
-               if (result.indexOf(tid) >= 0) {
-                   document.getElementById('anketa_second_info').style.display = 'none';
-                   anketa_collaps = 1;
-               }
-           } catch (e) { }
-
-       </script>
-
-
        <span id="human_print_city" style="color: #aaa;">%%HUMAN_CITY%%</span>
 
        <div id="human_search_block" style="padding: 15px 0 5px;">
@@ -52,14 +36,8 @@
        </div>
 
        <div id="human_status_block">
-           <span class="%%TIME_STYLE%%" title="%%TIME_SAY%%">%%HUMAN_TIME%%</span>
-           <span id="lock_user_link" class="link_simple" style="display: none;"
-            title="Полная блокировка - потеряет возможность общаться с вами">
-            Заблокировать
-           </span>
-           <span style="padding: 0px 5px; display: none;">
-             <img src="/img/ajax_loader_gray.gif" style="vertical-align: middle;">
-           </span>
+         <div class="btn btn-primary" @click="newMessage">Написать сообщение</div>
+         <quick-message v-if="globalNew" :human-id="globalNew" @close="closeMessage"></quick-message>
        </div>
 
        <div id="human_anketa_block">
@@ -69,71 +47,5 @@
            %%ADDITIONAL_CONTACT%%
            %%DESIRE_TAG%%
        </div>
-
-
-        <div id="lock_inform_block" class="mail_confirm_block" style="display: none;">
-           Контакт заблокирован и удалён из списка.<br><br>
-
-           Пожалуйста, кликните "Удалить и наказать" у сообщения, послужившего причиной жалобы, можно несколько.
-           Наказание начинает действовать сразу.
-
-           <span id="link_lock_abuse" class="link_simple">Опубликовать замечание</span>
-
-        </div>
-        <div id="unlock_inform_block" class="mail_confirm_block" style="display: none;">
-           Просто напишите сообщение заблокированному пользователю, он будет автоматически
-           разблокирован и добавлен в ваш список контактов. В случае чего, его всегда можно найти в поиске.
-        </div>
      </div>
-
-  <!-- build:include incoming-photo.htm --><!-- /build -->
-  %%MAIL_FORM_MESSAGE_POST%%
-  <script>
-      if (anketa_collaps) {
-          document.getElementById('anketa_collaps_link').innerHTML = "Развернуть анкету";
-      }
-  </script>
-
-<!-- build:include abuse-list.htm -->
-Замечания к анкете
-<!-- /build -->
-
-
-%%MAIL_CONFIRM_BLOCK_DN%%
-<div id="confirm_block_dn" class="mail_confirm_block" style="display: none;" ></div>
-
-
-
-     <div id="mess_shab_text_block" style="display: none;">
-
-      <div class="message_list_title_date">
-       <span>Здесь будет история вашей переписки</span>
-      </div>  <br />
-
-
-      <div id="mess_shab_text_caption">
-        Быстрые сообщения. Выберите чтобы отправить
-      </div>
-
-      <div id="mess_shab_text_link">
-        <span id="mess_shab_wrap"></span>
-        <span id="mess_shab_more" class="link_simple">Ещё..</span>
-      </div>
-
-      <div id="">
-        <span id="quick_tab_public" class="quick_mess_tab" data-tab="public">Познакомиться</span>
-        <span id="quick_tab_offer" class="quick_mess_tab" data-tab="offer">Реал секс</span>
-        <span id="quick_tab_virt" class="quick_mess_tab" data-tab="virt">Вирт секс</span>
-      </div>
-
-     </div>
-
-
-<!-- build:include mess-list.htm -->
-Список сообщений
-<!-- /build -->
-
-
-   </div>
- </div>
- <!-- Cent -->
+</div>
