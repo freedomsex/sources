@@ -1,189 +1,3 @@
-<<<<<<< HEAD
-
-// -- Хранилище ---
-var storage = {
-    enable:  0,
-    init() {
-        if (storage.is_enable()) {
-            storage.enable = 1;
-        }
-    },
-    is_enable() {
-        try {
-            return 'localStorage' in window && window['localStorage'] !== null;
-        }
-        catch(e) {
-            return false;
-        }
-    },
-    save(key,val) {
-        if (storage.enable) {
-            localStorage.setItem(key,val);
-        }
-    },
-    load(key,def) {
-        var result = def ? def : null;
-        if (storage.enable && localStorage.getItem(key)) {
-            result = localStorage.getItem(key);
-        }
-        return result;
-    },
-    set(key,val) {
-        storage.save(key,val);
-    },
-    get(key,def) {
-        storage.load(key,def);
-    },
-    array: {
-        load(key) {
-            var result = [];
-            var value = null;
-            value = storage.load(key);
-            value = json.parse(value);
-            if (value)
-                result = value;
-            return result;
-        } ,
-        save(key,val) {
-            storage.save(key,json.encode(val));
-        } ,
-        add(key,val) {
-
-        }
-    }
-}
-storage.init();
-
-var ls = storage;
-
-const store = new Vuex.Store({
-    state: {
-        count: 0,
-        user: {
-            data: {
-                id: 0,
-                sex: 0,
-                age: '',
-                name: '',
-                city: '',
-                up: '',
-                to: '',
-                who: 0,
-                close:   0,
-                virt:    0,
-                status:  0,
-                em: 0,
-                vk: 0,
-                ok: 0,
-                fb: 0,
-                go: 0,
-                sk: 0,
-                ph: 0,
-                tags: {
-                    str: ''
-                },
-                last: '',
-                anketa: {
-                    growth: '',
-                    weight: '',
-                    figure: ''
-                }
-            },
-            auth: {
-                iss: '',
-                exp: '',
-                iat: '',
-                sid: '',
-                uis: '',
-                auth: '',
-                ip:  ''
-            },
-            login: {
-                login: '',
-                pass:  '',
-                email: '',
-                promt: '',
-                last:  '',
-                error: '',
-                subsc: 0
-            },
-            moderator: {
-                promt: 0,
-                rank:  0,
-                resident: 0,
-                action: 0,
-                data: {
-                    action: 0,
-                    effect: 0,
-                    bunn: 0,
-                    rang: ''
-                }
-            },
-            credits: {
-                count: 0,
-                info: ''
-            }
-        }
-    },
-    actions: {
-        LOAD_USER_DATA({ commit }) {
-            console.log('load');
-            store.commit('setUserData', lscache.get('user'));
-            axios.get('/users/10336.json').then((response) => {
-                //this.response(data.body);
-                store.commit('setUserData', response.data.user);
-                //console.log(response.data.user);
-            }).catch((response) => {
-                console.log('error user data');
-            });
-        }
-    },
-    mutations: {
-        setUserData (state, data) {
-            if (data) {
-                Object.assign(state.user.data, data);
-                lscache.set('user', data, 23456);
-            }
-            //ls.set('auth', 2);
-        }
-    },
-    getters: {
-
-    }
-});
-
-store.dispatch('LOAD_USER_DATA');
-
-$(document).ready(function()
-{
-    //userinfo.init();
-    slider.init();
-    //giper_chat.init();
-    notepad.init();
-
-    mailsett.init();
-    report.init();
-    navigate.init();
-
-    name_suggest.init();
-    city_suggest.init();
-
-    option_static.init();
-    option_sex.init();
-    //option_email.init();
-    profile_alert.init();
-    profile_option.init();
-
-    //user_tag.init();
-    //desire_clip.init();
-
-    result_list.init();
-    //visited.init();
-
-});
-
-
-=======
 Vue.component('api-key-update', {
     props: [
       'item',
@@ -1874,7 +1688,6 @@ var api = {
 
 //ApiMessages.send();
 
->>>>>>> master
 
 // -- Получить новый хэш ---
 var hash; 
@@ -1923,8 +1736,6 @@ var auto_gen = {
 
 
 
-<<<<<<< HEAD
-=======
 var ContactLists = new Vue({
     computed: {
         initial() {
@@ -1947,7 +1758,6 @@ var ContactLists = new Vue({
 });
 
 
->>>>>>> master
 var cookie_storage = {
          
     enabled: 0, 
@@ -1968,29 +1778,16 @@ var cookie_storage = {
      
     del_cookie: function (name) 
     {              
-<<<<<<< HEAD
-        expires = new Date(); // получаем текущую дату 
-=======
         let expires = new Date(); // получаем текущую дату 
->>>>>>> master
         expires.setTime( expires.getTime() - 1000 ); 
          document.cookie = name + "=; expires=" + expires.toGMTString() +  "; path=/";  
     } ,    
     
-<<<<<<< HEAD
-    set_cookie: function (name,val,time) 
-    {      
-        expires = new Date(); 
-        expires.setTime( expires.getTime() + (1000 * 60 * time ) ); // минут
-         document.cookie = name + "="+ val +"; expires=" + expires.toGMTString() +  "; path=/";
-
-=======
     set_cookie: function (name, val, time) 
     {      
         let expires = new Date(); 
         expires.setTime( expires.getTime() + (1000 * 60 * time ) ); // минут
         document.cookie = name + "="+ val +"; expires=" + expires.toGMTString() +  "; path=/";
->>>>>>> master
     } ,  
     
     get_data: function (name) 
@@ -2027,21 +1824,6 @@ function get_cookie ( cookie_name )
     return ( unescape ( results[2] ) );
   else
     return null;
-<<<<<<< HEAD
-}   
-
-function del_cookie ( name ) {    
-  expires = new Date(); // получаем текущую дату 
-  expires.setTime( expires.getTime() - 1000 ); 
-   document.cookie = name + "=; expires=" + expires.toGMTString() +  "; path=/"; 
-}
-function set_cookie ( name, val, time ) {   
-  expires = new Date(); 
-  expires.setTime( expires.getTime() + (1000 * 60 * time ) ); // минут
-   document.cookie = name + "="+ val +"; expires=" + expires.toGMTString() +  "; path=/";
-} 
- 
-=======
 }
 
 function del_cookie ( name ) {
@@ -2055,7 +1837,6 @@ function set_cookie ( name, val, time ) {
    document.cookie = name + "="+ val +"; expires=" + expires.toGMTString() +  "; path=/";
 }
 
->>>>>>> master
 
 
 var desire_clip = {
@@ -2072,11 +1853,7 @@ var desire_clip = {
         },
         parse: function (data) {
             data = json.parse(data);
-<<<<<<< HEAD
-            if (data.id != undefined) {
-=======
             if (data) {
->>>>>>> master
                 if (data.id && user_tag.sync != data.id) {
                     user_tag.sync = data.id;
                     user_tag.action.store();
@@ -2160,60 +1937,6 @@ var device = {
 }
   
 
-<<<<<<< HEAD
-              
-var active_textarea ;             ////////////////////////////////////////////////////////
-var giper_chat = {    
-        
-    open_mess:  0,
-    idle_round: 0,
-
-    count_unread: 0, 
-    cascade: 0,
-     
-    round_time: 0, 
-    round_open: 1, 
-    
-    timer_id:   null,  
-    mess_block: null, 
-    
-    mess_stock: [],
-      
-    prev_title: null,
-        
-    init: function () 
-    {                           
-        if (device.width() > 1200) { 
-            giper_chat.mess_stock = storage.array.load('mess_stock'); 
-            giper_chat.remind();  
-        }                      
-            $('<div id="block_timer" class="timer">').appendTo('body');
-        giper_chat.timer_set(); 
-        giper_chat.new_round();
-         
-        $('#giper_reply .post').on('click', giper_chat.reply_show);  
-        // Установка текста по умолчанию
-        if (storage.load('reply_all'))  
-            $('#giper_reply textarea').val(storage.load('reply_all'));
-        giper_chat.prev_title = document.title; 
-    } ,
-
-    set_unread: function () 
-    {      
-        if (giper_chat.count_unread > 0) 
-        {
-            $('#menu_message_unread b').text(giper_chat.count_unread);
-            $('#menu_message_unread').show();
-            $('#menu_message').attr('title','Новых сообщений ' + giper_chat.count_unread); 
-        } else {
-            $('#menu_message_unread').text(''); 
-            $('#menu_message_unread').hide(); 
-            $('#menu_message').attr('title','Новых сообщений нет');
-        }                                 
-    } , 
-  
-    on_timer: function () 
-=======
 
 var active_textarea ;             ////////////////////////////////////////////////////////
 var giper_chat = {
@@ -2266,7 +1989,6 @@ var giper_chat = {
     } ,
 
     on_timer: function ()
->>>>>>> master
     {
         giper_chat.title_blink ();
 
@@ -2274,33 +1996,6 @@ var giper_chat = {
             giper_chat.round_time--
 
         //if (giper_chat.cascade != 0)console.log('on_timer cascade: ' +giper_chat.cascade)
-<<<<<<< HEAD
-  
-        giper_chat.trace();
-        
-        if (giper_chat.round_time < 1) 
-            giper_chat.new_round(); 
-    } , 
-    
-    new_round: function () 
-    {          
-        giper_chat.timer_stop(); 
-        giper_chat.ajax_new(); 
-    } ,
-    
-    trace: function () 
-    {
-        $('#block_timer').text(giper_chat.round_time);
-    } ,
-  
-    ajax_new: function () 
-    {         
-        simple_hash();  
-        giper_chat.round_open = 0;
-         
-        $.get('/ajax/new_mess.php',{ hash: hash }, giper_chat.on_load) 
-          .always( function() { giper_chat.round_open = 1; } );    
-=======
 
         giper_chat.trace();
 
@@ -2326,203 +2021,10 @@ var giper_chat = {
 
         $.get('/ajax/new_mess.php',{ hash: hash }, giper_chat.on_load)
           .always( function() { giper_chat.round_open = 1; } );
->>>>>>> master
     } ,
 
     on_load: function (data)
     {
-<<<<<<< HEAD
-        if (data) {    
-            var mess = json.parse(data); 
-            giper_chat.route_xz(mess); 
-            giper_chat.count_unread = mess.count_unread          ////////////////////////////////////
-            giper_chat.set_unread();                             ////////////////////////////////////
-        }   
-        setTimeout( function (){ giper_chat.timer_set(); },5000 );  
-    } ,
-    
-    route_xz: function (mess)
-    { 
-        if (device.width() > 1200 && mess.type && giper_chat.open_mess < 9) {                               /* */
-            if (mess.type == 'air_user' || mess.type == 'new_client') {          
-                visited.action.load_cache();
-                if (visited.list.length) {
-                    if (visited.list.indexOf(mess.user+'') >= 0) {     
-                        giper_chat.reply_enable();
-                        giper_chat.idle_round = 0;  
-                        setTimeout( function (){ giper_chat.timer_set(); },5000 ); 
-                        return 0;         
-                    }
-                }  
-            }           
-            giper_chat.mess_stock.push(mess);
-            giper_chat.stock.store(); 
-            giper_chat.new_message(mess); 
-        }                     
-    } ,
-
-    reply_enable: function ()
-    {                      
-        if (giper_chat.cascade == 0)
-        {     
-            if (giper_chat.open_mess > 2)                     
-                $('#giper_reply').show('blind');
-            if (giper_chat.open_mess > 5)                     
-                $('#giper_reply textarea').show('blind');   
-        }  
-            
-        if (giper_chat.open_mess < 3)                     
-            $('#giper_reply').hide('blind');
-        if (giper_chat.open_mess == 0)                     
-            giper_chat.cascade = 0;      
-                  
-                // console.log('re cascade: ' +giper_chat.cascade)
-            
-    } ,
-
-    reply_show: function ()
-    {                                           
-        var textarea = $('#giper_reply textarea');
-        if (!$(textarea).is(":visible"))
-        {                          
-            active_textarea = textarea;  
-            textarea.show('blind');  
-            textarea.focus();            
-            notepad.show();                                          ////////////////////////////////////
-        }   
-        else  
-            giper_chat.reply_all();  
-                                        
-    } ,
- 
-    reply_all: function ()
-    {  
-        var textarea = $('#giper_reply textarea'); 
-        var text = textarea.val(); 
-         
-        if (text)
-        {                              
-            var block_mess = $('#giper_stock').children().filter(':first');     
-            giper_chat.cascade = text;
-            storage.save('reply_all',text);
-            $('textarea',block_mess).val(text);
-            $('.post',block_mess).click(); 
-            textarea.hide('blind'); 
-        }              
-        giper_chat.reply_enable();                  
-    } ,
- 
-    new_message: function (val) 
-    {                              //  elem.appendChild();   
-                     
-                                
-        giper_chat.open_mess++ 
-        giper_chat.reply_enable(); 
-        
-        new_block = giper_chat.create_message(val);
-
-        new_block.prependTo($('#giper_stock'));
-          
-        new_block.show('blind'); 
-
-        setTimeout( function (){ $('.sound',new_block).show(); },500 ); 
-                            
-        giper_chat.idle_round = 0;  
-               // giper_chat.mess_stock.push(val);
-               // giper_chat.stock.store();           
-     
-    } ,  
-    
-    remind: function () 
-    {                       
-        jQuery.each (giper_chat.mess_stock,function(i,val) 
-        {                     
-            giper_chat.new_message(val);
-        });             
-    } , 
-    
-    stock: {  
-          
-        store: function () 
-        {  
-             storage.array.save('mess_stock',giper_chat.mess_stock);  
-        } ,      
-    
-        remove: function (num) 
-        {                               
-            var del = null;
-            jQuery.each (giper_chat.mess_stock,function(i,val) 
-            {                     
-                if (val.mess_id == num)
-                    del = i;
-            });  
-            
-            if(del || del == 0)
-            {                               //alert($('.new_message').length + '  <> ' + giper_chat.mess_stock.length)
-                giper_chat.mess_stock.splice(del,1); 
-                if ((giper_chat.mess_stock.length - $('.new_message').length) > 1)
-                    giper_chat.mess_stock = [];    
-                giper_chat.stock.store(); 
-            }   
-        }  
-      
-    } ,
-    
-     
-    create_message: function (val) 
-    {                  
-        if (!val.reply) val.reply = '';        
-        
-        //return 0;
-        
-        var new_block = $('#new_message_ex').clone()
-         .attr( 'id', val.type+'_'+val.mess_id )  //.css("display","none")  
-         .data('number',val.mess_id)
-         .data('user',val.user)
-         .addClass( val.type );
-                                              
-         $('.mess_text',new_block).html(val.text);       // click( function (){ location.href =  }); 
-         $('.close',new_block).click( 
-             function ()
-             { 
-                 giper_chat.close_message($(new_block));  
-             }
-         );
-         
-         if( val.type == 'new_message' || val.type == 'old_message' ) 
-         {        
-             if( val.type == 'old_message' )
-             {                 
-                 $('.title',new_block).text('Есть сообщение без ответа'); 
-                 $('.sound',new_block).remove(); 
-             }         
-
-             $('.post',new_block).click( function (){ giper_chat.post_mess(val); });
-
-             $('textarea',new_block).val( val.reply );          
-             $('.user_name',new_block).text(val.name+':'); 
-             $('.history',new_block).click( 
-             function ()
-             {             
-                 giper_chat.follow_message(val.user,val.mess_id);  
-             });
-                
-             $('.bunn',new_block).click( function ()
-             { 
-                 giper_chat.ajax_bun(val.user,val.mess_id,val.type); 
-                 giper_chat.open_mess--; 
-             });  
- 
-             if( val.type == 'new_message' ) 
-                 $('#contact_update').show('fade');
-         }  
-         
-         if( val.type == 'server_mess' ) 
-         { 
-             $('.sound',new_block).remove(); 
-             $('.title',new_block).text( val.reply );  
-             $('.bunn',new_block).remove();  
-=======
         if (data) {
             var mess = json.parse(data);
             giper_chat.route_xz(mess);
@@ -2711,70 +2213,10 @@ var giper_chat = {
              $('.sound',new_block).remove();
              $('.title',new_block).text( val.reply );
              $('.bunn',new_block).remove();
->>>>>>> master
              $('.post',new_block).val('Хорошо');
 
              $('.post',new_block).click(
                  function ()
-<<<<<<< HEAD
-                 { 
-                     send_serv_mess($('#'+val.type+'_'+val.mess_id ),'tip_user_bun_close')  
-                 }
-              ); 
- 
-              $('.history',new_block).text( 'Подробнее...' ) ;
-              $('.history',new_block).attr( 'href','/блог/наказывайте-кого-следует/' ) ;
-              $('.history',new_block).attr( 'target','_blank' ) ;
-         }  
-         
-         if( val.type == 'air_user' || val.type == 'new_client' ) 
-         {                           
-             if( val.type == 'air_user' )         
-                 $('.title',new_block).text('Сейчас на сайте');
-             if( val.type == 'new_client' )         
-                 $('.title',new_block).text('Зарегистрировалась сегодня');
- 
-             $('.mess_text',new_block).html(val.age + ' ' + val.city + ' ' + val.text);     
-                 
-             $('.sound',new_block).remove();   
-             // var timer_air = setTimeout( function (){ close_message( $(new_block) ); open_mess--; },30000 );
-             //$('.title',new_block).text( val.reply );  
-             $('.bunn',new_block).remove();        
-             $('.user_name',new_block).text(val.name+','); 
-             $('.user_name',new_block).text(val.name+','); 
-             $('.post',new_block).val('Написать');
-
-             $('.post',new_block).click( function () { giper_chat.post_mess(val); }); 
-
-             $('.history',new_block).text( 'Смотреть анкету' ) ;
-             $('.history',new_block).click( 
-             function ()
-             {             
-                 giper_chat.follow_message(val.user,val.mess_id);  
-             });
-              
-             if( val.type == 'new_client' ) {
-              
-             }
-         }      
-           
-         $(new_block).draggable( { 
-             handle:'.title',
-             stop: function(event, ui) 
-             {
-                 $('.sound',new_block).remove(); 
-           
-                 //alert ($(this).offset().left)
-           
-                 var topOff  = $(this).offset().top - $(window).scrollTop()
-                 var leftOff = $(this).offset().left
-                  $(this).css("top",topOff).css("left",leftOff).css("position","fixed")
-           
-                 $(this).appendTo( 'body' );
-             } 
-         });  /**/ 
-  
-=======
                  {
                      send_serv_mess($('#'+val.type+'_'+val.mess_id ),'tip_user_bun_close')
                  }
@@ -2832,27 +2274,11 @@ var giper_chat = {
              }
          });  /**/
 
->>>>>>> master
          return new_block;
 
     } ,
 
     close_message: function (elem)
-<<<<<<< HEAD
-    {      
-        $('.sound',elem).remove(); 
-        elem.hide('blind');       
-        giper_chat.open_mess--;
-        giper_chat.stock.remove(elem.data('number'));
-        setTimeout( function (){ elem.remove(); },500 ); 
-    } ,
-    
-    close_all: function (user)
-    {                                          /*
-        $('#giper_stock div').
-        $('.sound',elem).remove(); 
-        elem.hide('blind');       
-=======
     {
         $('.sound',elem).remove();
         elem.hide('blind');
@@ -2866,29 +2292,12 @@ var giper_chat = {
         $('#giper_stock div').
         $('.sound',elem).remove();
         elem.hide('blind');
->>>>>>> master
         giper_chat.open_mess--;
         giper_chat.stock.remove(elem.data('number'));
         setTimeout( function (){ elem.remove(); },500 ); */
     } ,
 
     follow_message: function (user,mess_id)
-<<<<<<< HEAD
-    {       
-        giper_chat.stock.remove(mess_id); 
-        location.href = '/'+user;
-    } ,
-
-    ajax_bun: function (user,mess_id,type) 
-    {  
-        giper_chat.close_message( $('#'+type+'_'+mess_id ) );  
-        $.post( "/mess/bun/", { id: mess_id, tid: user } ); 
-             
-    } ,
-
-    timer_set: function () 
-    { 
-=======
     {
         giper_chat.stock.remove(mess_id);
         location.href = '/'+user;
@@ -2903,7 +2312,6 @@ var giper_chat = {
 
     timer_set: function ()
     {
->>>>>>> master
         giper_chat.timer_stop();
         if (giper_chat.idle_round == 0) { giper_chat.round_time = 10;  } else
         if (giper_chat.idle_round == 1) { giper_chat.round_time = 10;  } else
@@ -2911,34 +2319,6 @@ var giper_chat = {
         if (giper_chat.idle_round == 3) { giper_chat.round_time = 25;  } else
         if (giper_chat.idle_round == 4) { giper_chat.round_time = 35;  } else
         if (giper_chat.idle_round > 11) { giper_chat.round_time = 300; } else
-<<<<<<< HEAD
-        if (giper_chat.idle_round > 4 ) { giper_chat.round_time = 60;  } 
-        
-        giper_chat.idle_round++   
-        giper_chat.timer_id = window.setInterval ( 'giper_chat.on_timer()', 1000 );   
-        //console.log('таймер запущен: ' +giper_chat.round_time)
-   
-    } ,
-
-    timer_stop: function () 
-    {
-        window.clearInterval(giper_chat.timer_id);  
-        //console.log('таймер остановлен: ' +giper_chat.cascade)
-    } , 
-
-    timer_cut: function () 
-    {
-        if (giper_chat.idle_round > 0 && giper_chat.round_time > 10)
-            giper_chat.round_time = 10;  
-        giper_chat.idle_round = 0;
-    } , 
-
-    toggle_text: function () 
-    {           
-        var textarea   = $('textarea',giper_chat.mess_block); 
-        var text_value = $(textarea).val(); 
-        if (!$(textarea).is(":visible")) 
-=======
         if (giper_chat.idle_round > 4 ) { giper_chat.round_time = 60;  }
 
         giper_chat.idle_round++
@@ -2965,27 +2345,11 @@ var giper_chat = {
         var textarea   = $('textarea',giper_chat.mess_block);
         var text_value = $(textarea).val();
         if (!$(textarea).is(":visible"))
->>>>>>> master
         {
             active_textarea = textarea;            ///////////////////////////////////////
             $(textarea).show('blind');
             $(textarea).focus();
             notepad.show();                        ///////////////////////////////////////
-<<<<<<< HEAD
-            return 0;     
-        } 
-        
-        return text_value 
-     
-    } ,
-     
-    post_mess: function (val)
-    {       
-        giper_chat.mess_block = $('#'+val.type+'_'+val.mess_id);     // alert( user )
- 
-        var text, repl 
-        
-=======
             return 0;
         }
 
@@ -2999,108 +2363,12 @@ var giper_chat = {
 
         var text, repl
 
->>>>>>> master
         if (giper_chat.cascade != 0)
         {
             text = giper_chat.cascade;
             repl = '';
         }
         else
-<<<<<<< HEAD
-        {      
-            text = giper_chat.toggle_text();
-            repl = text 
-        } 
-                                                   
-        if (text)  
-        {            
-            simple_hash();
-            
-            $.post
-            (
-                "/mailer/post/", 
-                {
-                    mess: text, 
-                    id:   val.user, 
-                    re:   repl, 
-                    captcha_code: $('.code',giper_chat.mess_block).val(), 
-                    hash: hash
-                 },  
-                 giper_chat.on_post
-             );  
-                                                    
-            disabled_with_timeout( $('.post',giper_chat.mess_block), 5); 
-            giper_chat.timer_cut();
-        }   
-         
-    } , 
-     
-    on_post: function (data)
-    {                                // alert (data) 
-        if( !data ) return 0;  
-        var mess = JSON.parse( data );  
-        
-        if( mess.error == 'captcha' ) 
-        {    
-            $('textarea',giper_chat.mess_block).show('blind');
-            $('.captcha_block',giper_chat.mess_block).show('blind');
-            $('.captcha',giper_chat.mess_block).get(0).src = '/secret_pic.php?hash='+hash;      
-        }
-
-        if( mess.saved == '1' ) 
-        {     
-            giper_chat.idle_round = 0; 
-                                   
-            $('#contact_update').show('fade'); 
-            giper_chat.close_message(giper_chat.mess_block); 
-
-            notepad.hide();                 //////////////////////////////////////////////
-            visited.action.save(giper_chat.mess_block.data('user')); 
-
-            setTimeout( function ()
-            { 
-               if (giper_chat.cascade != 0)
-                   giper_chat.reply_all(); 
-            },700 );              
-        } 
-        
-        if( mess.error == 'reload' ) 
-        {            
-            giper_chat.idle_round = 0;  
-            location.href = '/'+user+'?text='+text; //alert ('reload')              
-        }  
-
-        disabled_with_timeout( $('.post',giper_chat.mess_block), 0.05); 
-          
-    } , 
-       
-    title_blink: function () 
-    {
-        if (giper_chat.count_unread == 0) 
-        {
-            document.title = giper_chat.prev_title;
-            return false ; 
-        }     
-     
-        if( document.title != 'Вам сообщение!' ) 
-        {
-            document.title = 'Вам сообщение!' ; 
-        }
-        else
-            document.title = ' * * * * * * * * * * * * ' ; 
-    } ,
-     
-    post_serv: function (elem,value)
-    {               
-        giper_chat.close_message( $(elem) );                   /*
-        var param = {}; param[value] = 1;
-         $.get( "/ajax/messages_load.php", param ); */
-        set_cookie( 'user_bun', '1', 259200 ); 
-    }
-     
-}
- 
-=======
         {
             text = giper_chat.toggle_text();
             repl = text
@@ -3194,7 +2462,6 @@ var giper_chat = {
 
 }
 
->>>>>>> master
 
 
   $( document ).ready(function() {   
@@ -3340,40 +2607,6 @@ var master_info = {
 }
 
 
-<<<<<<< HEAD
- 
-// Навигация с помошью клавиатуры 
-var navigate = {    
-        
-    enable:  0,   
-        
-    init: function () 
-    {                           
-        $('#form_post_mess').on('keypress', function()
-        {
-            navigate.post_form(event,this);    
-        });
-                                     
-        $(document).on('keydown', function()
-        {                                 
-            navigate.through(event);    
-        });
-                                     
-    } , 
-
-    // Отправка сообщения по CTRL + Enter
-    post_form: function (event, formElem) 
-    {    
-        if((event.ctrlKey) && ((event.keyCode == 10)||(event.keyCode == 13))) 
-        {
-            formElem.submit();    
-        }
-    } ,
-          
-    // Навигация с помошью стрелок + CTRL
-    through: function (event) 
-    {  
-=======
 
 // Навигация с помошью клавиатуры
 var navigate = {
@@ -3399,16 +2632,11 @@ var navigate = {
     // Навигация с помошью стрелок + CTRL
     through: function (event)
     {
->>>>>>> master
         if (window.event)
             event = window.event;
 
         if (event.ctrlKey)
-<<<<<<< HEAD
-        {                           
-=======
         {
->>>>>>> master
             var link = null;
             var href = null;
             switch (event.keyCode ? event.keyCode : event.which ? event.which : null)
@@ -3428,33 +2656,6 @@ var navigate = {
                 case 0x24:
                     link = '#home_page';
                     break;
-<<<<<<< HEAD
-            }                
-            if($('a').is(link))  // alert($(link).attr('href')); return false;
-                document.location = $(link).attr('href');
-        }
-    }  
-
-}
- 
-
-
-// -- Блокнот ---
-var notepad = {    
-                    
-    note_block: null, 
-    last_click: null,
-    disibled:   0,
-    create:     0,    
-        
-    init: function () 
-    {             
-        if (device.width() < 1000)
-        {           
-            notepad.disibled = 1;                                                            
-        }              
-        
-=======
             }
             if($('a').is(link))  // alert($(link).attr('href')); return false;
                 document.location = $(link).attr('href');
@@ -3480,7 +2681,6 @@ var notepad = {
             notepad.disibled = 1;
         }
 
->>>>>>> master
         notepad.disibled = get_cookie ('note_vis')*1 ? 1 : 0;   //////////////////////////
 
         active_textarea = $('#mess_text_val');
@@ -3488,83 +2688,6 @@ var notepad = {
 
 
         $('textarea').click( function ()
-<<<<<<< HEAD
-        { 
-            active_textarea = this; 
-            notepad.show();  
-        });  
-        
-        $('#notepad_on').click( function (){ notepad.toggle_disable('on'); notepad.show('force'); });                                                   
-               
-        $('.close',notepad.note_block).click( function (){ notepad.hide(); });                
-        $('.post',notepad.note_block).click( function (){ notepad.toggle_disable('off'); notepad.hide(); }); 
-        $('.bunn',notepad.note_block).click( function (){ notepad.toggle_disable('off'); notepad.hide(); }); 
-                                     
-    } , 
-    
-    hide: function () 
-    {     
-        notepad.note_block.hide('fade');
-    } ,  
-    
-    show: function (force) 
-    {                                
-        if (!notepad.disibled)     
-        if (force || (active_textarea && notepad.last_click != active_textarea))
-        {
-            if (notepad.create) 
-            {                                   
-                notepad.note_block.show('fade');  
-                notepad.last_click = active_textarea;        /////////////////////////////  
-            }
-            else
-                notepad.ajax_load();   
-        } 
-    } ,
-    
-    toggle_disable: function (vset) 
-    {                                         
-        if (vset == 'off') notepad.disibled = 1;                       
-        if (vset == 'on' ) notepad.disibled = 0;
-                                      
-        if (vset) 
-        {                              
-            set_cookie ('note_vis', notepad.disibled, 259200);   /////////////////////////
-        } 
-    } ,
-    
-    ajax_load: function () 
-    {                              
-         simple_hash(); 
-         $.get( '/ajax/load_notepad.php', { hash: hash }, notepad.on_load); 
-    } , 
-    
-    remind: function () 
-    {      
-        var top  = storage.load('notepad_top');
-        var left = storage.load('notepad_left');
-                                       
-        if (top  && top  < 40) top  = 50;
-        if (left && left < 10) left = 10; 
-        if (top  > (device.height()-300)) top  = 0;
-        if (left > (device.width()-300))  left = 0; 
-         
-        if (top)  notepad.note_block.css("top",top+'px');  
-        if (left) notepad.note_block.css("left",left+'px');  
-        
-    } ,  
-    
-    on_load: function (data) 
-    {           
-           if( data.indexOf('div') > 0 ) 
-           { 
-               notepad.create = 1; 
-               $('.notes',notepad.note_block).html( data );
-               $('.note_line',notepad.note_block).click( 
-                   function ()
-                   { 
-                       $(active_textarea).val( $(this).text() ); 
-=======
         {
             active_textarea = this;
             notepad.show();
@@ -3649,38 +2772,10 @@ var notepad = {
 //                        var evt = document.createEvent('HTMLEvents');
 //                        evt.initEvent('input', false, true);
 //                        elt.dispatchEvent(evt);
->>>>>>> master
                    }
                );
 
                notepad.remind();
-<<<<<<< HEAD
-                                  
-               notepad.note_block.draggable
-               ( 
-                   { 
-                       handle:'.title',
-                       stop: function(event, ui) 
-                       {  
-                           var topOff = $(this).offset().top - $(window).scrollTop();
-                           notepad.note_block.css("top",topOff); 
-                           storage.save('notepad_top',topOff);
-                           storage.save('notepad_left',$(this).offset().left);
-                       } 
-                   }
-               );  
-                
-               notepad.show();  
-           }  
- 
-    }
-    
-     
-
-
-
-     
-=======
 
                notepad.note_block.draggable
                (
@@ -3706,7 +2801,6 @@ var notepad = {
 
 
 
->>>>>>> master
 }
 
 
@@ -3947,47 +3041,6 @@ var option_contact = {
 }          
 
 
-<<<<<<< HEAD
- 
-var option_email = { 
-  
-    init: function () {                               
-        $('.option_email_button').off('click'); 
-        $('.option_email_button').on('click',option_email.action.send_email);
-        if (userinfo.data.email) 
-            $('.option_email_value').val(userinfo.data.email); 
-        option_email.ajax.load();                
-    } ,    
-    ajax: {    
-        load: function () {                                
-            $.post('/sync/email/', option_email.ajax.on_load);                     
-        },   
-        post: function (email) {                                
-            $.post('/option/email/', { email: email }, option_email.ajax.on_save);      
-            userinfo.data.email = data.email;  
-            userinfo.action.set_email();                         
-            option_static.action.close();                      
-        },   
-        on_save: function (data) {           
-            profile_alert.option.show(json.parse(data));  
-        },   
-        on_load: function (data) {                  
-            data = json.parse(data);
-            if (data.email != undefined) {  
-                if (data.email != '') {              
-                    userinfo.data.email = data.email;   
-                    userinfo.action.set_email(); 
-                }     
-            }  
-        }              
-    } ,  
-    action: {                               
-        send_email: function () {          
-            option_email.ajax.post($('.option_email_value').val());                  
-        }                                   
-    }    
-}       
-=======
 
 var option_email = {
 
@@ -4027,7 +3080,6 @@ var option_email = {
         }
     }
 }
->>>>>>> master
 
 
       
@@ -4294,11 +3346,6 @@ var option_sex = {
 
 
 
-<<<<<<< HEAD
-// -- Статический блок опций ---
-var option_static = {    
-        
-=======
 var OptionStaticViewer = new Vue({
     el: '#option-static__viewer',
     store,
@@ -4316,232 +3363,11 @@ var OptionStaticViewer = new Vue({
 // -- Статический блок опций ---
 var option_static = {
 
->>>>>>> master
     click_enable: null,
     active_elem: null,
     timer_id: null,
     form: null,
 
-<<<<<<< HEAD
-    init: function () 
-    {                                          
-        if (!$('.option_static').length)
-            return null;
-        
-        $('.option_static').each( function (i,elem) {   
-            elem = $(elem);
-            if (!elem.data('active')) {   
-                elem.on('click',option_static.action.preload);                 
-                elem.data('active',1); 
-            }               
-        });                    // alert(1)
-        $('#option_static_close').on('click',option_static.action.close);                   
-    } , 
-         
-    ajax: {    
-        load: function (option) {     
-            option_static.option.form.trash();                          
-            $('#option_static_container')
-                .load( '/static/htm/option_' + option + '.html',option_static.ajax.on_load);
-        } ,  
-        on_load: function (data) {           // alert(visited.list)  
-            if (data) {    
-                option_static.action.router();
-                option_static.action.show_form();
-                $("html, body").animate({ scrollTop: 0 }, "slow");              
-            }                                         
-        } ,    
-        save: function (tid) {                               
-            //$.get( '/contact/addvisit/'+ uid +'/', { tid: tid }, visited.ajax.parse_save);
-        }   
-    } , 
-      
-    option: {  
-        loader: {  
-            show: function () {                          
-                $('#static_loader').delay(1000).show('fade');                          
-            } ,  
-            hide: function () {  
-                $('#static_loader').clearQueue();                              
-                $('#static_loader').hide('fade');                           
-            }                         
-        } , 
-        form: {  
-            show: function () {                         
-                $('#option_static_container').show('fade');                          
-            } ,  
-            hide: function () {                               
-                $('#option_static_container').hide('fade');                           
-            } ,  
-            trash: function () {                                   
-                $('#option_static_container').empty();                           
-            }                         
-        } , 
-        block: {  
-            show: function () {                          
-                $('#option_static_block').show('fade');                          
-            } ,  
-            hide: function () {                                
-                $('#option_static_block').hide('fade');                           
-            }                         
-        }                                    
-    } , 
-      
-    action: {       
-        show_form: function () {   
-           option_static.option.form.show();          
-           option_static.option.loader.hide();                    
-        } ,  
-        preload: function () {  
-            var option = $(this).data('option');
-            option_static.form = option;        
-            if (option) {
-               option_static.ajax.load(option); 
-               option_static.option.block.show();          
-               option_static.option.loader.show();
-            }                       
-        } ,     
-        close: function () {   
-           option_static.option.form.hide();         
-           option_static.option.loader.hide();        
-           option_static.option.block.hide();                               
-        } ,     
-        router: function () {                               
-           if (option_static.form == 'login') { 
-               option_login.init();
-           }                                
-           if (option_static.form == 'contact') { 
-               option_contact.init();
-           }                                
-           if (option_static.form == 'age') { 
-               option_age.init();
-           }                                
-           if (option_static.form == 'name') { 
-               option_name.init(); 
-               name_suggest.init(); 
-               city_suggest.init();
-           }                                 
-           if (option_static.form == 'city') { 
-               option_city.init();  
-               city_suggest.init();
-           }                                
-           if (option_static.form == 'hidepass') { 
-               option_email.init();
-           }                               
-           if (option_static.form == 'anketa') {  
-               option_anketa.init();
-               name_suggest.init(); 
-               city_suggest.init(); 
-           }                                     
-           if (option_static.form == 'chlogin') { 
-               option_chlogin.init();
-           }                                    
-           if (option_static.form == 'introduce') { 
-               option_intro.init(); 
-               name_suggest.init(); 
-               city_suggest.init();
-           }                                
-           if (option_static.form == 'desire') { 
-               option_tag.init();
-               tag_suggest.init();
-           }                          
-        }                                   
-    }    
-} 
- 
-
-          
-var option_tag = { 
-   
-    loaded:   0,  
-        
-    init: function () {   
-        $('#option_tag input').prop('disabled',true);
-        $('#option_tag_button').on('click',option_tag.action.send);      
-        option_tag.action.remind();    
-        option_tag.ajax.load();                 
-    } ,    
-    ajax: {    
-        load: function () {                     
-            $.get('/tag/user/', option_tag.ajax.on_load);                  
-        },   
-        on_load: function (data) {                          
-            data = json.parse(data);                           
-            if (data.tags.length > 0) {  
-                option_tag.action.print(data.tags); 
-                user_tag.list = data.tags;
-                user_tag.action.store();
-            }  
-            $('#option_tag input').prop('disabled',false); 
-            //                            
-            //option_static.action.close();     
-        },    
-        add: function (tag) {                             
-            $.post('/tag/add/', { tag: tag }, option_tag.ajax.on_save);                   
-        },   
-        on_save: function (data) {                          
-            data = json.parse(data);                           
-            if (data.id) {       
-                user_tag.list[user_tag.list.length-1].id = data.id;  
-                user_tag.option.set_count();  
-                option_tag.action.remind();
-            } else { 
-                option_tag.option.error(option_tag.loaded);
-            }
-            $('#option_tag_value').val('');
-            user_tag.action.store();  
-        },    
-        del: function (id) {                             
-            $.post('/tag/del/', { id: id });                   
-        }             
-    } ,        
-    action: {  
-        remind: function () {                             
-            if (user_tag.list.length > 0) {
-                option_tag.action.print(user_tag.list);
-            }                 
-        },    
-        send: function () {                           
-            var tag = $('#option_tag_value').val();    
-            var data = {"tag":tag,"id":0};
-            user_tag.list.push(data);   
-            option_tag.action.remind();     
-            option_tag.ajax.add(tag);   
-        },    
-        set: function () {     
-            userinfo.data.contact[$(this).data('val')] = $(this).prop('checked')*1;                     
-        } ,   
-        print: function (tags) {            
-            $('#option_tag_list').empty();
-            for (var i = 0; i < tags.length; i++) {
-                var style = '';
-                block_line = $('<i class="desire_tag">').text(tags[i].tag);
-                if (!tags[i].id) 
-                    block_line.addClass('desire_onload');
-                block_line.data('id',tags[i].id); 
-                block_line.data('num',i); 
-                block_line.data('tag',tags[i].tag);  
-                block_line.attr('id','utag'+i);  
-                block_line.on('click',option_tag.action.del); 
-                $('#option_tag_list').append(block_line); 
-            } 
-        }, 
-        add: function () {  
-            option_tag.ajax.add($(this).data('tag'));
-            option_tag.option.toggle(this); 
-            $(this).on('click',option_tag.action.del);          
-            var data = {"tag":$(this).data('tag'),"id":$(this).data('id')}; 
-            user_tag.list.splice($(this).data('num'),0,data);       
-        }, 
-        del: function () {  
-            option_tag.ajax.del($(this).data('id'));
-            option_tag.option.toggle(this);  
-            user_tag.list.splice($(this).data('num'),1);   
-            user_tag.option.set_count();
-            $(this).on('click',option_tag.action.add);                 
-        }, 
-        ids: function () {    
-=======
     init: function ()
     {
         if (!$('.option_static').length)
@@ -4760,28 +3586,10 @@ var option_tag = {
             $(this).on('click',option_tag.action.add);
         },
         ids: function () {
->>>>>>> master
             user_tag.idls = [];
             for (var i=0; i<user_tag.list; i++) {
                 if (user_tag.list[i].id)
                     user_tag.idls.push(user_tag.list[i].id);
-<<<<<<< HEAD
-            }  
-            return user_tag.idls;              
-        }                                      
-    },        
-    option: { 
-        toggle: function (elem) {   
-            $(elem).off('click');   
-            $(elem).toggleClass('deleted_tag');              
-        },
-        error: function (i) {   
-            $('#utag'+[i]).off('click');   
-            $('#utag'+[i]).toggleClass('error_tag');              
-        } 
-    }     
-}          
-=======
             }
             return user_tag.idls;
         }
@@ -4797,7 +3605,6 @@ var option_tag = {
         }
     }
 }
->>>>>>> master
 
 
       
@@ -5055,66 +3862,6 @@ var result_list = {
 
 
 
-<<<<<<< HEAD
-var abuse_list = new Vue({
-    el: '#search-form',
-    store,
-    mounted: function () {
-        //console.log(abuse_form.mess());
-    },
-    methods: {
-        showButton: function () {
-            if (!this.isFormShow) {
-                this.isButtonShow = true;
-            }
-        },
-    },
-    computed: Vuex.mapState({
-        user: state => state.user.data,
-        up() {
-            console.log(this.user.up+' *up8');
-            return this.user.up ? this.user.up : '';
-        },
-        to() {
-            return this.user.to ? this.user.to : '';
-        },
-        more(state) {
-            if (!this.user.sex || this.user.sex == 1) {
-                return '1';
-            } else {
-                return '2';
-            }
-        },
-    })
-});
- 
-// -- Слайдер, главная ---
-var slider = {  
- 
-    timer: null, 
-    context: 0,
-    next: 0,
-        
-    init: function () 
-    {          
-        if(!$('div').is('#top_intro_info_block'))
-            return null;
-         
-        $('#top_intro_info_block').on('mouseover',slider.stop);
-        $('#top_intro_info_block').on('mouseout',slider.start);
-        
-        // Предзагрузка картинок  
-        setInterval(function()
-        { 
-            var nn = ( slider.next + 1 < 5 ) ? slider.next + 1 : 0; 
-            a1 = new Image; 
-            a1.src = "/img/board/top_intro_info_" + nn + ".jpg";   
-        }, 10000);   
-                        
-    } ,  
-
-    slide: function (num,st) 
-=======
 ////
 // РОУТЕР ==========================================================
 ////
@@ -5184,7 +3931,6 @@ var slider = {
     } ,
 
     slide: function (num,st)
->>>>>>> master
     {
         var top_intro_caption = []
         var top_intro_context = []
@@ -5198,74 +3944,18 @@ var slider = {
          top_intro_context[3] = 'То что вы хотели спросить, то о чём вы хотели поговорить. Получайте прямо сейчас. Комфортное онлайн общение, интимные беседы, уютная обстановка и приятные собеседники уже ждут вас';
          top_intro_caption[4] = 'Секс знакомства бесплатно';
          top_intro_context[4] = 'Здесь всё бесплатно. Вам доступны все сервисы сайта полностью, уже сейчас. Ваша анкета всегда наверху. Vip аккаунтов нет, открытый доступ ко всем анкетам и безграничные возможности';
-<<<<<<< HEAD
- 
-        if( num > 4 ) num = 0;
-        for (var i = 0; i<5; i++) 
-=======
 
         if( num > 4 ) num = 0;
         for (var i = 0; i<5; i++)
->>>>>>> master
         {
             $('#board_img_'+i).removeClass('show');
             $('#board_img_'+i).attr('src','');
         }
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> master
         $('#board_img_' + num).addClass('show active');
         $('#board_img_' + num).attr('src','/img/board/top_intro_info_'+num+'.jpg');
 
         if (slider.context)
-<<<<<<< HEAD
-        {         
-            $('#top_intro_info_block_caption').text(top_intro_caption[num]);
-            $('#top_intro_info_block_context').text(top_intro_context[num]); 
-        }
-      
-        slider.next = num
-    } ,
-
-    start: function () 
-    {
-        slider.timer = setInterval( function(){ slider.slide(++slider.next,0)}, 20000); 
-    } ,
-
-    stop: function () 
-    {
-        clearTimeout(slider.timer); 
-    }
-    
-        
-}
-
-
-
-// -- Хранилище ---
-var storage = {
-
-    enable:  0,
-
-    init: function ()
-    {
-        if (storage.is_enable())
-        {
-            storage.enable = 1;
-        }
-
-    } ,
-
-    is_enable: function ()
-    {
-        try
-        {
-            return 'localStorage' in window && window['localStorage'] !== null;
-        }
-        catch (e)
-=======
         {
             $('#top_intro_info_block_caption').text(top_intro_caption[num]);
             $('#top_intro_info_block_context').text(top_intro_context[num]);
@@ -5310,62 +4000,11 @@ var storage = {
             return 'localStorage' in window && window['localStorage'] !== null;
         } 
         catch (e) 
->>>>>>> master
         {
             return false;
         }
     } ,
 
-<<<<<<< HEAD
-    save: function (key,val)
-    {
-        if (storage.enable)
-        {
-            localStorage.setItem(key,val);
-        }
-    } ,
-
-    load: function (key,def)
-    {
-        var result = def ? def : null;
-
-        if (storage.enable && localStorage.getItem(key))
-        {
-            result = localStorage.getItem(key);
-        }
-
-        return result;
-    } ,
-
-    array: {
-
-        load: function (key)
-        {
-            var result = [];
-            var value = null;
-
-            value = storage.load(key);
-            value = json.parse(value);
-            if (value)
-                result = value;
-
-            return result;
-        } ,
-
-        save: function (key,val)
-        {
-            storage.save(key,json.encode(val));
-        } ,
-
-        add: function (key,val)
-        {
-
-        }
-    }
-}
-
-storage.init();
-=======
     save: function (key,val) 
     {
         if (storage.enable) 
@@ -5415,7 +4054,6 @@ storage.init();
 
 }
    
->>>>>>> master
 
   
 // -- Города, подсказки, поиск названия ---
@@ -5668,14 +4306,6 @@ var tag_suggest = {
 } 
 
 
-<<<<<<< HEAD
-
-var user_menu = { init: function () {},
-    ajax: {},
-    action: {sets: {search: function () { },contact: function () {}}},
-    option: {act: { }, se: function () {}}
-}
-=======
                                  
 var user_menu = { 
   
@@ -5717,7 +4347,6 @@ var user_menu = {
         }                                   
     }    
 }          
->>>>>>> master
 
 
       
@@ -5757,74 +4386,6 @@ var user_tag = {
 }          
 
 
-<<<<<<< HEAD
-Vue.component('abuse-form', {
-    template: '#abuse-form',
-    props: [
-        'show'
-    ],
-
-});
-
-var menu_user_top = new Vue({
-    el: '#menu-user-top',
-    store,
-    data: {
-        auth: 1
-    },
-    mounted() {
-        //console.log(abuse_form.mess());
-    },
-    methods: {
-        showButton() {
-            if (!this.isFormShow) {
-                this.isButtonShow = true;
-            }
-        },
-    },
-    computed: Vuex.mapState({
-        user: state => state.user.data,
-        userString(state) {
-            let str = this.user.name;
-            // TODO: переделать без возможности отображения без имени
-            if (!str) {
-                if (this.user.sex == 1) {
-                    str = 'Парень';
-                } else
-                if (this.user.sex == 2) {
-                    str = 'Девушка';
-                }
-            }
-            //
-            if (this.user.age > 10 || this.user.city.length > 3) {
-                str = str + ', ';
-            }
-            if (this.user.age > 10) {
-                str = str + this.user.age + ' ';
-            }
-            if ((20 - str.length - this.user.city.length) >= 0) {
-                str = str + this.user.city;
-            }
-            if (!str) {
-                str = 'Кто вы?';
-            }
-            ls.save('user_string_print', str);
-            return str;
-        },
-        searchString(state) {
-            let str = '/index.php?view=simple&town='+this.user.city+
-                '&years_up='+this.user.up+'&years_to='+this.user.to+''+
-                '&who='+this.user.who+'';
-            return str;
-        }
-    })
-});
-
-// -- Информация о пользователе ---
-var userinfo = {
-
-    data: {},
-=======
 
 // -- Информация о пользователе ---
 var userinfo = {
@@ -5858,7 +4419,6 @@ var userinfo = {
         email:    ''
     },
 
->>>>>>> master
     init: function () {
         userinfo.ajax.load();
     } ,
@@ -5873,13 +4433,9 @@ var userinfo = {
                 userinfo.action.set_data(data);
                 master_info.init();
             } else {
-<<<<<<< HEAD
-                storage.save('auth',0); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-=======
                 storage.save('auth',0);
                 user_menu.option.act.show_reg();
                 userinfo.action.set_string();
->>>>>>> master
             }
         } ,
         save: {
@@ -5894,11 +4450,7 @@ var userinfo = {
             } ,
             city: function (func) {
                 $.post('/option/city/', { city: userinfo.data.city }, func);
-<<<<<<< HEAD
-            }  
-=======
             }
->>>>>>> master
         }
     } ,
     action: {
@@ -5916,11 +4468,7 @@ var userinfo = {
             userinfo.action.set_string(); /**/
         } ,
         set_name: function () {
-<<<<<<< HEAD
-            if (userinfo.data.name.length > 2) {
-=======
             if (userinfo.data.name && userinfo.data.name.length > 2) {
->>>>>>> master
                 $('.user_name_option').text(userinfo.data.name);
                 $('.name_suggest').val(userinfo.data.name);
             }
@@ -5934,11 +4482,7 @@ var userinfo = {
             userinfo.action.set_string();
         } ,
         set_city: function () {
-<<<<<<< HEAD
-            if (userinfo.data.city.length > 3) {
-=======
             if (userinfo.data.city && userinfo.data.city.length > 3) {
->>>>>>> master
                 $('.user_city_option').text(userinfo.data.city);
                 $('.city_suggest').val(userinfo.data.city);
             }
@@ -5960,11 +4504,7 @@ var userinfo = {
             $('.user_sex_option').text(say);
         } ,
         set_string: function () {
-<<<<<<< HEAD
-            var str = userinfo.data.name;
-=======
             var str = userinfo.data.name ? userinfo.data.name : '';
->>>>>>> master
             if (!userinfo.data.name) {
                 if (userinfo.data.sex == 1) {
                     str = 'Парень';
@@ -5974,16 +4514,6 @@ var userinfo = {
                 }
             }
 
-<<<<<<< HEAD
-            if (userinfo.data.age > 10 || userinfo.data.city.length > 3)
-                str = str + ', ';
-            if (userinfo.data.age > 10)
-                str = str + userinfo.data.age + ' ';
-            if ((20 - str.length - userinfo.data.city.length) >= 0)
-                str = str + userinfo.data.city;
-            if (!str)
-                str = 'Кто вы?';
-=======
             var cityLen = userinfo.data.city ? userinfo.data.city.length : 0;
             if (userinfo.data.age > 10 || cityLen > 3) {
                 str = str + ', ';
@@ -5996,7 +4526,6 @@ var userinfo = {
             if (!str) {
                 str = 'Кто вы?';
             }
->>>>>>> master
             if (userinfo.data.uid) {
                 $('.user_string_option').text(str);
                 storage.save('user_string_print', str);

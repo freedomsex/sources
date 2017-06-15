@@ -1,4 +1,30 @@
 
+const auth = {
+    state: {
+        iss: '',
+        exp: '',
+        iat: '',
+        sid: '',
+        uis: '',
+        auth: '',
+        ip:  ''
+            login: '',
+            pass:  '',
+            email: '',
+            promt: '',
+            last:  '',
+            error: '',
+            subsc: 0
+    },
+    actions: {
+
+    },
+    mutations: {
+
+    }
+};
+
+
 const mutations = {
     load(state, data) {
         if (data && data instanceof Array && data.length > 0) {
@@ -169,6 +195,20 @@ const contacts = {
     }
 }
 
+
+const credits = {
+    state: {
+        count: 0,
+        info: ''
+    },
+    actions: {
+
+    },
+    mutations: {
+
+    }
+};
+
 const modals = {
     state: {
         initial: false,
@@ -195,6 +235,25 @@ const modals = {
         }
     }
 }
+
+const moderator = {
+    state: {
+        promt: 0,
+        rank:  0,
+        resident: 0,
+        action: 0,
+        effect: 0,
+        bunn: 0,
+        rang: ''
+    },
+    actions: {
+
+    },
+    mutations: {
+
+    }
+};
+
 
 const search = {
     state: {
@@ -230,6 +289,31 @@ const user = {
     state: {
         uid: 0,
         sex: 0,
+        age: '',
+        name: '',
+        city: '',
+        up: '',
+        to: '',
+        who: 0,
+        close:   0,
+        virt:    0,
+        status:  0,
+        em: 0,
+        vk: 0,
+        ok: 0,
+        fb: 0,
+        go: 0,
+        sk: 0,
+        ph: 0,
+        tags: {
+            str: ''
+        },
+        last: '',
+        anketa: {
+            growth: '',
+            weight: '',
+            figure: ''
+        }
     },
     actions: {
         LOAD_USER({ commit }) {
@@ -253,6 +337,7 @@ const user = {
     mutations: {
         loadUser(state, data) {
             _.extend(state, data);
+            ls.set('user.data', data, 23456);
         },
     }
 }

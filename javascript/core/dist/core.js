@@ -1,160 +1,5 @@
 'use strict';
 
-<<<<<<< HEAD
-// -- Хранилище ---
-var storage = {
-    enable: 0,
-    init: function init() {
-        if (storage.is_enable()) {
-            storage.enable = 1;
-        }
-    },
-    is_enable: function is_enable() {
-        try {
-            return 'localStorage' in window && window['localStorage'] !== null;
-        } catch (e) {
-            return false;
-        }
-    },
-    save: function save(key, val) {
-        if (storage.enable) {
-            localStorage.setItem(key, val);
-        }
-    },
-    load: function load(key, def) {
-        var result = def ? def : null;
-        if (storage.enable && localStorage.getItem(key)) {
-            result = localStorage.getItem(key);
-        }
-        return result;
-    },
-    set: function set(key, val) {
-        storage.save(key, val);
-    },
-    get: function get(key, def) {
-        storage.load(key, def);
-    },
-
-    array: {
-        load: function load(key) {
-            var result = [];
-            var value = null;
-            value = storage.load(key);
-            value = json.parse(value);
-            if (value) result = value;
-            return result;
-        },
-        save: function save(key, val) {
-            storage.save(key, json.encode(val));
-        },
-        add: function add(key, val) {}
-    }
-};
-storage.init();
-
-var ls = storage;
-
-var store = new Vuex.Store({
-    state: {
-        count: 0,
-        user: {
-            data: {
-                id: 0,
-                sex: 0,
-                age: '',
-                name: '',
-                city: '',
-                up: '',
-                to: '',
-                who: 0,
-                close: 0,
-                virt: 0,
-                status: 0,
-                em: 0,
-                vk: 0,
-                ok: 0,
-                fb: 0,
-                go: 0,
-                sk: 0,
-                ph: 0,
-                tags: {
-                    str: ''
-                },
-                last: '',
-                anketa: {
-                    growth: '',
-                    weight: '',
-                    figure: ''
-                }
-            },
-            auth: {
-                iss: '',
-                exp: '',
-                iat: '',
-                sid: '',
-                uis: '',
-                auth: '',
-                ip: ''
-            },
-            login: {
-                login: '',
-                pass: '',
-                email: '',
-                promt: '',
-                last: '',
-                error: '',
-                subsc: 0
-            },
-            moderator: {
-                promt: 0,
-                rank: 0,
-                resident: 0,
-                action: 0,
-                data: {
-                    action: 0,
-                    effect: 0,
-                    bunn: 0,
-                    rang: ''
-                }
-            },
-            credits: {
-                count: 0,
-                info: ''
-            }
-        }
-    },
-    actions: {
-        LOAD_USER_DATA: function LOAD_USER_DATA(_ref) {
-            var commit = _ref.commit;
-
-            console.log('load');
-            store.commit('setUserData', lscache.get('user'));
-            axios.get('/users/10336.json').then(function (response) {
-                //this.response(data.body);
-                store.commit('setUserData', response.data.user);
-                //console.log(response.data.user);
-            }).catch(function (response) {
-                console.log('error user data');
-            });
-        }
-    },
-    mutations: {
-        setUserData: function setUserData(state, data) {
-            if (data) {
-                Object.assign(state.user.data, data);
-                lscache.set('user', data, 23456);
-            }
-            //ls.set('auth', 2);
-        }
-    },
-    getters: {}
-});
-
-store.dispatch('LOAD_USER_DATA');
-
-$(document).ready(function () {
-    //userinfo.init();
-=======
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -1224,7 +1069,6 @@ Vue.component('photo-dialog', {
 $(document).ready(function () {
 
     userinfo.init();
->>>>>>> master
     slider.init();
     //giper_chat.init();
     notepad.init();
@@ -1238,11 +1082,6 @@ $(document).ready(function () {
 
     option_static.init();
     option_sex.init();
-<<<<<<< HEAD
-    //option_email.init();
-    profile_alert.init();
-    profile_option.init();
-=======
     option_email.init();
     profile_alert.init();
     profile_option.init();
@@ -2013,7 +1852,6 @@ var api = {
 };
 
 //ApiMessages.send();
->>>>>>> master
 
     //user_tag.init();
     //desire_clip.init();
@@ -2062,60 +1900,6 @@ var auto_gen = {
     }
 
 };
-<<<<<<< HEAD
-
-var cookie_storage = {
-
-    enabled: 0,
-
-    init: function init() {},
-
-    get_cookie: function get_cookie(name) {
-        var results = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-        if (results) return unescape(results[2]);else return null;
-    },
-
-    del_cookie: function del_cookie(name) {
-        expires = new Date(); // получаем текущую дату 
-        expires.setTime(expires.getTime() - 1000);
-        document.cookie = name + "=; expires=" + expires.toGMTString() + "; path=/";
-    },
-
-    set_cookie: function set_cookie(name, val, time) {
-        expires = new Date();
-        expires.setTime(expires.getTime() + 1000 * 60 * time); // минут
-        document.cookie = name + "=" + val + "; expires=" + expires.toGMTString() + "; path=/";
-    },
-
-    get_data: function get_data(name) {
-        var data = get_cookie(name);
-        var result = null;
-
-        if (data) try {
-            result = JSON.parse(data);
-        } catch (e) {}
-
-        return result;
-    },
-
-    set_data: function set_data() {}
-
-};
-
-function get_cookie(cookie_name) {
-    var results = document.cookie.match('(^|;) ?' + cookie_name + '=([^;]*)(;|$)');
-
-    if (results) return unescape(results[2]);else return null;
-}
-
-function del_cookie(name) {
-    expires = new Date(); // получаем текущую дату 
-    expires.setTime(expires.getTime() - 1000);
-    document.cookie = name + "=; expires=" + expires.toGMTString() + "; path=/";
-}
-function set_cookie(name, val, time) {
-    expires = new Date();
-=======
 
 var ContactLists = new Vue({
     computed: {
@@ -2189,7 +1973,6 @@ function del_cookie(name) {
 }
 function set_cookie(name, val, time) {
     var expires = new Date();
->>>>>>> master
     expires.setTime(expires.getTime() + 1000 * 60 * time); // минут
     document.cookie = name + "=" + val + "; expires=" + expires.toGMTString() + "; path=/";
 }
@@ -2208,11 +1991,7 @@ var desire_clip = {
         },
         parse: function parse(data) {
             data = json.parse(data);
-<<<<<<< HEAD
-            if (data.id != undefined) {
-=======
             if (data) {
->>>>>>> master
                 if (data.id && user_tag.sync != data.id) {
                     user_tag.sync = data.id;
                     user_tag.action.store();
@@ -2276,7 +2055,6 @@ var desire_clip = {
 var device = {
 
     init: function init() {},
-<<<<<<< HEAD
 
     width: function width() {
         return $(window).width();
@@ -2291,22 +2069,6 @@ var device = {
 var active_textarea; ////////////////////////////////////////////////////////
 var giper_chat = {
 
-=======
-
-    width: function width() {
-        return $(window).width();
-    },
-
-    height: function height() {
-        return $(window).height(); //document                               
-    }
-
-};
-
-var active_textarea; ////////////////////////////////////////////////////////
-var giper_chat = {
-
->>>>>>> master
     open_mess: 0,
     idle_round: 0,
 
@@ -2452,21 +2214,11 @@ var giper_chat = {
     },
 
     new_message: function new_message(val) {
-<<<<<<< HEAD
-        //  elem.appendChild();   
-
-
-        giper_chat.open_mess++;
-        giper_chat.reply_enable();
-
-        new_block = giper_chat.create_message(val);
-=======
         //  elem.appendChild();
         giper_chat.open_mess++;
         giper_chat.reply_enable();
 
         var new_block = giper_chat.create_message(val);
->>>>>>> master
 
         new_block.prependTo($('#giper_stock'));
 
@@ -2478,11 +2230,7 @@ var giper_chat = {
 
         giper_chat.idle_round = 0;
         // giper_chat.mess_stock.push(val);
-<<<<<<< HEAD
-        // giper_chat.stock.store();           
-=======
         // giper_chat.stock.store();
->>>>>>> master
     },
 
     remind: function remind() {
@@ -2518,17 +2266,10 @@ var giper_chat = {
 
         //return 0;
 
-<<<<<<< HEAD
-        var new_block = $('#new_message_ex').clone().attr('id', val.type + '_' + val.mess_id) //.css("display","none")  
-        .data('number', val.mess_id).data('user', val.user).addClass(val.type);
-
-        $('.mess_text', new_block).html(val.text); // click( function (){ location.href =  }); 
-=======
         var new_block = $('#new_message_ex').clone().attr('id', val.type + '_' + val.mess_id) //.css("display","none")
         .data('number', val.mess_id).data('user', val.user).addClass(val.type);
 
         $('.mess_text', new_block).html(val.text); // click( function (){ location.href =  });
->>>>>>> master
         $('.close', new_block).click(function () {
             giper_chat.close_message($(new_block));
         });
@@ -2580,11 +2321,7 @@ var giper_chat = {
 
             $('.sound', new_block).remove();
             // var timer_air = setTimeout( function (){ close_message( $(new_block) ); open_mess--; },30000 );
-<<<<<<< HEAD
-            //$('.title',new_block).text( val.reply );  
-=======
             //$('.title',new_block).text( val.reply );
->>>>>>> master
             $('.bunn', new_block).remove();
             $('.user_name', new_block).text(val.name + ',');
             $('.user_name', new_block).text(val.name + ',');
@@ -2632,13 +2369,8 @@ var giper_chat = {
 
     close_all: function close_all(user) {/*
                                          $('#giper_stock div').
-<<<<<<< HEAD
-                                         $('.sound',elem).remove(); 
-                                         elem.hide('blind');       
-=======
                                          $('.sound',elem).remove();
                                          elem.hide('blind');
->>>>>>> master
                                          giper_chat.open_mess--;
                                          giper_chat.stock.remove(elem.data('number'));
                                          setTimeout( function (){ elem.remove(); },500 ); */
@@ -2681,85 +2413,6 @@ var giper_chat = {
         window.clearInterval(giper_chat.timer_id);
         //console.log('таймер остановлен: ' +giper_chat.cascade)
     },
-<<<<<<< HEAD
-
-    timer_cut: function timer_cut() {
-        if (giper_chat.idle_round > 0 && giper_chat.round_time > 10) giper_chat.round_time = 10;
-        giper_chat.idle_round = 0;
-    },
-
-    toggle_text: function toggle_text() {
-        var textarea = $('textarea', giper_chat.mess_block);
-        var text_value = $(textarea).val();
-        if (!$(textarea).is(":visible")) {
-            active_textarea = textarea; ///////////////////////////////////////
-            $(textarea).show('blind');
-            $(textarea).focus();
-            notepad.show(); ///////////////////////////////////////
-            return 0;
-        }
-
-        return text_value;
-    },
-
-    post_mess: function post_mess(val) {
-        giper_chat.mess_block = $('#' + val.type + '_' + val.mess_id); // alert( user )
-
-        var text, repl;
-
-        if (giper_chat.cascade != 0) {
-            text = giper_chat.cascade;
-            repl = '';
-        } else {
-            text = giper_chat.toggle_text();
-            repl = text;
-        }
-
-        if (text) {
-            simple_hash();
-
-            $.post("/mailer/post/", {
-                mess: text,
-                id: val.user,
-                re: repl,
-                captcha_code: $('.code', giper_chat.mess_block).val(),
-                hash: hash
-            }, giper_chat.on_post);
-
-            disabled_with_timeout($('.post', giper_chat.mess_block), 5);
-            giper_chat.timer_cut();
-        }
-    },
-
-    on_post: function on_post(data) {
-        // alert (data) 
-        if (!data) return 0;
-        var mess = JSON.parse(data);
-
-        if (mess.error == 'captcha') {
-            $('textarea', giper_chat.mess_block).show('blind');
-            $('.captcha_block', giper_chat.mess_block).show('blind');
-            $('.captcha', giper_chat.mess_block).get(0).src = '/secret_pic.php?hash=' + hash;
-        }
-
-        if (mess.saved == '1') {
-            giper_chat.idle_round = 0;
-
-            $('#contact_update').show('fade');
-            giper_chat.close_message(giper_chat.mess_block);
-
-            notepad.hide(); //////////////////////////////////////////////
-            visited.action.save(giper_chat.mess_block.data('user'));
-
-            setTimeout(function () {
-                if (giper_chat.cascade != 0) giper_chat.reply_all();
-            }, 700);
-        }
-
-        if (mess.error == 'reload') {
-            giper_chat.idle_round = 0;
-            location.href = '/' + user + '?text=' + text; //alert ('reload')              
-=======
 
     timer_cut: function timer_cut() {
         if (giper_chat.idle_round > 0 && giper_chat.round_time > 10) giper_chat.round_time = 10;
@@ -2837,7 +2490,6 @@ var giper_chat = {
         if (mess.error == 'reload') {
             giper_chat.idle_round = 0;
             location.href = '/' + user + '?text=' + text; //alert ('reload')
->>>>>>> master
         }
 
         disabled_with_timeout($('.post', giper_chat.mess_block), 0.05);
@@ -2853,7 +2505,6 @@ var giper_chat = {
             document.title = 'Вам сообщение!';
         } else document.title = ' * * * * * * * * * * * * ';
     },
-<<<<<<< HEAD
 
     post_serv: function post_serv(elem, value) {
         giper_chat.close_message($(elem)); /*
@@ -2862,16 +2513,6 @@ var giper_chat = {
         set_cookie('user_bun', '1', 259200);
     }
 
-=======
-
-    post_serv: function post_serv(elem, value) {
-        giper_chat.close_message($(elem)); /*
-                                           var param = {}; param[value] = 1;
-                                           $.get( "/ajax/messages_load.php", param ); */
-        set_cookie('user_bun', '1', 259200);
-    }
-
->>>>>>> master
 };
 
 $(document).ready(function () {
@@ -2988,21 +2629,6 @@ var master_info = {
             option_static.init();
         }
     }
-<<<<<<< HEAD
-
-};
-
-// Навигация с помошью клавиатуры 
-var navigate = {
-
-    enable: 0,
-
-    init: function init() {
-        $('#form_post_mess').on('keypress', function () {
-            navigate.post_form(event, this);
-        });
-
-=======
 
 };
 
@@ -3012,7 +2638,6 @@ var navigate = {
     enable: 0,
 
     init: function init() {
->>>>>>> master
         $(document).on('keydown', function () {
             navigate.through(event);
         });
@@ -3102,11 +2727,7 @@ var notepad = {
         if (!notepad.disibled) if (force || active_textarea && notepad.last_click != active_textarea) {
             if (notepad.create) {
                 notepad.note_block.show('fade');
-<<<<<<< HEAD
-                notepad.last_click = active_textarea; /////////////////////////////  
-=======
                 notepad.last_click = active_textarea; /////////////////////////////
->>>>>>> master
             } else notepad.ajax_load();
         }
     },
@@ -3143,9 +2764,6 @@ var notepad = {
             notepad.create = 1;
             $('.notes', notepad.note_block).html(data);
             $('.note_line', notepad.note_block).click(function () {
-<<<<<<< HEAD
-                $(active_textarea).val($(this).text());
-=======
                 var text = $(this).text();
                 $(active_textarea).val(text).focus();
                 if ($(active_textarea).attr('id') == 'mess-text-area') {
@@ -3156,7 +2774,6 @@ var notepad = {
                 //                        var evt = document.createEvent('HTMLEvents');
                 //                        evt.initEvent('input', false, true);
                 //                        elt.dispatchEvent(evt);
->>>>>>> master
             });
 
             notepad.remind();
@@ -3436,11 +3053,7 @@ var option_email = {
         },
         on_load: function on_load(data) {
             data = json.parse(data);
-<<<<<<< HEAD
-            if (data.email != undefined) {
-=======
             if (data) {
->>>>>>> master
                 if (data.email != '') {
                     userinfo.data.email = data.email;
                     userinfo.action.set_email();
@@ -3545,15 +3158,9 @@ var option_login = {
                 if (data.err != '0') {
                     option_login.option.captcha.reload();
                     option_login.option.captcha.show();
-<<<<<<< HEAD
                     option_login.option.say_login(data.say);
                 } else {
                     option_login.option.say_login(data.say);
-=======
-                    option_login.option.say_login(data.say);
-                } else {
-                    option_login.option.say_login(data.say);
->>>>>>> master
                     location.href = location.href;
                 }
                 //option_anketa.action.set_anketa(data.text);    
@@ -3668,13 +3275,6 @@ var option_name = {
             }
             if (userinfo.data.sex == 2) {
                 $('#woman_opt_name').show();
-<<<<<<< HEAD
-            }
-            if (!userinfo.data.sex) {
-                //$('#woman_opt_name').show(); 
-            }
-            $('.opt_name_val').on('click', option_name.action.send_link);
-=======
             }
             if (!userinfo.data.sex) {
                 //$('#woman_opt_name').show(); 
@@ -3863,176 +3463,6 @@ var option_static = {
                 option_tag.init();
                 tag_suggest.init();
             }
->>>>>>> master
-        }
-    }
-};
-
-<<<<<<< HEAD
-var option_sex = {
-
-    init: function init() {
-        $('.option_sex_change').off('click').on('click', option_sex.action.send_sex);
-    },
-    ajax: {
-        on_save: function on_save(data) {
-            userinfo.data.name = auto_gen.name(userinfo.data.sex);
-            userinfo.ajax.save.name(option_name.ajax.on_save);
-            data = json.parse(data);
-            if (data.sex) {
-                userinfo.data.sex = data.sex;
-                userinfo.action.set_sex();
-            }
-        }
-    },
-    action: {
-        send_sex: function send_sex() {
-            if (userinfo.data.sex == 0) {
-                userinfo.data.sex = 2;
-            } else if (userinfo.data.sex == 1) {
-                userinfo.data.sex = 2;
-            } else if (userinfo.data.sex == 2) {
-                userinfo.data.sex = 1;
-            }
-            userinfo.ajax.save.sex(option_sex.ajax.on_save);
-            userinfo.action.set_sex();
-        },
-        save: function save(sex) {
-            userinfo.data.sex = sex;
-            userinfo.ajax.save.sex(option_sex.ajax.on_save);
-            userinfo.action.set_sex();
-        }
-    }
-};
-
-// -- Статический блок опций ---
-var option_static = {
-
-    click_enable: null,
-    active_elem: null,
-    timer_id: null,
-    form: null,
-
-    init: function init() {
-        if (!$('.option_static').length) return null;
-
-        $('.option_static').each(function (i, elem) {
-            elem = $(elem);
-            if (!elem.data('active')) {
-                elem.on('click', option_static.action.preload);
-                elem.data('active', 1);
-            }
-        }); // alert(1)
-        $('#option_static_close').on('click', option_static.action.close);
-    },
-
-    ajax: {
-        load: function load(option) {
-            option_static.option.form.trash();
-            $('#option_static_container').load('/static/htm/option_' + option + '.html', option_static.ajax.on_load);
-        },
-        on_load: function on_load(data) {
-            // alert(visited.list)  
-            if (data) {
-                option_static.action.router();
-                option_static.action.show_form();
-                $("html, body").animate({ scrollTop: 0 }, "slow");
-            }
-        },
-        save: function save(tid) {
-            //$.get( '/contact/addvisit/'+ uid +'/', { tid: tid }, visited.ajax.parse_save);
-        }
-    },
-
-    option: {
-        loader: {
-            show: function show() {
-                $('#static_loader').delay(1000).show('fade');
-            },
-            hide: function hide() {
-                $('#static_loader').clearQueue();
-                $('#static_loader').hide('fade');
-            }
-        },
-        form: {
-            show: function show() {
-                $('#option_static_container').show('fade');
-            },
-            hide: function hide() {
-                $('#option_static_container').hide('fade');
-            },
-            trash: function trash() {
-                $('#option_static_container').empty();
-            }
-        },
-        block: {
-            show: function show() {
-                $('#option_static_block').show('fade');
-            },
-            hide: function hide() {
-                $('#option_static_block').hide('fade');
-            }
-        }
-    },
-
-    action: {
-        show_form: function show_form() {
-            option_static.option.form.show();
-            option_static.option.loader.hide();
-        },
-        preload: function preload() {
-            var option = $(this).data('option');
-            option_static.form = option;
-            if (option) {
-                option_static.ajax.load(option);
-                option_static.option.block.show();
-                option_static.option.loader.show();
-            }
-        },
-        close: function close() {
-            option_static.option.form.hide();
-            option_static.option.loader.hide();
-            option_static.option.block.hide();
-        },
-        router: function router() {
-            if (option_static.form == 'login') {
-                option_login.init();
-            }
-            if (option_static.form == 'contact') {
-                option_contact.init();
-            }
-            if (option_static.form == 'age') {
-                option_age.init();
-            }
-            if (option_static.form == 'name') {
-                option_name.init();
-                name_suggest.init();
-                city_suggest.init();
-            }
-            if (option_static.form == 'city') {
-                option_city.init();
-                city_suggest.init();
-            }
-            if (option_static.form == 'hidepass') {
-                option_email.init();
-            }
-            if (option_static.form == 'anketa') {
-                option_anketa.init();
-                name_suggest.init();
-                city_suggest.init();
-            }
-            if (option_static.form == 'chlogin') {
-                option_chlogin.init();
-            }
-            if (option_static.form == 'introduce') {
-                option_intro.init();
-                name_suggest.init();
-                city_suggest.init();
-            }
-            if (option_static.form == 'desire') {
-                option_tag.init();
-                tag_suggest.init();
-            }
         }
     }
 };
@@ -4042,13 +3472,6 @@ var option_tag = {
     loaded: 0,
 
     init: function init() {
-=======
-var option_tag = {
-
-    loaded: 0,
-
-    init: function init() {
->>>>>>> master
         $('#option_tag input').prop('disabled', true);
         $('#option_tag_button').on('click', option_tag.action.send);
         option_tag.action.remind();
@@ -4066,13 +3489,8 @@ var option_tag = {
                 user_tag.action.store();
             }
             $('#option_tag input').prop('disabled', false);
-<<<<<<< HEAD
-            //                            
-            //option_static.action.close();     
-=======
             //
             //option_static.action.close();
->>>>>>> master
         },
         add: function add(tag) {
             $.post('/tag/add/', { tag: tag }, option_tag.ajax.on_save);
@@ -4113,11 +3531,7 @@ var option_tag = {
             $('#option_tag_list').empty();
             for (var i = 0; i < tags.length; i++) {
                 var style = '';
-<<<<<<< HEAD
-                block_line = $('<i class="desire_tag">').text(tags[i].tag);
-=======
                 var block_line = $('<i class="desire_tag">').text(tags[i].tag);
->>>>>>> master
                 if (!tags[i].id) block_line.addClass('desire_onload');
                 block_line.data('id', tags[i].id);
                 block_line.data('num', i);
@@ -4382,41 +3796,6 @@ var result_list = {
     }
 };
 
-<<<<<<< HEAD
-var abuse_list = new Vue({
-    el: '#search-form',
-    store: store,
-    mounted: function mounted() {
-        //console.log(abuse_form.mess());
-    },
-    methods: {
-        showButton: function showButton() {
-            if (!this.isFormShow) {
-                this.isButtonShow = true;
-            }
-        }
-    },
-    computed: Vuex.mapState({
-        user: function user(state) {
-            return state.user.data;
-        },
-        up: function up() {
-            console.log(this.user.up + ' *up8');
-            return this.user.up ? this.user.up : '';
-        },
-        to: function to() {
-            return this.user.to ? this.user.to : '';
-        },
-        more: function more(state) {
-            if (!this.user.sex || this.user.sex == 1) {
-                return '1';
-            } else {
-                return '2';
-            }
-        }
-    })
-});
-=======
 ////
 // РОУТЕР ==========================================================
 ////
@@ -4458,7 +3837,6 @@ var abuse_list = new Vue({
 //     }
 // });
 
->>>>>>> master
 
 // -- Слайдер, главная ---
 var slider = {
@@ -4473,17 +3851,10 @@ var slider = {
         $('#top_intro_info_block').on('mouseover', slider.stop);
         $('#top_intro_info_block').on('mouseout', slider.start);
 
-<<<<<<< HEAD
-        // Предзагрузка картинок  
-        setInterval(function () {
-            var nn = slider.next + 1 < 5 ? slider.next + 1 : 0;
-            a1 = new Image();
-=======
         // Предзагрузка картинок
         setInterval(function () {
             var nn = slider.next + 1 < 5 ? slider.next + 1 : 0;
             var a1 = new Image();
->>>>>>> master
             a1.src = "/img/board/top_intro_info_" + nn + ".jpg";
         }, 10000);
     },
@@ -4518,24 +3889,6 @@ var slider = {
 
         slider.next = num;
     },
-<<<<<<< HEAD
-
-    start: function start() {
-        slider.timer = setInterval(function () {
-            slider.slide(++slider.next, 0);
-        }, 20000);
-    },
-
-    stop: function stop() {
-        clearTimeout(slider.timer);
-    }
-
-};
-
-// -- Хранилище ---
-var storage = {
-
-=======
 
     start: function start() {
         slider.timer = setInterval(function () {
@@ -4552,7 +3905,6 @@ var storage = {
 // -- Хранилище ---  
 var storage = {
 
->>>>>>> master
     enable: 0,
 
     init: function init() {
@@ -4584,15 +3936,9 @@ var storage = {
 
         return result;
     },
-<<<<<<< HEAD
 
     array: {
 
-=======
-
-    array: {
-
->>>>>>> master
         load: function load(key) {
             var result = [];
             var value = null;
@@ -4610,14 +3956,8 @@ var storage = {
 
         add: function add(key, val) {}
     }
-<<<<<<< HEAD
-};
-
-storage.init();
-=======
 
 };
->>>>>>> master
 
 // -- Города, подсказки, поиск названия ---
 var city_suggest = {
@@ -4684,7 +4024,6 @@ var city_suggest = {
         var block_this = city_suggest.active_elem.parent();
         for (var i = 0; i < cities.length; i++) {
             if (!cities[i]) continue;
-<<<<<<< HEAD
 
             block_line = $('<div class="suggest_line" data-city="' + cities[i] + '">').text(cities[i]);
             block_line.on('click', city_suggest.print);
@@ -4692,15 +4031,6 @@ var city_suggest = {
             $('.suggest_block', block_this).append(block_line);
         }
 
-=======
-
-            block_line = $('<div class="suggest_line" data-city="' + cities[i] + '">').text(cities[i]);
-            block_line.on('click', city_suggest.print);
-
-            $('.suggest_block', block_this).append(block_line);
-        }
-
->>>>>>> master
         if ($('.suggest_line', block_this).length) $('.suggest_block', block_this).show();
     },
 
@@ -4855,12 +4185,6 @@ var tag_suggest = {
     }
 };
 
-<<<<<<< HEAD
-var user_menu = { init: function init() {},
-    ajax: {},
-    action: { sets: { search: function search() {}, contact: function contact() {} } },
-    option: { act: {}, se: function se() {} }
-=======
 var user_menu = {
 
     init: function init() {},
@@ -4892,7 +4216,6 @@ var user_menu = {
         },
         se: function se() {}
     }
->>>>>>> master
 };
 
 var user_tag = {
@@ -4928,72 +4251,6 @@ var user_tag = {
     }
 };
 
-<<<<<<< HEAD
-Vue.component('abuse-form', {
-    template: '#abuse-form',
-    props: ['show']
-
-});
-
-var menu_user_top = new Vue({
-    el: '#menu-user-top',
-    store: store,
-    data: {
-        auth: 1
-    },
-    mounted: function mounted() {
-        //console.log(abuse_form.mess());
-    },
-
-    methods: {
-        showButton: function showButton() {
-            if (!this.isFormShow) {
-                this.isButtonShow = true;
-            }
-        }
-    },
-    computed: Vuex.mapState({
-        user: function user(state) {
-            return state.user.data;
-        },
-        userString: function userString(state) {
-            var str = this.user.name;
-            // TODO: переделать без возможности отображения без имени
-            if (!str) {
-                if (this.user.sex == 1) {
-                    str = 'Парень';
-                } else if (this.user.sex == 2) {
-                    str = 'Девушка';
-                }
-            }
-            //
-            if (this.user.age > 10 || this.user.city.length > 3) {
-                str = str + ', ';
-            }
-            if (this.user.age > 10) {
-                str = str + this.user.age + ' ';
-            }
-            if (20 - str.length - this.user.city.length >= 0) {
-                str = str + this.user.city;
-            }
-            if (!str) {
-                str = 'Кто вы?';
-            }
-            ls.save('user_string_print', str);
-            return str;
-        },
-        searchString: function searchString(state) {
-            var str = '/index.php?view=simple&town=' + this.user.city + '&years_up=' + this.user.up + '&years_to=' + this.user.to + '' + '&who=' + this.user.who + '';
-            return str;
-        }
-    })
-});
-
-// -- Информация о пользователе ---
-var userinfo = {
-
-    data: {},
-=======
 // -- Информация о пользователе ---
 var userinfo = {
 
@@ -5026,7 +4283,6 @@ var userinfo = {
         email: ''
     },
 
->>>>>>> master
     init: function init() {
         userinfo.ajax.load();
     },
@@ -5042,13 +4298,9 @@ var userinfo = {
                 userinfo.action.set_data(data);
                 master_info.init();
             } else {
-<<<<<<< HEAD
-                storage.save('auth', 0); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-=======
                 storage.save('auth', 0);
                 user_menu.option.act.show_reg();
                 userinfo.action.set_string();
->>>>>>> master
             }
         },
         save: {
@@ -5081,11 +4333,7 @@ var userinfo = {
             userinfo.action.set_string(); /**/
         },
         set_name: function set_name() {
-<<<<<<< HEAD
-            if (userinfo.data.name.length > 2) {
-=======
             if (userinfo.data.name && userinfo.data.name.length > 2) {
->>>>>>> master
                 $('.user_name_option').text(userinfo.data.name);
                 $('.name_suggest').val(userinfo.data.name);
             }
@@ -5097,11 +4345,7 @@ var userinfo = {
             userinfo.action.set_string();
         },
         set_city: function set_city() {
-<<<<<<< HEAD
-            if (userinfo.data.city.length > 3) {
-=======
             if (userinfo.data.city && userinfo.data.city.length > 3) {
->>>>>>> master
                 $('.user_city_option').text(userinfo.data.city);
                 $('.city_suggest').val(userinfo.data.city);
             }
@@ -5121,11 +4365,7 @@ var userinfo = {
             $('.user_sex_option').text(say);
         },
         set_string: function set_string() {
-<<<<<<< HEAD
-            var str = userinfo.data.name;
-=======
             var str = userinfo.data.name ? userinfo.data.name : '';
->>>>>>> master
             if (!userinfo.data.name) {
                 if (userinfo.data.sex == 1) {
                     str = 'Парень';
@@ -5134,12 +4374,6 @@ var userinfo = {
                 }
             }
 
-<<<<<<< HEAD
-            if (userinfo.data.age > 10 || userinfo.data.city.length > 3) str = str + ', ';
-            if (userinfo.data.age > 10) str = str + userinfo.data.age + ' ';
-            if (20 - str.length - userinfo.data.city.length >= 0) str = str + userinfo.data.city;
-            if (!str) str = 'Кто вы?';
-=======
             var cityLen = userinfo.data.city ? userinfo.data.city.length : 0;
             if (userinfo.data.age > 10 || cityLen > 3) {
                 str = str + ', ';
@@ -5151,7 +4385,6 @@ var userinfo = {
             if (!str) {
                 str = 'Кто вы?';
             }
->>>>>>> master
             if (userinfo.data.uid) {
                 $('.user_string_option').text(str);
                 storage.save('user_string_print', str);

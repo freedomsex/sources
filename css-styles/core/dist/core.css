@@ -164,11 +164,7 @@ html {
   width: 100%;
 }
 body {
-<<<<<<< HEAD
-  background: #ffffff;
-=======
   background: #f5f5f5;
->>>>>>> master
   color: #333333;
   font-family: Arial, Tahoma, Verdana, sans-serif;
   font-size: 12px;
@@ -574,8 +570,6 @@ li.menu_user_link_ear {
   height: 0;
   overflow: hidden;
 }
-<<<<<<< HEAD
-=======
 .user {
   border-bottom: 1px solid #f5f5f5;
   color: #333333;
@@ -664,7 +658,6 @@ a.name:hover {
 .list_user_new {
   background: #CBE6B3;
 }
->>>>>>> master
 .new_message textarea {
   display: none;
   margin: 3px 10px 5px;
@@ -1357,13 +1350,8 @@ a.name:hover {
 .info-table__link:hover {
   color: #333333;
 }
-<<<<<<< HEAD
-#search-form {
-  background: #f2f2f2;
-=======
 #form_search {
   background: #f5f5f5;
->>>>>>> master
   border-width: 1px 0px;
   border: 0px solid #eeeeee;
   max-width: 728px;
