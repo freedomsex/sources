@@ -80,17 +80,6 @@ module.exports = function (grunt) {
                 }
             }
         },
-        babel: {
-            options: {
-                sourceMap: false,
-                presets: ['es2015']
-            },
-            dist: {
-                files: {
-                    'javascript/core/dist/core.js': 'javascript/core/dist/core.es6'
-                }
-            }
-        },
         // Сборка исходников LESS в файлы css-style
         less: {
             dev: {

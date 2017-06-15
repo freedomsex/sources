@@ -7,7 +7,7 @@ const auth = {
         sid: '',
         uis: '',
         auth: '',
-        ip:  ''
+        ip:  '',
             login: '',
             pass:  '',
             email: '',
