@@ -231,6 +231,7 @@ module.exports = function (grunt) {
                 ],
                 tasks: ['less:dev'],
                 options: {
+                    livereload: true,
                     spawn: false,
                 },
             },
@@ -241,6 +242,7 @@ module.exports = function (grunt) {
                     'templates/mess/src/**/*.htm',
                     'templates/profile/src/*.htm',
                     'templates/_common/**/*.htm',
+                    '../inc/*.htm',
                 ],
                 tasks: ['processhtml:dev'],
                 options: {

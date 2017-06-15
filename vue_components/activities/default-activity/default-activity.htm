@@ -1,0 +1,23 @@
+
+<script type="text/x-template" id="default-activity">
+  <div class="default-activity" @click.self="close">
+    <nav id="menu-user" class="navbar navbar-inverse">
+      <div class="container">
+        <div class="navbar-header">
+          <span id="home_page" class="navbar-brand" href="/" style="padding: 10px 5px;" @click="close">
+            <img src="/static/img/icon/arrow_back.png" width="30" height="30" alt="" border="0" >
+          </span>
+        </div>
+        <div class="nav navbar-nav">
+          <p class="navbar-text default-activity__title" @click="close">
+            <slot name="caption">Заголовок</slot>
+          </p>
+        </div>
+      </div>
+    </nav>
+    <div class="default-activity__wrapper">
+        <slot></slot>
+    </div>
+  </div>
+</script>
+

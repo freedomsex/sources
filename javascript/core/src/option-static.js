@@ -1,18 +1,4 @@
 
-var OptionStaticViewer = new Vue({
-    el: '#option-static__viewer',
-    store,
-    computed: Vuex.mapState({
-        view: state => state.optionStatic.view
-    }),
-    methods: {
-        close() {
-            store.commit('optionDialog', false);
-        }
-    }
-});
-
-
 // -- Статический блок опций ---
 var option_static = {
 

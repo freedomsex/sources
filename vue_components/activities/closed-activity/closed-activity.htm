@@ -1,0 +1,16 @@
+
+<script type="text/x-template" id="closed-activity">
+  <div class="closed-activity" @click.self="close">
+    <nav id="menu-user" class="navbar navbar-inverse">
+      <div class="container">
+        <div class="nav navbar-nav navbar-right">
+          <i class="btn-close material-icons" @click="close">&#xE14C;</i>
+        </div>
+      </div>
+    </nav>
+    <div class="closed-activity__wrapper">
+      <slot></slot>
+    </div>
+  </div>
+</script>
+

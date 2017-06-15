@@ -4,7 +4,11 @@ var MenuUser = new Vue({
         message: 8,
         contact: 8
     },
+    store,
     computed: {
+        authorized() {
+            return (store.state.user.uid > 0) ? 1 : 0;
+        },
         newMessage() {
             return (this.message == false) || this.message < 8;
         },
@@ -14,6 +18,7 @@ var MenuUser = new Vue({
     },
     methods: {
         initial() {
+            console.log('initial')
             store.commit('showInitial', 1);
             axios.get('/mailer/check_contact').then(() => {
                 this.contact = 8;
@@ -39,6 +44,5 @@ var MenuUser = new Vue({
             this.loadStatus();
         }, delay * 1000);
     },
-    store,
     el: '#menu-user',
 });

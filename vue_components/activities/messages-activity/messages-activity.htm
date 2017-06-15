@@ -1,0 +1,26 @@
+
+<script type="text/x-template" id="messages-activity">
+  <default-activity @close="close">
+    <span slot="caption">Сообщения</span>
+    <div class="message-dialog" key="humanId">
+      <div class="message-dialog__history">
+        <message-list :humanId="humanId"></message-list>
+      </div>
+      <div class="message-dialog__tools">
+        <div class="send-form">
+          <div class="send-form__button-account" @click="accountOpen">
+            <i class="material-icons">&#xE853;</i>
+          </div>
+          <div class="send-form__textarea">
+            <textarea class="send-form__message-text"></textarea>
+          </div>
+          <div class="send-form__button-send">
+            <i class="material-icons">&#xE163;</i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <account-activity :humanId="account" v-if="account" @close="accountClose"/>
+  </default-activity>
+</script>
+

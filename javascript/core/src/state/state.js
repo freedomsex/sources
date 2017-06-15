@@ -93,3 +93,4 @@ const store = new Vuex.Store({
 store.dispatch('LOAD_API_TOKEN');
 store.dispatch('LOAD_ACCEPTS');
 store.dispatch('LOAD_USER');
+store.dispatch('SETTINGS');

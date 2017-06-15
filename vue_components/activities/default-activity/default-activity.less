@@ -1,0 +1,40 @@
+.default-activity {
+    position: fixed;
+    background: rgba(0, 0, 0, .2);
+
+    right: 0;
+    left: 0;
+    margin-right: auto;
+    margin-left: auto;
+
+    top: 0px;
+    bottom: 0;
+    max-width: 750px;
+    overflow: hidden;
+
+    //border: 3px solid #CCC;
+    //border-width: 0 3px;
+
+    &__title {
+        font-weight: bolder;
+        line-height: 20px
+    }
+    &__wrapper {
+        position: relative;
+        height: ~"calc(100% - 50px)";
+        max-height: 650px;
+        margin-bottom: 1px;
+        overflow: hidden;
+        max-width: 540px;
+        background: @white;
+        border: 1px solid @gray;
+        border-top: 0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+    &__container {
+        display: flex;
+        height: 100%;
+    }
+}

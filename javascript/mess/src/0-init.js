@@ -1,3 +1,47 @@
+var MessInstanse = new Vue({
+    data: {
+        globalNew: null,
+        searchSettings: false,
+    },
+    computed: {
+        initial() {
+            return this.$store.state.modals.initial;
+        },
+        intimate() {
+            return this.$store.state.modals.intimate;
+        },
+        sends() {
+            return this.$store.state.modals.sends;
+        },
+        view() {
+            return this.$store.state.optionStatic.view;
+        },
+        humanId() {
+            return this.globalNew;
+        }
+    },
+    methods: {
+        close() {
+            this.$store.commit('closeAll');
+            store.commit('optionDialog', false);
+        },
+        newMessage() {
+            this.globalNew =  Number(this.$route.path.substr(1));
+        },
+        closeMessage() {
+            this.globalNew = null;
+        },
+        openSearchSettings() {
+            this.searchSettings = true;
+        },
+        closeSearchSettings() {
+            this.searchSettings = false;
+        }
+    },
+    el: '#app',
+    store,
+    router
+});
 
 $( document ).ready(function()
 {
@@ -7,27 +51,12 @@ $( document ).ready(function()
       return results[1] || 0;
     }
 
-    //cont_list.init();
-
-    lock_user.init();
-    confirm_block_dn.init();
-
-    moderator.init();
-
-    edit_cont.init();
-    added_info.init();
     part_info.init();
-
-    quick_photo.init();
-    quick_mess.init();
-
-    mess_sett.init();
     dating_time.init();
-
-    anketa.init();
-    add_contact.init();
 
     if (tid) {
         visited.action.save(tid);
     }
  });
+
+

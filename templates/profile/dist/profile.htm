@@ -17,9 +17,10 @@
     
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+ <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 <link rel="stylesheet" type="text/css" href="%%CSS_FILE%%">
-     
+
 
   <script type="text/javascript">  
     function get_cookie ( cookie_name )
@@ -40,38 +41,17 @@
 </head>
 <body>
 %%MENU_USER_BLOCK%%
-<div class="container-fluid">
+<div class="container">
   <div class="row">
-    <div class="col-md-1 hidden-xs hidden-sm">
-    </div>
-    <div class="col-md-11 col-xs-12 col-sm-12">
-      <div id="earlap">
-      <div id="index_cent">   <!-- центр 100%  display: none; -->
- 
- <div style="padding: 25px 0 30px; position: relative;"> 
+    <div class="col-md-12 col-xs-12 col-sm-12">
+       <div style="padding: 25px 0 30px; position: relative;">
    <div id="notification">
       &nbsp; <div id="profile_alert" style="display: none;"></div> &nbsp;
    </div>
- 
+
    %%BLOCK_FORM_PROFILE%%
  </div>
- 
 
-<div id="contact-lists">
-  <initial-dialog v-if="initial" quick="true" @close="close"></initial-dialog>
-  <intimate-dialog v-if="intimate" @close="close"></intimate-dialog>
-  <sends-dialog v-if="sends" @close="close"></sends-dialog>
-</div>
-
-<!--<div id="router-view">
-  <router-view @close="close"></router-view>
-</div>-->
-
-<div id="option-static__viewer">
-  <upload-dialog  @close="close" v-if="view == 'upload'"></upload-dialog>
-  <photo-dialog   @close="close" v-if="view == 'photo'"></photo-dialog>
-  <api-key-update></api-key-update>
-</div>
 
 <!-- Статические опции, absolute -->
  <div id="option-static" style="display: none;">
@@ -83,12 +63,143 @@
      <div id="option-static__close">Закрыть</div>
    </div>
  </div>
-</div>  <!-- центр 100% -->
-
-      </div>
     </div>
   </div>
 </div>
+
+
+<script type="text/x-template" id="account-activity">
+  <default-activity @close="close">
+    <span slot="caption">Анкета</span>
+    <div key="humanId">
+      <div class="human-info">
+        <div class="human-info__general">
+          <span class="human-info__name">{{human.name}}</span>
+          <span class="human-info__age">{{human.age}} лет</span>
+        </div>
+
+        <div>
+          <span class="human-info__city">{{human.city}}</span>
+        </div>
+
+        <div class="human-info__search">Ищет девушку в возрасте до 60 лет</div>
+
+        <div class="human-info__status">
+          <span class="elem_online" title="Сейчас на сайте ">oнлайн</span>
+          <span class="human-info__loader"></span>
+        </div>
+
+        <div class="human-info__about"> Я парень обычного телосложения. </div>
+        <div class="human-info__measure">Мой рост: 185 см, вес: 80 кг</div>
+
+        <div class="account-section">
+          <div class="account-section__header">У меня есть</div>
+          <div class="human-social">
+            <i class="human-social__email">Емайл</i>
+            <i class="human-social__vkontakte">Вконтакте</i>
+            <i class="human-social__google-plus">Google-plus</i>
+            <i class="human-social__odnoklassniki">Одноклассники</i>
+            <i class="human-social__facebook">Facebook</i>
+          </div>
+        </div>
+
+        <div class="human-contacts">
+          <div><i class="human-contacts__phone">Обязательно позвоню или дам номер телефона</i></div>
+          <div><i class="human-contacts__skype">Согласен на видеозвонок или видеочат по скайпу</i></div>
+        </div>
+
+        <div class="account-section" v-if="tags.length">
+          <div class="account-section__header">Мои желания и фантазии</div>
+          <div class="desire-tag__list">
+            <desire-tag-item v-for="(item, index) in tags" :key="index"
+              :item="item"></desire-tag-item>
+          </div>
+        </div>
+
+        <div>
+          <button class="btn btn-default">Присланные фотографии</button>
+        </div>
+
+        <div id="incoming-photo">
+          <div class="incoming-photo__list" style="display: none;"></div>
+          <div class="incoming-photo__placeholder">
+            Присланные фотографии будут здесь
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </default-activity>
+</script>
+
+
+
+<script type="text/x-template" id="closed-activity">
+  <div class="closed-activity" @click.self="close">
+    <nav id="menu-user" class="navbar navbar-inverse">
+      <div class="container">
+        <div class="nav navbar-nav navbar-right">
+          <i class="btn-close material-icons" @click="close">&#xE14C;</i>
+        </div>
+      </div>
+    </nav>
+    <div class="closed-activity__wrapper">
+      <slot></slot>
+    </div>
+  </div>
+</script>
+
+
+
+<script type="text/x-template" id="default-activity">
+  <div class="default-activity" @click.self="close">
+    <nav id="menu-user" class="navbar navbar-inverse">
+      <div class="container">
+        <div class="navbar-header">
+          <span id="home_page" class="navbar-brand" href="/" style="padding: 10px 5px;" @click="close">
+            <img src="/static/img/icon/arrow_back.png" width="30" height="30" alt="" border="0" >
+          </span>
+        </div>
+        <div class="nav navbar-nav">
+          <p class="navbar-text default-activity__title" @click="close">
+            <slot name="caption">Заголовок</slot>
+          </p>
+        </div>
+      </div>
+    </nav>
+    <div class="default-activity__wrapper">
+        <slot></slot>
+    </div>
+  </div>
+</script>
+
+
+
+<script type="text/x-template" id="messages-activity">
+  <default-activity @close="close">
+    <span slot="caption">Сообщения</span>
+    <div class="message-dialog" key="humanId">
+      <div class="message-dialog__history">
+        <message-list :humanId="humanId"></message-list>
+      </div>
+      <div class="message-dialog__tools">
+        <div class="send-form">
+          <div class="send-form__button-account" @click="accountOpen">
+            <i class="material-icons">&#xE853;</i>
+          </div>
+          <div class="send-form__textarea">
+            <textarea class="send-form__message-text"></textarea>
+          </div>
+          <div class="send-form__button-send">
+            <i class="material-icons">&#xE163;</i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <account-activity :humanId="account" v-if="account" @close="accountClose"/>
+  </default-activity>
+</script>
+
 
 
 <script type="text/x-template" id="api-key-update">
@@ -148,13 +259,20 @@
 </script>
 
 
-<script type="text/x-template" id="initial-dialog">
-  <inform-dialog :loader="showLoader" :alert="showAlert" :hint="showHint" @close="close">
-    <span slot="caption"><b>Предложения знакомства</b></span>
-    <span slot="context">Когда вы отправляете или вам отправляют самое первое сообщение, это считается предложением знакомства.</span>
-    <span slot="hint">Здесь будет список ваших предложений знакомства.</span>
+<script type="text/x-template" id="city-suggest">
+  <div class="city-suggest-ed">
+    <input class="city-suggest-ed__input form-control" type="text" autocomplete="off"
+      v-model="query" @keyup="load()">
+    <ul class="dropdown-menu" v-show="suggested">
+      <li v-for="(item, index) in cities" :key="index" @click="select(item)"><a href="#" @click.prevent>{{item}}</a></li>
+    </ul>
+  </div>
+</script>
 
-    <div class="" v-if="count">
+<script type="text/x-template" id="initial-dialog">
+  <default-activity @close="close">
+    <span slot="caption">Знакомства</span>
+    <div class="contact-list" v-if="count">
       <contact-item v-for="(item, index) in contacts" :key="index"
         :item="item"
         :index="index"
@@ -164,35 +282,34 @@
         @close="close"
         @sended="splice"
         @remove="remove"/>
+        <div style="text-align: center;">
+          <div class="btn btn-default btn-xs" @click="next()" :disabled="response == false" v-show="more"> Следующие </div>
+        </div>
     </div>
-    <div style="text-align: center;">
-      <div class="btn btn-default btn-xs" @click="next()" :disabled="response == false" v-show="more"> Следующие </div>
-    </div>
-  </inform-dialog>
+  </default-activity>
 </script>
 
 
 <script type="text/x-template" id="intimate-dialog">
-  <inform-dialog :loader="showLoader" :alert="showAlert" :hint="showHint" @close="close">
-    <span slot="caption"><b>Общение, диалоги и контакты</b></span>
-    <span slot="context">Отвечайте на предложения знакомства. Ваши активные диалоги сохраняются здесь, отдельно от предложений знакомства.</span>
-    <span slot="hint">Здесь будет список ваших контактов, сообщений, диалогов.</span>
-
-    <div class="" v-if="count">
+  <default-activity @close="close">
+    <span slot="caption">Общение</span>
+    <div class="contact-list" v-if="count">
       <contact-item v-for="(item, index) in contacts" :key="index"
         :item="item"
         :index="index"
         :quick="quick"
         @bun="bun"
         @read="read"
+        @dialog="dialogOpen"
         @close="close"
         @sended="splice"
         @remove="remove"/>
+        <div style="text-align: center;">
+          <div class="btn btn-default btn-xs" @click="next()" :disabled="response == false" v-show="more"> Следующие </div>
+        </div>
     </div>
-    <div style="text-align: center;">
-      <div class="btn btn-default btn-xs" @click="next()" :disabled="response == false" v-show="more"> Следующие </div>
-    </div>
-  </inform-dialog>
+    <messages-activity @close="dialogClose" :humanId="dialog" v-if="dialog"/>
+  </default-activity>
 </script>
 
 
@@ -222,14 +339,22 @@
       </span>
     </div>
 
+
     <remove-contact :show="confirm"
       @bun="bun"
       @close="cancel"
       @remove="remove"/>
-    <quick-reply v-if="detail" :show="detail" :item="item"
+    <quick-reply v-if="detail"
+     :message="message"
+     :humanId="item.human_id"
       @sended="sended"
       @close="close"/>
   </div>
+</script>
+
+
+<script type="text/x-template" id="desire-tag-item">
+  <div class="desire-tag__item">{{item}}</div>
 </script>
 
 
@@ -240,7 +365,7 @@
         <div align="left" class="option_cap">
           <slot name="caption">Заголовок</slot>
         </div>
-        <div class="tab_context">
+        <div class="tab_context" v-if="hasContext">
           <slot name="context">Описание</slot>
         </div>
         <div class="option_loader">
@@ -248,7 +373,7 @@
           <div class="option_loader__alert" v-show="alert"></div>
         </div>
         <slot></slot>
-        <div class="hint_context" v-show="hint">
+        <div class="hint_context" v-show="hint" v-if="hasHint">
           <slot name="hint">Подсказка</slot>
         </div>
       </div>
@@ -324,6 +449,40 @@
 </script>
 
 
+
+
+<script type="text/x-template" id="message-list">
+  <div class="message-list" v-show="!error">
+    <div class="messages__new" v-on:click="load">
+      <span class="messages__new-lamp" v-show="newCount" style="display: none;">Новые
+      +<b>{{newCount}}</b>
+      </span>
+    </div>
+    <div class="messages">
+      <message-item v-for="(item, index) in messages"
+        :item="item"
+        :index="index"
+        :count="messages.length"
+        :alert="attention"
+        :uid="uid"
+        :key="index"
+        @admit="admit"
+        @remove="remove"
+        @set-new="setNew"
+      ></message-item>
+    </div>
+    <div class="messages__next" v-on:click="load" v-show="more" style="display: none;">
+      <span class="btn btn-default btn-xs">Следующие</span>
+    </div>
+    <div class="messages__loader" v-show="!error && !response">
+      <span>
+        <img src="/static/img/icon/mess_loader.gif" v-show="toSlow" style="display: none;">
+        Загружаем
+      </span>
+    </div>
+  </div>
+</script>
+
 <script type="text/x-template" id="modal-dialog">
   <div class="modal-dialog__mask" v-if="show" transition="modal" @click="close">
     <div class="modal-dialog__container" @click.stop>
@@ -339,12 +498,12 @@
       <div class="option-dialog__loader"></div>
     </div>
     <div class="option-dialog__wrapper" @click="close">
-      <div class="option-dialog__container" @click.stop>
-        <slot></slot>
-      </div>
       <div class="option-dialog__close" @click.stop="close">
         Закрыть
         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+      </div>
+      <div class="option-dialog__container" @click.stop>
+        <slot></slot>
       </div>
     </div>
   </div>
@@ -378,8 +537,38 @@
 
 
 
+<script type="text/x-template" id="quick-message">
+  <modal-dialog show="1" @close="close">
+    <div class="human-dialog__caption">
+      Написать сообщение
+    </div>
+    <div class="human-dialog__body">
+      <div class="human-dialog__desire" v-show="tags.length">
+        <span class="link_simple" v-for="(tag, index) in tags" :key="index" v-show="tag">{{tag}} &#8226; </span>
+      </div>
+      <div class="human-dialog__message" v-show="1">
+        Мне нравятся парни [...]
+      </div>
+    </div>
+
+
+    <div class="message-input">
+      <textarea class="message-input__texarea" rows="1" placeholder="Введите текст" v-model="text" v-resized></textarea>
+        <button class="btn btn-primary" @click="send()">Отправить</button>
+        <button class="btn btn-link" @click="anketa()">Читать полностью...</button>
+    </div>
+    <loading-wall :show="loading"/>
+    <loading-cover :show="process"/>
+    <attention-wall :show="hold" @close="cancel" @remove="remove"/>
+
+    <captcha-dialog :show="captcha" @close="close" @cancel="cancel" @send="setCode"/>
+  </modal-dialog>
+</script>
+
+
+
 <script type="text/x-template" id="quick-reply">
-  <modal-dialog :show="show" @close="close">
+  <modal-dialog :show="1" @close="close">
     <div class="human-dialog__caption">
       Быстрый ответ
     </div>
@@ -398,11 +587,10 @@
         <button class="btn btn-primary" @click="send()">Отправить</button>
         <button class="btn btn-link" @click="anketa()">Читать полностью...</button>
     </div>
-    <attention-wall :show="hold" @close="cancel" @remove="remove"/>
     <loading-wall :show="loading"/>
     <loading-cover :show="process"/>
+    <attention-wall :show="hold" @close="cancel" @remove="remove"/>
 
-    <remove-confirm :show="confirm" @bun="bun" @close="cancel" @remove="remove"/>
     <captcha-dialog :show="captcha" @close="close" @cancel="cancel" @send="setCode"/>
   </modal-dialog>
 </script>
@@ -426,16 +614,69 @@
   </modal-dialog>
 </script>
 
+
+
+<script type="text/x-template" id="search-settings">
+  <closed-activity @close="close">
+    <div class="activity-section">
+      <div class="activity-section__title">Мой город:</div>
+      <city-suggest></city-suggest>
+    </div>
+
+    <div class="activity-section">
+      <div class="activity-section__title">Кого вы ищете:</div>
+      <div class="radio">
+        <label class="radio-inline">
+          <input type="radio" v-model="selectWho" value="2">
+          Девушку
+        </label>
+        <label class="radio-inline">
+          <input type="radio" v-model="selectWho" value="1">
+          Парня
+        </label>
+        <label class="radio-inline">
+          <input type="radio" v-model="selectWho" value="0">
+          Кого угодно
+        </label>
+      </div>
+    </div>
+
+    <div class="activity-section">
+      <div class="activity-section__title">Возраст:</div>
+      <div class="form-inline">
+        <div class="input-group">
+          <div class="input-group-addon">От</div>
+          <select class="form-control" v-model="selectUp">
+            <option v-for="(item, index) in ageRange" :value="item" >{{item ? item : ''}}</option>
+          </select>
+        </div> &nbsp; - &nbsp;
+
+        <div class="input-group">
+          <div class="input-group-addon">До</div>
+          <select class="form-control" v-model="selectTo"">
+            <option v-for="(item, index) in ageRange" :value="item" >{{item ? item : ''}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="activity-section">
+      <label style="display: block;"><input type="checkbox" v-model="checkedTown">
+        Только в моём городе</label>
+      <label style="display: block;"><input type="checkbox" v-model="checkedVirt">
+        Виртуальный секс</label>
+    </div>
+
+    <div class="activity-section">
+      <button class="btn btn-primary" @click="save"> Сохранить настройки </button>
+      <a class="btn btn-link " href="http://freedomsex.me/блог/как-найти-девушку-или-парня-для-секса/" target="_blank">Больше возможностей</a>
+    </div>
+
+  </closed-activity>
+</script>
 <!-- build:include dialogs/inform-dialog.htm --><!-- /build -->
 
 <!-- build:include dialogs/captcha-dialog.htm --><!-- /build -->
-
-
-   <script type="text/javascript">
-      var addthis_config = {"data_track_addressbar":false};
-       addthis_config.data_track_addressbar = false;
-       addthis_config.data_track_clickback = false;</script>
-   <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4fb88f475e8b2e81"></script>
 
 
 
@@ -475,12 +716,8 @@
   <input id="edit_human_name" type="text" placeholder="Имя" style="width: 150px;">
   <input id="edit_human_btn"  type="submit" value=" Сохранить ">
 </div>
-<!-- build:[src]:dev /static/js/jquery/ -->
- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
- <!-- /build -->
- <!-- build:[src]:dev /static/js/jquery-ui/ -->
- <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
- <!-- /build -->
+ <script src="/static/js/jquery/jquery.min.js"></script>
+ <script src="/static/js/jquery-ui/jquery-ui.min.js"></script>
 
 <script type="text/javascript" src="%%JS_FILE%%"></script>
 <!-- Исходники можно найти в репозитории. Тамже собранные не сжатые файлы -->

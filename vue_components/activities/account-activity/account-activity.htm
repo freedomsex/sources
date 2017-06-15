@@ -1,0 +1,65 @@
+
+<script type="text/x-template" id="account-activity">
+  <default-activity @close="close">
+    <span slot="caption">Анкета</span>
+    <div key="humanId">
+      <div class="human-info">
+        <div class="human-info__general">
+          <span class="human-info__name">{{human.name}}</span>
+          <span class="human-info__age">{{human.age}} лет</span>
+        </div>
+
+        <div>
+          <span class="human-info__city">{{human.city}}</span>
+        </div>
+
+        <div class="human-info__search">Ищет девушку в возрасте до 60 лет</div>
+
+        <div class="human-info__status">
+          <span class="elem_online" title="Сейчас на сайте ">oнлайн</span>
+          <span class="human-info__loader"></span>
+        </div>
+
+        <div class="human-info__about"> Я парень обычного телосложения. </div>
+        <div class="human-info__measure">Мой рост: 185 см, вес: 80 кг</div>
+
+        <div class="account-section">
+          <div class="account-section__header">У меня есть</div>
+          <div class="human-social">
+            <i class="human-social__email">Емайл</i>
+            <i class="human-social__vkontakte">Вконтакте</i>
+            <i class="human-social__google-plus">Google-plus</i>
+            <i class="human-social__odnoklassniki">Одноклассники</i>
+            <i class="human-social__facebook">Facebook</i>
+          </div>
+        </div>
+
+        <div class="human-contacts">
+          <div><i class="human-contacts__phone">Обязательно позвоню или дам номер телефона</i></div>
+          <div><i class="human-contacts__skype">Согласен на видеозвонок или видеочат по скайпу</i></div>
+        </div>
+
+        <div class="account-section" v-if="tags.length">
+          <div class="account-section__header">Мои желания и фантазии</div>
+          <div class="desire-tag__list">
+            <desire-tag-item v-for="(item, index) in tags" :key="index"
+              :item="item"></desire-tag-item>
+          </div>
+        </div>
+
+        <div>
+          <button class="btn btn-default">Присланные фотографии</button>
+        </div>
+
+        <div id="incoming-photo">
+          <div class="incoming-photo__list" style="display: none;"></div>
+          <div class="incoming-photo__placeholder">
+            Присланные фотографии будут здесь
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </default-activity>
+</script>
+

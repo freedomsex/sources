@@ -1,0 +1,53 @@
+.activity-section {
+    margin-bottom: @indent-lg;
+    &__title {
+        margin: @indent-sm 0;
+        font-size: @font-lg;
+    }
+}
+
+.closed-activity {
+    position: fixed;
+    background: rgba(0, 0, 0, .2);
+
+    right: 0;
+    left: 0;
+    margin-right: auto;
+    margin-left: auto;
+
+    top: 0px;
+    bottom: 0;
+    max-width: 750px;
+    overflow: hidden;
+
+    //border: 3px solid #CCC;
+    //border-width: 0 3px;
+
+    .btn-close {
+        color: @white;
+        padding: 10px;
+        font-size: 30px;
+        cursor: pointer;
+    }
+    &__wrapper {
+        position: absolute;
+        right: 0;
+        height: ~"calc(100% - 50px)";
+        max-height: @activity-height;
+        max-width:  @activity-width;
+        width: 100%;
+        padding: @indent-md @indent-lg @indent-md;
+        margin-bottom: 1px;
+        overflow: hidden;
+        background: @white;
+        border: 1px solid @gray;
+        border-top: 0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+    &__container {
+        display: flex;
+        height: 100%;
+    }
+}

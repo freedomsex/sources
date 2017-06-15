@@ -37,6 +37,9 @@ Vue.component('contact-item', {
         sent() {
             return this.item.message ? (this.item.message.sender == this.$store.state.user.uid) : 0;
         },
+        humanId() {
+            return this.item.human_id;
+        },
     },
     methods: {
         show() {
@@ -45,12 +48,15 @@ Vue.component('contact-item', {
             if (this.quick) {
                 this.reply();
             } else {
-                this.anketa();
+                //this.anketa();
+                this.dialog();
             }
         },
         confirmBun() {
-            //console.log(this.initial);
             this.confirm = 'doit';
+        },
+        dialog() {
+            this.$emit('dialog', this.humanId);
         },
         confirmRemove() {
             //this.$emit('remove');
@@ -63,7 +69,7 @@ Vue.component('contact-item', {
             console.log('quick');
         },
         anketa() {
-            window.location = '/' + this.item.human_id;
+            window.location = '/' + this.humanId;
         },
         close() {
             this.detail = false;

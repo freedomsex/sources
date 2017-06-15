@@ -1,6 +1,6 @@
 
 <script type="text/x-template" id="quick-reply">
-  <modal-dialog :show="show" @close="close">
+  <modal-dialog :show="1" @close="close">
     <div class="human-dialog__caption">
       Быстрый ответ
     </div>
@@ -19,11 +19,10 @@
         <button class="btn btn-primary" @click="send()">Отправить</button>
         <button class="btn btn-link" @click="anketa()">Читать полностью...</button>
     </div>
-    <attention-wall :show="hold" @close="cancel" @remove="remove"/>
     <loading-wall :show="loading"/>
     <loading-cover :show="process"/>
+    <attention-wall :show="hold" @close="cancel" @remove="remove"/>
 
-    <remove-confirm :show="confirm" @bun="bun" @close="cancel" @remove="remove"/>
     <captcha-dialog :show="captcha" @close="close" @cancel="cancel" @send="setCode"/>
   </modal-dialog>
 </script>

@@ -5,6 +5,14 @@ Vue.component('inform-dialog', {
       'alert',
       'hint',
     ],
+    computed: {
+        hasContext() {
+            return !!this.$slots.context;
+        },
+        hasHint() {
+            return !!this.$slots.hint;
+        },
+    },
     methods: {
         close() {
             this.$emit('close');

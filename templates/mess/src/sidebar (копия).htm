@@ -1,0 +1,179 @@
+
+  <div class="">
+
+
+     <div class="message_listbox">
+
+  <div id="set_dating_time" style="margin: 0px;  position: relative;
+  background: #F6F7F8 ;
+  background-position: 100%  0%;
+  padding: 5px 0px 5px 10px ;
+  border-bottom: 1px solid #E9EAED;">
+
+   <a style="padding: 0px 1px 1px ; color: #999; text-decoration: none;
+text-shadow: #FFF 0px 1px 0px; display: block;" href="/блог/виртуальное-свидание/" target="_blank">
+     Время, когда вы зайдёте на сайт.
+   </a>
+
+     <select style="margin: 0px; " id="dating_hour">
+       <option>18</option>
+       <option>19</option>
+       <option>20</option>
+       <option>21</option>
+       <option>22</option>
+       <option>23</option>
+       <option>10</option>
+       <option>11</option>
+       <option>12</option>
+       <option>13</option>
+       <option>14</option>
+       <option>15</option>
+       <option>16</option>
+       <option>17</option>
+       <option value="00">-:- </option>
+     </select> :
+     <select style="margin: 0px;" id="dating_minut">
+       <option>30</option>
+       <option>00</option>
+       <option>15</option>
+       <option>45</option>
+       <option value="00">-:- </option>
+     </select>
+     <input id="dating_time_post_button" type="button" style="margin: 1px;" value="Ok">
+      <span id="saved_dating" style="display: none;
+margin-left: 5px;
+padding: 3px 5px;
+background: #CCFF99;
+position: absolute;
+bottom: 6px;
+right: 5px;
+border-radius: 3px;">Сохранено</span>
+  </div>
+
+
+      <!--// Альтернативный текст в списке контактов //-->
+
+      <div id="tip_list_users_block">
+        <div id="tip_list_users">
+         Пишите прямо сейчас.
+        </div>
+
+        <div id="tip_list_green_text">
+          Общайтесь свободно<br>
+          Без регистрации
+        </div>
+
+        <div id="tip_list_users_orange">
+          <div style="font-size: 15px;">
+            Бесплатно, 100% Анонимно
+          </div>
+          Без подтверждений, без СМС
+        </div>
+
+        <div style="font-size: 17px; padding: 5px 15px 0px;">
+         Обменивайтесь фото
+        </div>
+        <div style="font-size: 15px; padding: 0px 15px 0px;">
+         прямо в сообщениях
+        </div>
+        <div style="font-size: 13px; padding: 2px 15px 10px;">
+         сохраняя анонимность
+        </div>
+      </div>
+
+
+      <!--// Настнойки почты под списком контактов //-->
+
+      <div id="block_mail_setting">
+        <div>
+           <span id="mail_setting_caption">Кого вы ищете?</span>
+           <span id="mail_setting_show" class="link_simple">настроить</span>
+        </div>
+
+          <form id="form_mail_setting" action="" method="post">
+            <select size="1" name="search_sex" id="opt_who">
+             <option value="0">Парня или девушку</option>
+             <option value="1">Только парня</option>
+             <option value="2">Только девушку</option>
+            </select><br />
+
+
+            <div style="padding: 10px 0 10px;">
+             <label><input id="opt_town" name="option_mess_town"  type="checkbox" value="1">
+               Только в моём городе</label><br>
+             <label><input id="opt_virt" name="option_virt_accept" type="checkbox" value="1">
+               Виртуальный секс</label>
+            </div>
+
+             &nbsp; Возраст от
+                <input id="opt_up" name="years_up" type="text" value="" size="2"> до
+                <input id="opt_to" name="years_to" type="text" value="" size="2">  <br />
+
+            <div style="padding: 5px 0;">
+              <span id="mail_setting_added" class="link_dashed option_static" data-option="contact">
+                Контакты, сайты, соцсети
+              </span>
+            </div>
+
+            <div style="padding: 10px 0;">
+             <input id="post_mail_setting" name="mail_setting" type="submit" value="Сохранить"> &nbsp;
+             <a id="mail_setting_help" href="/блог/как-настроить-почту-и-поиск/" target="_blank">Помощь</a>
+            </div>
+
+            <div id="mail_setting_hide">
+              Скрыть настройки
+            </div>
+            <div id="saved_setting">
+              Сохранено
+            </div>
+          </form>
+
+      </div>
+
+      <script>
+        if( get_cookie('hide_mail_setting') ) {
+         document.getElementById('form_mail_setting').style.display = 'none';
+         document.getElementById('mail_setting_show').style.display = 'inline';
+        }
+      </script>
+      <!--//Настнойки почты //-->
+
+     </div>
+
+
+
+     <div id="moder_button" style="">
+       Я модератор
+     </div>
+
+
+
+
+
+
+
+
+    <div style=" padding: 15px 10px 5px;">
+
+    <div class="addthis_toolbox addthis_default_style "
+    addthis:url="%%SITE%%/"
+    addthis:title="Сайт знакомств для секса"
+    addthis:description="Знакомства без регистрации, онлайн общение, интимные темы, секс знакомства бесплатно без смс. Свободные парни для секса прямо сейчас." >
+     <a class="addthis_button_vk" title="Вконтакте" rel="nofollow"></a>
+     <a class="addthis_button_odnoklassniki_ru" title="Одноклассники" rel="nofollow"></a>
+     <a class="addthis_button_facebook" title="Facebook" rel="nofollow"></a>
+     <a class="addthis_button_twitter" title="Твиттер" rel="nofollow"></a>
+     <a class="addthis_button_google_plusone_share" title="Google+" rel="nofollow"></a>
+     <a class="addthis_button_mymailru" title="Мой мир" rel="nofollow"></a>
+     <a class="addthis_button_favorites" title="Добавить в избранное" style="margin-left: 3px;" rel="nofollow"></a>
+     </div>
+</div>
+
+         %%AD_MESSAGES_LEFT_UNDER_LISTBOX%%
+
+
+
+
+
+  </div>
+
