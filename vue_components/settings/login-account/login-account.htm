@@ -1,0 +1,33 @@
+
+<script type="text/x-template" id="login-account">
+  <closed-activity @close="close">
+    <div class="activity-section">
+      <div class="activity-section__title">Ваш логин</div>
+      <div class="form-inline">
+        <input class="form-control" type="text" v-model="login" placeholder="Введите логин">
+      </div>
+    </div>
+
+    <div class="activity-section">
+      <div class="activity-section__title">Пароль</div>
+      <div class="form-inline">
+        <input class="form-control" type="text" v-model="password" placeholder="Введите пароль">
+      </div>
+    </div>
+
+    <div class="activity-section" v-show="error && captcha">
+      <div class="activity-section__title">Код</div>
+      <simple-captcha @input="setCode"></simple-captcha>
+    </div>
+
+    <div class="activity-section">
+      <button class="btn btn-primary" @click="send"> Войти </button>
+      <button class="btn btn-link" @click="remind = true"> Не помню </button>
+    </div>
+
+    <div class="activity-section">
+      {{hint}}
+    </div>
+    <remind-login v-if="remind" @close="remind = false"></remind-login>
+  </closed-activity>
+</script>

@@ -149,7 +149,7 @@ const IntimateDialog = Vue.component('intimate-dialog', {
         load() {
             this.$store.dispatch('intimate/LOAD', this.next).then((response) => {
                 this.loaded();
-            }).catch((error) => this.error(error));
+            }).catch((error) => this.error = error);
             this.amount = this.count;
             this.hope();
         },

@@ -1,5 +1,7 @@
 'use strict';
 
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -81,22 +83,96 @@ var DefaultActivity = Vue.component('default-activity', {
 });
 
 Vue.component('messages-activity', {
-    props: ['humanId', 'show'],
+    props: ['humanId'],
     data: function data() {
         return {
-            account: false
+            message: '',
+            reply: '',
+            code: '',
+            show: true,
+            process: false,
+            approve: true,
+            dirt: false,
+            captcha: false,
+            account: false,
+            uploads: false,
+            photo: false
         };
     },
 
+    mounted: function mounted() {},
     methods: {
+        reset: function reset() {
+            //this.cancelPhoto();
+            this.show = true;
+            this.process = false;
+            this.approve = true;
+            this.message = '';
+        },
+
+        isDirt: _.debounce(function () {
+            var word = /\w{0,5}[хx]([хx\s\!@#\$%\^&*+-\|\/]{0,6})[уy]([уy\s\!@#\$%\^&*+-\|\/]{0,6})[ёiлeеюийя]\w{0,7}|\w{0,6}[пp]([пp\s\!@#\$%\^&*+-\|\/]{0,6})[iие]([iие\s\!@#\$%\^&*+-\|\/]{0,6})[3зс]([3зс\s\!@#\$%\^&*+-\|\/]{0,6})[дd]\w{0,10}|[сcs][уy]([уy\!@#\$%\^&*+-\|\/]{0,6})[4чkк]\w{1,3}|\w{0,4}[bб]([bб\s\!@#\$%\^&*+-\|\/]{0,6})[lл]([lл\s\!@#\$%\^&*+-\|\/]{0,6})[yя]\w{0,10}|\w{0,8}[её][bб][лске@eыиаa][наи@йвл]\w{0,8}|\w{0,4}[еe]([еe\s\!@#\$%\^&*+-\|\/]{0,6})[бb]([бb\s\!@#\$%\^&*+-\|\/]{0,6})[uу]([uу\s\!@#\$%\^&*+-\|\/]{0,6})[н4ч]\w{0,4}|\w{0,4}[еeё]([еeё\s\!@#\$%\^&*+-\|\/]{0,6})[бb]([бb\s\!@#\$%\^&*+-\|\/]{0,6})[нn]([нn\s\!@#\$%\^&*+-\|\/]{0,6})[уy]\w{0,4}|\w{0,4}[еe]([еe\s\!@#\$%\^&*+-\|\/]{0,6})[бb]([бb\s\!@#\$%\^&*+-\|\/]{0,6})[оoаa@]([оoаa@\s\!@#\$%\^&*+-\|\/]{0,6})[тnнt]\w{0,4}|\w{0,10}[ё]([ё\!@#\$%\^&*+-\|\/]{0,6})[б]\w{0,6}|\w{0,4}[pп]([pп\s\!@#\$%\^&*+-\|\/]{0,6})[иeеi]([иeеi\s\!@#\$%\^&*+-\|\/]{0,6})[дd]([дd\s\!@#\$%\^&*+-\|\/]{0,6})[oоаa@еeиi]([oоаa@еeиi\s\!@#\$%\^&*+-\|\/]{0,6})[рr]\w{0,12}/i;
+            this.dirt = word.test(this.message) ? true : false;
+            return this.dirt;
+        }, 700),
+
         close: function close() {
             this.$emit('close');
         },
-        accountOpen: function accountOpen() {
-            this.account = this.humanId;
+        cancel: function cancel() {
+            this.captcha = false;
+            this.confirm = false;
+            this.ignore = true;
+            console.log('cancel');
         },
-        accountClose: function accountClose() {
-            this.account = false;
+        select: function select(data) {
+            this.photo = data;
+        },
+        sendMessage: function sendMessage() {
+            var _this3 = this;
+
+            var data = {
+                id: this.humanId,
+                captcha_code: this.code
+            };
+            if (this.photo && this.photo.alias) {
+                data['photo'] = this.photo.alias;
+            } else if (true) {
+                data['mess'] = this.message;
+                data['re'] = this.reply;
+            }
+            api.messages.send(data).then(function (response) {
+                _this3.onMessageSend(response.data);
+            }).catch(function () {
+                _this3.onError();
+            });
+            this.photo = null;
+            this.process = true;
+        },
+        setCode: function setCode(code) {
+            this.code = code;
+            this.sendMessage();
+        },
+        onMessageSend: function onMessageSend(response) {
+            if (!response.saved && response.error) {
+                if (response.error == 'need_captcha') {
+                    this.captcha = true;
+                }
+                this.onError();
+            } else {
+                this.sended(response);
+            }
+            this.process = false;
+        },
+        sended: function sended(response) {
+            //MessList.messages.unshift(response.message);
+            this.$refs.messages.reload();
+            // TODO: очень старая зависимость
+            giper_chat.timer_cut();
+            this.reset();
+        },
+        onError: function onError() {
+            this.process = false;
         }
     },
     template: '#messages-activity'
@@ -112,17 +188,42 @@ Vue.component('api-key-update', {
 
     methods: {
         upKey: function upKey() {
+            var _this4 = this;
+
             console.log('upKey');
             axios.get('/sync/sess/').then(function (response) {
                 store.dispatch('LOAD_API_TOKEN');
+                _this4.upUser(response.data);
+                _this4.upSettings(response.data);
             });
+        },
+        upUser: function upUser(data) {
+            var uid = data.uid,
+                city = data.city,
+                sex = data.sex,
+                age = data.age,
+                name = data.name;
+
+            console.log(data);
+            store.commit('loadUser', { uid: uid, city: city, sex: sex, age: age, name: name });
+            store.commit('loadUser', data.contacts);
+        },
+        upSettings: function upSettings(data) {
+            var who = data.who,
+                up = data.years_up,
+                to = data.years_to,
+                town = data.close,
+                virt = data.virt;
+
+            store.commit('settings', { who: who, up: up, to: to, virt: virt, town: town });
         }
     },
     mounted: function mounted() {
-        var _this3 = this;
+        var _this5 = this;
 
+        this.upKey();
         setInterval(function () {
-            _this3.upKey();
+            _this5.upKey();
         }, 1000 * 600);
     },
 
@@ -167,7 +268,6 @@ Vue.component('attention-wall', {
 });
 
 Vue.component('captcha-dialog', {
-    props: ['show'],
     data: function data() {
         return {
             code: '',
@@ -197,13 +297,18 @@ Vue.component('captcha-dialog', {
 });
 
 Vue.component('city-suggest', {
-    props: [],
+    props: ['value'],
     data: function data() {
         return {
             query: '',
             cities: [],
             enable: true
         };
+    },
+    mounted: function mounted() {
+        if (this.value && this.value.length > 2) {
+            this.query = this.value;
+        }
     },
 
     computed: {
@@ -213,13 +318,13 @@ Vue.component('city-suggest', {
     },
     methods: {
         load: function load() {
-            var _this4 = this;
+            var _this6 = this;
 
             if (!this.query.length) {
                 return this.reset();
             }
             api.user.get({ q: this.query, hash: hash }, 'town/suggest').then(function (response) {
-                _this4.loaded(response.data.cities);
+                _this6.loaded(response.data.cities);
             });
         },
         reset: function reset() {
@@ -227,10 +332,8 @@ Vue.component('city-suggest', {
         },
         select: function select(item) {
             this.query = item;
+            this.$emit('select', item);
             this.reset();
-        },
-        close: function close() {
-            this.$emit('close');
         },
         loaded: function loaded(data) {
             if (data && data.length) {
@@ -288,11 +391,11 @@ var ContactDialog = {
             this.slow = false;
         },
         hope: function hope() {
-            var _this5 = this;
+            var _this7 = this;
 
             var sec = 2;
             setTimeout(function () {
-                return _this5.slow = true;
+                return _this7.slow = true;
             }, sec * 1000);
             this.reset();
         },
@@ -352,19 +455,19 @@ var InitialDialog = Vue.component('initial-dialog', {
     },
     methods: {
         load: function load() {
-            var _this6 = this;
+            var _this8 = this;
 
             this.$store.dispatch('initial/LOAD').then(function (response) {
-                _this6.loaded();
+                _this8.loaded();
             });
             this.amount = this.count;
             this.hope();
         },
         next: function next() {
-            var _this7 = this;
+            var _this9 = this;
 
             this.$store.dispatch('initial/NEXT', this.offset).then(function (response) {
-                _this7.loaded();
+                _this9.loaded();
             });
             this.reset();
         },
@@ -404,21 +507,21 @@ var IntimateDialog = Vue.component('intimate-dialog', {
     },
     methods: {
         load: function load() {
-            var _this8 = this;
+            var _this10 = this;
 
             this.$store.dispatch('intimate/LOAD', this.next).then(function (response) {
-                _this8.loaded();
+                _this10.loaded();
             }).catch(function (error) {
-                return _this8.error(error);
+                return _this10.error = error;
             });
             this.amount = this.count;
             this.hope();
         },
         next: function next() {
-            var _this9 = this;
+            var _this11 = this;
 
             this.$store.dispatch('intimate/NEXT', this.offset).then(function (response) {
-                _this9.loaded();
+                _this11.loaded();
             });
             this.hope();
         },
@@ -452,19 +555,19 @@ var SendsDialog = Vue.component('sends-dialog', {
     },
     methods: {
         load: function load() {
-            var _this10 = this;
+            var _this12 = this;
 
             this.$store.dispatch('sends/LOAD', this.next).then(function (response) {
-                _this10.loaded();
+                _this12.loaded();
             });
             this.amount = this.count;
             this.hope();
         },
         next: function next() {
-            var _this11 = this;
+            var _this13 = this;
 
             this.$store.dispatch('sends/NEXT', this.offset).then(function (response) {
-                _this11.loaded();
+                _this13.loaded();
             });
             this.reset();
         },
@@ -576,6 +679,10 @@ Vue.component('desire-tag-item', {
     template: '#desire-tag-item'
 });
 
+Vue.component('email-sended', {
+    template: '#email-sended'
+});
+
 Vue.component('inform-dialog', {
     props: ['loader', 'alert', 'hint'],
     computed: {
@@ -592,6 +699,14 @@ Vue.component('inform-dialog', {
         }
     },
     template: '#inform-dialog'
+});
+
+Vue.component('intro-info', {
+    data: function data() {
+        return {
+            slide: 1
+        };
+    }
 });
 
 Vue.component('loading-cover', {
@@ -618,15 +733,93 @@ Vue.component('loading-wall', {
         }
     },
     mounted: function mounted() {
-        var _this12 = this;
+        var _this14 = this;
 
         this.hope = false;
         setTimeout(function () {
-            return _this12.hope = true;
+            return _this14.hope = true;
         }, 3000);
     },
 
     template: '#loading-wall'
+});
+
+Vue.component('menu-user', {
+    data: function data() {
+        return {
+            message: 8,
+            contact: 8
+        };
+    },
+
+    store: store,
+    computed: {
+        authorized: function authorized() {
+            return store.state.user.uid > 0 ? 1 : 0;
+        },
+        newMessage: function newMessage() {
+            return this.message == false || this.message < 8;
+        },
+        newContact: function newContact() {
+            return this.contact == false || this.contact < 8;
+        },
+        signature: function signature() {
+            var results = 'Кто вы?';
+            var _$store$state$user = this.$store.state.user,
+                name = _$store$state$user.name,
+                city = _$store$state$user.city,
+                age = _$store$state$user.age,
+                sex = _$store$state$user.sex;
+
+            if (sex) {
+                results = sex == 1 ? 'Парень' : 'Девушка';
+                results = name ? name : results;
+            }
+            return results + ' ' + age + ' ' + city;
+        }
+    },
+    methods: {
+        initial: function initial() {
+            var _this15 = this;
+
+            console.log('initial');
+            store.commit('showInitial', 1);
+            axios.get('/mailer/check_contact').then(function () {
+                _this15.contact = 8;
+            });
+        },
+        intimate: function intimate() {
+            var _this16 = this;
+
+            store.commit('showIntimate', 1);
+            axios.get('/mailer/check_message').then(function () {
+                _this16.message = 8;
+            });
+        },
+        loadStatus: function loadStatus() {
+            var _this17 = this;
+
+            axios.get('/mailer/status').then(function (response) {
+                _this17.message = response.data.message;
+                _this17.contact = response.data.contact;
+            });
+        },
+        account: function account() {
+            this.$emit('account');
+        },
+        login: function login() {
+            this.$emit('login');
+        }
+    },
+    mounted: function mounted() {
+        var _this18 = this;
+
+        var delay = 15;
+        this.loadStatus();
+        setInterval(function () {
+            _this18.loadStatus();
+        }, delay * 1000);
+    }
 });
 
 var fdate = null;
@@ -640,7 +833,8 @@ Vue.component('message-item', {
             showOption: false,
             fixOption: false,
             alertOption: false,
-            showDialog: false
+            showDialog: false,
+            photo: false
         };
     },
 
@@ -655,7 +849,7 @@ Vue.component('message-item', {
             }
         },
         bun: function bun() {
-            var _this13 = this;
+            var _this19 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken }
@@ -665,7 +859,7 @@ Vue.component('message-item', {
                 tid: this.item.from
             };
             axios.post('/mess/bun/', data, config).then(function (response) {
-                _this13.$emit('remove', _this13.index);
+                _this19.$emit('remove', _this19.index);
             }).catch(function (error) {
                 console.log('error');
             });
@@ -675,7 +869,7 @@ Vue.component('message-item', {
             console.log('cancel');
         },
         remove: function remove() {
-            var _this14 = this;
+            var _this20 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken }
@@ -684,14 +878,14 @@ Vue.component('message-item', {
                 id: this.item.id
             };
             axios.post('/mess/delete/', data, config).then(function (response) {
-                _this14.$emit('remove', _this14.index);
+                _this20.$emit('remove', _this20.index);
             }).catch(function (error) {
                 console.log(error);
             });
             console.log('remove');
         },
         play: function play() {
-            var _this15 = this;
+            var _this21 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
@@ -700,24 +894,21 @@ Vue.component('message-item', {
             var server = this.$store.state.photoServer;
             var url = 'http://' + server + '/api/v1/users/' + uid + '/sends/' + this.alias + '.jpg';
             axios.get(url, config).then(function (response) {
-                _this15.photo(response.data.photo);
+                _this21.preview(response.data.photo);
             }).catch(function (error) {
                 console.log(error);
             });
         },
-        photo: function photo(_photo) {
-            console.log('photo', _photo);
-            var links = _photo._links;
+        preview: function preview(photo) {
+            var links = photo._links;
             if (links.origin.href) {
-                var _data = {
+                this.photo = {
                     thumb: links.thumb.href,
                     photo: links.origin.href,
-                    alias: _photo.alias,
-                    height: _photo.height,
-                    width: _photo.width
+                    alias: photo.alias,
+                    height: photo.height,
+                    width: photo.width
                 };
-                this.$store.commit('viewPhoto', _data);
-                this.$store.commit('optionDialog', 'photo');
             }
         },
         pathName: function pathName(name) {
@@ -835,7 +1026,7 @@ Vue.component('message-list', {
             //TODO: переписать глобальную зависимость
         },
         load: function load() {
-            var _this16 = this;
+            var _this22 = this;
 
             //console.log('load MessList data');
             this.response = 0;
@@ -844,16 +1035,18 @@ Vue.component('message-list', {
                 params: { id: this.tid, next: this.next, hash: hash }
             };
             axios.get('/ajax/messages_load.php', config).then(function (response) {
-                _this16.onLoad(response);
+                _this22.onLoad(response);
             }).catch(function (error) {
-                _this16.error = 10;
+                _this22.error = 10;
                 console.log(error);
             });
             setTimeout(function () {
-                return _this16.toSlow = true;
+                return _this22.toSlow = true;
             }, 7000);
         },
         onLoad: function onLoad(response) {
+            var _this23 = this;
+
             var messages = response.data.messages;
             this.received = messages ? messages.length : 0;
             if (!messages && !this.messages.length) {
@@ -862,13 +1055,18 @@ Vue.component('message-list', {
                 if (this.received) {
                     this.messages = _.union(this.messages, messages);
                 }
-                // TODO: Заменить на компоненты, страрые зависимости
-                lock_user.show_link();
                 this.next += this.batch;
             }
             this.response = 200;
             this.toSlow = false;
+            this.$nextTick(function () {
+                _this23.scroll();
+            });
             //console.log(response);
+        },
+        scroll: function scroll() {
+            var objDiv = document.getElementById("dialog-history");
+            objDiv.scrollTop = objDiv.scrollHeight + 30;
         },
         noMessages: function noMessages() {
             // TODO: Заменить на компоненты, страрые зависимости
@@ -893,6 +1091,9 @@ Vue.component('message-list', {
         }
     },
     computed: {
+        items: function items() {
+            return this.messages.reverse();
+        },
         more: function more() {
             if (this.received && this.received == this.batch) {
                 return true;
@@ -908,7 +1109,6 @@ Vue.component('message-list', {
 });
 
 Vue.component('modal-dialog', {
-    props: ['show', 'data'],
     methods: {
         close: function close() {
             this.$emit('close');
@@ -925,6 +1125,10 @@ Vue.component('modal-dialog', {
     },
 
     template: '#modal-dialog'
+});
+
+Vue.component('modal-super', {
+    template: '#modal-super'
 });
 
 ///
@@ -953,8 +1157,24 @@ Vue.component('option-dialog', {
     }
 });
 
+Vue.component('photo-send', {
+    props: ['photo', 'options'],
+    data: function data() {
+        return {
+            remove: false
+        };
+    },
+
+    methods: {
+        close: function close() {
+            this.$emit('close');
+        }
+    },
+    template: '#photo-send'
+});
+
 Vue.component('photo-view', {
-    props: ['show', 'photo', 'thumb', 'width', 'height', 'bypass'],
+    props: ['photo', 'thumb', 'maxWidth', 'bypass'],
     methods: {
         approve: function approve() {
             this.$store.commit('approveViewPhoto');
@@ -973,11 +1193,13 @@ Vue.component('photo-view', {
 
 Vue.directive('resized', {
     bind: function bind(el) {
-        el.style.height = el.scrollHeight + 'px';
-        $(el).on('input', function () {
-            this.style.height = 'auto';
-            this.style.height = this.scrollHeight + 'px';
+        $(el).on('change', function () {
+            el.style.height = '1px';
+            el.style.height = el.scrollHeight + 'px';
         });
+    },
+    componentUpdated: function componentUpdated(el) {
+        $(el).change();
     }
 });
 
@@ -999,11 +1221,39 @@ var QuickMessage = Vue.component('quick-message', {
         human: function human() {
             return this.$store.state.search.human;
         },
+        user: function user() {
+            return this.$store.state.user;
+        },
         tags: function tags() {
             return 'tags' in this.human ? this.human.tags : [];
         },
         hold: function hold() {
             return this.ignore ? 0 : this.human.hold;
+        },
+        warning: function warning() {
+            var result = '';
+            var who = { 1: 'парни', 2: 'девушки' };
+            if (this.human.close && this.user.city && this.user.city != this.human.city) {
+                result = 'Мне интересно общение только в моём городе';
+            }
+            if (this.human.who && this.human.who != this.user.sex) {
+                result = 'Мне интересны только ' + who[this.human.who];
+            } else if (this.human.who) {
+                var age = this.user.age;
+                if (this.human.up && age && this.human.up > age) {
+                    result = 'Мне интересны ' + who[this.human.who] + ' в возрасте от ' + this.human.up + ' лет ';
+                }
+                if (this.human.to && age && this.human.to < age) {
+                    result = 'Мне интересны ' + who[this.human.who] + ' в возрасте до ' + this.human.to + ' лет ';
+                }
+            }
+            if (!this.user.age) {
+                result = 'Укажите ваш возраст в анкете, для меня это важно';
+            }
+            if (!this.user.city) {
+                result = 'Укажите ваш город в анкете, для меня это важно';
+            }
+            return result;
         }
     },
     mounted: function mounted() {
@@ -1012,17 +1262,17 @@ var QuickMessage = Vue.component('quick-message', {
 
     methods: {
         reload: function reload() {
-            var _this17 = this;
+            var _this24 = this;
 
             this.loading = true;
             setTimeout(function () {
-                return _this17.loading = false;
+                return _this24.loading = false;
             }, 4 * 1000);
             store.dispatch('HUMAN', this.humanId).then(function (response) {
-                _this17.loaded();
+                _this24.loaded();
             }).catch(function (error) {
                 console.log(error);
-                _this17.loading = false;
+                _this24.loading = false;
             });
             console.log('reload*reload');
         },
@@ -1046,15 +1296,15 @@ var QuickMessage = Vue.component('quick-message', {
             console.log('cancel');
         },
         inProcess: function inProcess(sec) {
-            var _this18 = this;
+            var _this25 = this;
 
             this.process = true;
             setTimeout(function () {
-                return _this18.process = false;
+                return _this25.process = false;
             }, sec * 1000);
         },
         send: function send() {
-            var _this19 = this;
+            var _this26 = this;
 
             var data = {
                 id: this.humanId,
@@ -1062,9 +1312,9 @@ var QuickMessage = Vue.component('quick-message', {
                 captcha_code: this.code
             };
             api.messages.send(data).then(function (response) {
-                _this19.onMessageSend(response.data);
+                _this26.onMessageSend(response.data);
             }).catch(function (error) {
-                _this19.onError(error);
+                _this26.onError(error);
             });
             //  this.sended();
             this.inProcess(5);
@@ -1086,6 +1336,7 @@ var QuickMessage = Vue.component('quick-message', {
         },
         sended: function sended() {
             this.$emit('sended');
+            this.close();
         },
         anketa: function anketa() {
             window.location = '/' + this.humanId;
@@ -1101,6 +1352,55 @@ Vue.component('quick-reply', {
     props: ['humanId', 'message'],
     extends: QuickMessage,
     template: '#quick-reply'
+});
+
+Vue.component('quick-write', {
+    props: ['humanId'],
+    data: function data() {
+        return {
+            open: false,
+            sended: false
+        };
+    },
+
+    template: '#quick-write'
+});
+
+Vue.component('remind-login', {
+    data: function data() {
+        return {
+            email: '',
+            hint: 'Введите ваш емайл',
+            confirm: false
+        };
+    },
+
+    computed: {},
+    methods: {
+        close: function close() {
+            this.$emit('close');
+        },
+        send: function send() {
+            var _this27 = this;
+
+            if (!this.email) {
+                return;
+            }
+            this.hint = 'Отправляю...';
+            api.user.post({ email: this.email }, null, 'sync/remind').then(function (response) {
+                _this27.hint = response.data.say;
+                _this27.error = response.data.err;
+                _this27.sended();
+            });
+        },
+        sended: function sended() {
+            if (!this.error) {
+                this.hint = 'Успешно. Подождите.';
+                this.confirm = true;
+            }
+        }
+    },
+    template: '#remind-login'
 });
 
 var RemoveConfirm = Vue.component('remove-confirm', {
@@ -1172,7 +1472,6 @@ Vue.component('remove-contact', {
         };
     },
 
-    computed: {},
     methods: {
         remove: function remove() {
             this.$emit('remove');
@@ -1182,14 +1481,249 @@ Vue.component('remove-contact', {
     template: '#remove-confirm'
 });
 
-Vue.component('search-settings', {
+Vue.component('search-wizard', {
+    data: function data() {
+        return {};
+    },
+
+    store: store,
+    computed: Vuex.mapState({
+        range: function range(state) {
+            var settings = state.search.settings;
+            var range = '';
+            if (settings.up && settings.to) {
+                range = settings.up + ' - ' + settings.to;
+            } else if (settings.up && !settings.to) {
+                range = ' от ' + settings.up;
+            } else if (!settings.up && settings.to) {
+                range = ' до ' + settings.to;
+            }
+            return range ? ' в возрасте ' + range + ' лет ' : '';
+        },
+        who: function who(state) {
+            var settings = state.search.settings;
+            var who = ' знакомства с кем угодно ';
+            if (settings.who) {
+                who = settings.who == 1 ? ' знакомства с парнем ' : ' знакомства с девушкой ';
+            }
+            return who;
+        },
+        say: function say(state) {
+            var where = state.user.city ? '' : ', из любого города ';
+            return this.who + this.range + where;
+        }
+    }),
+    mounted: function mounted() {}
+});
+
+Vue.component('account-settings', {
     props: [],
+    data: function data() {
+        return {
+            selectCity: '',
+            selectSex: 0,
+            selectAge: 0,
+            selectName: ''
+        };
+    },
+
+    computed: Vuex.mapState({
+        sex: function sex(state) {
+            var sex = Number(state.user.sex);
+            if (sex) {
+                return sex == 1 ? 1 : 2;
+            }
+            return 0;
+        },
+        city: function city(state) {
+            return state.user.city;
+        },
+        age: function age(state) {
+            return state.user.age;
+        },
+        name: function name(state) {
+            var variant = [];
+            variant[1] = ['Саша', 'Дима', 'Сергей', 'Иван', 'Максим', 'Валера', 'Николай'];
+            variant[2] = ['Оля', 'Юля', 'Настя', 'Алена', 'Катя', 'Маргарита', 'Татьяна'];
+            var x = Math.floor(Math.random() * 7);
+            var name = state.user.name;
+            var auto = this.sex ? variant[this.sex][x] : '';
+            return name ? name : auto;
+        }
+    }),
+    mounted: function mounted() {
+        this.selectCity = this.city;
+        this.selectSex = this.sex;
+        this.selectAge = this.age;
+        this.selectName = this.name;
+    },
+
+    methods: {
+        saveSex: function saveSex() {
+            this.$store.dispatch('SAVE_SEX', this.selectSex);
+            this.resetName();
+        },
+        saveCity: function saveCity(city) {
+            this.$store.dispatch('SAVE_CITY', city);
+        },
+        saveAge: function saveAge() {
+            this.$store.dispatch('SAVE_AGE', this.selectAge);
+        },
+        saveName: function saveName() {
+            this.$store.dispatch('SAVE_NAME', this.selectName);
+        },
+        resetName: function resetName() {
+            this.selectName = this.name;
+        },
+        save: function save() {
+            this.saveName();
+        },
+        close: function close() {
+            this.save();
+            this.$emit('close');
+        }
+    },
+    template: '#account-settings'
+});
+
+Vue.component('login-account', {
+    props: [],
+    data: function data() {
+        return {
+            login: '',
+            password: '',
+            captcha: false,
+            code: '',
+            error: false,
+            remind: false,
+            hint: 'Введите данные'
+        };
+    },
+
+    computed: Vuex.mapState({
+        city: function city(state) {
+            return state.user.city;
+        }
+    }),
+    mounted: function mounted() {},
+
+    methods: {
+        close: function close() {
+            this.$emit('close');
+        },
+        send: function send() {
+            var _this28 = this;
+
+            var data = {
+                login: this.login,
+                pass: this.password,
+                captcha: this.code
+            };
+            api.user.post(data, null, 'sync/login').then(function (response) {
+                _this28.hint = response.data.say;
+                _this28.error = response.data.err;
+                _this28.captcha = response.data.captcha;
+                _this28.onLogin();
+            });
+        },
+        onLogin: function onLogin() {
+            if (!this.error) {
+                this.hint = 'Успешно. Подождите.';
+                location.href = location.href;
+            }
+        },
+        setCode: function setCode(code) {
+            this.code = code;
+        }
+    },
+    template: '#login-account'
+});
+
+Vue.component('photo-settings', {
+    data: function data() {
+        return {
+            photos: []
+        };
+    },
+
+    computed: Vuex.mapState({}),
+    mounted: function mounted() {
+        console.log('fileupload');
+        var self = this;
+        $('#fileupload').fileupload({
+            dataType: 'json',
+            add: function add(e, data) {
+                var server = self.$store.state.photoServer;
+                var uid = self.$store.state.user.uid;
+                data.url = 'http://' + server + '/api/v1/users/' + uid + '/photos?jwt=' + self.$store.state.apiToken;
+                data.submit();
+            },
+            done: function done(e, data) {
+                self.preview(data.result.photo);
+            }
+        });
+        this.loadPhoto();
+    },
+
+    methods: {
+        close: function close() {
+            this.$emit('close');
+        },
+        loadPhoto: function loadPhoto() {
+            var _this29 = this;
+
+            var server = this.$store.state.photoServer;
+            var uid = this.$store.state.user.uid;
+            var config = {
+                headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
+                params: { hash: hash }
+            };
+            axios.get('http://' + server + '/api/v1/users/' + uid + '/photos', config).then(function (response) {
+                var result = response.data.photos;
+                if (result && result.length) {
+                    _this29.photos = response.data.photos;
+                }
+                console.log(_this29.photos);
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        upload: function upload(e) {
+            $('#fileupload').click();
+        },
+
+        show: function show(index) {
+            this.preview(this.photos[index]);
+        },
+        preview: function preview(photo) {
+            var links = photo._links;
+            if (links.origin.href) {
+                var _data = {
+                    photo: links.origin.href,
+                    thumb: links.thumb.href,
+                    alias: photo.alias,
+                    height: photo.height,
+                    width: photo.width
+                };
+                this.$emit('select', _data);
+                //this.$store.commit('sendPhoto', data);
+                //console.log('sendPhoto');
+                //console.log(data);
+            }
+            this.close();
+        }
+    },
+    template: '#photo-settings'
+});
+
+Vue.component('search-settings', {
     data: function data() {
         return {
             ageRange: [0, 16, 17, 18, 20, 23, 25, 27, 30, 35, 40, 45, 50, 60, 80],
             selectWho: 0,
             selectUp: 0,
             selectTo: 0,
+            selectCity: '',
             checkedTown: 0,
             checkedVirt: 0
         };
@@ -1203,6 +1737,9 @@ Vue.component('search-settings', {
             }
             return 0;
         },
+        city: function city(state) {
+            return state.user.city; // [~!!!~] READ_ONLY
+        },
         up: function up(state) {
             return this.age(state.search.settings.up);
         },
@@ -1214,9 +1751,13 @@ Vue.component('search-settings', {
         },
         virt: function virt(state) {
             return state.search.settings.virt == true;
+        },
+        virgin: function virgin() {
+            return this.selectCity == this.city && this.selectWho == this.who && this.selectUp == this.up && this.selectTo == this.to && this.checkedTown == this.town && this.checkedVirt == this.virt;
         }
     }),
     mounted: function mounted() {
+        this.selectCity = this.city;
         this.selectWho = this.who;
         this.selectUp = this.up;
         this.selectTo = this.to;
@@ -1246,35 +1787,153 @@ Vue.component('search-settings', {
                 }
             });
         },
-        setWho: function setWho(value) {
-            this.$store.commit('settings', { who: value });
-        },
-        setUp: function setUp() {
-            this.$store.commit('settings', { up: this.selectUp });
-        },
-        setTo: function setTo() {
-            this.$store.commit('settings', { to: this.selectTo });
-        },
-        setTown: function setTown() {
-            this.$store.commit('settings', { town: this.town != true });
-        },
+
+        // setWho(value) {
+        //     this.$store.commit('settings', {who: value});
+        // },
+        // setUp() {
+        //     this.$store.commit('settings', {up: this.selectUp});
+        // },
+        // setTo() {
+        //     this.$store.commit('settings', {to: this.selectTo});
+        // },
+        // setTown() {
+        //     this.$store.commit('settings', {town: this.town != true});
+        // },
         save: function save() {
-            console.log(this.$store.state.search.settings);
-            this.$store.commit('settings', {
+            var data = {
                 who: this.selectWho,
-                city: '',
+                city: this.city,
                 up: this.selectUp,
                 to: this.selectTo,
                 town: this.checkedTown,
                 virt: this.checkedVirt
-            });
-            console.log(this.$store.state.search.settings);
+            };
+            if (!this.virgin) {
+                this.$store.dispatch('SAVE_SEARCH', data);
+            }
+        },
+        account: function account() {
+            this.$emit('account');
         },
         close: function close() {
+            this.save();
             this.$emit('close');
         }
     },
     template: '#search-settings'
+});
+
+Vue.component('sex-confirm', {
+    props: ['show'],
+    computed: {
+        variant: function variant() {
+            return this.show ? this.show : 'message';
+        },
+        caption: function caption() {
+            return this.content[this.variant].caption;
+        },
+        text: function text() {
+            return this.content[this.variant].text;
+        }
+    },
+    methods: {
+        close: function close() {
+            this.$emit('close');
+        },
+        save: function save(sex) {
+            this.$store.dispatch('SAVE_SEX', sex);
+            this.$emit('select', this.show);
+            this.close();
+        }
+    },
+    data: function data() {
+        return {
+            content: {
+                search: {
+                    caption: 'Подтвердите',
+                    text: 'Для правильного отображения результатов поиска необходимо указать пол. Вы парень или девушка?'
+                },
+                contacts: {
+                    caption: 'Вы девушка?',
+                    text: 'Начало быстрого общения в один клик. Хотите получать сообщения и новые знакомства. Достаточно подтвердить, парень вы или девушка.'
+                },
+                message: {
+                    caption: 'Подтвердите',
+                    text: 'Все пользователи желают знать с кем будут общаться. Чтобы продолжить укажите, парень вы или девушка.'
+                },
+                account: {
+                    caption: 'Кто вы?',
+                    text: 'Приватная анкета в один клик. Самое быстрое общение. Достаточно указать кто вы, парень или девушка. И начинайте общаться.'
+                }
+            }
+        };
+    },
+
+    template: '#sex-confirm'
+});
+
+Vue.component('simple-captcha', {
+    props: [],
+    data: function data() {
+        return {
+            code: '',
+            inc: 0
+        };
+    },
+
+    computed: {
+        src: function src() {
+            return '/capcha_pic.php?inc=' + this.inc;
+        }
+    },
+    mounted: function mounted() {},
+
+    methods: {
+        close: function close() {
+            this.$emit('close');
+        },
+        update: function update() {
+            this.inc++;
+        },
+        input: function input() {
+            this.$emit('input', this.code);
+        }
+    },
+    template: '#simple-captcha'
+});
+
+Vue.component('slider-vertical', {
+    data: function data() {
+        return {
+            slide: 1
+        };
+    }
+});
+Vue.component('snackbar', {
+    methods: {
+        close: function close() {
+            this.$emit('close');
+        }
+    },
+    mounted: function mounted() {
+        _.delay(this.close, 3000);
+    },
+
+    template: '#snackbar'
+});
+
+Vue.component('toast', {
+    methods: {
+        close: function close() {
+            this.$emit('close');
+        }
+    },
+    mounted: function mounted() {
+        _.delay(this.close, 2000);
+    },
+
+    template: '#toast'
 });
 
 Vue.component('upload-dialog', {
@@ -1284,38 +1943,12 @@ Vue.component('upload-dialog', {
             photos: [],
             server: null
         };
-        // file: {
-        //     data: null,
-        //     name: '',
-        //     size: 0
-        // }
     },
 
     created: function created() {
         this.server = this.$store.state.photoServer;
     },
     methods: {
-        loadPhoto: function loadPhoto() {
-            var _this20 = this;
-
-            var config = {
-                headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
-                params: { hash: hash }
-            };
-            axios.get('http://' + this.server + '/api/v1/users/' + uid + '/photos', config).then(function (response) {
-                var result = response.data.photos;
-                if (result && result.length) {
-                    _this20.photos = response.data.photos;
-                }
-                //console.log(this.photos);
-            }).catch(function (error) {
-                console.log(error);
-            });
-        },
-        upload: function upload(e) {
-            $('#fileupload').click();
-        },
-
         show: function show(index) {
             this.preview(this.photos[index]);
         },
@@ -1334,25 +1967,7 @@ Vue.component('upload-dialog', {
                 //console.log(data);
             }
             this.close();
-        },
-        close: function close() {
-            this.$emit('close');
         }
-    },
-    mounted: function mounted() {
-        console.log('fileupload');
-        var self = this;
-        $('#fileupload').fileupload({
-            dataType: 'json',
-            add: function add(e, data) {
-                data.url = 'http://' + self.server + '/api/v1/users/' + uid + '/photos?jwt=' + self.$store.state.apiToken;
-                data.submit();
-            },
-            done: function done(e, data) {
-                self.preview(data.result.photo);
-            }
-        });
-        this.loadPhoto();
     }
 });
 
@@ -1370,6 +1985,48 @@ Vue.component('photo-dialog', {
     }),
     template: '#photo-dialog'
 });
+
+////
+// РОУТЕР ==========================================================
+////
+
+// const routes = [
+//     { path: '/sends-contacts', name: 'sends', component: SendsDialog, props: { quick: false } },
+//     { path: '/initial-contacts', name: 'initial', component: InitialDialog, props: { quick: true } },
+//     { path: '/intimate-contacts',  name: 'intimate', component: IntimateDialog, props: { quick: false },
+//         // children: [
+//         //     {
+//         //         path: 'quick-reply',
+//         //         component: HumanDialog,
+//         //         props: {
+//         //             show : true
+//         //         }
+//         //     },
+//         // ]
+//     }
+// ];
+
+// // 3. Создаём инстанс роутера с опцией `routes`
+// // Можно передать и другие опции, но пока не будем усложнять
+var router = new VueRouter({
+    mode: 'history',
+    routes: [] // сокращение от routes: routes
+});
+
+// const RouterView = new Vue({
+//     el: '#router-view',
+//     store,
+//     router,
+//     created() {
+//         console.log('routerView created');
+//     },
+//     methods: {
+//         close() {
+//             router.go(-1);
+//         }
+//     }
+// });
+
 
 // -- Хранилище ---
 var storage = {
@@ -1709,6 +2366,7 @@ var moderator = {
 var search = {
     state: {
         list: [],
+        url: '',
         human: {
             name: '',
             age: 0,
@@ -1730,12 +2388,10 @@ var search = {
             var index = 'human.data.' + tid;
             commit('resetHuman', tid);
             commit('setHuman', ls.get(index));
-            var promise = api.search.get({ tid: tid });
-            promise.then(function (response) {
+            return api.search.get({ tid: tid }).then(function (response) {
                 commit('setHuman', response.data);
                 ls.set(index, response.data, 1500);
             });
-            return promise;
         },
         SETTINGS: function SETTINGS(_ref13) {
             var commit = _ref13.commit;
@@ -1743,6 +2399,13 @@ var search = {
             commit('settingsCookies');console.log('search.settings');
             commit('settings', ls.get('search.settings'));
             //let index = 'search.settings';
+        },
+        SAVE_SEARCH: function SAVE_SEARCH(_ref14, data) {
+            var state = _ref14.state,
+                commit = _ref14.commit;
+
+            commit('settings', data);
+            return api.user.saveSearch(data).then(function (response) {});
         }
     },
     mutations: {
@@ -1759,7 +2422,7 @@ var search = {
         },
         settings: function settings(state, data) {
             if (data) {
-                _.extend(state.settings, data);
+                _.assign(state.settings, data);
             }
         },
         settingsCookies: function settingsCookies(state) {
@@ -1776,6 +2439,13 @@ var search = {
                 state.settings.virt = data.virt;
             }
         }
+    },
+    getters: {
+        searchURL: function searchURL(state) {
+            var settings = state.settings;
+            var result = '/index.php?view=simple&town=' + settings.city + '&years_up=' + settings.up + '&years_to=' + settings.to + '&who=' + settings.who + '';
+            return result;
+        }
     }
 };
 
@@ -1786,11 +2456,6 @@ var user = {
         age: '',
         name: '',
         city: '',
-        up: '',
-        to: '',
-        who: 0,
-        close: 0,
-        virt: 0,
         status: 0,
         em: 0,
         vk: 0,
@@ -1810,32 +2475,56 @@ var user = {
         }
     },
     actions: {
-        LOAD_USER: function LOAD_USER(_ref14) {
-            var commit = _ref14.commit;
-
-            if (uid) {
-                commit('loadUser', { uid: uid });
-            }
-            if (typeof user_sex != 'undefined') {
-                commit('loadUser', { sex: user_sex });
-            }
-        },
-        SAVE_SEX: function SAVE_SEX(_ref15, sex) {
+        LOAD_USER: function LOAD_USER(_ref15) {
             var commit = _ref15.commit;
 
-            var promise = api.user.saveSex(sex);
-            promise.then(function (response) {
-                if (response.data.sex) {
-                    store.commit('loadUser', { sex: response.data.sex });
-                }
-            });
-            return promise;
+            // if (uid) {
+            //     commit('loadUser', {uid});
+            // }
+            commit('loadUser', ls.get('user.data'));
+        },
+        SAVE_SEX: function SAVE_SEX(_ref16, sex) {
+            var state = _ref16.state,
+                commit = _ref16.commit;
+
+            if (sex && state.sex != sex) {
+                api.user.saveSex(sex).then(function (response) {});
+                commit('loadUser', { sex: sex });
+            }
+            commit('loadUser', { name: '' });
+        },
+        SAVE_AGE: function SAVE_AGE(_ref17, age) {
+            var state = _ref17.state,
+                commit = _ref17.commit;
+
+            if (age && state.age != age) {
+                api.user.saveAge(age).then(function (response) {});
+                commit('loadUser', { age: age });
+            }
+        },
+        SAVE_NAME: function SAVE_NAME(_ref18, name) {
+            var state = _ref18.state,
+                commit = _ref18.commit;
+
+            if (name && state.name != name) {
+                api.user.saveName(name).then(function (response) {});
+                commit('loadUser', { name: name });
+            }
+        },
+        SAVE_CITY: function SAVE_CITY(_ref19, city) {
+            var state = _ref19.state,
+                commit = _ref19.commit;
+
+            if (city && state.city != city) {
+                api.user.saveCity(city).then(function (response) {});
+                commit('loadUser', { city: city });
+            }
         }
     },
     mutations: {
         loadUser: function loadUser(state, data) {
-            _.extend(state, data);
-            ls.set('user.data', data, 23456);
+            state = _.assign(state, data);
+            ls.set('user.data', state, 23456);
         }
     }
 };
@@ -1854,7 +2543,7 @@ var store = new Vuex.Store({
     state: {
         apiToken: '',
         //photoServer: '127.0.0.1:8888',
-        photoServer: '127.0.0.1:8888',
+        photoServer: '195.154.54.70',
         count: 0,
         optionStatic: {
             view: null
@@ -1885,13 +2574,13 @@ var store = new Vuex.Store({
         }
     },
     actions: {
-        LOAD_API_TOKEN: function LOAD_API_TOKEN(_ref16) {
-            var commit = _ref16.commit;
+        LOAD_API_TOKEN: function LOAD_API_TOKEN(_ref20) {
+            var commit = _ref20.commit;
 
             commit('setApiToken', { apiToken: get_cookie('jwt') });
         },
-        LOAD_ACCEPTS: function LOAD_ACCEPTS(_ref17) {
-            var commit = _ref17.commit;
+        LOAD_ACCEPTS: function LOAD_ACCEPTS(_ref21) {
+            var commit = _ref21.commit;
 
             var accepts = ls.get('accepts');
             if (accepts && accepts.photo) {
@@ -1903,23 +2592,23 @@ var store = new Vuex.Store({
     mutations: {
         setApiToken: function setApiToken(state, data) {
             if (data) {
-                _.extend(state, data);
+                _.assign(state, data);
             }
             //console.log(state)
         },
         viewPhoto: function viewPhoto(state, data) {
-            _.extend(state.photoView, data);
+            _.assign(state.photoView, data);
         },
         viewUpload: function viewUpload(state, data) {
             state.uploadView.show = data === true;
         },
         sendPhoto: function sendPhoto(state, data) {
             console.log('sendPhoto');
-            _.extend(state.formMess.sendPhoto, data);
+            _.assign(state.formMess.sendPhoto, data);
         },
         approveViewPhoto: function approveViewPhoto(state) {
             state.accepts.photo = true;
-            ls.set('accepts', _.extend(state.accepts, { photo: true }));
+            ls.set('accepts', _.assign(state.accepts, { photo: true }));
         },
         intimated: function intimated(state, data) {
             state.formMess.intimate = data === true;
@@ -1943,7 +2632,7 @@ var Api = function () {
         _classCallCheck(this, Api);
 
         // Delay requests sec
-        this.setDelay('2');
+        this.setDelay('0');
         // [!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]
         this.setRoot(host, version);
         this.setConfig(this.root, key);
@@ -2179,16 +2868,40 @@ var ApiUser = function (_Api3) {
 
         var key = '1234';
         var host = '/';
-        var routing = {
-            post: 'option/sex'
-        };
-        return _possibleConstructorReturn(this, (ApiUser.__proto__ || Object.getPrototypeOf(ApiUser)).call(this, host, key, null, routing));
+        return _possibleConstructorReturn(this, (ApiUser.__proto__ || Object.getPrototypeOf(ApiUser)).call(this, host, key, null, null));
     }
 
     _createClass(ApiUser, [{
         key: 'saveSex',
         value: function saveSex(sex) {
-            return this.post({ sex: sex });
+            return this.save({ sex: sex }, null, 'option/sex');
+        }
+    }, {
+        key: 'saveAge',
+        value: function saveAge(age) {
+            return _get(ApiUser.prototype.__proto__ || Object.getPrototypeOf(ApiUser.prototype), 'save', this).call(this, { age: age }, null, 'option/age');
+        }
+    }, {
+        key: 'saveName',
+        value: function saveName(name) {
+            return _get(ApiUser.prototype.__proto__ || Object.getPrototypeOf(ApiUser.prototype), 'save', this).call(this, { name: name }, null, 'option/name');
+        }
+    }, {
+        key: 'saveCity',
+        value: function saveCity(city) {
+            return _get(ApiUser.prototype.__proto__ || Object.getPrototypeOf(ApiUser.prototype), 'save', this).call(this, { city: city }, null, 'option/city');
+        }
+    }, {
+        key: 'saveSearch',
+        value: function saveSearch(data) {
+            data = {
+                search_sex: data.who,
+                years_up: data.up,
+                years_to: data.to,
+                option_mess_town: data.town,
+                option_virt_accept: data.virt
+            };
+            return _get(ApiUser.prototype.__proto__ || Object.getPrototypeOf(ApiUser.prototype), 'save', this).call(this, data, null, 'msett/save');
         }
     }]);
 
@@ -2202,7 +2915,7 @@ var ApiSearch = function (_Api4) {
         _classCallCheck(this, ApiSearch);
 
         var key = '1234';
-        var host = 'http://127.0.0.1:9000/';
+        var host = 'http://212.83.162.58/';
         var routing = {
             route: 'users',
             get: '{tid}'
@@ -2220,7 +2933,7 @@ var ApiContact = function (_Api5) {
         _classCallCheck(this, ApiContact);
 
         var key = store.state.apiToken;
-        var host = 'http://127.0.0.1:8000/';
+        var host = 'http://212.83.134.89:9000/';
         return _possibleConstructorReturn(this, (ApiContact.__proto__ || Object.getPrototypeOf(ApiContact)).call(this, host, key, null, routing));
     }
 
@@ -2294,6 +3007,75 @@ var api = {
 
 //ApiMessages.send();
 
+
+new Vue({
+    data: {
+        searchSettings: false,
+        accountSettings: false,
+        sexConfirm: false,
+        logIn: false
+    },
+    computed: {
+        initial: function initial() {
+            return this.$store.state.modals.initial;
+        },
+        intimate: function intimate() {
+            return this.$store.state.modals.intimate;
+        },
+        sends: function sends() {
+            return this.$store.state.modals.sends;
+        },
+        view: function view() {
+            return this.$store.state.optionStatic.view;
+        },
+        isSex: function isSex() {
+            return this.$store.state.user.sex;
+        },
+        humanId: function humanId() {
+            return Number(this.$route.path.substr(1));
+        }
+    },
+    methods: {
+        search: function search() {
+            window.location = this.$store.getters.searchURL;
+        },
+        close: function close() {
+            this.$store.commit('closeAll');
+            store.commit('optionDialog', false);
+        },
+        confirmSex: function confirmSex(variant) {
+            if (!this.isSex) {
+                this.sexConfirm = variant;
+                return false;
+            }
+            return true;
+        },
+        selectSex: function selectSex(variant) {
+            if (variant == 'search') {
+                this.openSearchSettings();
+            }
+            if (variant == 'account') {
+                this.openAccountSettings();
+            }
+        },
+        openSearchSettings: function openSearchSettings() {
+            if (this.confirmSex('search')) {
+                this.searchSettings = true;
+            }
+        },
+        openAccountSettings: function openAccountSettings() {
+            if (this.confirmSex('account')) {
+                this.accountSettings = true;
+            }
+        },
+        openLogIn: function openLogIn() {
+            this.logIn = true;
+        }
+    },
+    el: '#app',
+    store: store,
+    router: router
+});
 
 $(document).ready(function () {
     //userinfo.init();
@@ -3071,63 +3853,6 @@ var master_info = {
     }
 
 };
-
-var MenuUser = new Vue({
-    data: {
-        message: 8,
-        contact: 8
-    },
-    store: store,
-    computed: {
-        authorized: function authorized() {
-            return store.state.user.uid > 0 ? 1 : 0;
-        },
-        newMessage: function newMessage() {
-            return this.message == false || this.message < 8;
-        },
-        newContact: function newContact() {
-            return this.contact == false || this.contact < 8;
-        }
-    },
-    methods: {
-        initial: function initial() {
-            var _this29 = this;
-
-            console.log('initial');
-            store.commit('showInitial', 1);
-            axios.get('/mailer/check_contact').then(function () {
-                _this29.contact = 8;
-            });
-        },
-        intimate: function intimate() {
-            var _this30 = this;
-
-            store.commit('showIntimate', 1);
-            axios.get('/mailer/check_message').then(function () {
-                _this30.message = 8;
-            });
-        },
-        loadStatus: function loadStatus() {
-            var _this31 = this;
-
-            axios.get('/mailer/status').then(function (response) {
-                _this31.message = response.data.message;
-                _this31.contact = response.data.contact;
-            });
-        }
-    },
-    mounted: function mounted() {
-        var _this32 = this;
-
-        var delay = 15;
-        this.loadStatus();
-        setInterval(function () {
-            _this32.loadStatus();
-        }, delay * 1000);
-    },
-
-    el: '#menu-user'
-});
 
 // Навигация с помошью клавиатуры
 var navigate = {
@@ -4277,48 +5002,6 @@ var result_list = {
 
     }
 };
-
-////
-// РОУТЕР ==========================================================
-////
-
-// const routes = [
-//     { path: '/sends-contacts', name: 'sends', component: SendsDialog, props: { quick: false } },
-//     { path: '/initial-contacts', name: 'initial', component: InitialDialog, props: { quick: true } },
-//     { path: '/intimate-contacts',  name: 'intimate', component: IntimateDialog, props: { quick: false },
-//         // children: [
-//         //     {
-//         //         path: 'quick-reply',
-//         //         component: HumanDialog,
-//         //         props: {
-//         //             show : true
-//         //         }
-//         //     },
-//         // ]
-//     }
-// ];
-
-// // 3. Создаём инстанс роутера с опцией `routes`
-// // Можно передать и другие опции, но пока не будем усложнять
-var router = new VueRouter({
-    mode: 'history',
-    routes: [] // сокращение от routes: routes
-});
-
-// const RouterView = new Vue({
-//     el: '#router-view',
-//     store,
-//     router,
-//     created() {
-//         console.log('routerView created');
-//     },
-//     methods: {
-//         close() {
-//             router.go(-1);
-//         }
-//     }
-// });
-
 
 var abuse_list = new Vue({
     el: '#search-form',

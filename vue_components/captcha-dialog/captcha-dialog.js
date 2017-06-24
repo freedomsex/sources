@@ -1,6 +1,5 @@
 
 Vue.component('captcha-dialog', {
-    props: ['show'],
     data() {
         return {
             code: '',

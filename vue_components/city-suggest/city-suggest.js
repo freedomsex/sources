@@ -1,11 +1,16 @@
 Vue.component('city-suggest', {
-    props: [],
+    props: ['value'],
     data() {
         return {
             query: '',
             cities: [],
             enable: true
         };
+    },
+    mounted() {
+        if (this.value && this.value.length > 2) {
+            this.query = this.value;
+        }
     },
     computed: {
         suggested() {
@@ -26,10 +31,8 @@ Vue.component('city-suggest', {
         },
         select(item) {
             this.query = item;
+            this.$emit('select', item);
             this.reset();
-        },
-        close() {
-            this.$emit('close');
         },
         loaded(data) {
             if (data && data.length) {

@@ -1,8 +1,10 @@
 
-var MenuUser = new Vue({
-    data: {
-        message: 8,
-        contact: 8
+Vue.component('menu-user', {
+    data() {
+        return {
+            message: 8,
+            contact: 8
+        }
     },
     store,
     computed: {
@@ -15,6 +17,15 @@ var MenuUser = new Vue({
         newContact() {
             return (this.contact == false) || this.contact < 8;
         },
+        signature() {
+            var results = 'Кто вы?';
+            let {name, city, age, sex} = this.$store.state.user;
+            if (sex) {
+                results = sex == 1 ? 'Парень' : 'Девушка';
+                results = name ? name : results;
+            }
+            return results + ' ' + age + ' ' + city;
+        }
     },
     methods: {
         initial() {
@@ -36,6 +47,12 @@ var MenuUser = new Vue({
                 this.contact = response.data.contact;
             });
         },
+        account() {
+            this.$emit('account');
+        },
+        login() {
+            this.$emit('login');
+        },
     },
     mounted() {
         let delay = 15;
@@ -44,5 +61,4 @@ var MenuUser = new Vue({
             this.loadStatus();
         }, delay * 1000);
     },
-    el: '#menu-user',
 });

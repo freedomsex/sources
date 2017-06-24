@@ -2,6 +2,7 @@
 var search = {
     state: {
         list: [],
+        url: '',
         human: {
             name: '',
             age: 0,
@@ -21,17 +22,19 @@ var search = {
             let index = 'human.data.'+tid;
             commit('resetHuman', tid);
             commit('setHuman', ls.get(index));
-            let promise = api.search.get({tid});
-            promise.then((response) => {
+            return api.search.get({tid}).then((response) => {
                 commit('setHuman', response.data);
                 ls.set(index, response.data, 1500);
             });
-            return promise;
         },
         SETTINGS({ commit }) {
             commit('settingsCookies'); console.log('search.settings');
             commit('settings', ls.get('search.settings'));
             //let index = 'search.settings';
+        },
+        SAVE_SEARCH({state, commit}, data) {
+                commit('settings', data);
+                return api.user.saveSearch(data).then((response) => { });
         },
     },
     mutations: {
@@ -48,7 +51,7 @@ var search = {
         },
         settings(state, data) {
             if (data) {
-                _.extend(state.settings, data);
+                _.assign(state.settings, data);
             }
         },
         settingsCookies(state) {
@@ -65,6 +68,15 @@ var search = {
                 state.settings.town = data.town;
                 state.settings.virt = data.virt;
             }
+        }
+    },
+    getters: {
+        searchURL(state) {
+            let settings = state.settings;
+            let result = '/index.php?view=simple&town=' + settings.city +
+                '&years_up=' + settings.up + '&years_to=' + settings.to +
+                '&who=' + settings.who +'';
+            return result;
         }
     }
 };

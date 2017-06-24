@@ -1,4 +1,76 @@
 
+new Vue({
+    data: {
+        searchSettings: false,
+        accountSettings: false,
+        sexConfirm: false,
+        logIn: false,
+    },
+    computed: {
+        initial() {
+            return this.$store.state.modals.initial;
+        },
+        intimate() {
+            return this.$store.state.modals.intimate;
+        },
+        sends() {
+            return this.$store.state.modals.sends;
+        },
+        view() {
+            return this.$store.state.optionStatic.view;
+        },
+        isSex() {
+            return this.$store.state.user.sex;
+        },
+        humanId() {
+            return Number(this.$route.path.substr(1));
+        }
+    },
+    methods: {
+        search() {
+            window.location = this.$store.getters.searchURL;
+        },
+        close() {
+            this.$store.commit('closeAll');
+            store.commit('optionDialog', false);
+        },
+
+        confirmSex(variant) {
+            if (!this.isSex) {
+                this.sexConfirm = variant;
+                return false;
+            }
+            return true;
+        },
+        selectSex(variant) {
+            if (variant == 'search') {
+                this.openSearchSettings();
+            }
+            if (variant == 'account') {
+                this.openAccountSettings();
+            }
+        },
+        openSearchSettings() {
+            if (this.confirmSex('search')) {
+                this.searchSettings = true;
+            }
+        },
+        openAccountSettings() {
+            if (this.confirmSex('account')) {
+                this.accountSettings = true;
+            }
+        },
+        openLogIn() {
+            this.logIn = true;
+        },
+    },
+    el: '#app',
+    store,
+    router
+});
+
+
+
 $(document).ready(function()
 {
     //userinfo.init();

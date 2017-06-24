@@ -5,19 +5,46 @@
 <link rel="stylesheet" type="text/css" href="%%CSS_UNIQUE%%">
 </head>
 <body>
-%%MENU_HEADER%%
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-1 hidden-xs hidden-sm">
+<div id="app">
+  %%MENU_HEADER%%
+  <div class="container content">
+    <div class="row">
+      %%TOP_INFO_BLOCK%%
     </div>
-    <div class="col-md-11 col-xs-12 col-sm-12">
-      <div id="earlap">
-      <!-- build:include main.htm --><!-- /build -->
+    <div class="row">
+      <div class="col-md-12">
+        <!-- build:include ../../_common/search-wizard.htm --><!-- /build -->
       </div>
     </div>
+    <div class="row">
+      %%BLOCK_STATIC_TIP%%
+      %%TIP_FORM_BLOCK%%
+      %%INFO_TEXT_SCH%%
+    </div>
   </div>
+
+<!-- build:include ../../_common/ad-top.htm --><!-- /build -->
+
+<!-- build:include search-results.htm --><!-- /build -->
+
+<!-- build:include slider-vertical.htm --><!-- /build -->
+
+<!-- build:include ../../_common/info-links.htm --><!-- /build -->
+<!-- build:include ../../_common/option-static.htm --><!-- /build -->
+
 </div>
+   %%BLOCK_COUNTER_ALL%%
 <!-- build:include ../../_common/footer.htm --><!-- /build -->
+
+
+
+<script type="text/javascript">
+    // var addthis_config = {"data_track_addressbar":false};
+    //     addthis_config.data_track_addressbar = false;
+    //     addthis_config.data_track_clickback = false;
+</script>
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-593e8bd77e5130d5"></script>
+
 </body>
 </html>
 

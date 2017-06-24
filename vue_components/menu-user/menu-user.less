@@ -1,11 +1,109 @@
-.menu-user__status {
-  background-color: rgba(0, 0, 0, 0);
-  width: 10px;
-  height: 10px;
-  display: inline-block;
-  border-radius: 10px;
-  vertical-align: middle;
-  &.active {
-    background-color: @white;
-  }
+.menu-bar {
+    height: 50px;
+    width: 100%;
+    background-color: @menu-color;
+    &.glass {
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+}
+
+.menu-user {
+    max-width: 750px;
+    margin: 0 auto;
+    padding: 0 10px;
+    color: @white;
+    &__wrapper {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    &__navbar {
+        flex: 1;
+        display: flex;
+        &-right {
+            flex: 0 1;
+        }
+    }
+
+    &__logo {
+        flex: 0;
+        font-size: 18px;
+        margin: auto;
+        margin-right: 0;
+    }
+
+    &__account {
+        flex: 0 1 200px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        justify-content: flex-end;
+        overflow: hidden;
+        white-space: nowrap;
+        margin: auto;
+    }
+
+    &__status {
+        background-color: rgba(0, 0, 0, 0);
+        width: 10px;
+        height: 10px;
+        display: inline-block;
+        margin-left: 5px;
+        border-radius: 10px;
+        vertical-align: middle;
+        &.active {
+            background-color: @white;
+        }
+    }
+    &__signature {
+        border-bottom: 1px dashed @menu-light;
+        color: @menu-light;
+        font-size: 15px;
+        margin: 0px 5px;
+        overflow: hidden;
+        white-space: nowrap;
+        max-width: 150px;
+    }
+}
+
+.navbar-title {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    padding: 0 @indent-sm;
+    cursor: pointer;
+    font-weight: bolder;
+}
+
+.navbar-button {
+    height: 50px;
+    white-space: nowrap;
+    padding: 0 @indent-sm;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    .material-icons {
+        min-width: 24px;
+        margin-right: @indent-xs;
+        vertical-align: middle;
+    }
+    &:hover {
+        background-color: @menu-hover;
+    }
+    &:first-child {
+        margin-left: @indent-md;
+    }
+
+    &__title {
+        &-search {
+            @media (max-width: 640px) { display: none; }
+        }
+        &-messages {
+            @media (max-width: 560px) { display: none; }
+        }
+        &-contacts {
+            @media (max-width: 500px) { display: none; }
+        }
+    }
 }

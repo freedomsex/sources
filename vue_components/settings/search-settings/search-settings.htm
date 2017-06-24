@@ -3,22 +3,25 @@
   <closed-activity @close="close">
     <div class="activity-section">
       <div class="activity-section__title">Мой город:</div>
-      <city-suggest></city-suggest>
+      <div class="form-inline" @click="account">
+        <input class="form-control" type="text" :value="city" disabled>
+        <button class="btn btn-default"> Изменить </button>
+      </div>
     </div>
 
     <div class="activity-section">
       <div class="activity-section__title">Кого вы ищете:</div>
       <div class="radio">
         <label class="radio-inline">
-          <input type="radio" v-model="selectWho" value="2">
+          <input type="radio" v-model="selectWho" :value="2">
           Девушку
         </label>
         <label class="radio-inline">
-          <input type="radio" v-model="selectWho" value="1">
+          <input type="radio" v-model="selectWho" :value="1">
           Парня
         </label>
         <label class="radio-inline">
-          <input type="radio" v-model="selectWho" value="0">
+          <input type="radio" v-model="selectWho" :value="0">
           Кого угодно
         </label>
       </div>
@@ -51,8 +54,7 @@
     </div>
 
     <div class="activity-section">
-      <button class="btn btn-primary" @click="save"> Сохранить настройки </button>
-      <a class="btn btn-link " href="http://freedomsex.me/блог/как-найти-девушку-или-парня-для-секса/" target="_blank">Больше возможностей</a>
+      <a class="" href="http://freedomsex.me/блог/как-найти-девушку-или-парня-для-секса/" target="_blank">Больше возможностей</a>
     </div>
 
   </closed-activity>

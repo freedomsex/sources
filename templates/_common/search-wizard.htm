@@ -1,13 +1,14 @@
-
+<search-wizard inline-template @change="openSearchSettings()">
   <div id="search-wizard">
-    <div class="alert alert-warning" @click="openSearchSettings()">
-        <p>
+    <div class="alert alert-warning" style="min-height: 62px;" @click="$emit('change')">
+        <p v-show="say" style="display: none;">
           <i class="material-icons">&#xE8B4;</i>
-          Вы ищете: знакомства и общение с кем угодно, из любого города &nbsp;
-          <button class="btn btn-default btn-sm" @click="openSearchSettings()">
+          Вы ищете: {{say}} &nbsp;
+          <button class="btn btn-default btn-sm">
               <span aria-hidden="true" class="glyphicon glyphicon-cog"></span>
               Настроить поиск
           </button>
       </p>
     </div>
   </div>
+</search-wizard>

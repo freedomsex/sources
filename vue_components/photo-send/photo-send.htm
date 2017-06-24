@@ -1,0 +1,23 @@
+<script type="text/x-template" id="photo-send">
+  <div class="photo-send__mask" transition="modal" @click="close">
+    <div class="photo-send__container" @click.stop>
+
+      <div class="close-self-button">
+        <i class="material-icons" @click="close"></i>
+      </div>
+      <photo-view :photo="photo.photo" :thumb="photo.thumb" :maxWidth="600" @close="close"/>
+      <div class="photo-send__options" v-show="options">
+        <button class="btn btn-default" @click="remove = true">
+          <span aria-hidden="true" class="glyphicon glyphicon-trash"></span>
+          Удалить
+        </button>
+        <button class="btn btn-primary" @click="$emit('send')">
+          <span aria-hidden="true" class="glyphicon glyphicon-send"></span>
+          Отправить
+        </button>
+      </div>
+      <toast v-if="remove" @close="remove = false">Временно недоступно</toast>
+      <slot></slot>
+    </div>
+  </div>
+</script>

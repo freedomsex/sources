@@ -73,9 +73,6 @@ Vue.component('remove-contact', {
             }
         }
     },
-    computed: {
-
-    },
     methods: {
         remove() {
             this.$emit('remove');

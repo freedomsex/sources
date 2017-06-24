@@ -36,8 +36,13 @@
        </div>
 
        <div id="human_status_block">
-         <div class="btn btn-primary" @click="newMessage">Написать сообщение</div>
-         <quick-message v-if="globalNew" :human-id="globalNew" @close="closeMessage"></quick-message>
+         <quick-write :human-id="humanId" inline-template>
+           <div>
+             <div class="btn btn-primary" @click="open = true">Написать сообщение</div>
+             <quick-message v-if="open" :human-id="humanId" @sended="sended = true" @close="open = false"></quick-message>
+             <snackbar v-if="sended" @close="sended = false">Сообщение отправлено.</snackbar>
+           </div>
+         </quick-write>
        </div>
 
        <div id="human_anketa_block">

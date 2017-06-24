@@ -2,9 +2,12 @@
 <script type="text/x-template" id="closed-activity">
   <div class="closed-activity" @click.self="close">
     <nav id="menu-user" class="navbar navbar-inverse">
-      <div class="container">
-        <div class="nav navbar-nav navbar-right">
-          <i class="btn-close material-icons" @click="close">&#xE14C;</i>
+      <div class="menu-user">
+        <div class="menu-user__wrapper">
+          <div class="menu-user__navbar"></div>
+          <div class="menu-user__navbar-right" @click="close">
+            <i class="btn-close material-icons" @click="close">&#xE14C;</i>
+          </div>
         </div>
       </div>
     </nav>

@@ -1,0 +1,7 @@
+<script type="text/x-template" id="modal-super">
+  <div class="modal-super__mask" transition="modal" @click="$emit('close')">
+    <div class="modal-super__container" @click.stop>
+      <slot></slot>
+    </div>
+  </div>
+</script>

@@ -13,6 +13,7 @@ module.exports = function (grunt) {
                 src: [
                     'bower_components/lscache/lscache.min.js',
                     'bower_components/json3/lib/json3.min.js',
+                    'bower_components/es6-promise/es6-promise.min.js',
                     'bower_components/underscore/underscore-min.js',
                     'bower_components/moment/min/moment.min.js',
                     'bower_components/moment/locale/ru.js',
@@ -114,8 +115,8 @@ module.exports = function (grunt) {
                     'templates/profile/dist/profile.htm': ['templates/profile/src/_main.htm']
                 }
             }
-        }, 
-        //  
+        },
+        //
         replace: {
             dist: {
                 options: {
@@ -131,7 +132,7 @@ module.exports = function (grunt) {
                   ]
                 },
                 files: {
-                    'javascript/core/dist/core.js':   ['javascript/core/dist/core.js'] 
+                    'javascript/core/dist/core.js':   ['javascript/core/dist/core.js']
                 }
             },
             dev: {
@@ -140,7 +141,7 @@ module.exports = function (grunt) {
                     {
                         json: {
                             "NET-DELAY": 2,
-                            "API-PHOTO": "127.0.0.1:8888",
+                            "API-PHOTO": "127.0.0.1:8008",
                             "API-SEARCH": "127.0.0.1:9000",
                             "API-CONTACT": "127.0.0.1:8000",
                         }
@@ -148,7 +149,7 @@ module.exports = function (grunt) {
                   ]
                 },
                 files: {
-                    'javascript/core/dist/core.js': 'javascript/core/dist/core.js' 
+                    'javascript/core/dist/core.js': 'javascript/core/dist/core.js'
                 }
             }
         },

@@ -55,13 +55,18 @@ Vue.component('message-list', {
                 if (this.received) {
                     this.messages = _.union(this.messages, messages);
                 }
-                // TODO: Заменить на компоненты, страрые зависимости
-                lock_user.show_link();
                 this.next += this.batch;
             }
             this.response = 200;
             this.toSlow = false;
+            this.$nextTick(() => {
+                this.scroll();
+            });
             //console.log(response);
+        },
+        scroll() {
+            var objDiv = document.getElementById("dialog-history");
+            objDiv.scrollTop = objDiv.scrollHeight+30;
         },
         noMessages() {
             // TODO: Заменить на компоненты, страрые зависимости
@@ -86,6 +91,9 @@ Vue.component('message-list', {
         }
     },
     computed: {
+        items() {
+            return this.messages.reverse();
+        },
         more() {
             if (this.received && this.received == this.batch) {
                 return true;

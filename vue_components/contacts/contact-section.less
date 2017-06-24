@@ -11,17 +11,20 @@
 }
 
 .contact-list {
-  padding: @indent-xs @indent-md;
+    padding: @indent-xs @indent-sm;
+    &__next {
+        text-align: center;
+        margin: 10px 0 15px;
+    }
 }
 
 .contact-list__item {
-  border-top: 1px solid @gray-light;
+  border-bottom: 1px solid @gray-light;
   position: relative;
   background: @white;
   overflow: hidden;
     font-size: 14px;
   &-info {
-    margin-right: @indent-xs;
     .user-list__name {
       color: @dark;
     }
@@ -34,11 +37,11 @@
   }
   &-content {
     .link;
-    padding: @indent-sm @indent-xs;
+    padding: 7px @indent-xs;
     white-space: nowrap;
   }
   &-preview {
-    padding: @indent-sm 0 0;
+    //padding-top: @indent-xs;
   }
   &-option {
     position: absolute;
@@ -128,6 +131,7 @@
   margin: 0 0 10px;
   overflow-y: hidden;
   resize: vertical;
+  line-height: 1;
 }
 
 .message-input__button() {

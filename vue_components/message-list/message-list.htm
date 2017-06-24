@@ -7,8 +7,11 @@
       +<b>{{newCount}}</b>
       </span>
     </div>
+    <div class="messages__next" v-on:click="load" v-show="more" style="display: none;">
+      <span class="btn btn-default btn-xs">Следующие</span>
+    </div>
     <div class="messages">
-      <message-item v-for="(item, index) in messages"
+      <message-item v-for="(item, index) in items"
         :item="item"
         :index="index"
         :count="messages.length"
@@ -19,9 +22,6 @@
         @remove="remove"
         @set-new="setNew"
       ></message-item>
-    </div>
-    <div class="messages__next" v-on:click="load" v-show="more" style="display: none;">
-      <span class="btn btn-default btn-xs">Следующие</span>
     </div>
     <div class="messages__loader" v-show="!error && !response">
       <span>

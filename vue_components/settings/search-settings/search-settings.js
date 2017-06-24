@@ -1,12 +1,12 @@
 
 Vue.component('search-settings', {
-    props: [],
     data() {
         return {
              ageRange: [0,16,17,18,20,23,25,27,30,35,40,45,50,60,80],
              selectWho: 0,
              selectUp: 0,
              selectTo: 0,
+             selectCity: '',
              checkedTown: 0,
              checkedVirt: 0,
         }
@@ -19,6 +19,9 @@ Vue.component('search-settings', {
             }
             return 0;
         },
+        city(state) {
+            return state.user.city; // [~!!!~] READ_ONLY
+        },
         up(state) {
             return this.age(state.search.settings.up);
         },
@@ -30,9 +33,20 @@ Vue.component('search-settings', {
         },
         virt(state) {
             return state.search.settings.virt == true;
+        },
+        virgin() {
+            return (
+                this.selectCity == this.city &&
+                this.selectWho == this.who &&
+                this.selectUp == this.up &&
+                this.selectTo == this.to &&
+                this.checkedTown == this.town &&
+                this.checkedVirt == this.virt
+            );
         }
     }),
     mounted() {
+        this.selectCity = this.city;
         this.selectWho = this.who;
         this.selectUp = this.up;
         this.selectTo = this.to;
@@ -55,31 +69,36 @@ Vue.component('search-settings', {
                 }
             });
         },
-        setWho(value) {
-            this.$store.commit('settings', {who: value});
-        },
-        setUp() {
-            this.$store.commit('settings', {up: this.selectUp});
-        },
-        setTo() {
-            this.$store.commit('settings', {to: this.selectTo});
-        },
-        setTown() {
-            this.$store.commit('settings', {town: this.town != true});
-        },
+        // setWho(value) {
+        //     this.$store.commit('settings', {who: value});
+        // },
+        // setUp() {
+        //     this.$store.commit('settings', {up: this.selectUp});
+        // },
+        // setTo() {
+        //     this.$store.commit('settings', {to: this.selectTo});
+        // },
+        // setTown() {
+        //     this.$store.commit('settings', {town: this.town != true});
+        // },
         save() {
-            console.log(this.$store.state.search.settings);
-            this.$store.commit('settings', {
+            var data = {
                 who:  this.selectWho,
-                city: '',
+                city: this.city,
                 up:   this.selectUp,
                 to:   this.selectTo,
                 town: this.checkedTown,
                 virt: this.checkedVirt,
-            });
-            console.log(this.$store.state.search.settings);
+            };
+            if (!this.virgin) {
+                this.$store.dispatch('SAVE_SEARCH', data);
+            }
+        },
+        account() {
+            this.$emit('account');
         },
         close() {
+            this.save();
             this.$emit('close');
         },
     },

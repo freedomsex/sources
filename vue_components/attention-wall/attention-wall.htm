@@ -1,7 +1,7 @@
 
 <script type="text/x-template" id="attention-wall">
-  <modal-dialog :show="show" @close="close">
-    <div class="attention-wall" v-if="show">
+  <modal-dialog @close="close">
+    <div class="attention-wall">
       <div class="attention-wall__content">
         <div class="attention-wall__caption">{{caption}}</div>
         <div class="attention-wall__text">{{text}}</div>

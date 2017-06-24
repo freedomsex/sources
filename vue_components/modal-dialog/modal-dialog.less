@@ -12,34 +12,40 @@
   justify-content: center;
 }
 
-.modal-dialog__wrapper {
-  padding: @indent-lg;
-}
-
-.modal-dialog__container {
-  min-width: 200px;
-  max-width: 400px;
-  background: @white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
-  transition: all .3s ease;
-  overflow: auto;
-  border-radius: 4px;
-  position: relative;
-  z-index: 1000;
-}
-
-.modal-dialog__caption {
-  font-size: @font-lg;
-  font-weight: bold;
-}
-
-.modal-dialog__body {
-  font-size: 14px;
-  padding: @indent-md 0 @indent-md;
-}
-
-.modal-dialog__footer {
-  text-align: right;
+.modal-dialog {
+    &__wrapper {
+        padding: @indent-lg;
+        text-align: left;
+    }
+    &__container {
+        min-width: 200px;
+        max-width: 400px;
+        background: @white;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
+        transition: all .3s ease;
+        overflow: auto;
+        border-radius: 4px;
+        position: relative;
+        margin: 10px;
+        z-index: 1000;
+    }
+    &__caption {
+        font-size: @font-lg;
+        font-weight: bold;
+    }
+    &__body {
+        font-size: 14px;
+        padding: @indent-md 0 @indent-md;
+    }
+    &__section {
+        padding: 0 0 @indent-sm;
+    }
+    &__footer {
+        text-align: right;
+    }
+    &__centred {
+        text-align: center;
+    }
 }
 
 .modal-enter,

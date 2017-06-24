@@ -36,7 +36,7 @@
         </div>
 
         <div class="galery-photo__list" v-show="photos.length" style="display: none;">
-          <img class="galery-photo__item-photo" :src="item._links.galery.href" v-for="(item, index) in photos" @click="show(index)">
+          <img class="galery-photo__item" :src="item._links.galery.href" v-for="(item, index) in photos" @click="show(index)">
         </div>
         <div class="galery-photo__placeholder" v-show="!photos.length">
           Фотографии которые вы загрузите будут здесь

@@ -1,0 +1,36 @@
+.intro-info {
+    padding-left: 15px;
+    padding-top: 10px;
+    font-size: 14px;
+    color: #333;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding-bottom: 7px;
+    background-color: rgba(255, 255, 255, 0.55);
+    &__item {
+        padding-top: @indent-lg;
+    }
+    &__pages {
+        text-align: center;
+        padding-top: 3px;
+        font-size: 0px;
+    }
+    &__link {
+        cursor: pointer;
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        margin-left: @indent-sm;
+        border-radius: 20px;
+        background: @gray;
+        opacity: 0.7;
+        &:hover {
+            background: @white;
+        }
+        &.active {
+            background: @white;
+        }
+    }
+}

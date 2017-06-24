@@ -175,13 +175,30 @@ class ApiUser extends Api {
     constructor() {
         let key = '1234';
         let host = '/';
-        let routing = {
-            post: 'option/sex',
-        };
-        super(host, key, null, routing);
+        super(host, key, null, null);
     }
     saveSex(sex) {
-        return this.post({sex});
+        return this.save({sex}, null, 'option/sex');
+    }
+    saveAge(age) {
+        return super.save({age}, null, 'option/age');
+    }
+    saveName(name) {
+        return super.save({name}, null, 'option/name');
+    }
+    saveCity(city) {
+        return super.save({city}, null, 'option/city');
+    }
+
+    saveSearch(data) {
+        data = {
+            search_sex: data.who,
+            years_up: data.up,
+            years_to: data.to,
+            option_mess_town: data.town,
+            option_virt_accept: data.virt,
+        };
+        return super.save(data, null, 'msett/save');
     }
 }
 

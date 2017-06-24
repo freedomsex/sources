@@ -17,6 +17,7 @@ Vue.component('message-item', {
             fixOption:   false,
             alertOption: false,
             showDialog: false,
+            photo: false,
         }
     },
     methods: {
@@ -69,24 +70,21 @@ Vue.component('message-item', {
             let server = this.$store.state.photoServer;
             let url = `http://${server}/api/v1/users/${uid}/sends/${this.alias}.jpg`;
             axios.get(url, config).then((response) => {
-                this.photo(response.data.photo)
+                this.preview(response.data.photo)
             }).catch((error) => {
                 console.log(error);
             });
         },
-        photo(photo) {
-            console.log('photo', photo);
+        preview(photo) {
             let links = photo._links;
             if (links.origin.href) {
-                let data = {
+                this.photo = {
                     thumb: links.thumb.href,
                     photo: links.origin.href,
                     alias:  photo.alias,
                     height: photo.height,
                     width:  photo.width,
                 }
-                this.$store.commit('viewPhoto', data);
-                this.$store.commit('optionDialog', 'photo');
             }
         },
         pathName(name) {

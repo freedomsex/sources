@@ -5,11 +5,6 @@ const user = {
         age: '',
         name: '',
         city: '',
-        up: '',
-        to: '',
-        who: 0,
-        close:   0,
-        virt:    0,
         status:  0,
         em: 0,
         vk: 0,
@@ -30,27 +25,41 @@ const user = {
     },
     actions: {
         LOAD_USER({ commit }) {
-            if (uid) {
-                commit('loadUser', {uid});
+            // if (uid) {
+            //     commit('loadUser', {uid});
+            // }
+            commit('loadUser', ls.get('user.data'));
+        },
+        SAVE_SEX({ state, commit }, sex) {
+            if (sex && state.sex != sex) {
+                api.user.saveSex(sex).then((response) => { });
+                commit('loadUser', { sex });
             }
-            if (typeof user_sex != 'undefined') {
-                commit('loadUser', {sex: user_sex});
+            commit('loadUser', {name: ''});
+        },
+        SAVE_AGE({ state, commit }, age) {
+            if (age && state.age != age) {
+                api.user.saveAge(age).then((response) => { });
+                commit('loadUser', {age});
             }
         },
-        SAVE_SEX({ commit }, sex) {
-            let promise = api.user.saveSex(sex);
-            promise.then((response) => {
-                if (response.data.sex) {
-                    store.commit('loadUser', { sex: response.data.sex });
-                }
-            });
-            return promise;
+        SAVE_NAME({ state, commit }, name) {
+            if (name && state.name != name) {
+                api.user.saveName(name).then((response) => { });
+                commit('loadUser', {name});
+            }
+        },
+        SAVE_CITY({ state, commit }, city) {
+            if (city && state.city != city) {
+                api.user.saveCity(city).then((response) => { });
+                commit('loadUser', {city});
+            }
         },
     },
     mutations: {
         loadUser(state, data) {
-            _.extend(state, data);
-            ls.set('user.data', data, 23456);
+            state = _.assign(state, data);
+            ls.set('user.data', state, 23456);
         },
     }
 }

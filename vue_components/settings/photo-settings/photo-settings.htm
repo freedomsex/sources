@@ -1,0 +1,21 @@
+
+<script type="text/x-template" id="photo-settings">
+  <closed-activity @close="close">
+    <div class="activity-section">
+      <div class="activity-section__title">Фотографии</div>
+      <div class="galery-photo" v-show="photos.length" style="display: none;">
+        <img class="galery-photo__item" :src="item._links.galery.href" v-for="(item, index) in photos" @click="show(index)">
+      </div>
+    </div>
+
+    <div class="activity-section">
+      <div class="upload_photo__add">
+        <button class="btn btn-primary" @click="upload">
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+          Добавить
+        </button>
+        <input id="fileupload" type="file" name="file" data-form-data='{"script": "true"}'>
+      </div>
+    </div>
+  </closed-activity>
+</script>

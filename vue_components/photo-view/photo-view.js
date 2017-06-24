@@ -1,11 +1,9 @@
 
 Vue.component('photo-view', {
     props: [
-        'show',
         'photo',
         'thumb',
-        'width',
-        'height',
+        'maxWidth',
         'bypass'
     ],
     methods: {

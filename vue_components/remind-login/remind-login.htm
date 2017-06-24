@@ -1,0 +1,27 @@
+<script type="text/x-template" id="remind-login">
+  <modal-dialog @close="close">
+    <div class="modal-dialog__wrapper">
+      <div class="modal-dialog__caption">
+        Восстановить пароль
+      </div>
+      <div class="modal-dialog__body">
+        <div class="modal-dialog__section">
+          Напоминание возможно только по подтвержденному вами ранее адресу электронной почты.
+        </div>
+        <div class="modal-dialog__section">
+          <div class="form-inline">
+            <input class="form-control" type="email" name="email" v-model="email" placeholder="Ваш емайл адрес">
+          </div>
+        </div>
+        <div class="modal-dialog__section">
+          {{hint}}
+        </div>
+      </div>
+      <div class="modal-dialog__footer">
+        <button class="btn btn-primary" @click="send"> Отправить </button>
+      </div>
+    </div>
+    <email-sended v-show="confirm" @close="$emit('close')"></email-sended>
+  </modal-dialog>
+</script>
+

@@ -32,6 +32,7 @@
     "blueimp-file-upload": "fileupload#^9.17.0",
     "vue-resource": "^1.2.1",
     "vue-router": "^2.3.0",
-    "pluralize": "^4.0.0"
+    "pluralize": "^4.0.0",
+    "es6-promise": "^4.0.5"
   }
 }

@@ -58,23 +58,23 @@ const store = new Vuex.Store({
     mutations: {
         setApiToken (state, data) {
             if (data) {
-                _.extend(state, data);
+                _.assign(state, data);
             }
             //console.log(state)
         },
         viewPhoto(state, data) {
-            _.extend(state.photoView, data);
+            _.assign(state.photoView, data);
         },
         viewUpload(state, data) {
             state.uploadView.show = (data === true);
         },
         sendPhoto(state, data) {
             console.log('sendPhoto');
-            _.extend(state.formMess.sendPhoto, data);
+            _.assign(state.formMess.sendPhoto, data);
         },
         approveViewPhoto(state) {
             state.accepts.photo = true;
-            ls.set('accepts', _.extend(state.accepts, {photo: true}));
+            ls.set('accepts', _.assign(state.accepts, {photo: true}));
         },
         intimated(state, data) {
             state.formMess.intimate = (data === true);

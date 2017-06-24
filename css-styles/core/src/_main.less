@@ -26,7 +26,7 @@ html {
     width:@width14;
 }
 body {
-//    background: @light;
+    background: @gray-light;
     color: @dark;
     font-family: Arial, Tahoma, Verdana, sans-serif;
 //    font-size: 12px;
@@ -47,6 +47,30 @@ body {
     @media (min-width: 1170px) {
         margin-left: 150px;
     }*/
+}
+
+.paper() {
+    margin-top: @indent-md;
+    padding-top: @indent-md;
+    padding-bottom: @indent-md;
+    background: @white;
+}
+
+.content {
+    background: @white;
+}
+
+.desires-list {
+    .paper();
+    padding-bottom: @indent-sm;
+}
+
+.search-results {
+    .paper();
+}
+
+.information-partner-block {
+    .paper();
 }
 
 a {
@@ -214,7 +238,6 @@ label {
     color: @dark;
     display: block;
     font-size: 14px;
-    margin: 0px 10px;
     padding: 12px 7px;
     position: relative;
     text-align: left;
@@ -731,5 +754,6 @@ a.name {
 @import "index.less";
 @import "profile.less";
 @import "details.less";
+@import "site-info.less";
 
 @import "../vue-components.less";

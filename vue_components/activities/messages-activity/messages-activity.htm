@@ -3,24 +3,33 @@
   <default-activity @close="close">
     <span slot="caption">Сообщения</span>
     <div class="message-dialog" key="humanId">
-      <div class="message-dialog__history">
-        <message-list :humanId="humanId"></message-list>
+      <div id="dialog-history" class="message-dialog__history">
+        <message-list :humanId="humanId" ref="messages"></message-list>
       </div>
       <div class="message-dialog__tools">
         <div class="send-form">
-          <div class="send-form__button-account" @click="accountOpen">
+          <div class="send-form__button-account" @click="account = humanId">
             <i class="material-icons">&#xE853;</i>
           </div>
           <div class="send-form__textarea">
-            <textarea class="send-form__message-text"></textarea>
+            <textarea class="send-form__message-text" v-model="message" autofocus v-resized
+             :disabled="process == true" :placeholder="process ? 'Отправляю...' : 'Введите текст'"
+             @keyup.ctrl.enter.prevent="sendMessage"></textarea>
           </div>
-          <div class="send-form__button-send">
+          <div class="send-form__button-send" @click="sendMessage" v-if="message">
             <i class="material-icons">&#xE163;</i>
+          </div>
+          <div class="send-form__button-send" @click="uploads = true" v-else>
+            <i class="material-icons">&#xE3B0;</i>
           </div>
         </div>
       </div>
     </div>
-    <account-activity :humanId="account" v-if="account" @close="accountClose"/>
+    <account-activity :humanId="account" v-if="account" @close="account = false"/>
+    <photo-settings v-if="uploads" @select="select" @close="uploads = false"/>
+    <photo-send v-if="photo" :photo="photo" :options="true" @send="sendMessage" @close="photo = false"/>
+
+    <captcha-dialog v-show="captcha" @close="close" @cancel="cancel" @send="setCode"/>
   </default-activity>
 </script>
 

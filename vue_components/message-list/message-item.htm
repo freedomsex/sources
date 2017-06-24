@@ -35,13 +35,13 @@
       <span aria-hidden="true" class="glyphicon glyphicon-remove"></span>
     </span>
   </div>
-  <remove-confirm
-    :show="showDialog"
+  <remove-confirm v-show="showDialog"
     :data="item"
     @bun="bun"
     @close="cancel"
-    @remove="remove"
-  ></remove-confirm>
+    @remove="remove"/>
+
+  <photo-send v-if="photo" :photo="photo" @close="photo = false"/>
 </div>
 </script>
 

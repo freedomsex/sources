@@ -1,12 +1,15 @@
 Vue.directive('resized', {
-  bind: function (el) {
-    el.style.height = (el.scrollHeight) + 'px';
-    $(el).on('input', function () {
-      this.style.height = 'auto';
-      this.style.height = (this.scrollHeight) + 'px';
+  bind(el) {
+    $(el).on('change', () => {
+        el.style.height = '1px';
+        el.style.height = (el.scrollHeight) + 'px';
     });
+  },
+  componentUpdated(el) {
+      $(el).change();
   }
-})
+});
+
 
 var QuickMessage = Vue.component('quick-message', {
     props: ['humanId'],
@@ -25,11 +28,40 @@ var QuickMessage = Vue.component('quick-message', {
         human() {
             return this.$store.state.search.human;
         },
+        user() {
+            return this.$store.state.user;
+        },
         tags() {
             return ('tags' in this.human) ? this.human.tags : [];
         },
         hold() {
             return this.ignore ? 0 : this.human.hold;
+        },
+        warning() {
+            var result = '';
+            var who = {1: 'парни', 2: 'девушки'};
+            if (this.human.close && this.user.city && this.user.city != this.human.city) {
+                result = 'Мне интересно общение только в моём городе';
+            }
+            if (this.human.who && this.human.who != this.user.sex) {
+                result = 'Мне интересны только ' + who[this.human.who];
+            } else
+            if (this.human.who) {
+                var age = this.user.age;
+                if (this.human.up && age && this.human.up > age) {
+                    result = 'Мне интересны ' + who[this.human.who] + ' в возрасте от ' + this.human.up + ' лет ';
+                }
+                if (this.human.to && age && this.human.to < age) {
+                    result = 'Мне интересны ' + who[this.human.who] + ' в возрасте до ' + this.human.to + ' лет ';
+                }
+            }
+            if (!this.user.age) {
+                result = 'Укажите ваш возраст в анкете, для меня это важно';
+            }
+            if (!this.user.city) {
+                result = 'Укажите ваш город в анкете, для меня это важно';
+            }
+            return result;
         }
     },
     mounted() {
@@ -101,6 +133,7 @@ var QuickMessage = Vue.component('quick-message', {
         },
         sended() {
             this.$emit('sended');
+            this.close();
         },
         anketa() {
             window.location = '/' + this.humanId;

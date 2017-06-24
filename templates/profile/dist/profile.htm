@@ -53,6 +53,29 @@
  </div>
 
 
+
+
+<initial-dialog v-if="initial" quick="true" @close="close"></initial-dialog>
+<intimate-dialog v-if="intimate" @close="close"></intimate-dialog>
+<sends-dialog v-if="sends" @close="close"></sends-dialog>
+
+<!--<div id="router-view">
+<router-view @close="close"></router-view>
+</div>-->
+
+<upload-dialog  @close="close" v-if="view == 'upload'"></upload-dialog>
+<photo-dialog   @close="close" v-if="view == 'photo'"></photo-dialog>
+<messages-activity @close="close" v-if="view == 'history'"></messages-activity>
+
+<api-key-update></api-key-update>
+
+<search-settings v-if="searchSettings" @close="searchSettings = false; search()" @account="openAccountSettings()"></search-settings>
+<account-settings v-if="accountSettings" @close="accountSettings = false"></account-settings>
+<sex-confirm v-if="sexConfirm" :show="sexConfirm" @close="sexConfirm = false" @select="selectSex"></sex-confirm>
+<login-account v-if="logIn" @close="logIn = false"></login-account>
+
+
+
 <!-- Статические опции, absolute -->
  <div id="option-static" style="display: none;">
    <div id="option-static__cover">
@@ -137,9 +160,12 @@
 <script type="text/x-template" id="closed-activity">
   <div class="closed-activity" @click.self="close">
     <nav id="menu-user" class="navbar navbar-inverse">
-      <div class="container">
-        <div class="nav navbar-nav navbar-right">
-          <i class="btn-close material-icons" @click="close">&#xE14C;</i>
+      <div class="menu-user">
+        <div class="menu-user__wrapper">
+          <div class="menu-user__navbar"></div>
+          <div class="menu-user__navbar-right" @click="close">
+            <i class="btn-close material-icons" @click="close">&#xE14C;</i>
+          </div>
         </div>
       </div>
     </nav>
@@ -154,16 +180,18 @@
 <script type="text/x-template" id="default-activity">
   <div class="default-activity" @click.self="close">
     <nav id="menu-user" class="navbar navbar-inverse">
-      <div class="container">
-        <div class="navbar-header">
-          <span id="home_page" class="navbar-brand" href="/" style="padding: 10px 5px;" @click="close">
-            <img src="/static/img/icon/arrow_back.png" width="30" height="30" alt="" border="0" >
-          </span>
-        </div>
-        <div class="nav navbar-nav">
-          <p class="navbar-text default-activity__title" @click="close">
-            <slot name="caption">Заголовок</slot>
-          </p>
+      <div class="menu-user">
+        <div class="menu-user__wrapper">
+          <div class="menu-user__logo">
+            <span id="home_page" class="" style="padding: 10px 0px;" @click="close">
+              <img src="/static/img/icon/arrow_back.png" width="30" height="30" alt="" border="0" >
+            </span>
+          </div>
+          <div class="menu-user__navbar" >
+            <div class="navbar-title" @click="$emit('close')">
+              <slot name="caption">Заголовок</slot>
+            </div>
+          </div>
         </div>
       </div>
     </nav>
@@ -179,24 +207,33 @@
   <default-activity @close="close">
     <span slot="caption">Сообщения</span>
     <div class="message-dialog" key="humanId">
-      <div class="message-dialog__history">
-        <message-list :humanId="humanId"></message-list>
+      <div id="dialog-history" class="message-dialog__history">
+        <message-list :humanId="humanId" ref="messages"></message-list>
       </div>
       <div class="message-dialog__tools">
         <div class="send-form">
-          <div class="send-form__button-account" @click="accountOpen">
+          <div class="send-form__button-account" @click="account = humanId">
             <i class="material-icons">&#xE853;</i>
           </div>
           <div class="send-form__textarea">
-            <textarea class="send-form__message-text"></textarea>
+            <textarea class="send-form__message-text" v-model="message" autofocus v-resized
+             :disabled="process == true" :placeholder="process ? 'Отправляю...' : 'Введите текст'"
+             @keyup.ctrl.enter.prevent="sendMessage"></textarea>
           </div>
-          <div class="send-form__button-send">
+          <div class="send-form__button-send" @click="sendMessage" v-if="message">
             <i class="material-icons">&#xE163;</i>
+          </div>
+          <div class="send-form__button-send" @click="uploads = true" v-else>
+            <i class="material-icons">&#xE3B0;</i>
           </div>
         </div>
       </div>
     </div>
-    <account-activity :humanId="account" v-if="account" @close="accountClose"/>
+    <account-activity :humanId="account" v-if="account" @close="account = false"/>
+    <photo-settings v-if="uploads" @select="select" @close="uploads = false"/>
+    <photo-send v-if="photo" :photo="photo" :options="true" @send="sendMessage" @close="photo = false"/>
+
+    <captcha-dialog v-show="captcha" @close="close" @cancel="cancel" @send="setCode"/>
   </default-activity>
 </script>
 
@@ -208,8 +245,8 @@
 
 
 <script type="text/x-template" id="attention-wall">
-  <modal-dialog :show="show" @close="close">
-    <div class="attention-wall" v-if="show">
+  <modal-dialog @close="close">
+    <div class="attention-wall">
       <div class="attention-wall__content">
         <div class="attention-wall__caption">{{caption}}</div>
         <div class="attention-wall__text">{{text}}</div>
@@ -223,7 +260,7 @@
 </script>
 
 <script type="text/x-template" id="captcha-dialog">
-  <modal-dialog :show="show" @close="close">
+  <modal-dialog @close="close">
     <div class="captcha-dialog__caption">
       Подтвердите
       <a href="/блог/простые-проверки/" target="_blank" aria-hidden="true" class="glyphicon glyphicon-info-sign"></a>
@@ -282,9 +319,9 @@
         @close="close"
         @sended="splice"
         @remove="remove"/>
-        <div style="text-align: center;">
-          <div class="btn btn-default btn-xs" @click="next()" :disabled="response == false" v-show="more"> Следующие </div>
-        </div>
+    </div>
+    <div class="contact-list__next">
+      <div class="btn btn-default btn-xs" @click="next()" :disabled="response == false" v-show="more"> Следующие </div>
     </div>
   </default-activity>
 </script>
@@ -304,9 +341,9 @@
         @close="close"
         @sended="splice"
         @remove="remove"/>
-        <div style="text-align: center;">
-          <div class="btn btn-default btn-xs" @click="next()" :disabled="response == false" v-show="more"> Следующие </div>
-        </div>
+    </div>
+    <div class="contact-list__next">
+      <div class="btn btn-default btn-xs" @click="next()" :disabled="response == false" v-show="more"> Следующие </div>
     </div>
     <messages-activity @close="dialogClose" :humanId="dialog" v-if="dialog"/>
   </default-activity>
@@ -340,7 +377,7 @@
     </div>
 
 
-    <remove-contact :show="confirm"
+    <remove-contact v-show="confirm"
       @bun="bun"
       @close="cancel"
       @remove="remove"/>
@@ -356,6 +393,26 @@
 <script type="text/x-template" id="desire-tag-item">
   <div class="desire-tag__item">{{item}}</div>
 </script>
+
+<script type="text/x-template" id="email-sended">
+  <modal-dialog @close="$emit('close')">
+    <div class="modal-dialog__wrapper">
+      <div class="modal-dialog__caption">
+        Письмо отправлено
+      </div>
+      <div class="modal-dialog__body">
+        <div class="modal-dialog__section">
+          Доставка письма занимает от секунды до нескольких минут.
+          Если письма долго нет - проверьте папку спам, особенно если ваша почта на «Gmail».
+        </div>
+        <div class="modal-dialog__section">
+          <a href="/блог/восстановление-пароля/" target="_blank">Что делать если писимо не пришло &raquo;</a>
+        </div>
+      </div>
+    </div>
+  </modal-dialog>
+</script>
+
 
 
 <script type="text/x-template" id="inform-dialog">
@@ -438,13 +495,13 @@
       <span aria-hidden="true" class="glyphicon glyphicon-remove"></span>
     </span>
   </div>
-  <remove-confirm
-    :show="showDialog"
+  <remove-confirm v-show="showDialog"
     :data="item"
     @bun="bun"
     @close="cancel"
-    @remove="remove"
-  ></remove-confirm>
+    @remove="remove"/>
+
+  <photo-send v-if="photo" :photo="photo" @close="photo = false"/>
 </div>
 </script>
 
@@ -458,8 +515,11 @@
       +<b>{{newCount}}</b>
       </span>
     </div>
+    <div class="messages__next" v-on:click="load" v-show="more" style="display: none;">
+      <span class="btn btn-default btn-xs">Следующие</span>
+    </div>
     <div class="messages">
-      <message-item v-for="(item, index) in messages"
+      <message-item v-for="(item, index) in items"
         :item="item"
         :index="index"
         :count="messages.length"
@@ -471,9 +531,6 @@
         @set-new="setNew"
       ></message-item>
     </div>
-    <div class="messages__next" v-on:click="load" v-show="more" style="display: none;">
-      <span class="btn btn-default btn-xs">Следующие</span>
-    </div>
     <div class="messages__loader" v-show="!error && !response">
       <span>
         <img src="/static/img/icon/mess_loader.gif" v-show="toSlow" style="display: none;">
@@ -484,8 +541,16 @@
 </script>
 
 <script type="text/x-template" id="modal-dialog">
-  <div class="modal-dialog__mask" v-if="show" transition="modal" @click="close">
+  <div class="modal-dialog__mask" transition="modal" @click="close">
     <div class="modal-dialog__container" @click.stop>
+      <slot></slot>
+    </div>
+  </div>
+</script>
+
+<script type="text/x-template" id="modal-super">
+  <div class="modal-super__mask" transition="modal" @click="$emit('close')">
+    <div class="modal-super__container" @click.stop>
       <slot></slot>
     </div>
   </div>
@@ -510,35 +575,62 @@
 </script>
 
 
+<script type="text/x-template" id="photo-send">
+  <div class="photo-send__mask" transition="modal" @click="close">
+    <div class="photo-send__container" @click.stop>
+
+      <div class="close-self-button">
+        <i class="material-icons" @click="close"></i>
+      </div>
+      <photo-view :photo="photo.photo" :thumb="photo.thumb" :maxWidth="600" @close="close"/>
+      <div class="photo-send__options" v-show="options">
+        <button class="btn btn-default" @click="remove = true">
+          <span aria-hidden="true" class="glyphicon glyphicon-trash"></span>
+          Удалить
+        </button>
+        <button class="btn btn-primary" @click="$emit('send')">
+          <span aria-hidden="true" class="glyphicon glyphicon-send"></span>
+          Отправить
+        </button>
+      </div>
+      <toast v-if="remove" @close="remove = false">Временно недоступно</toast>
+      <slot></slot>
+    </div>
+  </div>
+</script>
+
 
 <script type="text/x-template" id="photo-view">
-    <div class="photo-view" :style="{ backgroundImage: 'url('+thumb+')', minHeight: height + 'px'}">
-      <div class="photo-view__accept" v-if="!accept">
-        <div class="photo-view__accept-caption">
+  <div class="photo-view" :style="{ backgroundImage: 'url('+thumb+')' }">
+
+    <modal-dialog @close="close" v-if="!accept">
+      <div class="modal-dialog__wrapper">
+        <div class="modal-dialog__caption">
           Контроль содержания отсутствует
         </div>
-        <div class="photo-view__accept-text">
+        <div class="modal-dialog__body">
           У администраторов нет доступа к загружаемым фото.
           Внимание! Изображения могут иметь возрастные ограничения. Пожалуйста, подтвердите
           что вы имеете право продолжить просмотр.
         </div>
-        <div class="photo-view__accept-option">
-          <button class="btn btn-success btn-sm" @click="approve">
+        <div class="modal-dialog__footer">
+          <button class="btn btn-success" @click="approve">
             <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
             Подтверждаю
           </button>
         </div>
       </div>
-      <div v-else>
-        <img :src="photo" :style="{ maxWidth: width +'px' }">
-      </div>
+    </modal-dialog>
+    <div v-else>
+      <img :src="photo" :style="{ maxWidth: maxWidth +'px' }">
     </div>
+  </div>
 </script>
 
 
 
 <script type="text/x-template" id="quick-message">
-  <modal-dialog show="1" @close="close">
+  <modal-dialog @close="close">
     <div class="human-dialog__caption">
       Написать сообщение
     </div>
@@ -546,8 +638,8 @@
       <div class="human-dialog__desire" v-show="tags.length">
         <span class="link_simple" v-for="(tag, index) in tags" :key="index" v-show="tag">{{tag}} &#8226; </span>
       </div>
-      <div class="human-dialog__message" v-show="1">
-        Мне нравятся парни [...]
+      <div class="human-dialog__warning" v-show="warning">
+        {{warning}}
       </div>
     </div>
 
@@ -559,16 +651,16 @@
     </div>
     <loading-wall :show="loading"/>
     <loading-cover :show="process"/>
-    <attention-wall :show="hold" @close="cancel" @remove="remove"/>
+    <attention-wall :show="hold" v-if="hold" @close="cancel" @remove="remove"/>
 
-    <captcha-dialog :show="captcha" @close="close" @cancel="cancel" @send="setCode"/>
+    <captcha-dialog v-show="captcha" @close="close" @cancel="cancel" @send="setCode"/>
   </modal-dialog>
 </script>
 
 
 
 <script type="text/x-template" id="quick-reply">
-  <modal-dialog :show="1" @close="close">
+  <modal-dialog @close="close">
     <div class="human-dialog__caption">
       Быстрый ответ
     </div>
@@ -589,15 +681,43 @@
     </div>
     <loading-wall :show="loading"/>
     <loading-cover :show="process"/>
-    <attention-wall :show="hold" @close="cancel" @remove="remove"/>
+    <attention-wall :show="hold" v-if="hold" @close="cancel" @remove="remove"/>
 
-    <captcha-dialog :show="captcha" @close="close" @cancel="cancel" @send="setCode"/>
+    <captcha-dialog v-show="captcha" @close="close" @cancel="cancel" @send="setCode"/>
+  </modal-dialog>
+</script>
+
+
+<script type="text/x-template" id="remind-login">
+  <modal-dialog @close="close">
+    <div class="modal-dialog__wrapper">
+      <div class="modal-dialog__caption">
+        Восстановить пароль
+      </div>
+      <div class="modal-dialog__body">
+        <div class="modal-dialog__section">
+          Напоминание возможно только по подтвержденному вами ранее адресу электронной почты.
+        </div>
+        <div class="modal-dialog__section">
+          <div class="form-inline">
+            <input class="form-control" type="email" name="email" v-model="email" placeholder="Ваш емайл адрес">
+          </div>
+        </div>
+        <div class="modal-dialog__section">
+          {{hint}}
+        </div>
+      </div>
+      <div class="modal-dialog__footer">
+        <button class="btn btn-primary" @click="send"> Отправить </button>
+      </div>
+    </div>
+    <email-sended v-show="confirm" @close="$emit('close')"></email-sended>
   </modal-dialog>
 </script>
 
 
 <script type="text/x-template" id="remove-confirm">
-  <modal-dialog :show="show" @close="close">
+  <modal-dialog @close="close">
     <div class="modal-dialog__wrapper">
       <div class="modal-dialog__caption">
         {{caption}}
@@ -616,26 +736,132 @@
 
 
 
+<script type="text/x-template" id="account-settings">
+  <closed-activity @close="close">
+    <div class="activity-section">
+      <div class="activity-section__title">Мой город:</div>
+      <div class="form-inline">
+        <city-suggest :value="city" @select="saveCity"/>
+      </div>
+    </div>
+
+    <div class="activity-section">
+      <div class="activity-section__title">Кто вы:</div>
+      <div class="radio">
+        <label class="radio-inline">
+          <input type="radio" v-model="selectSex" :value="2" @change="saveSex">
+          Девушка
+        </label>
+        <label class="radio-inline">
+          <input type="radio" v-model="selectSex" :value="1" @change="saveSex">
+          Парень
+        </label>
+      </div>
+    </div>
+
+    <div class="activity-section">
+      <div class="activity-section__title">Возраст:</div>
+      <div class="form-inline">
+        <select class="form-control" v-model="selectAge" @change="saveAge">
+          <option v-for="(item, index) in 80" :value="item" >{{item ? item : ''}}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="activity-section">
+      <div class="activity-section__title">Имя:</div>
+      <div class="form-inline">
+        <input class="form-control" type="text" v-model="selectName" @blur="saveName" placeholder="Ваше имя">
+      </div>
+    </div>
+
+    <div class="activity-section">
+      <a class="" href="/profile.php" target="_blank">Другие настройки</a>
+    </div>
+
+  </closed-activity>
+</script>
+
+
+<script type="text/x-template" id="login-account">
+  <closed-activity @close="close">
+    <div class="activity-section">
+      <div class="activity-section__title">Ваш логин</div>
+      <div class="form-inline">
+        <input class="form-control" type="text" v-model="login" placeholder="Введите логин">
+      </div>
+    </div>
+
+    <div class="activity-section">
+      <div class="activity-section__title">Пароль</div>
+      <div class="form-inline">
+        <input class="form-control" type="text" v-model="password" placeholder="Введите пароль">
+      </div>
+    </div>
+
+    <div class="activity-section" v-show="error && captcha">
+      <div class="activity-section__title">Код</div>
+      <simple-captcha @input="setCode"></simple-captcha>
+    </div>
+
+    <div class="activity-section">
+      <button class="btn btn-primary" @click="send"> Войти </button>
+      <button class="btn btn-link" @click="remind = true"> Не помню </button>
+    </div>
+
+    <div class="activity-section">
+      {{hint}}
+    </div>
+    <remind-login v-if="remind" @close="remind = false"></remind-login>
+  </closed-activity>
+</script>
+
+
+<script type="text/x-template" id="photo-settings">
+  <closed-activity @close="close">
+    <div class="activity-section">
+      <div class="activity-section__title">Фотографии</div>
+      <div class="galery-photo" v-show="photos.length" style="display: none;">
+        <img class="galery-photo__item" :src="item._links.galery.href" v-for="(item, index) in photos" @click="show(index)">
+      </div>
+    </div>
+
+    <div class="activity-section">
+      <div class="upload_photo__add">
+        <button class="btn btn-primary" @click="upload">
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+          Добавить
+        </button>
+        <input id="fileupload" type="file" name="file" data-form-data='{"script": "true"}'>
+      </div>
+    </div>
+  </closed-activity>
+</script>
+
+
 <script type="text/x-template" id="search-settings">
   <closed-activity @close="close">
     <div class="activity-section">
       <div class="activity-section__title">Мой город:</div>
-      <city-suggest></city-suggest>
+      <div class="form-inline" @click="account">
+        <input class="form-control" type="text" :value="city" disabled>
+        <button class="btn btn-default"> Изменить </button>
+      </div>
     </div>
 
     <div class="activity-section">
       <div class="activity-section__title">Кого вы ищете:</div>
       <div class="radio">
         <label class="radio-inline">
-          <input type="radio" v-model="selectWho" value="2">
+          <input type="radio" v-model="selectWho" :value="2">
           Девушку
         </label>
         <label class="radio-inline">
-          <input type="radio" v-model="selectWho" value="1">
+          <input type="radio" v-model="selectWho" :value="1">
           Парня
         </label>
         <label class="radio-inline">
-          <input type="radio" v-model="selectWho" value="0">
+          <input type="radio" v-model="selectWho" :value="0">
           Кого угодно
         </label>
       </div>
@@ -668,11 +894,56 @@
     </div>
 
     <div class="activity-section">
-      <button class="btn btn-primary" @click="save"> Сохранить настройки </button>
-      <a class="btn btn-link " href="http://freedomsex.me/блог/как-найти-девушку-или-парня-для-секса/" target="_blank">Больше возможностей</a>
+      <a class="" href="http://freedomsex.me/блог/как-найти-девушку-или-парня-для-секса/" target="_blank">Больше возможностей</a>
     </div>
 
   </closed-activity>
+</script>
+
+<script type="text/x-template" id="sex-confirm">
+  <modal-dialog @close="close">
+    <div class="modal-dialog__wrapper">
+      <div class="modal-dialog__caption">
+        {{caption}}
+      </div>
+      <div class="modal-dialog__body">
+        {{text}}
+      </div>
+      <div class="modal-dialog__centred">
+        <button class="btn btn-primary btn-fat" @click="save(2)">   Девушка   </button>
+        <button class="btn btn-primary btn-fat" @click="save(1)">   Парень   </button>
+      </div>
+    </div>
+  </modal-dialog>
+</script>
+
+
+<script type="text/x-template" id="simple-captcha">
+  <div class="form-inline">
+    <div class="input-group" style="max-width: 300px;">
+      <span class="captcha-dialog__addon input-group-addon captcha-img__addon" @click="update">
+        <span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span>
+      </span>
+      <span class="captcha-dialog__addon input-group-addon captcha-img__addon">
+        <img class="form-message__captcha-img" :src="src" width="48" height="20" @click="update">
+      </span>
+      <input class="form-control" type="text" autocomplete="off" v-model="code" @change="input">
+    </div>
+  </div>
+</script>
+<script type="text/x-template" id="snackbar">
+  <div class="snackbar" @click="close">
+    <div class="snackbar__body">
+      <slot></slot>
+    </div>
+  </div>
+</script>
+<script type="text/x-template" id="toast">
+  <div class="toast" @click="close">
+    <div class="toast__body">
+      <slot></slot>
+    </div>
+  </div>
 </script>
 <!-- build:include dialogs/inform-dialog.htm --><!-- /build -->
 
@@ -716,8 +987,12 @@
   <input id="edit_human_name" type="text" placeholder="Имя" style="width: 150px;">
   <input id="edit_human_btn"  type="submit" value=" Сохранить ">
 </div>
- <script src="/static/js/jquery/jquery.min.js"></script>
- <script src="/static/js/jquery-ui/jquery-ui.min.js"></script>
+<!-- build:[src]:dev /static/js/jquery/ -->
+ <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+ <!-- /build -->
+ <!-- build:[src]:dev /static/js/jquery-ui/ -->
+ <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+ <!-- /build -->
 
 <script type="text/javascript" src="%%JS_FILE%%"></script>
 <!-- Исходники можно найти в репозитории. Тамже собранные не сжатые файлы -->

@@ -1,5 +1,4 @@
 Vue.component('modal-dialog', {
-    props: ['show', 'data'],
     methods: {
         close() {
             this.$emit('close');
@@ -16,4 +15,3 @@ Vue.component('modal-dialog', {
     },
     template: '#modal-dialog',
 });
-

@@ -1,4 +1,27 @@
 
+
+
+<initial-dialog v-if="initial" quick="true" @close="close"></initial-dialog>
+<intimate-dialog v-if="intimate" @close="close"></intimate-dialog>
+<sends-dialog v-if="sends" @close="close"></sends-dialog>
+
+<!--<div id="router-view">
+<router-view @close="close"></router-view>
+</div>-->
+
+<upload-dialog  @close="close" v-if="view == 'upload'"></upload-dialog>
+<photo-dialog   @close="close" v-if="view == 'photo'"></photo-dialog>
+<messages-activity @close="close" v-if="view == 'history'"></messages-activity>
+
+<api-key-update></api-key-update>
+
+<search-settings v-if="searchSettings" @close="searchSettings = false; search()" @account="openAccountSettings()"></search-settings>
+<account-settings v-if="accountSettings" @close="accountSettings = false"></account-settings>
+<sex-confirm v-if="sexConfirm" :show="sexConfirm" @close="sexConfirm = false" @select="selectSex"></sex-confirm>
+<login-account v-if="logIn" @close="logIn = false"></login-account>
+
+
+
 <!-- Статические опции, absolute -->
  <div id="option-static" style="display: none;">
    <div id="option-static__cover">

@@ -1,0 +1,13 @@
+<script type="text/x-template" id="simple-captcha">
+  <div class="form-inline">
+    <div class="input-group" style="max-width: 300px;">
+      <span class="captcha-dialog__addon input-group-addon captcha-img__addon" @click="update">
+        <span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span>
+      </span>
+      <span class="captcha-dialog__addon input-group-addon captcha-img__addon">
+        <img class="form-message__captcha-img" :src="src" width="48" height="20" @click="update">
+      </span>
+      <input class="form-control" type="text" autocomplete="off" v-model="code" @change="input">
+    </div>
+  </div>
+</script>
