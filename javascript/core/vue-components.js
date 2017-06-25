@@ -773,7 +773,6 @@ Vue.component('message-item', {
       'index',
       'count',
       'alert',
-      'uid',
       'first_date'
     ],
     template: '#messages-item',
@@ -831,10 +830,10 @@ Vue.component('message-item', {
         play() {
             let config = {
                 headers: {'Authorization': 'Bearer ' + this.$store.state.apiToken},
-                params: {tid}
+                params: { tid: this.item.from }
             };
             let server = this.$store.state.photoServer;
-            let url = `http://${server}/api/v1/users/${uid}/sends/${this.alias}.jpg`;
+            let url = `http://${server}/api/v1/users/${this.uid}/sends/${this.alias}.jpg`;
             axios.get(url, config).then((response) => {
                 this.preview(response.data.photo)
             }).catch((error) => {
@@ -878,6 +877,9 @@ Vue.component('message-item', {
         //this.attention();
     },
     computed: {
+        uid() {
+            return this.$store.state.user.uid;
+        },
         attention() {
             return (this.alert || this.alertOption) ? 1 : 0;
         },
@@ -888,7 +890,7 @@ Vue.component('message-item', {
             return (this.showOption || this.fixOption) ? 1 : 0;
         },
         sent() {
-            return (!uid || uid == this.item.from) ? 1 : 0;
+            return (!this.uid || this.uid == this.item.from) ? 1 : 0;
         },
         read() {
             return (this.item.read == 0) ? false : true;
@@ -951,13 +953,11 @@ Vue.component('message-list', {
             received: 0,
             attention: false,
             uid: null,
-            tid: null,
             date: null,
             toSlow: false,
         }
     },
     mounted: function () {
-        this.tid = this.humanId;
         this.load();
     },
     methods: {
@@ -975,7 +975,7 @@ Vue.component('message-list', {
             this.response = 0;
             let config = {
                 headers: {'Authorization': 'Bearer ' + this.$store.state.apiToken},
-                params: {id: this.tid, next: this.next, hash}
+                params: {id: this.humanId, next: this.next, hash}
             };
             axios.get('/ajax/messages_load.php', config).then((response) => {
                 this.onLoad(response);

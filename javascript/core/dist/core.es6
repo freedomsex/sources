@@ -773,7 +773,6 @@ Vue.component('message-item', {
       'index',
       'count',
       'alert',
-      'uid',
       'first_date'
     ],
     template: '#messages-item',
@@ -831,10 +830,10 @@ Vue.component('message-item', {
         play() {
             let config = {
                 headers: {'Authorization': 'Bearer ' + this.$store.state.apiToken},
-                params: {tid}
+                params: { tid: this.item.from }
             };
             let server = this.$store.state.photoServer;
-            let url = `http://${server}/api/v1/users/${uid}/sends/${this.alias}.jpg`;
+            let url = `http://${server}/api/v1/users/${this.uid}/sends/${this.alias}.jpg`;
             axios.get(url, config).then((response) => {
                 this.preview(response.data.photo)
             }).catch((error) => {
@@ -878,6 +877,9 @@ Vue.component('message-item', {
         //this.attention();
     },
     computed: {
+        uid() {
+            return this.$store.state.user.uid;
+        },
         attention() {
             return (this.alert || this.alertOption) ? 1 : 0;
         },
@@ -888,7 +890,7 @@ Vue.component('message-item', {
             return (this.showOption || this.fixOption) ? 1 : 0;
         },
         sent() {
-            return (!uid || uid == this.item.from) ? 1 : 0;
+            return (!this.uid || this.uid == this.item.from) ? 1 : 0;
         },
         read() {
             return (this.item.read == 0) ? false : true;
@@ -951,13 +953,11 @@ Vue.component('message-list', {
             received: 0,
             attention: false,
             uid: null,
-            tid: null,
             date: null,
             toSlow: false,
         }
     },
     mounted: function () {
-        this.tid = this.humanId;
         this.load();
     },
     methods: {
@@ -975,7 +975,7 @@ Vue.component('message-list', {
             this.response = 0;
             let config = {
                 headers: {'Authorization': 'Bearer ' + this.$store.state.apiToken},
-                params: {id: this.tid, next: this.next, hash}
+                params: {id: this.humanId, next: this.next, hash}
             };
             axios.get('/ajax/messages_load.php', config).then((response) => {
                 this.onLoad(response);
@@ -5037,38 +5037,6 @@ var result_list = {
 
 
 
-var abuse_list = new Vue({
-    el: '#search-form',
-    store,
-    mounted: function () {
-        //console.log(abuse_form.mess());
-    },
-    methods: {
-        showButton: function () {
-            if (!this.isFormShow) {
-                this.isButtonShow = true;
-            }
-        },
-    },
-    computed: Vuex.mapState({
-        user: state => state.user.data,
-        up() {
-            console.log(this.user.up+' *up8');
-            return this.user.up ? this.user.up : '';
-        },
-        to() {
-            return this.user.to ? this.user.to : '';
-        },
-        more(state) {
-            if (!this.user.sex || this.user.sex == 1) {
-                return '1';
-            } else {
-                return '2';
-            }
-        },
-    })
-});
-
 // -- Слайдер, главная ---
 var slider = {
 
@@ -5514,67 +5482,6 @@ var user_tag = {
 }          
 
 
-Vue.component('abuse-form', {
-    template: '#abuse-form',
-    props: [
-        'show'
-    ],
-
-});
-
-var menu_user_top = new Vue({
-    el: '#menu-user-top',
-    store,
-    data: {
-        auth: 1
-    },
-    mounted() {
-        //console.log(abuse_form.mess());
-    },
-    methods: {
-        showButton() {
-            if (!this.isFormShow) {
-                this.isButtonShow = true;
-            }
-        },
-    },
-    computed: Vuex.mapState({
-        user: state => state.user.data,
-        userString(state) {
-            let str = this.user.name;
-            // TODO: переделать без возможности отображения без имени
-            if (!str) {
-                if (this.user.sex == 1) {
-                    str = 'Парень';
-                } else
-                if (this.user.sex == 2) {
-                    str = 'Девушка';
-                }
-            }
-            //
-            if (this.user.age > 10 || this.user.city.length > 3) {
-                str = str + ', ';
-            }
-            if (this.user.age > 10) {
-                str = str + this.user.age + ' ';
-            }
-            if ((20 - str.length - this.user.city.length) >= 0) {
-                str = str + this.user.city;
-            }
-            if (!str) {
-                str = 'Кто вы?';
-            }
-            ls.save('user_string_print', str);
-            return str;
-        },
-        searchString(state) {
-            let str = '/index.php?view=simple&town='+this.user.city+
-                '&years_up='+this.user.up+'&years_to='+this.user.to+''+
-                '&who='+this.user.who+'';
-            return str;
-        }
-    })
-});
 
 // -- Информация о пользователе ---
 var userinfo = {

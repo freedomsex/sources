@@ -12,13 +12,11 @@ Vue.component('message-list', {
             received: 0,
             attention: false,
             uid: null,
-            tid: null,
             date: null,
             toSlow: false,
         }
     },
     mounted: function () {
-        this.tid = this.humanId;
         this.load();
     },
     methods: {
@@ -36,7 +34,7 @@ Vue.component('message-list', {
             this.response = 0;
             let config = {
                 headers: {'Authorization': 'Bearer ' + this.$store.state.apiToken},
-                params: {id: this.tid, next: this.next, hash}
+                params: {id: this.humanId, next: this.next, hash}
             };
             axios.get('/ajax/messages_load.php', config).then((response) => {
                 this.onLoad(response);

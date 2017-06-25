@@ -826,7 +826,7 @@ var fdate = null;
 var prev = null;
 
 Vue.component('message-item', {
-    props: ['item', 'index', 'count', 'alert', 'uid', 'first_date'],
+    props: ['item', 'index', 'count', 'alert', 'first_date'],
     template: '#messages-item',
     data: function data() {
         return {
@@ -889,10 +889,10 @@ Vue.component('message-item', {
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
-                params: { tid: tid }
+                params: { tid: this.item.from }
             };
             var server = this.$store.state.photoServer;
-            var url = 'http://' + server + '/api/v1/users/' + uid + '/sends/' + this.alias + '.jpg';
+            var url = 'http://' + server + '/api/v1/users/' + this.uid + '/sends/' + this.alias + '.jpg';
             axios.get(url, config).then(function (response) {
                 _this21.preview(response.data.photo);
             }).catch(function (error) {
@@ -933,6 +933,9 @@ Vue.component('message-item', {
     },
 
     computed: {
+        uid: function uid() {
+            return this.$store.state.user.uid;
+        },
         attention: function attention() {
             return this.alert || this.alertOption ? 1 : 0;
         },
@@ -943,7 +946,7 @@ Vue.component('message-item', {
             return this.showOption || this.fixOption ? 1 : 0;
         },
         sent: function sent() {
-            return !uid || uid == this.item.from ? 1 : 0;
+            return !this.uid || this.uid == this.item.from ? 1 : 0;
         },
         read: function read() {
             return this.item.read == 0 ? false : true;
@@ -1005,14 +1008,12 @@ Vue.component('message-list', {
             received: 0,
             attention: false,
             uid: null,
-            tid: null,
             date: null,
             toSlow: false
         };
     },
 
     mounted: function mounted() {
-        this.tid = this.humanId;
         this.load();
     },
     methods: {
@@ -1032,7 +1033,7 @@ Vue.component('message-list', {
             this.response = 0;
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
-                params: { id: this.tid, next: this.next, hash: hash }
+                params: { id: this.humanId, next: this.next, hash: hash }
             };
             axios.get('/ajax/messages_load.php', config).then(function (response) {
                 _this22.onLoad(response);
@@ -5003,40 +5004,6 @@ var result_list = {
     }
 };
 
-var abuse_list = new Vue({
-    el: '#search-form',
-    store: store,
-    mounted: function mounted() {
-        //console.log(abuse_form.mess());
-    },
-    methods: {
-        showButton: function showButton() {
-            if (!this.isFormShow) {
-                this.isButtonShow = true;
-            }
-        }
-    },
-    computed: Vuex.mapState({
-        user: function user(state) {
-            return state.user.data;
-        },
-        up: function up() {
-            console.log(this.user.up + ' *up8');
-            return this.user.up ? this.user.up : '';
-        },
-        to: function to() {
-            return this.user.to ? this.user.to : '';
-        },
-        more: function more(state) {
-            if (!this.user.sex || this.user.sex == 1) {
-                return '1';
-            } else {
-                return '2';
-            }
-        }
-    })
-});
-
 // -- Слайдер, главная ---
 var slider = {
 
@@ -5423,66 +5390,6 @@ var user_tag = {
         }
     }
 };
-
-Vue.component('abuse-form', {
-    template: '#abuse-form',
-    props: ['show']
-
-});
-
-var menu_user_top = new Vue({
-    el: '#menu-user-top',
-    store: store,
-    data: {
-        auth: 1
-    },
-    mounted: function mounted() {
-        //console.log(abuse_form.mess());
-    },
-
-    methods: {
-        showButton: function showButton() {
-            if (!this.isFormShow) {
-                this.isButtonShow = true;
-            }
-        }
-    },
-    computed: Vuex.mapState({
-        user: function user(state) {
-            return state.user.data;
-        },
-        userString: function userString(state) {
-            var str = this.user.name;
-            // TODO: переделать без возможности отображения без имени
-            if (!str) {
-                if (this.user.sex == 1) {
-                    str = 'Парень';
-                } else if (this.user.sex == 2) {
-                    str = 'Девушка';
-                }
-            }
-            //
-            if (this.user.age > 10 || this.user.city.length > 3) {
-                str = str + ', ';
-            }
-            if (this.user.age > 10) {
-                str = str + this.user.age + ' ';
-            }
-            if (20 - str.length - this.user.city.length >= 0) {
-                str = str + this.user.city;
-            }
-            if (!str) {
-                str = 'Кто вы?';
-            }
-            ls.save('user_string_print', str);
-            return str;
-        },
-        searchString: function searchString(state) {
-            var str = '/index.php?view=simple&town=' + this.user.city + '&years_up=' + this.user.up + '&years_to=' + this.user.to + '' + '&who=' + this.user.who + '';
-            return str;
-        }
-    })
-});
 
 // -- Информация о пользователе ---
 var userinfo = {
