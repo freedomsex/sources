@@ -1,48 +1,3 @@
-var MessInstanse = new Vue({
-    data: {
-        globalNew: null,
-        searchSettings: false,
-    },
-    computed: {
-        initial() {
-            return this.$store.state.modals.initial;
-        },
-        intimate() {
-            return this.$store.state.modals.intimate;
-        },
-        sends() {
-            return this.$store.state.modals.sends;
-        },
-        view() {
-            return this.$store.state.optionStatic.view;
-        },
-        humanId() {
-            return this.globalNew;
-        }
-    },
-    methods: {
-        close() {
-            this.$store.commit('closeAll');
-            store.commit('optionDialog', false);
-        },
-        newMessage() {
-            this.globalNew =  Number(this.$route.path.substr(1));
-        },
-        closeMessage() {
-            this.globalNew = null;
-        },
-        openSearchSettings() {
-            this.searchSettings = true;
-        },
-        closeSearchSettings() {
-            this.searchSettings = false;
-        }
-    },
-    el: '#app',
-    store,
-    router
-});
-
 $( document ).ready(function()
 {
     // Получение GET параметров по имени
@@ -342,79 +297,188 @@ var edit_cont = {
 
 
 
-// -- Настройки почты, поиска ---  
-var mess_sett = {
-       
-    init: function () 
-    {       
-        $('#post_mail_setting').on('click',mess_sett.ajax_post); 
-        mess_sett.print(cookie_storage.get_data('mail_sett'));
-                                         
-        $('#mail_setting_hide').on('click',mess_sett.hide);  
-        $('#mail_setting_show').on('click',mess_sett.show);
-           
-    } , 
-    
-    print: function (sett) 
-    {                          
-        if (!sett.who)
-        {
-            $("#opt_who").val(0)
+var FormMess = new Vue({
+    el: '#message_post_form',
+    store,
+    data: {
+    	message: '',
+        reply:  '',
+        code:  '',
+        show: true,
+        process: false,
+        approve: true,
+        dirt: false,
+        tid: null,
+    },
+    mounted: function () {
+        this.tid = tid;
+
+        $('#mess-text-area').on('keypress', (event, el) => {
+            if((event.ctrlKey) && ((event.keyCode == 10) || (event.keyCode == 13))) {
+                this.sendMessage();
+            }
+        });
+
+    },
+    watch: {
+        message: function() { this.isDirt(); },
+    },
+    computed: Vuex.mapState({
+        config: state => state.formMess,
+        photo:  state => state.formMess.sendPhoto,
+        intimate: state => state.formMess.intimate,
+        user: state => state.user,
+    }),
+    methods: {
+    	reset() {
+            this.cancelPhoto();
+    		this.show = true;
+    		this.process = false;
+            this.approve = true;
+            this.message = '';
+    	},
+        isDirt: _.debounce(function() {
+            let word = /\w{0,5}[хx]([хx\s\!@#\$%\^&*+-\|\/]{0,6})[уy]([уy\s\!@#\$%\^&*+-\|\/]{0,6})[ёiлeеюийя]\w{0,7}|\w{0,6}[пp]([пp\s\!@#\$%\^&*+-\|\/]{0,6})[iие]([iие\s\!@#\$%\^&*+-\|\/]{0,6})[3зс]([3зс\s\!@#\$%\^&*+-\|\/]{0,6})[дd]\w{0,10}|[сcs][уy]([уy\!@#\$%\^&*+-\|\/]{0,6})[4чkк]\w{1,3}|\w{0,4}[bб]([bб\s\!@#\$%\^&*+-\|\/]{0,6})[lл]([lл\s\!@#\$%\^&*+-\|\/]{0,6})[yя]\w{0,10}|\w{0,8}[её][bб][лске@eыиаa][наи@йвл]\w{0,8}|\w{0,4}[еe]([еe\s\!@#\$%\^&*+-\|\/]{0,6})[бb]([бb\s\!@#\$%\^&*+-\|\/]{0,6})[uу]([uу\s\!@#\$%\^&*+-\|\/]{0,6})[н4ч]\w{0,4}|\w{0,4}[еeё]([еeё\s\!@#\$%\^&*+-\|\/]{0,6})[бb]([бb\s\!@#\$%\^&*+-\|\/]{0,6})[нn]([нn\s\!@#\$%\^&*+-\|\/]{0,6})[уy]\w{0,4}|\w{0,4}[еe]([еe\s\!@#\$%\^&*+-\|\/]{0,6})[бb]([бb\s\!@#\$%\^&*+-\|\/]{0,6})[оoаa@]([оoаa@\s\!@#\$%\^&*+-\|\/]{0,6})[тnнt]\w{0,4}|\w{0,10}[ё]([ё\!@#\$%\^&*+-\|\/]{0,6})[б]\w{0,6}|\w{0,4}[pп]([pп\s\!@#\$%\^&*+-\|\/]{0,6})[иeеi]([иeеi\s\!@#\$%\^&*+-\|\/]{0,6})[дd]([дd\s\!@#\$%\^&*+-\|\/]{0,6})[oоаa@еeиi]([oоаa@еeиi\s\!@#\$%\^&*+-\|\/]{0,6})[рr]\w{0,12}/i;
+            this.dirt = word.test(this.message) ? true : false;
+            return this.dirt;
+        }, 700),
+        upload() {
+            store.commit('optionDialog', 'upload');
+        },
+        cancelPhoto() {
+        	store.commit('sendPhoto', {photo: null, alias: null});
+        },
+        send() {
+            this.photo.alias ? sendPhoto() : sendMessage();
+        },
+        sendPhoto() {
+        	// TODO: почти готово, ждем сообщений
+            //Vue.htt*p.headers.common['Authorization'] = 'Bearer ' + get_cookie('jwt');
+            // let data = {
+            // 	alias: this.photo.alias
+            // };
+            // this.$http.post('http://'+api_photo+'/api/v1/users/'+tid+'/sends', data).then(function (response) {
+            //     //console.log(response.body);
+            // });
+            // window.location.reload();
+        },
+        sendMessage() {
+            // TODO: убрать из формы старое говно
+            let data = {
+                id: this.tid,
+                captcha_code: this.code
+            };
+            if (this.photo.alias) {
+                data['photo'] = this.photo.alias;
+            } else {
+                data['mess'] = this.message;
+                data['re'] = this.reply;
+            }
+            api.messages.send(data).then((response) => {
+                this.onMessageSend(response.data);
+            });
+            this.process = true;
+        },
+        sendSex(sex) {
+            this.$store.dispatch('SAVE_SEX', sex).then((response) => {
+                this.sendMessage();
+            }).catch((error) => {
+                this.onError(error);
+            });
+            this.process = true;
+        },
+        onMessageSend(response) {
+        	if (!response.saved && response.error) {
+        		if (response.error == 'need_captcha') {
+                    this.captcha();
+        		}
+                this.onError();
+        	} else {
+                this.sended(response);
+        	}
+            this.process = false;
+        },
+        sended(response) {
+            //MessList.messages.unshift(response.message);
+            MessList.reload();
+            // TODO: старая зависимость
+            $('#mess_shab_text_block').hide();
+            giper_chat.timer_cut();
+            this.reset();
+        },
+        captcha() {
+            $('.form-message__captcha-img').get(0).src = '/secret_pic.php?hash='+hash;
+            this.approve = false;
+        },
+        onError() {
+            this.process = false;
         }
-        else
-            $("#opt_who").val(sett.who)
-        
-        if (sett.town*1)
-            $("#opt_town").attr("checked","checked");
-            
-        if (sett.virt*1)   
-            $("#opt_virt").attr("checked","checked");
- 
-        if (sett.up > 0) 
-            $("#opt_up").val(sett.up);
+    },
+});
 
-        if (sett.to > 0)
-            $("#opt_to").val(sett.to);  
-                              
-    } ,                                     
-                                                
-    /* -- Скрыть/показать настройки --- */  
-    show: function () 
-    {                   
-      $('#form_mail_setting').show('blind'); 
-      $('#mail_setting_show').hide('fade');   
-       cookie_storage.del_cookie('hide_mail_setting');
-         
-    } , 
-    
-    hide: function () 
-    {                    
-        $('#form_mail_setting').hide('blind');
-        $('#mail_setting_show').show('fade');
-        cookie_storage.set_cookie('hide_mail_setting', 1, 259200);  
-    } , 
-    
-    on_save: function () 
-    {           
-        $('#saved_setting').show('fade');
-        $('#saved_setting').delay(2000).hide('fade');
-    } , 
-    
-    ajax_post: function () 
-    {        
-        var post_data = $('#form_mail_setting').serialize();
-        $.post('/msett/save/', post_data);
-         
-        mess_sett.on_save(); 
-        return false;
-    } ,    
-   
-    
- 
- 
+
+// -- Форма отправки сообщения ---
+var form_mess = {
+
+    show_form: function () {
+        $('#message_post_form').show('blind');
+    },
+
+    hide_form: function () {
+        $('#message_post_form').hide('blind');
+    }
+
 }
-  
 
+
+
+
+var incoming_photo = new Vue({
+    el: '#incoming-photo',
+    store,
+    data: {
+        photos: [],
+        user:   0,
+        server: null,
+    },
+    created: function () {
+        this.server = this.$store.state.photoServer;
+    },
+    methods: {
+        loadPhoto() {
+            let config = {
+                headers: {'Authorization': 'Bearer ' + this.$store.state.apiToken},
+                params: {tid, hash}
+            };
+            axios.get(`http://${this.server}/api/v1/users/${uid}/sends`,config).then((response) => {
+                this.photos = response.data.photos;
+                //console.log(this.photos);
+            }).catch((error) => {
+                console.log(error);
+            });
+        },
+        show: function (index) {
+            let photo = this.photos[index];
+            let links = photo._links;
+            if (links.origin.href) {
+                let data = {
+                    thumb: links.thumb.href,
+                    photo: links.origin.href,
+                    alias:  photo.alias,
+                    height: photo.height,
+                    width:  photo.width,
+                }
+                store.commit('viewPhoto', data);
+                store.commit('optionDialog', 'photo');
+            }
+            //console.log(this.photos[index].height);
+        },
+    }
+});
+
+$(document).ready(function() {
+    incoming_photo.loadPhoto();
+});
 
 // -- Я модератор, кнопка, блок ---
 var moderator = {
