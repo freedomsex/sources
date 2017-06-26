@@ -63,6 +63,10 @@ Vue.component('account-settings', {
             this.save();
             this.$emit('close');
         },
+        login() {
+            this.$emit('login');
+            this.$emit('close');
+        },
     },
     template: '#account-settings',
 });

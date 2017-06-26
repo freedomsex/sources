@@ -16,7 +16,7 @@
 <api-key-update></api-key-update>
 
 <search-settings v-if="searchSettings" @close="searchSettings = false; search()" @account="openAccountSettings()"></search-settings>
-<account-settings v-if="accountSettings" @close="accountSettings = false"></account-settings>
+<account-settings v-if="accountSettings" @close="accountSettings = false" @login="logIn = true"></account-settings>
 <sex-confirm v-if="sexConfirm" :show="sexConfirm" @close="sexConfirm = false" @select="selectSex"></sex-confirm>
 <login-account v-if="logIn" @close="logIn = false"></login-account>
 

@@ -28,6 +28,9 @@ Vue.component('contact-item', {
         city() {
             return this.item.user ? this.item.user.city : '';
         },
+        title() {
+            return this.name + ' ' + this.age + ' ' + this.city;
+        },
         message() {
             return this.item.message ? this.item.message.text : '';
         },
@@ -44,7 +47,6 @@ Vue.component('contact-item', {
     methods: {
         show() {
             //this.$emit('show');
-            console.log('show = initial-item');
             if (this.quick) {
                 this.reply();
             } else {
@@ -56,7 +58,7 @@ Vue.component('contact-item', {
             this.confirm = 'doit';
         },
         dialog() {
-            this.$emit('dialog', this.humanId);
+            this.$emit('dialog', {id: this.humanId, title: this.title});
         },
         confirmRemove() {
             //this.$emit('remove');

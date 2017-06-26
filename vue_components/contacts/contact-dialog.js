@@ -78,12 +78,9 @@ var ContactDialog = {
             this.error = true;
             console.log(error);
         },
-        dialogOpen(id) {
-            console.log('dialog', id);
-            this.dialog = id;
-        },
-        dialogClose() {
-            this.dialog = false;
+        dialogOpen(data) {
+            this.dialog = data.id;
+            this.title = data.title;
         }
     },
     mounted() {

@@ -199,7 +199,7 @@
 <api-key-update></api-key-update>
 
 <search-settings v-if="searchSettings" @close="searchSettings = false; search()" @account="openAccountSettings()"></search-settings>
-<account-settings v-if="accountSettings" @close="accountSettings = false"></account-settings>
+<account-settings v-if="accountSettings" @close="accountSettings = false" @login="logIn = true"></account-settings>
 <sex-confirm v-if="sexConfirm" :show="sexConfirm" @close="sexConfirm = false" @select="selectSex"></sex-confirm>
 <login-account v-if="logIn" @close="logIn = false"></login-account>
 
@@ -338,7 +338,7 @@
 
 <script type="text/x-template" id="messages-activity">
   <default-activity @close="close">
-    <span slot="caption">Сообщения</span>
+    <span slot="caption">{{title}}</span>
     <div class="message-dialog" key="humanId">
       <div id="dialog-history" class="message-dialog__history">
         <message-list :humanId="humanId" ref="messages"></message-list>
@@ -478,7 +478,7 @@
     <div class="contact-list__next">
       <div class="btn btn-default btn-xs" @click="next()" :disabled="response == false" v-show="more"> Следующие </div>
     </div>
-    <messages-activity @close="dialogClose" :humanId="dialog" v-if="dialog"/>
+    <messages-activity @close="dialog = false" :humanId="dialog" :title="title" v-if="dialog"/>
   </default-activity>
 </script>
 
@@ -881,11 +881,11 @@
       <div class="activity-section__title">Кто вы:</div>
       <div class="radio">
         <label class="radio-inline">
-          <input type="radio" v-model="selectSex" :value="2" @change="saveSex">
+          <input type="radio" v-model.number="selectSex" :value="2" @change="saveSex">
           Девушка
         </label>
         <label class="radio-inline">
-          <input type="radio" v-model="selectSex" :value="1" @change="saveSex">
+          <input type="radio" v-model.number="selectSex" :value="1" @change="saveSex">
           Парень
         </label>
       </div>
@@ -894,8 +894,8 @@
     <div class="activity-section">
       <div class="activity-section__title">Возраст:</div>
       <div class="form-inline">
-        <select class="form-control" v-model="selectAge" @change="saveAge">
-          <option v-for="(item, index) in 80" :value="item" >{{item ? item : ''}}</option>
+        <select class="form-control" v-model.number="selectAge" @change="saveAge">
+          <option v-for="(item, index) in _.range(16, 81)" :value="item" >{{item ? item : ''}}</option>
         </select>
       </div>
     </div>
@@ -909,6 +909,10 @@
 
     <div class="activity-section">
       <a class="" href="/profile.php" target="_blank">Другие настройки</a>
+    </div>
+
+    <div class="activity-section">
+      <span class="link_simple" @click="login">Уже есть анкета?</span>
     </div>
 
   </closed-activity>

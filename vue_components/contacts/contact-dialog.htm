@@ -38,6 +38,6 @@
     <div class="contact-list__next">
       <div class="btn btn-default btn-xs" @click="next()" :disabled="response == false" v-show="more"> Следующие </div>
     </div>
-    <messages-activity @close="dialogClose" :humanId="dialog" v-if="dialog"/>
+    <messages-activity @close="dialog = false" :humanId="dialog" :title="title" v-if="dialog"/>
   </default-activity>
 </script>

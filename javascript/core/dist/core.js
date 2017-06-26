@@ -83,7 +83,7 @@ var DefaultActivity = Vue.component('default-activity', {
 });
 
 Vue.component('messages-activity', {
-    props: ['humanId'],
+    props: ['humanId', 'title'],
     data: function data() {
         return {
             message: '',
@@ -426,12 +426,9 @@ var ContactDialog = {
             this.error = true;
             console.log(_error);
         },
-        dialogOpen: function dialogOpen(id) {
-            console.log('dialog', id);
-            this.dialog = id;
-        },
-        dialogClose: function dialogClose() {
-            this.dialog = false;
+        dialogOpen: function dialogOpen(data) {
+            this.dialog = data.id;
+            this.title = data.title;
         }
     },
     mounted: function mounted() {
@@ -607,6 +604,9 @@ Vue.component('contact-item', {
         city: function city() {
             return this.item.user ? this.item.user.city : '';
         },
+        title: function title() {
+            return this.name + ' ' + this.age + ' ' + this.city;
+        },
         message: function message() {
             return this.item.message ? this.item.message.text : '';
         },
@@ -623,7 +623,6 @@ Vue.component('contact-item', {
     methods: {
         show: function show() {
             //this.$emit('show');
-            console.log('show = initial-item');
             if (this.quick) {
                 this.reply();
             } else {
@@ -635,7 +634,7 @@ Vue.component('contact-item', {
             this.confirm = 'doit';
         },
         dialog: function dialog() {
-            this.$emit('dialog', this.humanId);
+            this.$emit('dialog', { id: this.humanId, title: this.title });
         },
         confirmRemove: function confirmRemove() {
             //this.$emit('remove');
@@ -1581,6 +1580,10 @@ Vue.component('account-settings', {
         },
         close: function close() {
             this.save();
+            this.$emit('close');
+        },
+        login: function login() {
+            this.$emit('login');
             this.$emit('close');
         }
     },

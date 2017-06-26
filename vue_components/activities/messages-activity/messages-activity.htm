@@ -1,7 +1,7 @@
 
 <script type="text/x-template" id="messages-activity">
   <default-activity @close="close">
-    <span slot="caption">Сообщения</span>
+    <span slot="caption">{{title}}</span>
     <div class="message-dialog" key="humanId">
       <div id="dialog-history" class="message-dialog__history">
         <message-list :humanId="humanId" ref="messages"></message-list>

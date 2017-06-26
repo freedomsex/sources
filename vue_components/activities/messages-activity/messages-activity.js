@@ -1,6 +1,6 @@
 
 Vue.component('messages-activity', {
-    props: ['humanId'],
+    props: ['humanId', 'title'],
     data() {
         return {
             message: '',

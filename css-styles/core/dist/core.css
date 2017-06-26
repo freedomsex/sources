@@ -1965,7 +1965,6 @@ a.name:hover {
 }
 .galery-photo {
   margin: 0 -5px;
-  background: #cccccc;
 }
 .galery-photo__item {
   width: 100px;
@@ -2892,59 +2891,6 @@ a.name:hover {
 .btn-fat {
   padding-left: 25px;
   padding-right: 25px;
-}
-#search-wizard {
-  text-align: center;
-  margin-top: 10px;
-}
-#search-wizard .material-icons {
-  vertical-align: middle;
-  position: relative;
-  top: -3px;
-}
-.town_line {
-  color: #333333;
-  font-size: 11px;
-  padding: 3px 4px;
-}
-.town_line b {
-  font-size: 12px;
-}
-.town_line i {
-  font-size: 10px;
-}
-.town_line:hover {
-  background: DodgerBlue;
-  color: White;
-}
-.suggest_wrap {
-  display: block;
-  margin: 0px;
-  position: relative;
-}
-.suggest_block {
-  background: White;
-  border: 1px solid DarkGray;
-  cursor: pointer;
-  display: none;
-  left: 0px;
-  margin: 0px;
-  max-height: 320px;
-  overflow-x: hidden;
-  overflow-y: auto;
-  position: absolute;
-  right: 0px;
-  text-align: left;
-  z-index: 100;
-}
-.suggest_line {
-  color: #333333;
-  font-size: 11px;
-  padding: 3px 4px;
-}
-.suggest_line:hover {
-  background: DodgerBlue;
-  color: White;
 }
 #search-wizard {
   text-align: center;
