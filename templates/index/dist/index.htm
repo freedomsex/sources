@@ -316,7 +316,7 @@
             <i class="material-icons">&#xE853;</i>
           </div>
           <div class="send-form__textarea">
-            <textarea class="send-form__message-text" v-model="message" autofocus v-resized
+            <textarea class="send-form__message-text" v-model="message" v-resized
              :disabled="process == true" :placeholder="process ? 'Отправляю...' : 'Введите текст'"
              @keyup.ctrl.enter.prevent="sendMessage"></textarea>
           </div>
