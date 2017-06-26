@@ -250,6 +250,17 @@ module.exports = function (grunt) {
                 },
             },
         },
+        autoprefixer: {
+            options: {
+                browsers: ['> 0.5%', 'last 2 versions']
+            },
+            dist: {
+                files: {
+                    "css-styles/core/dist/core.css": "css-styles/core/dist/core.css",
+                    "css-styles/mess/dist/mess.css": "css-styles/mess/dist/mess.css"
+                }
+            }
+        }
     });
 
     // Загрузка модулей, которые предварительно установлены
@@ -261,6 +272,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-replace');
     grunt.loadNpmTasks('grunt-babel');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-autoprefixer');
 
     // Эти задания будут выполнятся сразу же когда вы в консоли напечатание grunt, и нажмете Enter
     grunt.registerTask('core', [
@@ -270,7 +282,7 @@ module.exports = function (grunt) {
     ]);
     //grunt.registerTask('default', ['concat', 'babel', 'uglify', 'less', 'processhtml']);
     grunt.registerTask('dev',  ['core', 'replace:dev', 'concat:bundle_dev', 'processhtml:dev']);
-    grunt.registerTask('prod', ['core', 'replace:dist', 'uglify', 'concat:bundle_prod', 'processhtml:dist' ]);
+    grunt.registerTask('prod', ['core', 'replace:dist', 'uglify', 'concat:bundle_prod', 'processhtml:dist', 'autoprefixer' ]);
     grunt.registerTask('p',    ['prod', 'watch']);
     grunt.registerTask('d',    ['dev', 'watch']);
     grunt.registerTask('img',  ['image_resize']);
