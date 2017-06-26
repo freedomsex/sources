@@ -23,10 +23,10 @@ Vue.component('contact-item', {
             return result;
         },
         age() {
-            return this.item.user ? this.item.user.age : null;
+            return this.item.user && this.item.user.age ? this.item.user.age : '';
         },
         city() {
-            return this.item.user ? this.item.user.city : '';
+            return this.item.user && this.item.user.city ? this.item.user.city : '';
         },
         title() {
             return this.name + ' ' + this.age + ' ' + this.city;

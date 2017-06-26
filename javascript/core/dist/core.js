@@ -599,10 +599,10 @@ Vue.component('contact-item', {
             return result;
         },
         age: function age() {
-            return this.item.user ? this.item.user.age : null;
+            return this.item.user && this.item.user.age ? this.item.user.age : '';
         },
         city: function city() {
-            return this.item.user ? this.item.user.city : '';
+            return this.item.user && this.item.user.city ? this.item.user.city : '';
         },
         title: function title() {
             return this.name + ' ' + this.age + ' ' + this.city;
