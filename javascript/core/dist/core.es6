@@ -182,7 +182,7 @@ Vue.component('api-key-update', {
         },
         upUser(data) {
             let {uid, city, sex, age, name} = data;
-            console.log(data);
+            //console.log('upUser', data);
             store.commit('loadUser', {uid, city, sex, age, name});
             store.commit('loadUser', data.contacts);
         },
@@ -1009,8 +1009,8 @@ Vue.component('message-list', {
         },
         noMessages() {
             // TODO: Заменить на компоненты, страрые зависимости
-            quick_mess.ajax_load();
-            notice_post.show();
+            //quick_mess.ajax_load();
+            //notice_post.show();
             store.commit('intimated', false);
         },
         setDate(date) {
@@ -2303,12 +2303,13 @@ var search = {
             });
         },
         SETTINGS({ commit }) {
-            commit('settingsCookies'); console.log('search.settings');
+            commit('settingsCookies');
             commit('settings', ls.get('search.settings'));
             //let index = 'search.settings';
         },
         SAVE_SEARCH({state, commit}, data) {
                 commit('settings', data);
+                ls.set('search.settings', data);
                 return api.user.saveSearch(data).then((response) => { });
         },
     },
@@ -2326,6 +2327,7 @@ var search = {
         },
         settings(state, data) {
             if (data) {
+                //console.log('settings:', data);
                 _.assign(state.settings, data);
             }
         },
@@ -2337,18 +2339,19 @@ var search = {
                 }
                 catch(e) { }
                 state.settings.city = '';
-                state.settings.who = data.who;
-                state.settings.up = data.up;
-                state.settings.to = data.to;
-                state.settings.town = data.town;
-                state.settings.virt = data.virt;
+                state.settings.who = Number(data.who);
+                state.settings.up = Number(data.up);
+                state.settings.to = Number(data.to);
+                state.settings.town = Boolean(data.town);
+                state.settings.virt = Boolean(data.virt);
+                //console.log('dataCookies:', data);
             }
         }
     },
     getters: {
-        searchURL(state) {
+        searchURL(state, getters, rootState) {
             let settings = state.settings;
-            let result = '/index.php?view=simple&town=' + settings.city +
+            let result = '/index.php?view=simple&town=' + rootState.user.city +
                 '&years_up=' + settings.up + '&years_to=' + settings.to +
                 '&who=' + settings.who +'';
             return result;
@@ -2826,7 +2829,7 @@ new Vue({
     },
     methods: {
         search() {
-            window.location = this.$store.getters.searchURL;
+            //window.location = this.$store.getters.searchURL;
         },
         close() {
             this.$store.commit('closeAll');

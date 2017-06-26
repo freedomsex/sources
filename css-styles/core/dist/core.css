@@ -206,6 +206,11 @@ body {
   padding-bottom: 15px;
   background: #ffffff;
 }
+.form-inline .form-control {
+  display: inline-block;
+  width: auto;
+  vertical-align: middle;
+}
 a {
   -moz-transition: color 0.2s ease;
   -o-transition: color 0.2s ease;
@@ -1796,11 +1801,14 @@ a.name:hover {
   margin: 10px 0 15px;
 }
 .contact-list__item {
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid #f5f5f5;
   position: relative;
   background: #ffffff;
   overflow: hidden;
   font-size: 14px;
+}
+.contact-list__item:last-child {
+  border-bottom-width: 0px;
 }
 .contact-list__item-info .user-list__name {
   color: #333333;
@@ -2099,6 +2107,17 @@ a.name:hover {
 .menu-user__navbar-right {
   flex: 0 1;
 }
+.menu-user__getlogin {
+  flex: 1 1;
+  display: flex;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.menu-user__login {
+  flex: 0 0;
+  display: flex;
+  margin: auto;
+}
 .menu-user__logo {
   flex: 0;
   font-size: 18px;
@@ -2152,6 +2171,10 @@ a.name:hover {
   display: flex;
   align-items: center;
   cursor: pointer;
+  overflow: hidden;
+}
+.navbar-button div {
+  overflow: hidden;
 }
 .navbar-button .material-icons {
   min-width: 24px;

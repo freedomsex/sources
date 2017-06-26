@@ -182,7 +182,7 @@ Vue.component('api-key-update', {
         },
         upUser(data) {
             let {uid, city, sex, age, name} = data;
-            console.log(data);
+            //console.log('upUser', data);
             store.commit('loadUser', {uid, city, sex, age, name});
             store.commit('loadUser', data.contacts);
         },
@@ -1009,8 +1009,8 @@ Vue.component('message-list', {
         },
         noMessages() {
             // TODO: Заменить на компоненты, страрые зависимости
-            quick_mess.ajax_load();
-            notice_post.show();
+            //quick_mess.ajax_load();
+            //notice_post.show();
             store.commit('intimated', false);
         },
         setDate(date) {

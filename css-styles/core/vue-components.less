@@ -347,7 +347,10 @@
 }
 
 .contact-list__item {
-  border-bottom: 1px solid @gray-light;
+  &:last-child {
+    border-bottom-width: 0px;
+  }
+  border-bottom: 1px solid @light;
   position: relative;
   background: @white;
   overflow: hidden;
@@ -680,6 +683,19 @@
         }
     }
 
+    &__getlogin {
+        flex: 1 1;
+        display: flex;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    &__login {
+        flex: 0 0;
+        display: flex;
+        margin: auto;
+    }
+
     &__logo {
         flex: 0;
         font-size: 18px;
@@ -738,6 +754,10 @@
     display: flex;
     align-items: center;
     cursor: pointer;
+    overflow: hidden;
+    div {
+        overflow: hidden;
+    }
     .material-icons {
         min-width: 24px;
         margin-right: @indent-xs;

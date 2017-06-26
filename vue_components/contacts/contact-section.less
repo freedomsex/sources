@@ -19,7 +19,10 @@
 }
 
 .contact-list__item {
-  border-bottom: 1px solid @gray-light;
+  &:last-child {
+    border-bottom-width: 0px;
+  }
+  border-bottom: 1px solid @light;
   position: relative;
   background: @white;
   overflow: hidden;

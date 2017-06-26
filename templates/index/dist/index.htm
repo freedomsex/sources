@@ -76,21 +76,6 @@
 
   <div class="container search-results">
 
-<!-- build:remove:dev -->
-  <div class="container hidden-xs">
-    <div class="row">
-<iframe id="frame-id-01" style="position: relative; background-color: transparent; border: none; overflow: hidden;  height: 89px; width: 728px; " src="//data.freedomsex.me/din_new8.php?code=c1b2082d1105d784218299f23aa44f93&bid=35225&w=728&h=89&linkdest=&modelnick=&clickurl=&refresh=1&meffect=random&einterval=none&logo=black&bbgcolor=none&bg_none=none&btextcolor=222222&mbordercolor=000000&mhovercolor=F7941D&mbordertype=solid&shad=0&bfontfamily=Arial&mtextalign=right&id=28644&server=runetki.com&langs=ru&campaign=655683&size=728x89&header=1&modelname=1&modelicon=1&modelinfo=1&geoflag=1&geoheader=1&selgeoheader=0&mediagroup=0&mediatype=2&skins=def&no_ab=1&no_ab_sub_data=1&no_ab_sub_media=2&category=all&srv=0&no_ab=1&no_ab_sub_data=1&no_ab_sub_media=2&no_ab_domain=freedomsex.me"></iframe>
-    </div>
-  </div>
-
-  <div class="container visible-xs-block">
-    <div class="row">
-      <a href="https://runetki.com/" rel="nofollow" target="_blank" >
-        <img src="/static/img/ad-horizontal.gif" style="width: 100%;">
-      </a>
-    </div>
-  </div>
-<!-- /build -->
     <div class="row">
       <div class="col-md-12">
         %%ERROR_SEARCH_ALT%%
@@ -943,7 +928,7 @@
     <div class="activity-section">
       <div class="activity-section__title">Мой город:</div>
       <div class="form-inline" @click="account">
-        <input class="form-control" type="text" :value="city" disabled>
+        <input class="form-control" type="text" :value.trim="city" disabled>
         <button class="btn btn-default"> Изменить </button>
       </div>
     </div>
@@ -952,15 +937,15 @@
       <div class="activity-section__title">Кого вы ищете:</div>
       <div class="radio">
         <label class="radio-inline">
-          <input type="radio" v-model="selectWho" :value="2">
+          <input type="radio" v-model.number="selectWho" :value="2">
           Девушку
         </label>
         <label class="radio-inline">
-          <input type="radio" v-model="selectWho" :value="1">
+          <input type="radio" v-model.number="selectWho" :value="1">
           Парня
         </label>
         <label class="radio-inline">
-          <input type="radio" v-model="selectWho" :value="0">
+          <input type="radio" v-model.number="selectWho" :value="0">
           Кого угодно
         </label>
       </div>
@@ -971,14 +956,14 @@
       <div class="form-inline">
         <div class="input-group">
           <div class="input-group-addon">От</div>
-          <select class="form-control" v-model="selectUp">
+          <select class="form-control" v-model.number="selectUp">
             <option v-for="(item, index) in ageRange" :value="item" >{{item ? item : ''}}</option>
           </select>
         </div> &nbsp; - &nbsp;
 
         <div class="input-group">
           <div class="input-group-addon">До</div>
-          <select class="form-control" v-model="selectTo"">
+          <select class="form-control" v-model.number="selectTo"">
             <option v-for="(item, index) in ageRange" :value="item" >{{item ? item : ''}}</option>
           </select>
         </div>
@@ -1086,12 +1071,8 @@
   <input id="edit_human_name" type="text" placeholder="Имя" style="width: 150px;">
   <input id="edit_human_btn"  type="submit" value=" Сохранить ">
 </div>
-<!-- build:[src]:dev /static/js/jquery/ -->
- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
- <!-- /build -->
- <!-- build:[src]:dev /static/js/jquery-ui/ -->
- <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
- <!-- /build -->
+ <script src="/static/js/jquery/jquery.min.js"></script>
+ <script src="/static/js/jquery-ui/jquery-ui.min.js"></script>
 
 <script type="text/javascript" src="%%JS_FILE%%"></script>
 <!-- Исходники можно найти в репозитории. Тамже собранные не сжатые файлы -->

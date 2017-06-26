@@ -18,7 +18,7 @@ Vue.component('api-key-update', {
         },
         upUser(data) {
             let {uid, city, sex, age, name} = data;
-            console.log(data);
+            //console.log('upUser', data);
             store.commit('loadUser', {uid, city, sex, age, name});
             store.commit('loadUser', data.contacts);
         },

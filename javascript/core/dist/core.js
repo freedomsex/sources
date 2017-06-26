@@ -203,8 +203,8 @@ Vue.component('api-key-update', {
                 sex = data.sex,
                 age = data.age,
                 name = data.name;
+            //console.log('upUser', data);
 
-            console.log(data);
             store.commit('loadUser', { uid: uid, city: city, sex: sex, age: age, name: name });
             store.commit('loadUser', data.contacts);
         },
@@ -1071,8 +1071,8 @@ Vue.component('message-list', {
         },
         noMessages: function noMessages() {
             // TODO: Заменить на компоненты, страрые зависимости
-            quick_mess.ajax_load();
-            notice_post.show();
+            //quick_mess.ajax_load();
+            //notice_post.show();
             store.commit('intimated', false);
         },
         setDate: function setDate(date) {
@@ -2397,7 +2397,7 @@ var search = {
         SETTINGS: function SETTINGS(_ref13) {
             var commit = _ref13.commit;
 
-            commit('settingsCookies');console.log('search.settings');
+            commit('settingsCookies');
             commit('settings', ls.get('search.settings'));
             //let index = 'search.settings';
         },
@@ -2406,6 +2406,7 @@ var search = {
                 commit = _ref14.commit;
 
             commit('settings', data);
+            ls.set('search.settings', data);
             return api.user.saveSearch(data).then(function (response) {});
         }
     },
@@ -2423,6 +2424,7 @@ var search = {
         },
         settings: function settings(state, data) {
             if (data) {
+                //console.log('settings:', data);
                 _.assign(state.settings, data);
             }
         },
@@ -2433,18 +2435,19 @@ var search = {
                     data = JSON.parse(data);
                 } catch (e) {}
                 state.settings.city = '';
-                state.settings.who = data.who;
-                state.settings.up = data.up;
-                state.settings.to = data.to;
-                state.settings.town = data.town;
-                state.settings.virt = data.virt;
+                state.settings.who = Number(data.who);
+                state.settings.up = Number(data.up);
+                state.settings.to = Number(data.to);
+                state.settings.town = Boolean(data.town);
+                state.settings.virt = Boolean(data.virt);
+                //console.log('dataCookies:', data);
             }
         }
     },
     getters: {
-        searchURL: function searchURL(state) {
+        searchURL: function searchURL(state, getters, rootState) {
             var settings = state.settings;
-            var result = '/index.php?view=simple&town=' + settings.city + '&years_up=' + settings.up + '&years_to=' + settings.to + '&who=' + settings.who + '';
+            var result = '/index.php?view=simple&town=' + rootState.user.city + '&years_up=' + settings.up + '&years_to=' + settings.to + '&who=' + settings.who + '';
             return result;
         }
     }
@@ -2544,7 +2547,7 @@ var store = new Vuex.Store({
     state: {
         apiToken: '',
         //photoServer: '127.0.0.1:8888',
-        photoServer: '195.154.54.70',
+        photoServer: '127.0.0.1:8008',
         count: 0,
         optionStatic: {
             view: null
@@ -2633,7 +2636,7 @@ var Api = function () {
         _classCallCheck(this, Api);
 
         // Delay requests sec
-        this.setDelay('0');
+        this.setDelay('2');
         // [!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]
         this.setRoot(host, version);
         this.setConfig(this.root, key);
@@ -2916,7 +2919,7 @@ var ApiSearch = function (_Api4) {
         _classCallCheck(this, ApiSearch);
 
         var key = '1234';
-        var host = 'http://212.83.162.58/';
+        var host = 'http://127.0.0.1:9000/';
         var routing = {
             route: 'users',
             get: '{tid}'
@@ -2934,7 +2937,7 @@ var ApiContact = function (_Api5) {
         _classCallCheck(this, ApiContact);
 
         var key = store.state.apiToken;
-        var host = 'http://212.83.134.89:9000/';
+        var host = 'http://127.0.0.1:8000/';
         return _possibleConstructorReturn(this, (ApiContact.__proto__ || Object.getPrototypeOf(ApiContact)).call(this, host, key, null, routing));
     }
 
@@ -3038,7 +3041,7 @@ new Vue({
     },
     methods: {
         search: function search() {
-            window.location = this.$store.getters.searchURL;
+            //window.location = this.$store.getters.searchURL;
         },
         close: function close() {
             this.$store.commit('closeAll');

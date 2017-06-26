@@ -68,8 +68,8 @@ Vue.component('message-list', {
         },
         noMessages() {
             // TODO: Заменить на компоненты, страрые зависимости
-            quick_mess.ajax_load();
-            notice_post.show();
+            //quick_mess.ajax_load();
+            //notice_post.show();
             store.commit('intimated', false);
         },
         setDate(date) {
