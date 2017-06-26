@@ -3041,7 +3041,7 @@ new Vue({
     },
     methods: {
         search: function search() {
-            //window.location = this.$store.getters.searchURL;
+            window.location = this.$store.getters.searchURL;
         },
         close: function close() {
             this.$store.commit('closeAll');

@@ -2829,7 +2829,7 @@ new Vue({
     },
     methods: {
         search() {
-            //window.location = this.$store.getters.searchURL;
+            window.location = this.$store.getters.searchURL;
         },
         close() {
             this.$store.commit('closeAll');
