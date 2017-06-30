@@ -2794,8 +2794,8 @@ var desires = {
             var state = _ref22.state,
                 commit = _ref22.commit;
 
-            return api.user.desireDelete(state.list[index].id);
             commit('delete', index);
+            return api.user.desireDelete(state.list[index].id);
         }
     },
     mutations: {
