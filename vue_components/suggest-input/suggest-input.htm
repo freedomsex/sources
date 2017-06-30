@@ -1,0 +1,10 @@
+
+<script type="text/x-template" id="suggest-input">
+  <div class="dropdown suggest-input form-inline">
+    <input class="form-control" type="text" autocomplete="off" v-model="query" :disabled="disabled"
+     @focus="load" @keyup="load">
+    <ul class="dropdown-menu" v-show="suggested">
+      <li v-for="(item, index) in items" :key="index" @click="select(item)"><a href="#" @click.prevent>{{item}}</a></li>
+    </ul>
+  </div>
+</script>

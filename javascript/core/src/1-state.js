@@ -1,26 +1,79 @@
 
+const about = {
+    namespaced: true,
+    state: {
+        growth: 0,
+        weight: 0,
+        figure: 0
+    },
+    actions: {
+        SYNC({rootState, commit, getters}) {
+            return api.user.syncAbout().then((response) => {
+                commit('update', response.data);
+            });
+        },
+        SAVE({state, commit}, data) {
+            api.user.saveAbout({anketa: data}).then((response) => {
+                commit('update', data);
+            });
+        }
+    },
+    mutations: {
+        update(state, data) {
+            if (data) {
+                _.assign(state, data);
+            }
+        },
+    }
+};
+
+
 const auth = {
+    namespaced: true,
     state: {
         iss: '',
         exp: '',
         iat: '',
         sid: '',
-        uis: '',
+        uid: '',
         auth: '',
         ip:  '',
             login: '',
             pass:  '',
             email: '',
             promt: '',
-            last:  '',
-            error: '',
-            subsc: 0
+            subscr: false,
+        last:  '',
+        error: ''
     },
     actions: {
-
+        SYNC({commit}) {
+            return api.user.syncAuth().then((response) => {
+                commit('update', response.data);
+            });
+        },
+        SAVE_LOGIN({commit}, data) {
+            return api.user.saveLogin(data);
+        },
+        SAVE_PASSWD({commit}, data) {
+            return api.user.savePasswd(data);
+        },
+        SAVE_EMAIL({commit}, data) {
+            return api.user.saveEmail(data);
+        },
+        REMOVE_EMAIL({commit}) {
+            return api.user.removeEmail();
+        },
+        SAVE_SUSCRIBE({commit}, data) {
+            return api.user.saveSubscribe();
+        }
     },
     mutations: {
-
+        update(state, data) {
+            if (data) {
+                _.assign(state, data);
+            }
+        },
     }
 };
 
@@ -209,6 +262,45 @@ const credits = {
     }
 };
 
+
+const desires = {
+    namespaced: true,
+    state: {
+        list: [],
+    },
+    actions: {
+        SYNC({rootState, commit, getters}) {
+            return api.user.desireList().then((response) => {
+                commit('update', response.data);
+            });
+        },
+        ADD({state, commit}, tag) {
+            //commit('add', tag);
+            return api.user.desireAdd(tag).then((response) => {
+                let id = response.data.id;
+                commit('add', {id, tag});
+            });
+        },
+        DELETE({state, commit}, index) {
+            return api.user.desireDelete(state.list[index].id);
+            commit('delete', index);
+        }
+    },
+    mutations: {
+        update(state, data) {
+            if (data && data.length) {
+                state.list = data.slice();
+            }
+        },
+        add(state, data) {
+            state.list.unshift(data);
+        },
+        delete(state, index) {
+            state.list.splice(index, 1);
+        },
+    }
+};
+
 const modals = {
     state: {
         initial: false,
@@ -347,23 +439,20 @@ const user = {
         age: '',
         name: '',
         city: '',
-        status:  0,
-        em: 0,
-        vk: 0,
-        ok: 0,
-        fb: 0,
-        go: 0,
-        sk: 0,
-        ph: 0,
+        contacts: {
+            em: 0,
+            vk: 0,
+            ok: 0,
+            fb: 0,
+            go: 0,
+            sk: 0,
+            ph: 0,
+        },
         tags: {
             str: ''
         },
-        last: '',
-        anketa: {
-            growth: '',
-            weight: '',
-            figure: ''
-        }
+        status: 0,
+        last: ''
     },
     actions: {
         LOAD_USER({ commit }) {
@@ -397,10 +486,18 @@ const user = {
                 commit('loadUser', {city});
             }
         },
+        SAVE_CONTACTS({ state, commit }, contacts) {
+            api.user.saveContacts(contacts).then((response) => { });
+            commit('loadUser', {contacts});
+        },
     },
     mutations: {
         loadUser(state, data) {
             state = _.assign(state, data);
+            ls.set('user.data', state, 23456);
+        },
+        resetUser(state, data) {
+            state = data;
             ls.set('user.data', state, 23456);
         },
     }
@@ -414,8 +511,11 @@ var ls = lscache;
 const store = new Vuex.Store({
     modules: {
         user,
+        auth,
+        about,
         search,
         contacts,
+        desires,
         modals
     },
     state: {
@@ -694,6 +794,9 @@ class ApiUser extends Api {
     saveCity(city) {
         return super.save({city}, null, 'option/city');
     }
+    saveContacts(data) {
+        return super.save({contact: data}, null, 'option/contact');
+    }
 
     saveSearch(data) {
         data = {
@@ -705,6 +808,44 @@ class ApiUser extends Api {
         };
         return super.save(data, null, 'msett/save');
     }
+
+    syncAbout() {
+        return super.load(null, 'sync/anketa');
+    }
+    saveAbout(data) {
+        return super.save(data, null, 'option/anketa');
+    }
+
+    syncAuth() {
+        return super.load(null, 'sync/authdata');
+    }
+    saveLogin(login) {
+        return super.save({login}, null, 'option/login');
+    }
+    savePasswd(pass) {
+        return super.save({pass}, null, 'option/passwd');
+    }
+    saveEmail(email) {
+        return super.save({email}, null, 'option/email');
+    }
+    removeEmail() {
+        return super.remove(null, null, 'option/demail');
+    }
+    saveSubscribe() {
+        return super.save(null, null, 'option/subscr');
+    }
+
+
+    desireList() {
+        return super.load(null, 'tag/user');
+    }
+    desireAdd(tag) {
+        return super.save({tag}, null, 'tag/add');
+    }
+    desireDelete(id) {
+        return super.remove({id}, null, 'tag/del');
+    }
+
 }
 
 class ApiSearch extends Api {

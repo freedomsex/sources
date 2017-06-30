@@ -42,8 +42,7 @@
         <div class="account-section" v-if="tags.length">
           <div class="account-section__header">Мои желания и фантазии</div>
           <div class="desire-tag__list">
-            <desire-tag-item v-for="(item, index) in tags" :key="index"
-              :item="item"></desire-tag-item>
+            <desire-tag-item v-for="(item, index) in tags" :key="index" :tag="item"/>
           </div>
         </div>
 

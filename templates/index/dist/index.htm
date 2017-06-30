@@ -170,11 +170,24 @@
 <api-key-update></api-key-update>
 
 <search-settings v-if="searchSettings" @close="searchSettings = false; search()" @account="openAccountSettings()"></search-settings>
-<account-settings v-if="accountSettings" @close="accountSettings = false" @login="logIn = true"></account-settings>
+<account-settings v-if="accountSettings"
+  @close="accountSettings = false"
+  @settings="otherSettings = true"
+  @login="logIn = true"></account-settings>
 <sex-confirm v-if="sexConfirm" :show="sexConfirm" @close="sexConfirm = false" @select="selectSex"></sex-confirm>
 <login-account v-if="logIn" @close="logIn = false"></login-account>
+<other-settings v-if="otherSettings" @close="otherSettings = false"
+  @security="securitySettings = true"
+  @desires="desiresSettings = true"
+  @social="socialSettings = true"
+  @about="aboutSettings = true"></other-settings>
+<security-settings v-if="securitySettings" @close="securitySettings = false" @warning="showSnackbar" @alert="showToast"></security-settings>
+<desires-settings v-if="desiresSettings" @close="desiresSettings = false"></desires-settings>
+<social-settings v-if="socialSettings" @close="socialSettings = false"></social-settings>
+<about-settings v-if="aboutSettings" @close="aboutSettings = false"></about-settings>
 
-
+<snackbar v-if="warning" @close="warning = null">{{warning}}</snackbar>
+<toast v-if="alert" @close="alert = null">{{alert}}</toast>
 
 <!-- Статические опции, absolute -->
  <div id="option-static" style="display: none;">
@@ -234,8 +247,7 @@
         <div class="account-section" v-if="tags.length">
           <div class="account-section__header">Мои желания и фантазии</div>
           <div class="desire-tag__list">
-            <desire-tag-item v-for="(item, index) in tags" :key="index"
-              :item="item"></desire-tag-item>
+            <desire-tag-item v-for="(item, index) in tags" :key="index" :tag="item"/>
           </div>
         </div>
 
@@ -491,7 +503,7 @@
 
 
 <script type="text/x-template" id="desire-tag-item">
-  <div class="desire-tag__item">{{item}}</div>
+  <div class="desire-tag__item" :class="{active, error}" @click="select">{{tag}}</div>
 </script>
 
 <script type="text/x-template" id="email-sended">
@@ -610,12 +622,12 @@
 
 <script type="text/x-template" id="message-list">
   <div class="message-list" v-show="!error">
-    <div class="messages__new" v-on:click="load">
-      <span class="messages__new-lamp" v-show="newCount" style="display: none;">Новые
+    <div class="messages__new" @click="load">
+      <span class="messages__new-lamp" v-show="newCount">Новые
       +<b>{{newCount}}</b>
       </span>
     </div>
-    <div class="messages__next" v-on:click="load" v-show="more" style="display: none;">
+    <div class="messages__next" @click="loadNext" v-show="more">
       <span class="btn btn-default btn-xs">Следующие</span>
     </div>
     <div class="messages">
@@ -835,6 +847,64 @@
 
 
 
+<script type="text/x-template" id="about-settings">
+  <closed-activity @close="close">
+    <div class="activity-section">
+      <div class="activity-section__title">Ваш рост</div>
+      <div class="form-inline">
+        <div class="input-group">
+          <input class="form-control" type="text" size="3" v-model.number="inputGrowth" @change="deflower" :disabled="process">
+          <div class="input-group-addon">См</div>
+        </div>
+      </div>
+    </div>
+    <div class="activity-section">
+      <div class="activity-section__title">Ваш вес</div>
+      <div class="form-inline">
+        <div class="input-group">
+          <input class="form-control" type="text" size="3" v-model.number="inputWeight" @change="deflower" :disabled="process">
+          <div class="input-group-addon">Кг</div>
+        </div>
+      </div>
+    </div>
+    <div class="activity-section">
+      <div class="activity-section__title">Телосложение, фигура</div>
+      <div class="radio">
+        <label>
+          <input type="radio" id="input-figure" v-model.number="selectFigure" value="2" @change="deflower" :disabled="process">
+          Спортивная
+        </label>
+      </div>
+      <div class="radio">
+        <label>
+          <input type="radio" id="input-figure" v-model.number="selectFigure" value="3" @change="deflower" :disabled="process">
+          Обычная
+        </label>
+      </div>
+      <div class="radio">
+        <label>
+          <input type="radio" id="input-figure" v-model.number="selectFigure" value="5" @change="deflower" :disabled="process">
+          Полная
+        </label>
+      </div>
+      <div class="radio">
+        <label>
+          <input type="radio" id="input-figure" v-model.number="selectFigure" value="6" @change="deflower" :disabled="process">
+          Худая
+        </label>
+      </div>
+      <div class="radio">
+        <label>
+          <input type="radio" id="input-figure" v-model.number="selectFigure" value="0" @change="deflower" :disabled="process">
+          Не указывать
+        </label>
+      </div>
+    </div>
+
+  </closed-activity>
+</script>
+
+
 <script type="text/x-template" id="account-settings">
   <closed-activity @close="close">
     <div class="activity-section">
@@ -875,12 +945,49 @@
     </div>
 
     <div class="activity-section">
-      <a class="" href="/profile.php" target="_blank">Другие настройки</a>
+      <a class="" href="/profile.php" target="_blank" @click.prevent="settings">Другие настройки</a>
     </div>
 
     <div class="activity-section">
       <span class="link_simple" @click="login">Уже есть анкета?</span>
     </div>
+
+  </closed-activity>
+</script>
+
+
+<script type="text/x-template" id="desires-settings">
+  <closed-activity @close="close">
+    <div class="activity-section">
+      <div class="activity-section__title">Желания</div>
+      <suggest-input @select="add" :disabled="process"/>
+    </div>
+
+    <div class="activity-section">
+      <div class="desire-tag__list">
+        <desire-tag-item v-for="(item, index) in tags" :key="index"
+         :tag="item.tag"
+         :id="item.id"
+         @select="confirmRemove = index"/>
+      </div>
+    </div>
+
+    <modal-dialog @close="confirmRemove = null" v-if="confirmRemove !== null">
+      <div class="modal-dialog__wrapper">
+        <div class="modal-dialog__body">
+          Удалить желание? Всегда можно будет добавить заново здесь,
+          или кликнув по понравившемуся в любой анкете.
+        </div>
+        <div class="modal-dialog__footer">
+          <button class="btn btn-danger" @click="remove">
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            Удалить
+          </button>
+        </div>
+      </div>
+    </modal-dialog>
+
+
 
   </closed-activity>
 </script>
@@ -916,6 +1023,52 @@
       {{hint}}
     </div>
     <remind-login v-if="remind" @close="remind = false"></remind-login>
+  </closed-activity>
+</script>
+
+
+<script type="text/x-template" id="other-settings">
+  <closed-activity @close="close">
+<!--
+    <div class="activity-section">
+      <div class="activity-section__title">Статус анкеты</div>
+      Обычный
+      <span class="link_simple" @click="$emit('security')">Изменить</span>
+    </div>
+
+    <div class="activity-section">
+      <div class="activity-section__title">Кредиты доверия</div>
+      <span class="link_simple" @click="$emit('security')">Получить</span>
+    </div>
+ -->
+    <div class="activity-section">
+      <div class="activity-section__title">Настройки</div>
+      <span class="link_simple" @click="$emit('security')">Безопасность</span>
+    </div>
+
+    <div class="activity-section">
+      <span class="link_simple" @click="$emit('desires')">Желания и фантазии</span>
+    </div>
+
+    <div class="activity-section">
+      <span class="link_simple" @click="$emit('social')">Контакты, соцсети</span>
+    </div>
+
+    <div class="activity-section">
+      <span class="link_simple" @click="$emit('about')">Анкетные данные</span>
+    </div>
+
+<!--
+    <div class="activity-section">
+      <div class="activity-section__title">Поддержка</div>
+      <span class="link_simple" @click="$emit('security')">Оставить отзыв</span>
+    </div>
+
+    <div class="activity-section">
+      <span class="link_simple" @click="$emit('about')">Задать вопрос</span>
+    </div>
+ -->
+
   </closed-activity>
 </script>
 
@@ -956,15 +1109,15 @@
       <div class="activity-section__title">Кого вы ищете:</div>
       <div class="radio">
         <label class="radio-inline">
-          <input type="radio" v-model.number="selectWho" :value="2">
+          <input type="radio" v-model.number="selectWho" value="2">
           Девушку
         </label>
         <label class="radio-inline">
-          <input type="radio" v-model.number="selectWho" :value="1">
+          <input type="radio" v-model.number="selectWho" value="1">
           Парня
         </label>
         <label class="radio-inline">
-          <input type="radio" v-model.number="selectWho" :value="0">
+          <input type="radio" v-model.number="selectWho" value="0">
           Кого угодно
         </label>
       </div>
@@ -1003,6 +1156,116 @@
   </closed-activity>
 </script>
 
+
+<script type="text/x-template" id="security-settings">
+  <closed-activity @close="close">
+    <div class="activity-section">
+      <div class="activity-section__title">Логин:</div>
+      <div class="form-inline">
+          <input class="form-control" type="text" v-model="inputLogin" @change="saveLogin" :disabled="process || processLogin">
+      </div>
+    </div>
+    <div class="activity-section">
+      <div class="activity-section__title">Пароль:</div>
+      <div class="form-inline">
+        <input class="form-control" type="text" v-model="inputPasswd" @change="savePasswd" :disabled="process || processPasswd">
+      </div>
+    </div>
+    <div class="activity-section">
+      <div class="activity-section__title">Емаил:</div>
+      <div class="form-inline">
+        <label @click="promt ? confirmRemove = true : false">
+          <input class="form-control" type="text" v-model="inputEmail"
+           @change="saveEmail"
+           :disabled="process || promt || processEmail">
+        </label>
+      </div>
+    </div>
+    <div class="activity-section">
+      <div class="activity-section__title">Уведомления:</div>
+      <div class="radio">
+        <label class="radio-inline">
+          <input type="radio" id="input-figure" v-model.number="checkSubscribe" value="1" @change="saveSubscribe" :disabled="process || !promt || !email">
+          Принимать
+        </label>
+        <label class="radio-inline">
+          <input type="radio" id="input-figure" v-model.number="checkSubscribe" value="0" @change="saveSubscribe" :disabled="process || !promt || !email">
+          Отклонить
+        </label>
+      </div>
+    </div>
+
+    <modal-dialog @close="confirmRemove = false" v-if="confirmRemove">
+      <div class="modal-dialog__wrapper">
+        <div class="modal-dialog__body">
+          Ваш емаил подтвержден. Пожалуйста, подтвердите удаление и следуйте инструкциям
+          в письме которое будет отправлено на ваш емаил.
+        </div>
+        <div class="modal-dialog__footer">
+          <button class="btn btn-danger" @click="removeEmail">
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            Удалить
+          </button>
+        </div>
+      </div>
+    </modal-dialog>
+  </closed-activity>
+</script>
+
+
+<script type="text/x-template" id="social-settings">
+  <closed-activity @close="close">
+    <div class="activity-section">
+      <div class="activity-section__title">Контакты, соцсети</div>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" v-model="checkedContact.em" @change="deflower">
+            У меня есть электронная почта
+          </label>
+        </div>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" v-model="checkedContact.vk" @change="deflower">
+            Есть страничка Вконтакте
+          </label>
+        </div>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" v-model="checkedContact.ok" @change="deflower">
+            Я есть в Одноклассниках
+          </label>
+        </div>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" v-model="checkedContact.fb" @change="deflower">
+            У меня страница на Фэйсбуке
+          </label>
+        </div>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" v-model="checkedContact.go" @change="deflower">
+            Имею Google+
+          </label>
+        </div>
+    </div>
+    <div class="activity-section">
+      <div class="activity-section__title">Видеочат и телефон</div>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" v-model="checkedContact.sk" @change="deflower">
+            Видеозвонок, видеочат, скайп
+          </label>
+        </div>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" v-model="checkedContact.ph" @change="deflower">
+            Позвоню или дам номер телефона
+          </label>
+        </div>
+    </div>
+  </closed-activity>
+</script>
+
 <script type="text/x-template" id="sex-confirm">
   <modal-dialog @close="close">
     <div class="modal-dialog__wrapper">
@@ -1035,10 +1298,22 @@
   </div>
 </script>
 <script type="text/x-template" id="snackbar">
-  <div class="snackbar" @click="close">
-    <div class="snackbar__body">
-      <slot></slot>
+  <transition name="snackbar">
+    <div class="snackbar" @click="close">
+      <div class="snackbar__body">
+        <slot></slot>
+      </div>
     </div>
+  </transition>
+</script>
+
+<script type="text/x-template" id="suggest-input">
+  <div class="dropdown suggest-input form-inline">
+    <input class="form-control" type="text" autocomplete="off" v-model="query" :disabled="disabled"
+     @focus="load" @keyup="load">
+    <ul class="dropdown-menu" v-show="suggested">
+      <li v-for="(item, index) in items" :key="index" @click="select(item)"><a href="#" @click.prevent>{{item}}</a></li>
+    </ul>
   </div>
 </script>
 <script type="text/x-template" id="toast">

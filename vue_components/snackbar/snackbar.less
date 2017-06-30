@@ -15,6 +15,13 @@
         min-width: 200px;
         max-width: 550px;
         width: 100%;
-        border-top: 0px solid @red-dark;
+        border-top: 3px solid @white;
     }
+}
+
+.snackbar-enter-active, .snackbar-leave-active {
+  transition: all .5s
+}
+.snackbar-enter, .snackbar-leave-to /* .fade-leave-active для <2.1.8 */ {
+  transform: translateY(50px);
 }

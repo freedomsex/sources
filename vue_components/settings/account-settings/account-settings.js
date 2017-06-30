@@ -67,6 +67,9 @@ Vue.component('account-settings', {
             this.$emit('login');
             this.$emit('close');
         },
+        settings() {
+            this.$emit('settings');
+        },
     },
     template: '#account-settings',
 });

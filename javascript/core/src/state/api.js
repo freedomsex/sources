@@ -189,6 +189,9 @@ class ApiUser extends Api {
     saveCity(city) {
         return super.save({city}, null, 'option/city');
     }
+    saveContacts(data) {
+        return super.save({contact: data}, null, 'option/contact');
+    }
 
     saveSearch(data) {
         data = {
@@ -200,6 +203,44 @@ class ApiUser extends Api {
         };
         return super.save(data, null, 'msett/save');
     }
+
+    syncAbout() {
+        return super.load(null, 'sync/anketa');
+    }
+    saveAbout(data) {
+        return super.save(data, null, 'option/anketa');
+    }
+
+    syncAuth() {
+        return super.load(null, 'sync/authdata');
+    }
+    saveLogin(login) {
+        return super.save({login}, null, 'option/login');
+    }
+    savePasswd(pass) {
+        return super.save({pass}, null, 'option/passwd');
+    }
+    saveEmail(email) {
+        return super.save({email}, null, 'option/email');
+    }
+    removeEmail() {
+        return super.remove(null, null, 'option/demail');
+    }
+    saveSubscribe() {
+        return super.save(null, null, 'option/subscr');
+    }
+
+
+    desireList() {
+        return super.load(null, 'tag/user');
+    }
+    desireAdd(tag) {
+        return super.save({tag}, null, 'tag/add');
+    }
+    desireDelete(id) {
+        return super.remove({id}, null, 'tag/del');
+    }
+
 }
 
 class ApiSearch extends Api {

@@ -17,10 +17,10 @@ Vue.component('api-key-update', {
             });
         },
         upUser(data) {
-            let {uid, city, sex, age, name} = data;
-            //console.log('upUser', data);
-            store.commit('loadUser', {uid, city, sex, age, name});
-            store.commit('loadUser', data.contacts);
+            let {uid, city, sex, age, name, contacts} = data;
+            console.log('upUser', data);
+            store.commit('resetUser', {uid, city, sex, age, name, contacts});
+            //store.commit('loadUser', data.contacts);
         },
         upSettings(data) {
             let {who, years_up: up, years_to: to, close: town, virt} = data;

@@ -14,6 +14,7 @@ Vue.component('message-list', {
             uid: null,
             date: null,
             toSlow: false,
+            skipScroll: false,
         }
     },
     mounted: function () {
@@ -44,6 +45,10 @@ Vue.component('message-list', {
             });
             setTimeout(() => this.toSlow = true, 7000);
         },
+        loadNext() {
+            this.skipScroll = true;
+            this.load();
+        },
         onLoad(response) {
             let messages = response.data.messages;
             this.received = messages ? messages.length : 0;
@@ -63,6 +68,9 @@ Vue.component('message-list', {
             //console.log(response);
         },
         scroll() {
+            if (this.skipScroll) {
+                return this.skipScroll = false;
+            }
             var objDiv = document.getElementById("dialog-history");
             objDiv.scrollTop = objDiv.scrollHeight+30;
         },
@@ -90,7 +98,8 @@ Vue.component('message-list', {
     },
     computed: {
         items() {
-            return this.messages.reverse();
+            //let arr = this.messages.slice();
+            return this.messages.slice().reverse();
         },
         more() {
             if (this.received && this.received == this.batch) {

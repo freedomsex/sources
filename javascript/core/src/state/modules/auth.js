@@ -1,25 +1,49 @@
 
 const auth = {
+    namespaced: true,
     state: {
         iss: '',
         exp: '',
         iat: '',
         sid: '',
-        uis: '',
+        uid: '',
         auth: '',
         ip:  '',
             login: '',
             pass:  '',
             email: '',
             promt: '',
-            last:  '',
-            error: '',
-            subsc: 0
+            subscr: false,
+        last:  '',
+        error: ''
     },
     actions: {
-
+        SYNC({commit}) {
+            return api.user.syncAuth().then((response) => {
+                commit('update', response.data);
+            });
+        },
+        SAVE_LOGIN({commit}, data) {
+            return api.user.saveLogin(data);
+        },
+        SAVE_PASSWD({commit}, data) {
+            return api.user.savePasswd(data);
+        },
+        SAVE_EMAIL({commit}, data) {
+            return api.user.saveEmail(data);
+        },
+        REMOVE_EMAIL({commit}) {
+            return api.user.removeEmail();
+        },
+        SAVE_SUSCRIBE({commit}, data) {
+            return api.user.saveSubscribe();
+        }
     },
     mutations: {
-
+        update(state, data) {
+            if (data) {
+                _.assign(state, data);
+            }
+        },
     }
 };

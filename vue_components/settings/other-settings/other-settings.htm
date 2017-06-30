@@ -1,0 +1,45 @@
+
+<script type="text/x-template" id="other-settings">
+  <closed-activity @close="close">
+<!--
+    <div class="activity-section">
+      <div class="activity-section__title">Статус анкеты</div>
+      Обычный
+      <span class="link_simple" @click="$emit('security')">Изменить</span>
+    </div>
+
+    <div class="activity-section">
+      <div class="activity-section__title">Кредиты доверия</div>
+      <span class="link_simple" @click="$emit('security')">Получить</span>
+    </div>
+ -->
+    <div class="activity-section">
+      <div class="activity-section__title">Настройки</div>
+      <span class="link_simple" @click="$emit('security')">Безопасность</span>
+    </div>
+
+    <div class="activity-section">
+      <span class="link_simple" @click="$emit('desires')">Желания и фантазии</span>
+    </div>
+
+    <div class="activity-section">
+      <span class="link_simple" @click="$emit('social')">Контакты, соцсети</span>
+    </div>
+
+    <div class="activity-section">
+      <span class="link_simple" @click="$emit('about')">Анкетные данные</span>
+    </div>
+
+<!--
+    <div class="activity-section">
+      <div class="activity-section__title">Поддержка</div>
+      <span class="link_simple" @click="$emit('security')">Оставить отзыв</span>
+    </div>
+
+    <div class="activity-section">
+      <span class="link_simple" @click="$emit('about')">Задать вопрос</span>
+    </div>
+ -->
+
+  </closed-activity>
+</script>

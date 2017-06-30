@@ -5,23 +5,20 @@ const user = {
         age: '',
         name: '',
         city: '',
-        status:  0,
-        em: 0,
-        vk: 0,
-        ok: 0,
-        fb: 0,
-        go: 0,
-        sk: 0,
-        ph: 0,
+        contacts: {
+            em: 0,
+            vk: 0,
+            ok: 0,
+            fb: 0,
+            go: 0,
+            sk: 0,
+            ph: 0,
+        },
         tags: {
             str: ''
         },
-        last: '',
-        anketa: {
-            growth: '',
-            weight: '',
-            figure: ''
-        }
+        status: 0,
+        last: ''
     },
     actions: {
         LOAD_USER({ commit }) {
@@ -55,10 +52,18 @@ const user = {
                 commit('loadUser', {city});
             }
         },
+        SAVE_CONTACTS({ state, commit }, contacts) {
+            api.user.saveContacts(contacts).then((response) => { });
+            commit('loadUser', {contacts});
+        },
     },
     mutations: {
         loadUser(state, data) {
             state = _.assign(state, data);
+            ls.set('user.data', state, 23456);
+        },
+        resetUser(state, data) {
+            state = data;
             ls.set('user.data', state, 23456);
         },
     }

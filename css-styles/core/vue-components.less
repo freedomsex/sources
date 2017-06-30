@@ -172,7 +172,7 @@
         margin-bottom: 1px;
         overflow: hidden;
         background: @white;
-        border: 1px solid @gray;
+        border: 0px solid @gray;
         border-top: 0;
         box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
         overflow-x: hidden;
@@ -486,22 +486,45 @@
   background-image: url('/static/img/icon/send.png');
 }
 
-.desire-tag__item {
-    background-color: @white;
-    background-image: url(/static/img/icon/desire_corner.png);
-    background-position: left top;
-    background-repeat: no-repeat;
-    border-radius: @radius-xs;
-    border: 1px solid @gray-light;
-    color: @dark-light;
-    cursor: pointer;
-    display: inline-block;
-    font-size: @font-sm;
-    font-style: normal;
-    margin-bottom: @indent-xs;
-    margin-right:  @indent-xs;
-    padding: @indent-xs @indent-xs+2;
-    line-height: 1;
+.desire-tag {
+    &__item {
+        background-color: @white;
+        background-image: url(/static/img/icon/desire_corner.png);
+        background-position: left top;
+        background-repeat: no-repeat;
+        border-radius: @radius-xs;
+        border: 1px solid @gray-light;
+        color: @dark-light;
+        cursor: pointer;
+        display: inline-block;
+        font-size: @font-sm;
+        font-style: normal;
+        margin-bottom: @indent-xs;
+        margin-right:  @indent-xs;
+        padding: @indent-xs @indent-xs+2;
+        line-height: 1;
+        &.deleted {
+            background-color: @gray;
+            text-decoration: line-through;
+        }
+        &.added {
+            background-color: @yellow-light;
+            border-color: @orange-light;
+        }
+        &.error {
+            background-color: @pink-light;
+            border-color: @pink;
+        }
+        &.active {
+            background-image: url(/static/img/icon/desire_corner_blue.png);
+            border-color: @purpur-dark;
+        }
+        &.process {
+            background: @white;
+            border-color: @light;
+            color: @gray-dark;
+        }
+    }
 }
 
 .galery-photo {
@@ -1485,6 +1508,7 @@
         color: White;
     }
 }
+
 .btn-fat {
     padding-left: @indent-xl;
     padding-right: @indent-xl;
@@ -1535,7 +1559,22 @@
         min-width: 200px;
         max-width: 550px;
         width: 100%;
-        border-top: 0px solid @red-dark;
+        border-top: 3px solid @white;
+    }
+}
+
+.snackbar-enter-active, .snackbar-leave-active {
+  transition: all .5s
+}
+.snackbar-enter, .snackbar-leave-to /* .fade-leave-active для <2.1.8 */ {
+  transform: translateY(50px);
+}
+.suggest-input  {
+    .dropdown-menu {
+        display: inline-block;
+        > li > a {
+            padding-left: 12px;
+        }
     }
 }
 .toast {

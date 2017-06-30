@@ -1,0 +1,53 @@
+
+<script type="text/x-template" id="social-settings">
+  <closed-activity @close="close">
+    <div class="activity-section">
+      <div class="activity-section__title">Контакты, соцсети</div>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" v-model="checkedContact.em" @change="deflower">
+            У меня есть электронная почта
+          </label>
+        </div>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" v-model="checkedContact.vk" @change="deflower">
+            Есть страничка Вконтакте
+          </label>
+        </div>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" v-model="checkedContact.ok" @change="deflower">
+            Я есть в Одноклассниках
+          </label>
+        </div>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" v-model="checkedContact.fb" @change="deflower">
+            У меня страница на Фэйсбуке
+          </label>
+        </div>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" v-model="checkedContact.go" @change="deflower">
+            Имею Google+
+          </label>
+        </div>
+    </div>
+    <div class="activity-section">
+      <div class="activity-section__title">Видеочат и телефон</div>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" v-model="checkedContact.sk" @change="deflower">
+            Видеозвонок, видеочат, скайп
+          </label>
+        </div>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" v-model="checkedContact.ph" @change="deflower">
+            Позвоню или дам номер телефона
+          </label>
+        </div>
+    </div>
+  </closed-activity>
+</script>

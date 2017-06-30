@@ -1,4 +1,4 @@
 
 <script type="text/x-template" id="desire-tag-item">
-  <div class="desire-tag__item">{{item}}</div>
+  <div class="desire-tag__item" :class="{active, error}" @click="select">{{tag}}</div>
 </script>

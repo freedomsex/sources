@@ -6,8 +6,11 @@ var ls = lscache;
 const store = new Vuex.Store({
     modules: {
         user,
+        auth,
+        about,
         search,
         contacts,
+        desires,
         modals
     },
     state: {

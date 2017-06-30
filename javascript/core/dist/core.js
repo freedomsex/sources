@@ -202,11 +202,12 @@ Vue.component('api-key-update', {
                 city = data.city,
                 sex = data.sex,
                 age = data.age,
-                name = data.name;
-            //console.log('upUser', data);
+                name = data.name,
+                contacts = data.contacts;
 
-            store.commit('loadUser', { uid: uid, city: city, sex: sex, age: age, name: name });
-            store.commit('loadUser', data.contacts);
+            console.log('upUser', data);
+            store.commit('resetUser', { uid: uid, city: city, sex: sex, age: age, name: name, contacts: contacts });
+            //store.commit('loadUser', data.contacts);
         },
         upSettings: function upSettings(data) {
             var who = data.who,
@@ -674,7 +675,19 @@ Vue.component('contact-item', {
 });
 
 Vue.component('desire-tag-item', {
-    props: ['item'],
+    props: ['id', 'tag'],
+    data: function data() {
+        return {
+            active: false,
+            error: false
+        };
+    },
+
+    methods: {
+        select: function select() {
+            this.$emit('select');
+        }
+    },
     template: '#desire-tag-item'
 });
 
@@ -1008,7 +1021,8 @@ Vue.component('message-list', {
             attention: false,
             uid: null,
             date: null,
-            toSlow: false
+            toSlow: false,
+            skipScroll: false
         };
     },
 
@@ -1044,6 +1058,10 @@ Vue.component('message-list', {
                 return _this22.toSlow = true;
             }, 7000);
         },
+        loadNext: function loadNext() {
+            this.skipScroll = true;
+            this.load();
+        },
         onLoad: function onLoad(response) {
             var _this23 = this;
 
@@ -1065,6 +1083,9 @@ Vue.component('message-list', {
             //console.log(response);
         },
         scroll: function scroll() {
+            if (this.skipScroll) {
+                return this.skipScroll = false;
+            }
             var objDiv = document.getElementById("dialog-history");
             objDiv.scrollTop = objDiv.scrollHeight + 30;
         },
@@ -1092,7 +1113,8 @@ Vue.component('message-list', {
     },
     computed: {
         items: function items() {
-            return this.messages.reverse();
+            //let arr = this.messages.slice();
+            return this.messages.slice().reverse();
         },
         more: function more() {
             if (this.received && this.received == this.batch) {
@@ -1516,6 +1538,68 @@ Vue.component('search-wizard', {
     mounted: function mounted() {}
 });
 
+Vue.component('about-settings', {
+    props: [],
+    data: function data() {
+        return {
+            inputGrowth: '',
+            inputWeight: '',
+            selectFigure: null,
+            process: false,
+            virgin: true
+        };
+    },
+
+    computed: Vuex.mapState({
+        growth: function growth(state) {
+            return state.about.growth;
+        },
+        weight: function weight(state) {
+            return state.about.weight;
+        },
+        figure: function figure(state) {
+            return state.about.figure;
+        }
+    }),
+    mounted: function mounted() {
+        var _this28 = this;
+
+        this.$store.dispatch('about/SYNC').then(function () {
+            _this28.init();
+            _this28.process = false;
+        }).catch(function () {
+            _this28.process = false;
+        });
+        this.process = true;
+        this.init();
+    },
+
+    methods: {
+        init: function init() {
+            this.inputGrowth = this.growth ? this.growth : '';
+            this.inputWeight = this.weight ? this.weight : '';
+            this.selectFigure = this.figure;
+        },
+        deflower: function deflower() {
+            this.virgin = false;
+        },
+        close: function close() {
+            this.save();
+            this.$emit('close');
+        },
+        save: function save() {
+            if (!this.virgin) {
+                this.$store.dispatch('about/SAVE', {
+                    growth: this.inputGrowth,
+                    weight: this.inputWeight,
+                    figure: this.selectFigure
+                });
+            }
+        }
+    },
+    template: '#about-settings'
+});
+
 Vue.component('account-settings', {
     props: [],
     data: function data() {
@@ -1585,9 +1669,56 @@ Vue.component('account-settings', {
         login: function login() {
             this.$emit('login');
             this.$emit('close');
+        },
+        settings: function settings() {
+            this.$emit('settings');
         }
     },
     template: '#account-settings'
+});
+
+Vue.component('desires-settings', {
+    props: [],
+    data: function data() {
+        return {
+            process: false,
+            desire: '',
+            confirmRemove: null
+        };
+    },
+
+    computed: Vuex.mapState({
+        tags: function tags(state) {
+            return state.desires.list;
+        }
+    }),
+    mounted: function mounted() {
+        var _this29 = this;
+
+        this.process = true;
+        this.$store.dispatch('desires/SYNC').then(function (response) {
+            _this29.process = false;
+        });
+    },
+
+    methods: {
+        close: function close() {
+            this.$emit('close');
+        },
+        add: function add(tag) {
+            var _this30 = this;
+
+            this.process = true;
+            this.$store.dispatch('desires/ADD', tag).then(function (response) {
+                _this30.process = false;
+            });
+        },
+        remove: function remove() {
+            this.$store.dispatch('desires/DELETE', this.confirmRemove);
+            this.confirmRemove = null;
+        }
+    },
+    template: '#desires-settings'
 });
 
 Vue.component('login-account', {
@@ -1616,7 +1747,7 @@ Vue.component('login-account', {
             this.$emit('close');
         },
         send: function send() {
-            var _this28 = this;
+            var _this31 = this;
 
             var data = {
                 login: this.login,
@@ -1624,10 +1755,10 @@ Vue.component('login-account', {
                 captcha: this.code
             };
             api.user.post(data, null, 'sync/login').then(function (response) {
-                _this28.hint = response.data.say;
-                _this28.error = response.data.err;
-                _this28.captcha = response.data.captcha;
-                _this28.onLogin();
+                _this31.hint = response.data.say;
+                _this31.error = response.data.err;
+                _this31.captcha = response.data.captcha;
+                _this31.onLogin();
             });
         },
         onLogin: function onLogin() {
@@ -1641,6 +1772,21 @@ Vue.component('login-account', {
         }
     },
     template: '#login-account'
+});
+
+Vue.component('other-settings', {
+    props: [],
+    data: function data() {
+        return {};
+    },
+
+    computed: Vuex.mapState({}),
+    methods: {
+        close: function close() {
+            this.$emit('close');
+        }
+    },
+    template: '#other-settings'
 });
 
 Vue.component('photo-settings', {
@@ -1674,7 +1820,7 @@ Vue.component('photo-settings', {
             this.$emit('close');
         },
         loadPhoto: function loadPhoto() {
-            var _this29 = this;
+            var _this32 = this;
 
             var server = this.$store.state.photoServer;
             var uid = this.$store.state.user.uid;
@@ -1685,9 +1831,9 @@ Vue.component('photo-settings', {
             axios.get('http://' + server + '/api/v1/users/' + uid + '/photos', config).then(function (response) {
                 var result = response.data.photos;
                 if (result && result.length) {
-                    _this29.photos = response.data.photos;
+                    _this32.photos = response.data.photos;
                 }
-                console.log(_this29.photos);
+                console.log(_this32.photos);
             }).catch(function (error) {
                 console.log(error);
             });
@@ -1828,6 +1974,180 @@ Vue.component('search-settings', {
     template: '#search-settings'
 });
 
+Vue.component('security-settings', {
+    props: [],
+    data: function data() {
+        return {
+            inputLogin: '',
+            inputPasswd: '',
+            inputEmail: '',
+            checkSubscribe: false,
+            process: false,
+            processLogin: false,
+            processPasswd: false,
+            processEmail: false,
+            confirmRemove: false,
+            virgin: true
+        };
+    },
+
+    computed: Vuex.mapState({
+        login: function login(state) {
+            return state.auth.login;
+        },
+        passwd: function passwd(state) {
+            return state.auth.pass;
+        },
+        email: function email(state) {
+            return state.auth.email;
+        },
+        promt: function promt(state) {
+            return state.auth.promt;
+        },
+        subscr: function subscr(state) {
+            return state.auth.subscr;
+        }
+    }),
+    mounted: function mounted() {
+        var _this33 = this;
+
+        this.$store.dispatch('auth/SYNC').then(function () {
+            _this33.init();
+            _this33.process = false;
+        }).catch(function () {
+            _this33.process = false;
+        });
+        this.process = true;
+        this.init();
+    },
+
+    methods: {
+        init: function init() {
+            this.inputLogin = this.login;
+            this.inputPasswd = this.passwd;
+            this.inputEmail = this.email;
+            this.checkSubscribe = this.subscr;
+            // this.selectFigure = this.figure;
+        },
+        deflower: function deflower() {
+            this.virgin = false;
+        },
+        saveLogin: function saveLogin() {
+            var _this34 = this;
+
+            this.processLogin = true;
+            this.$store.dispatch('auth/SAVE_LOGIN', this.inputLogin).then(function (response) {
+                var data = response.data;
+                if (data.err) {
+                    _this34.$emit('warning', data.say);
+                }
+                _this34.processLogin = false;
+            }).catch(function () {
+                _this34.processLogin = false;
+            });
+        },
+        savePasswd: function savePasswd() {
+            var _this35 = this;
+
+            this.processPasswd = true;
+            this.$store.dispatch('auth/SAVE_PASSWD', this.inputPasswd).then(function (response) {
+                var data = response.data;
+                if (data.err) {
+                    _this35.$emit('warning', data.say);
+                }
+                _this35.processPasswd = false;
+            }).catch(function () {
+                _this35.processPasswd = false;
+            });
+        },
+        saveEmail: function saveEmail() {
+            var _this36 = this;
+
+            this.processEmail = true;
+            this.$store.dispatch('auth/SAVE_EMAIL', this.inputEmail).then(function (response) {
+                var data = response.data;
+                if (data.err) {
+                    _this36.$emit('warning', data.say);
+                }
+                _this36.processEmail = false;
+            }).catch(function () {
+                _this36.processEmail = false;
+            });
+        },
+        removeEmail: function removeEmail() {
+            var _this37 = this;
+
+            this.confirmRemove = false;
+            this.processEmail = true;
+            console.log('REMOVE_EMAIL');
+            this.$store.dispatch('auth/REMOVE_EMAIL').then(function (response) {
+                var data = response.data;
+                if (data.err) {
+                    _this37.$emit('warning', data.say);
+                }
+                _this37.processEmail = false;
+            }).catch(function () {
+                _this37.processEmail = false;
+            });
+        },
+        saveSubscribe: function saveSubscribe() {
+            this.$store.dispatch('auth/SAVE_SUSCRIBE');
+        },
+        close: function close() {
+            if (!this.processLogin && !this.processPasswd && !this.processEmail) {
+                this.$emit('close');
+            } else {
+                this.$emit('alert', 'Подождите, сохраняю.');
+            }
+        }
+    },
+    template: '#security-settings'
+});
+
+Vue.component('social-settings', {
+    props: [],
+    data: function data() {
+        return {
+            checkedContact: {
+                em: 0,
+                vk: 0,
+                ok: 0,
+                fb: 0,
+                go: 0,
+                sk: 0,
+                ph: 0
+            },
+            virgin: true
+        };
+    },
+
+    computed: Vuex.mapState({
+        contacts: function contacts(state) {
+            return state.user.contacts;
+        }
+    }),
+    mounted: function mounted() {
+        console.log('user', this.contacts);
+        this.checkedContact = this.contacts;
+    },
+
+    methods: {
+        close: function close() {
+            this.save();
+            this.$emit('close');
+        },
+        deflower: function deflower() {
+            this.virgin = false;
+        },
+        save: function save() {
+            if (!this.virgin) {
+                this.$store.dispatch('SAVE_CONTACTS', this.checkedContact);
+            }
+        }
+    },
+    template: '#social-settings'
+});
+
 Vue.component('sex-confirm', {
     props: ['show'],
     computed: {
@@ -1925,6 +2245,50 @@ Vue.component('snackbar', {
     },
 
     template: '#snackbar'
+});
+
+Vue.component('suggest-input', {
+    props: ['url', 'disabled'],
+    data: function data() {
+        return {
+            query: '',
+            items: [],
+            enable: true
+        };
+    },
+
+    computed: {
+        suggested: function suggested() {
+            return this.items.length;
+        }
+    },
+    methods: {
+        load: function load() {
+            var _this38 = this;
+
+            api.user.get({ q: this.query }, 'tag/suggest').then(function (response) {
+                _this38.loaded(response.data);
+            });
+        },
+        reset: function reset() {
+            this.query = '';
+            this.items = [];
+        },
+        select: function select(item) {
+            this.query = item;
+            this.$emit('select', item);
+            this.reset();
+        },
+        loaded: function loaded(data) {
+            if (data && data.length) {
+                this.items = data;
+                console.log('loaded', data);
+            } else {
+                this.reset();
+            }
+        }
+    },
+    template: '#suggest-input'
 });
 
 Vue.component('toast', {
@@ -2083,25 +2447,100 @@ var storage = {
 };
 storage.init();
 
+var about = {
+    namespaced: true,
+    state: {
+        growth: 0,
+        weight: 0,
+        figure: 0
+    },
+    actions: {
+        SYNC: function SYNC(_ref) {
+            var rootState = _ref.rootState,
+                commit = _ref.commit,
+                getters = _ref.getters;
+
+            return api.user.syncAbout().then(function (response) {
+                commit('update', response.data);
+            });
+        },
+        SAVE: function SAVE(_ref2, data) {
+            var state = _ref2.state,
+                commit = _ref2.commit;
+
+            api.user.saveAbout({ anketa: data }).then(function (response) {
+                commit('update', data);
+            });
+        }
+    },
+    mutations: {
+        update: function update(state, data) {
+            if (data) {
+                _.assign(state, data);
+            }
+        }
+    }
+};
+
 var auth = {
+    namespaced: true,
     state: {
         iss: '',
         exp: '',
         iat: '',
         sid: '',
-        uis: '',
+        uid: '',
         auth: '',
         ip: '',
         login: '',
         pass: '',
         email: '',
         promt: '',
+        subscr: false,
         last: '',
-        error: '',
-        subsc: 0
+        error: ''
     },
-    actions: {},
-    mutations: {}
+    actions: {
+        SYNC: function SYNC(_ref3) {
+            var commit = _ref3.commit;
+
+            return api.user.syncAuth().then(function (response) {
+                commit('update', response.data);
+            });
+        },
+        SAVE_LOGIN: function SAVE_LOGIN(_ref4, data) {
+            var commit = _ref4.commit;
+
+            return api.user.saveLogin(data);
+        },
+        SAVE_PASSWD: function SAVE_PASSWD(_ref5, data) {
+            var commit = _ref5.commit;
+
+            return api.user.savePasswd(data);
+        },
+        SAVE_EMAIL: function SAVE_EMAIL(_ref6, data) {
+            var commit = _ref6.commit;
+
+            return api.user.saveEmail(data);
+        },
+        REMOVE_EMAIL: function REMOVE_EMAIL(_ref7) {
+            var commit = _ref7.commit;
+
+            return api.user.removeEmail();
+        },
+        SAVE_SUSCRIBE: function SAVE_SUSCRIBE(_ref8, data) {
+            var commit = _ref8.commit;
+
+            return api.user.saveSubscribe();
+        }
+    },
+    mutations: {
+        update: function update(state, data) {
+            if (data) {
+                _.assign(state, data);
+            }
+        }
+    }
 };
 
 var mutations = {
@@ -2124,10 +2563,10 @@ var initial = _.extend({
         list: []
     },
     actions: {
-        LOAD: function LOAD(_ref) {
-            var state = _ref.state,
-                commit = _ref.commit,
-                rootState = _ref.rootState;
+        LOAD: function LOAD(_ref9) {
+            var state = _ref9.state,
+                commit = _ref9.commit,
+                rootState = _ref9.rootState;
 
             commit('load', ls.get('initial-contacts'));
             return api.contacts.initial.cget({
@@ -2138,10 +2577,10 @@ var initial = _.extend({
                 ls.set('initial-contacts', state.list);
             });
         },
-        NEXT: function NEXT(_ref2, offset) {
-            var state = _ref2.state,
-                commit = _ref2.commit,
-                rootState = _ref2.rootState;
+        NEXT: function NEXT(_ref10, offset) {
+            var state = _ref10.state,
+                commit = _ref10.commit,
+                rootState = _ref10.rootState;
 
             return api.contacts.initial.cget({
                 uid: rootState.user.uid,
@@ -2150,10 +2589,10 @@ var initial = _.extend({
                 commit('add', response.data);
             });
         },
-        DELETE: function DELETE(_ref3, index) {
-            var state = _ref3.state,
-                commit = _ref3.commit,
-                rootState = _ref3.rootState;
+        DELETE: function DELETE(_ref11, index) {
+            var state = _ref11.state,
+                commit = _ref11.commit,
+                rootState = _ref11.rootState;
 
             var result = api.contacts.initial.delete({
                 uid: rootState.user.uid,
@@ -2162,10 +2601,10 @@ var initial = _.extend({
             commit('delete', index);
             return result;
         },
-        READ: function READ(_ref4, index) {
-            var state = _ref4.state,
-                commit = _ref4.commit,
-                rootState = _ref4.rootState;
+        READ: function READ(_ref12, index) {
+            var state = _ref12.state,
+                commit = _ref12.commit,
+                rootState = _ref12.rootState;
 
             var result = api.contacts.initial.put(null, {
                 uid: rootState.user.uid,
@@ -2193,10 +2632,10 @@ var intimate = _.extend({
         list: []
     },
     actions: {
-        LOAD: function LOAD(_ref5) {
-            var state = _ref5.state,
-                commit = _ref5.commit,
-                rootState = _ref5.rootState;
+        LOAD: function LOAD(_ref13) {
+            var state = _ref13.state,
+                commit = _ref13.commit,
+                rootState = _ref13.rootState;
 
             commit('load', ls.get('intimate-contacts'));
             return api.contacts.intimate.cget({
@@ -2207,10 +2646,10 @@ var intimate = _.extend({
                 ls.set('intimate-contacts', state.list);
             });
         },
-        NEXT: function NEXT(_ref6, offset) {
-            var state = _ref6.state,
-                commit = _ref6.commit,
-                rootState = _ref6.rootState;
+        NEXT: function NEXT(_ref14, offset) {
+            var state = _ref14.state,
+                commit = _ref14.commit,
+                rootState = _ref14.rootState;
 
             return api.contacts.intimate.cget({
                 uid: rootState.user.uid,
@@ -2219,10 +2658,10 @@ var intimate = _.extend({
                 commit('add', response.data);
             });
         },
-        DELETE: function DELETE(_ref7, index) {
-            var state = _ref7.state,
-                commit = _ref7.commit,
-                rootState = _ref7.rootState;
+        DELETE: function DELETE(_ref15, index) {
+            var state = _ref15.state,
+                commit = _ref15.commit,
+                rootState = _ref15.rootState;
 
             var result = api.contacts.intimate.delete({
                 uid: rootState.user.uid,
@@ -2231,10 +2670,10 @@ var intimate = _.extend({
             commit('delete', index);
             return result;
         },
-        READ: function READ(_ref8, index) {
-            var state = _ref8.state,
-                commit = _ref8.commit,
-                rootState = _ref8.rootState;
+        READ: function READ(_ref16, index) {
+            var state = _ref16.state,
+                commit = _ref16.commit,
+                rootState = _ref16.rootState;
 
             var result = api.contacts.initial.put(null, {
                 uid: rootState.user.uid,
@@ -2262,10 +2701,10 @@ var sends = _.extend({
         list: []
     },
     actions: {
-        LOAD: function LOAD(_ref9) {
-            var state = _ref9.state,
-                commit = _ref9.commit,
-                rootState = _ref9.rootState;
+        LOAD: function LOAD(_ref17) {
+            var state = _ref17.state,
+                commit = _ref17.commit,
+                rootState = _ref17.rootState;
 
             commit('load', ls.get('sends-contacts'));
             return api.contacts.sends.cget({
@@ -2276,10 +2715,10 @@ var sends = _.extend({
                 ls.set('sends-contacts', state.list);
             });
         },
-        NEXT: function NEXT(_ref10, offset) {
-            var state = _ref10.state,
-                commit = _ref10.commit,
-                rootState = _ref10.rootState;
+        NEXT: function NEXT(_ref18, offset) {
+            var state = _ref18.state,
+                commit = _ref18.commit,
+                rootState = _ref18.rootState;
 
             return api.contacts.sends.cget({
                 uid: rootState.user.uid,
@@ -2288,10 +2727,10 @@ var sends = _.extend({
                 commit('add', response.data);
             });
         },
-        DELETE: function DELETE(_ref11, index) {
-            var state = _ref11.state,
-                commit = _ref11.commit,
-                rootState = _ref11.rootState;
+        DELETE: function DELETE(_ref19, index) {
+            var state = _ref19.state,
+                commit = _ref19.commit,
+                rootState = _ref19.rootState;
 
             var result = api.contacts.sends.delete({
                 uid: rootState.user.uid,
@@ -2324,6 +2763,54 @@ var credits = {
     },
     actions: {},
     mutations: {}
+};
+
+var desires = {
+    namespaced: true,
+    state: {
+        list: []
+    },
+    actions: {
+        SYNC: function SYNC(_ref20) {
+            var rootState = _ref20.rootState,
+                commit = _ref20.commit,
+                getters = _ref20.getters;
+
+            return api.user.desireList().then(function (response) {
+                commit('update', response.data);
+            });
+        },
+        ADD: function ADD(_ref21, tag) {
+            var state = _ref21.state,
+                commit = _ref21.commit;
+
+            //commit('add', tag);
+            return api.user.desireAdd(tag).then(function (response) {
+                var id = response.data.id;
+                commit('add', { id: id, tag: tag });
+            });
+        },
+        DELETE: function DELETE(_ref22, index) {
+            var state = _ref22.state,
+                commit = _ref22.commit;
+
+            return api.user.desireDelete(state.list[index].id);
+            commit('delete', index);
+        }
+    },
+    mutations: {
+        update: function update(state, data) {
+            if (data && data.length) {
+                state.list = data.slice();
+            }
+        },
+        add: function add(state, data) {
+            state.list.unshift(data);
+        },
+        delete: function _delete(state, index) {
+            state.list.splice(index, 1);
+        }
+    }
 };
 
 var modals = {
@@ -2386,8 +2873,8 @@ var search = {
         }
     },
     actions: {
-        HUMAN: function HUMAN(_ref12, tid) {
-            var commit = _ref12.commit;
+        HUMAN: function HUMAN(_ref23, tid) {
+            var commit = _ref23.commit;
 
             var index = 'human.data.' + tid;
             commit('resetHuman', tid);
@@ -2397,16 +2884,16 @@ var search = {
                 ls.set(index, response.data, 1500);
             });
         },
-        SETTINGS: function SETTINGS(_ref13) {
-            var commit = _ref13.commit;
+        SETTINGS: function SETTINGS(_ref24) {
+            var commit = _ref24.commit;
 
             commit('settingsCookies');
             commit('settings', ls.get('search.settings'));
             //let index = 'search.settings';
         },
-        SAVE_SEARCH: function SAVE_SEARCH(_ref14, data) {
-            var state = _ref14.state,
-                commit = _ref14.commit;
+        SAVE_SEARCH: function SAVE_SEARCH(_ref25, data) {
+            var state = _ref25.state,
+                commit = _ref25.commit;
 
             commit('settings', data);
             ls.set('search.settings', data);
@@ -2463,36 +2950,33 @@ var user = {
         age: '',
         name: '',
         city: '',
-        status: 0,
-        em: 0,
-        vk: 0,
-        ok: 0,
-        fb: 0,
-        go: 0,
-        sk: 0,
-        ph: 0,
+        contacts: {
+            em: 0,
+            vk: 0,
+            ok: 0,
+            fb: 0,
+            go: 0,
+            sk: 0,
+            ph: 0
+        },
         tags: {
             str: ''
         },
-        last: '',
-        anketa: {
-            growth: '',
-            weight: '',
-            figure: ''
-        }
+        status: 0,
+        last: ''
     },
     actions: {
-        LOAD_USER: function LOAD_USER(_ref15) {
-            var commit = _ref15.commit;
+        LOAD_USER: function LOAD_USER(_ref26) {
+            var commit = _ref26.commit;
 
             // if (uid) {
             //     commit('loadUser', {uid});
             // }
             commit('loadUser', ls.get('user.data'));
         },
-        SAVE_SEX: function SAVE_SEX(_ref16, sex) {
-            var state = _ref16.state,
-                commit = _ref16.commit;
+        SAVE_SEX: function SAVE_SEX(_ref27, sex) {
+            var state = _ref27.state,
+                commit = _ref27.commit;
 
             if (sex && state.sex != sex) {
                 api.user.saveSex(sex).then(function (response) {});
@@ -2500,37 +2984,48 @@ var user = {
             }
             commit('loadUser', { name: '' });
         },
-        SAVE_AGE: function SAVE_AGE(_ref17, age) {
-            var state = _ref17.state,
-                commit = _ref17.commit;
+        SAVE_AGE: function SAVE_AGE(_ref28, age) {
+            var state = _ref28.state,
+                commit = _ref28.commit;
 
             if (age && state.age != age) {
                 api.user.saveAge(age).then(function (response) {});
                 commit('loadUser', { age: age });
             }
         },
-        SAVE_NAME: function SAVE_NAME(_ref18, name) {
-            var state = _ref18.state,
-                commit = _ref18.commit;
+        SAVE_NAME: function SAVE_NAME(_ref29, name) {
+            var state = _ref29.state,
+                commit = _ref29.commit;
 
             if (name && state.name != name) {
                 api.user.saveName(name).then(function (response) {});
                 commit('loadUser', { name: name });
             }
         },
-        SAVE_CITY: function SAVE_CITY(_ref19, city) {
-            var state = _ref19.state,
-                commit = _ref19.commit;
+        SAVE_CITY: function SAVE_CITY(_ref30, city) {
+            var state = _ref30.state,
+                commit = _ref30.commit;
 
             if (city && state.city != city) {
                 api.user.saveCity(city).then(function (response) {});
                 commit('loadUser', { city: city });
             }
+        },
+        SAVE_CONTACTS: function SAVE_CONTACTS(_ref31, contacts) {
+            var state = _ref31.state,
+                commit = _ref31.commit;
+
+            api.user.saveContacts(contacts).then(function (response) {});
+            commit('loadUser', { contacts: contacts });
         }
     },
     mutations: {
         loadUser: function loadUser(state, data) {
             state = _.assign(state, data);
+            ls.set('user.data', state, 23456);
+        },
+        resetUser: function resetUser(state, data) {
+            state = data;
             ls.set('user.data', state, 23456);
         }
     }
@@ -2543,8 +3038,11 @@ var ls = lscache;
 var store = new Vuex.Store({
     modules: {
         user: user,
+        auth: auth,
+        about: about,
         search: search,
         contacts: contacts,
+        desires: desires,
         modals: modals
     },
     state: {
@@ -2581,13 +3079,13 @@ var store = new Vuex.Store({
         }
     },
     actions: {
-        LOAD_API_TOKEN: function LOAD_API_TOKEN(_ref20) {
-            var commit = _ref20.commit;
+        LOAD_API_TOKEN: function LOAD_API_TOKEN(_ref32) {
+            var commit = _ref32.commit;
 
             commit('setApiToken', { apiToken: get_cookie('jwt') });
         },
-        LOAD_ACCEPTS: function LOAD_ACCEPTS(_ref21) {
-            var commit = _ref21.commit;
+        LOAD_ACCEPTS: function LOAD_ACCEPTS(_ref33) {
+            var commit = _ref33.commit;
 
             var accepts = ls.get('accepts');
             if (accepts && accepts.photo) {
@@ -2899,6 +3397,11 @@ var ApiUser = function (_Api3) {
             return _get(ApiUser.prototype.__proto__ || Object.getPrototypeOf(ApiUser.prototype), 'save', this).call(this, { city: city }, null, 'option/city');
         }
     }, {
+        key: 'saveContacts',
+        value: function saveContacts(data) {
+            return _get(ApiUser.prototype.__proto__ || Object.getPrototypeOf(ApiUser.prototype), 'save', this).call(this, { contact: data }, null, 'option/contact');
+        }
+    }, {
         key: 'saveSearch',
         value: function saveSearch(data) {
             data = {
@@ -2909,6 +3412,61 @@ var ApiUser = function (_Api3) {
                 option_virt_accept: data.virt
             };
             return _get(ApiUser.prototype.__proto__ || Object.getPrototypeOf(ApiUser.prototype), 'save', this).call(this, data, null, 'msett/save');
+        }
+    }, {
+        key: 'syncAbout',
+        value: function syncAbout() {
+            return _get(ApiUser.prototype.__proto__ || Object.getPrototypeOf(ApiUser.prototype), 'load', this).call(this, null, 'sync/anketa');
+        }
+    }, {
+        key: 'saveAbout',
+        value: function saveAbout(data) {
+            return _get(ApiUser.prototype.__proto__ || Object.getPrototypeOf(ApiUser.prototype), 'save', this).call(this, data, null, 'option/anketa');
+        }
+    }, {
+        key: 'syncAuth',
+        value: function syncAuth() {
+            return _get(ApiUser.prototype.__proto__ || Object.getPrototypeOf(ApiUser.prototype), 'load', this).call(this, null, 'sync/authdata');
+        }
+    }, {
+        key: 'saveLogin',
+        value: function saveLogin(login) {
+            return _get(ApiUser.prototype.__proto__ || Object.getPrototypeOf(ApiUser.prototype), 'save', this).call(this, { login: login }, null, 'option/login');
+        }
+    }, {
+        key: 'savePasswd',
+        value: function savePasswd(pass) {
+            return _get(ApiUser.prototype.__proto__ || Object.getPrototypeOf(ApiUser.prototype), 'save', this).call(this, { pass: pass }, null, 'option/passwd');
+        }
+    }, {
+        key: 'saveEmail',
+        value: function saveEmail(email) {
+            return _get(ApiUser.prototype.__proto__ || Object.getPrototypeOf(ApiUser.prototype), 'save', this).call(this, { email: email }, null, 'option/email');
+        }
+    }, {
+        key: 'removeEmail',
+        value: function removeEmail() {
+            return _get(ApiUser.prototype.__proto__ || Object.getPrototypeOf(ApiUser.prototype), 'remove', this).call(this, null, null, 'option/demail');
+        }
+    }, {
+        key: 'saveSubscribe',
+        value: function saveSubscribe() {
+            return _get(ApiUser.prototype.__proto__ || Object.getPrototypeOf(ApiUser.prototype), 'save', this).call(this, null, null, 'option/subscr');
+        }
+    }, {
+        key: 'desireList',
+        value: function desireList() {
+            return _get(ApiUser.prototype.__proto__ || Object.getPrototypeOf(ApiUser.prototype), 'load', this).call(this, null, 'tag/user');
+        }
+    }, {
+        key: 'desireAdd',
+        value: function desireAdd(tag) {
+            return _get(ApiUser.prototype.__proto__ || Object.getPrototypeOf(ApiUser.prototype), 'save', this).call(this, { tag: tag }, null, 'tag/add');
+        }
+    }, {
+        key: 'desireDelete',
+        value: function desireDelete(id) {
+            return _get(ApiUser.prototype.__proto__ || Object.getPrototypeOf(ApiUser.prototype), 'remove', this).call(this, { id: id }, null, 'tag/del');
         }
     }]);
 
@@ -3020,7 +3578,14 @@ new Vue({
         searchSettings: false,
         accountSettings: false,
         sexConfirm: false,
-        logIn: false
+        logIn: false,
+        warning: '',
+        alert: '',
+        securitySettings: false,
+        desiresSettings: false,
+        socialSettings: false,
+        aboutSettings: false,
+        otherSettings: false
     },
     computed: {
         initial: function initial() {
@@ -3077,6 +3642,12 @@ new Vue({
         },
         openLogIn: function openLogIn() {
             this.logIn = true;
+        },
+        showSnackbar: function showSnackbar(text) {
+            this.warning = text;
+        },
+        showToast: function showToast(text) {
+            this.alert = text;
         }
     },
     el: '#app',

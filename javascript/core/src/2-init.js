@@ -5,6 +5,13 @@ new Vue({
         accountSettings: false,
         sexConfirm: false,
         logIn: false,
+        warning: '',
+        alert: '',
+        securitySettings: false,
+        desiresSettings: false,
+        socialSettings: false,
+        aboutSettings: false,
+        otherSettings: false,
     },
     computed: {
         initial() {
@@ -62,6 +69,12 @@ new Vue({
         },
         openLogIn() {
             this.logIn = true;
+        },
+        showSnackbar(text) {
+            this.warning = text;
+        },
+        showToast(text) {
+            this.alert = text;
         },
     },
     el: '#app',

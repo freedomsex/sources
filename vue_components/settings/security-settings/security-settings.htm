@@ -1,0 +1,55 @@
+
+<script type="text/x-template" id="security-settings">
+  <closed-activity @close="close">
+    <div class="activity-section">
+      <div class="activity-section__title">Логин:</div>
+      <div class="form-inline">
+          <input class="form-control" type="text" v-model="inputLogin" @change="saveLogin" :disabled="process || processLogin">
+      </div>
+    </div>
+    <div class="activity-section">
+      <div class="activity-section__title">Пароль:</div>
+      <div class="form-inline">
+        <input class="form-control" type="text" v-model="inputPasswd" @change="savePasswd" :disabled="process || processPasswd">
+      </div>
+    </div>
+    <div class="activity-section">
+      <div class="activity-section__title">Емаил:</div>
+      <div class="form-inline">
+        <label @click="promt ? confirmRemove = true : false">
+          <input class="form-control" type="text" v-model="inputEmail"
+           @change="saveEmail"
+           :disabled="process || promt || processEmail">
+        </label>
+      </div>
+    </div>
+    <div class="activity-section">
+      <div class="activity-section__title">Уведомления:</div>
+      <div class="radio">
+        <label class="radio-inline">
+          <input type="radio" id="input-figure" v-model.number="checkSubscribe" value="1" @change="saveSubscribe" :disabled="process || !promt || !email">
+          Принимать
+        </label>
+        <label class="radio-inline">
+          <input type="radio" id="input-figure" v-model.number="checkSubscribe" value="0" @change="saveSubscribe" :disabled="process || !promt || !email">
+          Отклонить
+        </label>
+      </div>
+    </div>
+
+    <modal-dialog @close="confirmRemove = false" v-if="confirmRemove">
+      <div class="modal-dialog__wrapper">
+        <div class="modal-dialog__body">
+          Ваш емаил подтвержден. Пожалуйста, подтвердите удаление и следуйте инструкциям
+          в письме которое будет отправлено на ваш емаил.
+        </div>
+        <div class="modal-dialog__footer">
+          <button class="btn btn-danger" @click="removeEmail">
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            Удалить
+          </button>
+        </div>
+      </div>
+    </modal-dialog>
+  </closed-activity>
+</script>

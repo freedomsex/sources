@@ -181,10 +181,10 @@ Vue.component('api-key-update', {
             });
         },
         upUser(data) {
-            let {uid, city, sex, age, name} = data;
-            //console.log('upUser', data);
-            store.commit('loadUser', {uid, city, sex, age, name});
-            store.commit('loadUser', data.contacts);
+            let {uid, city, sex, age, name, contacts} = data;
+            console.log('upUser', data);
+            store.commit('resetUser', {uid, city, sex, age, name, contacts});
+            //store.commit('loadUser', data.contacts);
         },
         upSettings(data) {
             let {who, years_up: up, years_to: to, close: town, virt} = data;
@@ -625,8 +625,19 @@ Vue.component('contact-item', {
 
 
 Vue.component('desire-tag-item', {
-    props: ['item'],
-    template: '#desire-tag-item',
+    props: ['id', 'tag'],
+    data() {
+        return {
+            active: false,
+            error: false,
+        }
+    },
+    methods: {
+        select() {
+            this.$emit('select');
+        }
+    },
+    template: '#desire-tag-item'
 });
 
 Vue.component('email-sended', {
@@ -954,6 +965,7 @@ Vue.component('message-list', {
             uid: null,
             date: null,
             toSlow: false,
+            skipScroll: false,
         }
     },
     mounted: function () {
@@ -984,6 +996,10 @@ Vue.component('message-list', {
             });
             setTimeout(() => this.toSlow = true, 7000);
         },
+        loadNext() {
+            this.skipScroll = true;
+            this.load();
+        },
         onLoad(response) {
             let messages = response.data.messages;
             this.received = messages ? messages.length : 0;
@@ -1003,6 +1019,9 @@ Vue.component('message-list', {
             //console.log(response);
         },
         scroll() {
+            if (this.skipScroll) {
+                return this.skipScroll = false;
+            }
             var objDiv = document.getElementById("dialog-history");
             objDiv.scrollTop = objDiv.scrollHeight+30;
         },
@@ -1030,7 +1049,8 @@ Vue.component('message-list', {
     },
     computed: {
         items() {
-            return this.messages.reverse();
+            //let arr = this.messages.slice();
+            return this.messages.slice().reverse();
         },
         more() {
             if (this.received && this.received == this.batch) {
@@ -1456,6 +1476,65 @@ Vue.component('search-wizard', {
     },
 });
 
+Vue.component('about-settings', {
+    props: [],
+    data() {
+        return {
+            inputGrowth: '',
+            inputWeight: '',
+            selectFigure: null,
+            process: false,
+            virgin: true
+        }
+    },
+    computed: Vuex.mapState({
+        growth(state) {
+            return state.about.growth;
+        },
+        weight(state) {
+            return state.about.weight;
+        },
+        figure(state) {
+            return state.about.figure;
+        }
+    }),
+    mounted() {
+        this.$store.dispatch('about/SYNC').then(() => {
+            this.init();
+            this.process = false;
+        }).catch(() => {
+            this.process = false;
+        });
+        this.process = true;
+        this.init();
+    },
+    methods: {
+        init() {
+            this.inputGrowth = this.growth ? this.growth : '';
+            this.inputWeight = this.weight ? this.weight : '';
+            this.selectFigure = this.figure;
+        },
+        deflower() {
+            this.virgin = false;
+        },
+        close() {
+            this.save();
+            this.$emit('close');
+        },
+        save() {
+            if (!this.virgin) {
+                this.$store.dispatch('about/SAVE', {
+                    growth: this.inputGrowth,
+                    weight: this.inputWeight,
+                    figure: this.selectFigure
+                });
+            }
+        },
+    },
+    template: '#about-settings',
+});
+
+
 Vue.component('account-settings', {
     props: [],
     data() {
@@ -1524,8 +1603,50 @@ Vue.component('account-settings', {
             this.$emit('login');
             this.$emit('close');
         },
+        settings() {
+            this.$emit('settings');
+        },
     },
     template: '#account-settings',
+});
+
+
+Vue.component('desires-settings', {
+    props: [],
+    data() {
+        return {
+            process: false,
+            desire: '',
+            confirmRemove: null
+        }
+    },
+    computed: Vuex.mapState({
+        tags(state) {
+            return state.desires.list;
+        }
+    }),
+    mounted() {
+        this.process = true;
+        this.$store.dispatch('desires/SYNC').then((response) => {
+            this.process = false;
+        });
+    },
+    methods: {
+        close() {
+            this.$emit('close');
+        },
+        add(tag) {
+            this.process = true;
+            this.$store.dispatch('desires/ADD', tag).then((response) => {
+                this.process = false;
+            });
+        },
+        remove() {
+            this.$store.dispatch('desires/DELETE', this.confirmRemove);
+            this.confirmRemove = null;
+        }
+    },
+    template: '#desires-settings',
 });
 
 
@@ -1577,6 +1698,25 @@ Vue.component('login-account', {
         }
     },
     template: '#login-account',
+});
+
+
+Vue.component('other-settings', {
+    props: [],
+    data() {
+        return {
+
+        }
+    },
+    computed: Vuex.mapState({
+
+    }),
+    methods: {
+        close() {
+            this.$emit('close');
+        },
+    },
+    template: '#other-settings',
 });
 
 
@@ -1761,6 +1901,168 @@ Vue.component('search-settings', {
     template: '#search-settings',
 });
 
+
+Vue.component('security-settings', {
+    props: [],
+    data() {
+        return {
+            inputLogin: '',
+            inputPasswd: '',
+            inputEmail: '',
+            checkSubscribe: false,
+            process: false,
+            processLogin: false,
+            processPasswd: false,
+            processEmail: false,
+            confirmRemove: false,
+            virgin: true
+        }
+    },
+    computed: Vuex.mapState({
+        login(state) {
+            return state.auth.login;
+        },
+        passwd(state) {
+            return state.auth.pass;
+        },
+        email(state) {
+            return state.auth.email;
+        },
+        promt(state) {
+            return state.auth.promt;
+        },
+        subscr(state) {
+            return state.auth.subscr;
+        },
+    }),
+    mounted() {
+        this.$store.dispatch('auth/SYNC').then(() => {
+            this.init();
+            this.process = false;
+        }).catch(() => {
+            this.process = false;
+        });
+        this.process = true;
+        this.init();
+    },
+    methods: {
+        init() {
+            this.inputLogin = this.login;
+            this.inputPasswd = this.passwd;
+            this.inputEmail = this.email;
+            this.checkSubscribe = this.subscr;
+            // this.selectFigure = this.figure;
+        },
+        deflower() {
+            this.virgin = false;
+        },
+        saveLogin() {
+            this.processLogin = true;
+            this.$store.dispatch('auth/SAVE_LOGIN', this.inputLogin).then((response) => {
+                var data = response.data;
+                if (data.err) {
+                    this.$emit('warning', data.say);
+                }
+                this.processLogin = false;
+            }).catch(() => {
+                this.processLogin = false;
+            });
+        },
+        savePasswd() {
+            this.processPasswd = true;
+            this.$store.dispatch('auth/SAVE_PASSWD', this.inputPasswd).then((response) => {
+                var data = response.data;
+                if (data.err) {
+                    this.$emit('warning', data.say);
+                }
+                this.processPasswd = false;
+            }).catch(() => {
+                this.processPasswd = false;
+            });
+        },
+        saveEmail() {
+            this.processEmail = true;
+            this.$store.dispatch('auth/SAVE_EMAIL', this.inputEmail).then((response) => {
+                var data = response.data;
+                if (data.err) {
+                    this.$emit('warning', data.say);
+                }
+                this.processEmail = false;
+            }).catch(() => {
+                this.processEmail = false;
+            });
+        },
+        removeEmail() {
+            this.confirmRemove = false;
+            this.processEmail = true;
+            console.log('REMOVE_EMAIL');
+            this.$store.dispatch('auth/REMOVE_EMAIL').then((response) => {
+                var data = response.data;
+                if (data.err) {
+                    this.$emit('warning', data.say);
+                }
+                this.processEmail = false;
+            }).catch(() => {
+                this.processEmail = false;
+            });
+        },
+        saveSubscribe() {
+            this.$store.dispatch('auth/SAVE_SUSCRIBE');
+        },
+        close() {
+            if (!this.processLogin && !this.processPasswd && !this.processEmail) {
+                this.$emit('close');
+            } else {
+                this.$emit('alert', 'Подождите, сохраняю.');
+            }
+        },
+    },
+    template: '#security-settings',
+});
+
+
+Vue.component('social-settings', {
+    props: [],
+    data() {
+        return {
+            checkedContact: {
+                em: 0,
+                vk: 0,
+                ok: 0,
+                fb: 0,
+                go: 0,
+                sk: 0,
+                ph: 0,
+            },
+            virgin: true
+        }
+    },
+    computed: Vuex.mapState({
+        contacts(state) {
+            return state.user.contacts;
+        }
+    }),
+    mounted() {
+        console.log('user', this.contacts);
+        this.checkedContact = this.contacts;
+    },
+    methods: {
+        close() {
+            this.save();
+            this.$emit('close');
+        },
+        deflower() {
+            this.virgin = false;
+        },
+        save() {
+            if (!this.virgin) {
+                this.$store.dispatch('SAVE_CONTACTS', this.checkedContact);
+            }
+        }
+    },
+    template: '#social-settings',
+});
+
 Vue.component('sex-confirm', {
     props: ['show'],
     computed: {
@@ -1857,6 +2159,47 @@ Vue.component('snackbar', {
         _.delay(this.close, 3000);
     },
     template: '#snackbar',
+});
+
+Vue.component('suggest-input', {
+    props: ['url', 'disabled'],
+    data() {
+        return {
+            query: '',
+            items: [],
+            enable: true
+        };
+    },
+    computed: {
+        suggested() {
+            return this.items.length;
+        }
+    },
+    methods: {
+        load() {
+            api.user.get({q: this.query}, 'tag/suggest').then((response) => {
+                this.loaded(response.data);
+            });
+        },
+        reset() {
+            this.query = '';
+            this.items = [];
+        },
+        select(item) {
+            this.query = item;
+            this.$emit('select', item);
+            this.reset();
+        },
+        loaded(data) {
+            if (data && data.length) {
+                this.items = data;
+                console.log('loaded', data)
+            } else {
+                this.reset();
+            }
+        },
+    },
+    template: '#suggest-input',
 });
 
 Vue.component('toast', {

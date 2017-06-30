@@ -1,0 +1,36 @@
+
+<script type="text/x-template" id="desires-settings">
+  <closed-activity @close="close">
+    <div class="activity-section">
+      <div class="activity-section__title">Желания</div>
+      <suggest-input @select="add" :disabled="process"/>
+    </div>
+
+    <div class="activity-section">
+      <div class="desire-tag__list">
+        <desire-tag-item v-for="(item, index) in tags" :key="index"
+         :tag="item.tag"
+         :id="item.id"
+         @select="confirmRemove = index"/>
+      </div>
+    </div>
+
+    <modal-dialog @close="confirmRemove = null" v-if="confirmRemove !== null">
+      <div class="modal-dialog__wrapper">
+        <div class="modal-dialog__body">
+          Удалить желание? Всегда можно будет добавить заново здесь,
+          или кликнув по понравившемуся в любой анкете.
+        </div>
+        <div class="modal-dialog__footer">
+          <button class="btn btn-danger" @click="remove">
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            Удалить
+          </button>
+        </div>
+      </div>
+    </modal-dialog>
+
+
+
+  </closed-activity>
+</script>

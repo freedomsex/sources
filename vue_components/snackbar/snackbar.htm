@@ -1,7 +1,9 @@
 <script type="text/x-template" id="snackbar">
-  <div class="snackbar" @click="close">
-    <div class="snackbar__body">
-      <slot></slot>
+  <transition name="snackbar">
+    <div class="snackbar" @click="close">
+      <div class="snackbar__body">
+        <slot></slot>
+      </div>
     </div>
-  </div>
+  </transition>
 </script>
