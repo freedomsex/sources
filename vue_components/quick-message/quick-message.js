@@ -16,6 +16,7 @@ var QuickMessage = Vue.component('quick-message', {
     data() {
         return {
             text: '',
+            account: 0,
             captcha: false,
             process: false,
             loading: false,
@@ -134,9 +135,6 @@ var QuickMessage = Vue.component('quick-message', {
         sended() {
             this.$emit('sended');
             this.close();
-        },
-        anketa() {
-            window.location = '/' + this.humanId;
         },
         onError() {
             this.process = false;

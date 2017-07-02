@@ -28,6 +28,44 @@ Vue.component('account-activity', {
         tags: function tags() {
             return 'tags' in this.human ? this.human.tags : [];
         },
+        social: function social() {
+            var _human = this.human,
+                em = _human.em,
+                vk = _human.vk,
+                ok = _human.ok,
+                fb = _human.fb,
+                go = _human.go;
+
+            if (em || vk || ok || fb || go) {
+                return { em: em, vk: vk, ok: ok, fb: fb, go: go };
+            }
+            return null;
+        },
+        interact: function interact() {
+            var _human2 = this.human,
+                ph = _human2.ph,
+                sk = _human2.sk;
+
+            if (ph || sk) {
+                return { ph: ph, sk: sk };
+            }
+            return null;
+        },
+        figure: function figure() {
+            var figure = this.human.anketa ? this.human.anketa.figure : null;
+            var result = figure;
+            switch (figure) {
+                case 2:
+                    result = 'спортивного';break;
+                case 3:
+                    result = 'обычного';break;
+                case 5:
+                    result = 'полного';break;
+                case 6:
+                    result = 'худого';break;
+            }
+            return result;
+        },
         hold: function hold() {
             return this.ignore ? 0 : this.human.hold;
         }
@@ -38,6 +76,7 @@ Vue.component('account-activity', {
         },
         loaded: function loaded() {
             this.loading = false;
+            console.log(this.human);
         },
         hope: function hope() {
             var _this = this;
@@ -1230,6 +1269,7 @@ var QuickMessage = Vue.component('quick-message', {
     data: function data() {
         return {
             text: '',
+            account: 0,
             captcha: false,
             process: false,
             loading: false,
@@ -1359,9 +1399,6 @@ var QuickMessage = Vue.component('quick-message', {
         sended: function sended() {
             this.$emit('sended');
             this.close();
-        },
-        anketa: function anketa() {
-            window.location = '/' + this.humanId;
         },
         onError: function onError() {
             this.process = false;

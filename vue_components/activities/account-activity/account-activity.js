@@ -16,6 +16,31 @@ Vue.component('account-activity', {
         tags() {
             return ('tags' in this.human) ? this.human.tags : [];
         },
+        social() {
+            let {em, vk, ok, fb, go} = this.human;
+            if (em || vk || ok || fb || go) {
+                return {em, vk, ok, fb, go};
+            }
+            return null;
+        },
+        interact() {
+            let {ph, sk} = this.human;
+            if (ph || sk) {
+                return {ph, sk};
+            }
+            return null;
+        },
+        figure() {
+            var figure = this.human.anketa ? this.human.anketa.figure : null;
+            var result = figure;
+            switch (figure) {
+                case 2: result = 'спортивного'; break;
+                case 3: result = 'обычного'; break;
+                case 5: result = 'полного'; break;
+                case 6: result = 'худого'; break;
+            }
+            return result;
+        },
         hold() {
             return this.ignore ? 0 : this.human.hold;
         },
@@ -26,6 +51,7 @@ Vue.component('account-activity', {
         },
         loaded() {
             this.loading = false;
+                console.log(this.human);
         },
         hope() {
             setTimeout(() => this.loading = false, 4 * 1000);

@@ -118,30 +118,46 @@
           <span class="human-info__city">{{human.city}}</span>
         </div>
 
-        <div class="human-info__search">Ищет девушку в возрасте до 60 лет</div>
+        <div class="account-section" v-if="human.anketa">
+          <div class="account-section__header">Я ищу</div>
+          <div class="human-info__search">
+            Девушку в возрасте до 60 лет
+          </div>
+        </div>
 
-        <div class="human-info__status">
+
+
+        <div class="human-info__status" v-if="0">
           <span class="elem_online" title="Сейчас на сайте ">oнлайн</span>
           <span class="human-info__loader"></span>
         </div>
 
-        <div class="human-info__about"> Я парень обычного телосложения. </div>
-        <div class="human-info__measure">Мой рост: 185 см, вес: 80 кг</div>
-
-        <div class="account-section">
-          <div class="account-section__header">У меня есть</div>
-          <div class="human-social">
-            <i class="human-social__email">Емайл</i>
-            <i class="human-social__vkontakte">Вконтакте</i>
-            <i class="human-social__google-plus">Google-plus</i>
-            <i class="human-social__odnoklassniki">Одноклассники</i>
-            <i class="human-social__facebook">Facebook</i>
+        <div class="account-section" v-if="human.anketa">
+          <div class="account-section__header">Обо мне</div>
+          <div class="human-info__about">
+            Я {{human.sex == 1 ? 'парень' : 'девушка'}}
+            <span v-show="figure">{{figure}} телосложения</span>
+          </div>
+          <div class="human-info__measure">
+            <span v-show="human.anketa.growth">Мой рост: {{human.anketa.growth}} см, </span>
+            <span v-show="human.anketa.weight">Вес:  {{human.anketa.weight}} кг</span>
           </div>
         </div>
 
-        <div class="human-contacts">
-          <div><i class="human-contacts__phone">Обязательно позвоню или дам номер телефона</i></div>
-          <div><i class="human-contacts__skype">Согласен на видеозвонок или видеочат по скайпу</i></div>
+        <div class="account-section" v-if="social">
+          <div class="account-section__header">У меня есть</div>
+          <div class="human-social">
+            <i class="human-social__email" v-show="social.em">Емайл</i>
+            <i class="human-social__vkontakte" v-show="social.vk">Вконтакте</i>
+            <i class="human-social__google-plus" v-show="social.go">Google-plus</i>
+            <i class="human-social__odnoklassniki" v-show="social.ok">Одноклассники</i>
+            <i class="human-social__facebook" v-show="social.fb">Facebook</i>
+          </div>
+        </div>
+
+        <div class="human-contacts" v-if="interact">
+          <div><i class="human-contacts__phone" v-show="social.ph">Обязательно позвоню или дам номер телефона</i></div>
+          <div><i class="human-contacts__skype" v-show="social.sk">Согласен на видеозвонок или видеочат по скайпу</i></div>
         </div>
 
         <div class="account-section" v-if="tags.length">
@@ -150,7 +166,7 @@
             <desire-tag-item v-for="(item, index) in tags" :key="index" :tag="item"/>
           </div>
         </div>
-
+<!--
         <div>
           <button class="btn btn-default">Присланные фотографии</button>
         </div>
@@ -161,7 +177,7 @@
             Присланные фотографии будут здесь
           </div>
         </div>
-
+ -->
       </div>
     </div>
   </default-activity>
@@ -658,13 +674,14 @@
     <div class="message-input">
       <textarea class="message-input__texarea" rows="1" placeholder="Введите текст" v-model="text" v-resized></textarea>
         <button class="btn btn-primary" @click="send()">Отправить</button>
-        <button class="btn btn-link" @click="anketa()">Читать полностью...</button>
+        <button class="btn btn-link" @click="account = humanId">Смотреть анкету...</button>
     </div>
     <loading-wall :show="loading"/>
     <loading-cover :show="process"/>
     <attention-wall :show="hold" v-if="hold" @close="cancel" @remove="remove"/>
 
     <captcha-dialog v-show="captcha" @close="close" @cancel="cancel" @send="setCode"/>
+    <account-activity :humanId="account" v-if="account" @close="account = false"/>
   </modal-dialog>
 </script>
 
@@ -688,13 +705,14 @@
     <div class="message-input">
       <textarea class="message-input__texarea" rows="1" placeholder="Введите текст" v-model="text" v-resized></textarea>
         <button class="btn btn-primary" @click="send()">Отправить</button>
-        <button class="btn btn-link" @click="anketa()">Читать полностью...</button>
+        <button class="btn btn-link" @click="account = humanId">Смотреть анкету...</button>
     </div>
     <loading-wall :show="loading"/>
     <loading-cover :show="process"/>
     <attention-wall :show="hold" v-if="hold" @close="cancel" @remove="remove"/>
 
     <captcha-dialog v-show="captcha" @close="close" @cancel="cancel" @send="setCode"/>
+    <account-activity :humanId="account" v-if="account" @close="account = false"/>
   </modal-dialog>
 </script>
 
