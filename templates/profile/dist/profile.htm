@@ -156,8 +156,8 @@
         </div>
 
         <div class="human-contacts" v-if="interact">
-          <div><i class="human-contacts__phone" v-show="social.ph">Обязательно позвоню или дам номер телефона</i></div>
-          <div><i class="human-contacts__skype" v-show="social.sk">Согласен на видеозвонок или видеочат по скайпу</i></div>
+          <div><i class="human-contacts__phone" v-show="interact.ph">Обязательно позвоню или дам номер телефона</i></div>
+          <div><i class="human-contacts__skype" v-show="interact.sk">Согласен на видеозвонок или видеочат по скайпу</i></div>
         </div>
 
         <div class="account-section" v-if="tags.length">
