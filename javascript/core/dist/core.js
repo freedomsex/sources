@@ -25,6 +25,9 @@ Vue.component('account-activity', {
         human: function human() {
             return this.$store.state.search.human;
         },
+        age: function age() {
+            return moment.duration(this.human.age, "years").humanize();
+        },
         tags: function tags() {
             return 'tags' in this.human ? this.human.tags : [];
         },
@@ -68,6 +71,31 @@ Vue.component('account-activity', {
         },
         hold: function hold() {
             return this.ignore ? 0 : this.human.hold;
+        },
+        who: function who() {
+            var result = 'Парня или девушку ';
+            if (this.human.who) {
+                result = this.human.who == 1 ? 'Парня ' : 'Девушку ';
+            }
+            if (this.human.up || this.human.to) {
+                result += ' в возрасте ';
+                result += this.human.up ? ' от ' + this.human.up : '';
+                result += this.human.to ? ' до ' + this.human.to : '';
+                result += ' лет ';
+            }
+            return result;
+        },
+        ago: function ago() {
+            var last = this.human.last;
+
+            var result = 'Онлайн';
+            if (last > 2592000) {
+                result = null;
+            } //else
+            if (last > 777) {
+                result = moment.duration(0 - last, "seconds").humanize(true);
+            }
+            return result;
         }
     },
     methods: {
@@ -622,6 +650,7 @@ Vue.component('contact-item', {
     props: ['item', 'index', 'quick'],
     data: function data() {
         return {
+            account: false,
             detail: false,
             confirm: false
         };
@@ -685,9 +714,6 @@ Vue.component('contact-item', {
             this.detail = true;
             this.$emit('read', this.index);
             console.log('quick');
-        },
-        anketa: function anketa() {
-            window.location = '/' + this.humanId;
         },
         close: function close() {
             this.detail = false;
@@ -1417,6 +1443,7 @@ Vue.component('quick-write', {
     props: ['humanId'],
     data: function data() {
         return {
+            account: false,
             open: false,
             sended: false
         };
@@ -3618,6 +3645,7 @@ new Vue({
         logIn: false,
         warning: '',
         alert: '',
+        account: false,
         securitySettings: false,
         desiresSettings: false,
         socialSettings: false,
@@ -3685,6 +3713,9 @@ new Vue({
         },
         showToast: function showToast(text) {
             this.alert = text;
+        },
+        showAccount: function showAccount(humanId) {
+            this.account = humanId;
         }
     },
     el: '#app',

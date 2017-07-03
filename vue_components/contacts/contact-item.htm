@@ -34,6 +34,8 @@
      :message="message"
      :humanId="item.human_id"
       @sended="sended"
+      @account="account = humanId"
       @close="close"/>
+    <account-activity :humanId="account" v-if="account" @close="account = false"/>
   </div>
 </script>

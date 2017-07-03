@@ -7,6 +7,7 @@ Vue.component('contact-item', {
     ],
     data() {
         return {
+            account: false,
             detail:  false,
             confirm: false
         }
@@ -69,9 +70,6 @@ Vue.component('contact-item', {
             this.detail = true;
             this.$emit('read', this.index);
             console.log('quick');
-        },
-        anketa() {
-            window.location = '/' + this.humanId;
         },
         close() {
             this.detail = false;

@@ -128,8 +128,9 @@
          <quick-write :human-id="humanId" inline-template>
            <div>
              <div class="btn btn-primary" @click="open = true">Написать сообщение</div>
-             <quick-message v-if="open" :human-id="humanId" @sended="sended = true" @close="open = false"></quick-message>
+             <quick-message v-if="open" :human-id="humanId" @sended="sended = true" @close="open = false" @account="account = humanId"></quick-message>
              <snackbar v-if="sended" @close="sended = false">Сообщение отправлено.</snackbar>
+             <account-activity :human-id="account" v-if="account" @close="account = null"></account-activity>
            </div>
          </quick-write>
        </div>
@@ -244,26 +245,23 @@
       <div class="human-info">
         <div class="human-info__general">
           <span class="human-info__name">{{human.name}}</span>
-          <span class="human-info__age">{{human.age}} лет</span>
+          <span class="human-info__age">{{age}}</span>
+          <span class="human-info__ago">({{ago}})</span>
         </div>
+
 
         <div>
           <span class="human-info__city">{{human.city}}</span>
         </div>
 
-        <div class="account-section" v-if="human.anketa">
+        <div class="account-section" v-if="who">
           <div class="account-section__header">Я ищу</div>
           <div class="human-info__search">
-            Девушку в возрасте до 60 лет
+            {{who}}
           </div>
         </div>
 
 
-
-        <div class="human-info__status" v-if="0">
-          <span class="elem_online" title="Сейчас на сайте ">oнлайн</span>
-          <span class="human-info__loader"></span>
-        </div>
 
         <div class="account-section" v-if="human.anketa">
           <div class="account-section__header">Обо мне</div>
@@ -546,7 +544,9 @@
      :message="message"
      :humanId="item.human_id"
       @sended="sended"
+      @account="account = humanId"
       @close="close"/>
+    <account-activity :humanId="account" v-if="account" @close="account = false"/>
   </div>
 </script>
 
@@ -807,14 +807,13 @@
     <div class="message-input">
       <textarea class="message-input__texarea" rows="1" placeholder="Введите текст" v-model="text" v-resized></textarea>
         <button class="btn btn-primary" @click="send()">Отправить</button>
-        <button class="btn btn-link" @click="account = humanId">Смотреть анкету...</button>
+        <button class="btn btn-link" @click="$emit('account', humanId)">Смотреть анкету...</button>
     </div>
     <loading-wall :show="loading"/>
     <loading-cover :show="process"/>
     <attention-wall :show="hold" v-if="hold" @close="cancel" @remove="remove"/>
 
     <captcha-dialog v-show="captcha" @close="close" @cancel="cancel" @send="setCode"/>
-    <account-activity :humanId="account" v-if="account" @close="account = false"/>
   </modal-dialog>
 </script>
 
@@ -838,14 +837,13 @@
     <div class="message-input">
       <textarea class="message-input__texarea" rows="1" placeholder="Введите текст" v-model="text" v-resized></textarea>
         <button class="btn btn-primary" @click="send()">Отправить</button>
-        <button class="btn btn-link" @click="account = humanId">Смотреть анкету...</button>
+        <button class="btn btn-link" @click="$emit('account')">Смотреть анкету</button>
     </div>
     <loading-wall :show="loading"/>
     <loading-cover :show="process"/>
     <attention-wall :show="hold" v-if="hold" @close="cancel" @remove="remove"/>
 
     <captcha-dialog v-show="captcha" @close="close" @cancel="cancel" @send="setCode"/>
-    <account-activity :humanId="account" v-if="account" @close="account = false"/>
   </modal-dialog>
 </script>
 

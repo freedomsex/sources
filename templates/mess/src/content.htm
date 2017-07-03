@@ -39,8 +39,9 @@
          <quick-write :human-id="humanId" inline-template>
            <div>
              <div class="btn btn-primary" @click="open = true">Написать сообщение</div>
-             <quick-message v-if="open" :human-id="humanId" @sended="sended = true" @close="open = false"></quick-message>
+             <quick-message v-if="open" :human-id="humanId" @sended="sended = true" @close="open = false" @account="account = humanId"></quick-message>
              <snackbar v-if="sended" @close="sended = false">Сообщение отправлено.</snackbar>
+             <account-activity :human-id="account" v-if="account" @close="account = null"></account-activity>
            </div>
          </quick-write>
        </div>

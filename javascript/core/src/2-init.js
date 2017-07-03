@@ -7,6 +7,7 @@ new Vue({
         logIn: false,
         warning: '',
         alert: '',
+        account: false,
         securitySettings: false,
         desiresSettings: false,
         socialSettings: false,
@@ -75,6 +76,9 @@ new Vue({
         },
         showToast(text) {
             this.alert = text;
+        },
+        showAccount(humanId) {
+            this.account = humanId;
         },
     },
     el: '#app',

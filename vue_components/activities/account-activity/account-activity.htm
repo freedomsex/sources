@@ -6,26 +6,23 @@
       <div class="human-info">
         <div class="human-info__general">
           <span class="human-info__name">{{human.name}}</span>
-          <span class="human-info__age">{{human.age}} лет</span>
+          <span class="human-info__age">{{age}}</span>
+          <span class="human-info__ago">({{ago}})</span>
         </div>
+
 
         <div>
           <span class="human-info__city">{{human.city}}</span>
         </div>
 
-        <div class="account-section" v-if="human.anketa">
+        <div class="account-section" v-if="who">
           <div class="account-section__header">Я ищу</div>
           <div class="human-info__search">
-            Девушку в возрасте до 60 лет
+            {{who}}
           </div>
         </div>
 
 
-
-        <div class="human-info__status" v-if="0">
-          <span class="elem_online" title="Сейчас на сайте ">oнлайн</span>
-          <span class="human-info__loader"></span>
-        </div>
 
         <div class="account-section" v-if="human.anketa">
           <div class="account-section__header">Обо мне</div>

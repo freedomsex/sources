@@ -2,7 +2,7 @@
 .human-info {
     padding: @indent-lg  @indent-md;
     &__general {
-        margin-bottom: @indent-md;
+        margin-bottom: 0;
     }
     &__name {
         display: inline-block;
@@ -10,6 +10,9 @@
     }
     &__age {
         display: inline-block;
+    }
+    &__ago {
+        color: @gray;
     }
     &__city {
         display: inline-block;
@@ -42,7 +45,6 @@
     &__about {
         color: @dark;
         font-size: @font-sm;
-        margin-top: @indent-md;
     }
     &__measure {
         color: @dark;
@@ -196,6 +198,7 @@
     bottom: 0;
     max-width: 750px;
     overflow: hidden;
+    z-index: 1;
 
     //border: 3px solid #CCC;
     //border-width: 0 3px;
@@ -1071,7 +1074,7 @@
 
 .modal-dialog__mask {
   position: fixed;
-  z-index: 9998;
+  z-index: 1;
   top: 0;
   left: 0;
   width: 100%;
@@ -1098,7 +1101,7 @@
         border-radius: 4px;
         position: relative;
         margin: 10px;
-        z-index: 1000;
+        z-index: 1;
     }
     &__caption {
         font-size: @font-lg;

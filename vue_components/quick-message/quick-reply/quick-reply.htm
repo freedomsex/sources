@@ -17,14 +17,13 @@
     <div class="message-input">
       <textarea class="message-input__texarea" rows="1" placeholder="Введите текст" v-model="text" v-resized></textarea>
         <button class="btn btn-primary" @click="send()">Отправить</button>
-        <button class="btn btn-link" @click="account = humanId">Смотреть анкету...</button>
+        <button class="btn btn-link" @click="$emit('account')">Смотреть анкету</button>
     </div>
     <loading-wall :show="loading"/>
     <loading-cover :show="process"/>
     <attention-wall :show="hold" v-if="hold" @close="cancel" @remove="remove"/>
 
     <captcha-dialog v-show="captcha" @close="close" @cancel="cancel" @send="setCode"/>
-    <account-activity :humanId="account" v-if="account" @close="account = false"/>
   </modal-dialog>
 </script>
 

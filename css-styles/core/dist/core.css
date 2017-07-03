@@ -1517,7 +1517,7 @@ a.name:hover {
   padding: 20px 15px;
 }
 .human-info__general {
-  margin-bottom: 15px;
+  margin-bottom: 0;
 }
 .human-info__name {
   display: inline-block;
@@ -1525,6 +1525,9 @@ a.name:hover {
 }
 .human-info__age {
   display: inline-block;
+}
+.human-info__ago {
+  color: #cccccc;
 }
 .human-info__city {
   display: inline-block;
@@ -1549,7 +1552,6 @@ a.name:hover {
 .human-info__about {
   color: #333333;
   font-size: 12px;
-  margin-top: 15px;
 }
 .human-info__measure {
   color: #333333;
@@ -1682,6 +1684,7 @@ a.name:hover {
   bottom: 0;
   max-width: 750px;
   overflow: hidden;
+  z-index: 1;
 }
 .default-activity__title {
   font-weight: bolder;
@@ -2551,7 +2554,7 @@ a.name:hover {
 }
 .modal-dialog__mask {
   position: fixed;
-  z-index: 9998;
+  z-index: 1;
   top: 0;
   left: 0;
   width: 100%;
@@ -2582,7 +2585,7 @@ a.name:hover {
   border-radius: 4px;
   position: relative;
   margin: 10px;
-  z-index: 1000;
+  z-index: 1;
 }
 .modal-dialog__caption {
   font-size: 18px;
