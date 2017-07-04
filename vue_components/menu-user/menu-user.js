@@ -24,7 +24,7 @@ Vue.component('menu-user', {
                 results = sex == 1 ? 'Парень' : 'Девушка';
                 results = name ? name : results;
             }
-            return results + ' ' + age + ' ' + city;
+            return results + ' ' + (age ? age : '') + ' ' + (city ? city : '');
         }
     },
     methods: {
@@ -52,6 +52,9 @@ Vue.component('menu-user', {
         },
         login() {
             this.$emit('login');
+        },
+        regmy() {
+            window.location = '/?regmy';
         },
     },
     mounted() {

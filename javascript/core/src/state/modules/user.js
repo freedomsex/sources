@@ -2,7 +2,7 @@ const user = {
     state: {
         uid: 0,
         sex: 0,
-        age: '',
+        age: 0,
         name: '',
         city: '',
         contacts: {

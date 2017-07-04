@@ -856,7 +856,7 @@ Vue.component('menu-user', {
                 results = sex == 1 ? 'Парень' : 'Девушка';
                 results = name ? name : results;
             }
-            return results + ' ' + age + ' ' + city;
+            return results + ' ' + (age ? age : '') + ' ' + (city ? city : '');
         }
     },
     methods: {
@@ -890,6 +890,9 @@ Vue.component('menu-user', {
         },
         login: function login() {
             this.$emit('login');
+        },
+        regmy: function regmy() {
+            window.location = '/?regmy';
         }
     },
     mounted: function mounted() {
@@ -3075,7 +3078,7 @@ var user = {
     state: {
         uid: 0,
         sex: 0,
-        age: '',
+        age: 0,
         name: '',
         city: '',
         contacts: {
@@ -3176,7 +3179,7 @@ var store = new Vuex.Store({
     state: {
         apiToken: '',
         //photoServer: '127.0.0.1:8888',
-        photoServer: '195.154.54.70',
+        photoServer: '127.0.0.1:8008',
         count: 0,
         optionStatic: {
             view: null
@@ -3265,7 +3268,7 @@ var Api = function () {
         _classCallCheck(this, Api);
 
         // Delay requests sec
-        this.setDelay('0');
+        this.setDelay('2');
         // [!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]
         this.setRoot(host, version);
         this.setConfig(this.root, key);
@@ -3608,7 +3611,7 @@ var ApiSearch = function (_Api4) {
         _classCallCheck(this, ApiSearch);
 
         var key = '1234';
-        var host = 'http://212.83.162.58/';
+        var host = 'http://127.0.0.1:9000/';
         var routing = {
             route: 'users',
             get: '{tid}'
@@ -3626,7 +3629,7 @@ var ApiContact = function (_Api5) {
         _classCallCheck(this, ApiContact);
 
         var key = store.state.apiToken;
-        var host = 'http://212.83.134.89:9000/';
+        var host = 'http://127.0.0.1:8000/';
         return _possibleConstructorReturn(this, (ApiContact.__proto__ || Object.getPrototypeOf(ApiContact)).call(this, host, key, null, routing));
     }
 
