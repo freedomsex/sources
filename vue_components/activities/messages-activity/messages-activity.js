@@ -13,6 +13,7 @@ Vue.component('messages-activity', {
             captcha: false,
             account: false,
             uploads: false,
+            incoming: false,
             photo: false,
         }
     },
@@ -89,6 +90,9 @@ Vue.component('messages-activity', {
         },
         onError() {
             this.process = false;
+        },
+        videochat() {
+            window.open('/videochat.php?to='+this.humanId, 'videochat', 'width=432, height=280, resizable=yes, scrollbars=yes');
         }
     },
     template: '#messages-activity',

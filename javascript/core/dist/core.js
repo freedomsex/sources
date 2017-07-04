@@ -163,6 +163,7 @@ Vue.component('messages-activity', {
             captcha: false,
             account: false,
             uploads: false,
+            incoming: false,
             photo: false
         };
     },
@@ -240,6 +241,9 @@ Vue.component('messages-activity', {
         },
         onError: function onError() {
             this.process = false;
+        },
+        videochat: function videochat() {
+            window.open('/videochat.php?to=' + this.humanId, 'videochat', 'width=432, height=280, resizable=yes, scrollbars=yes');
         }
     },
     template: '#messages-activity'
@@ -1785,6 +1789,66 @@ Vue.component('desires-settings', {
     template: '#desires-settings'
 });
 
+Vue.component('incoming-photo', {
+    props: ['humanId'],
+    data: function data() {
+        return {
+            photos: [],
+            user: 0,
+            server: null
+        };
+    },
+
+    created: function created() {
+        this.server = this.$store.state.photoServer;
+    },
+    mounted: function mounted() {
+        this.loadPhoto();
+    },
+
+    computed: {
+        uid: function uid() {
+            return this.$store.state.user.uid;
+        }
+    },
+    methods: {
+        loadPhoto: function loadPhoto() {
+            var _this31 = this;
+
+            var config = {
+                headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
+                params: { tid: this.humanId, hash: hash }
+            };
+            axios.get('http://' + this.server + '/api/v1/users/' + this.uid + '/sends', config).then(function (response) {
+                _this31.photos = response.data.photos;
+                //console.log(this.photos);
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        show: function show(index) {
+            var photo = this.photos[index];
+            var links = photo._links;
+            if (links.origin.href) {
+                var _data = {
+                    thumb: links.thumb.href,
+                    photo: links.origin.href,
+                    alias: photo.alias,
+                    height: photo.height,
+                    width: photo.width
+                };
+                store.commit('viewPhoto', _data);
+                store.commit('optionDialog', 'photo');
+            }
+            //console.log(this.photos[index].height);
+        },
+        close: function close() {
+            this.$emit('close');
+        }
+    },
+    template: '#incoming-photo'
+});
+
 Vue.component('login-account', {
     props: [],
     data: function data() {
@@ -1811,7 +1875,7 @@ Vue.component('login-account', {
             this.$emit('close');
         },
         send: function send() {
-            var _this31 = this;
+            var _this32 = this;
 
             var data = {
                 login: this.login,
@@ -1819,10 +1883,10 @@ Vue.component('login-account', {
                 captcha: this.code
             };
             api.user.post(data, null, 'sync/login').then(function (response) {
-                _this31.hint = response.data.say;
-                _this31.error = response.data.err;
-                _this31.captcha = response.data.captcha;
-                _this31.onLogin();
+                _this32.hint = response.data.say;
+                _this32.error = response.data.err;
+                _this32.captcha = response.data.captcha;
+                _this32.onLogin();
             });
         },
         onLogin: function onLogin() {
@@ -1884,7 +1948,7 @@ Vue.component('photo-settings', {
             this.$emit('close');
         },
         loadPhoto: function loadPhoto() {
-            var _this32 = this;
+            var _this33 = this;
 
             var server = this.$store.state.photoServer;
             var uid = this.$store.state.user.uid;
@@ -1895,9 +1959,9 @@ Vue.component('photo-settings', {
             axios.get('http://' + server + '/api/v1/users/' + uid + '/photos', config).then(function (response) {
                 var result = response.data.photos;
                 if (result && result.length) {
-                    _this32.photos = response.data.photos;
+                    _this33.photos = response.data.photos;
                 }
-                console.log(_this32.photos);
+                console.log(_this33.photos);
             }).catch(function (error) {
                 console.log(error);
             });
@@ -1912,14 +1976,14 @@ Vue.component('photo-settings', {
         preview: function preview(photo) {
             var links = photo._links;
             if (links.origin.href) {
-                var _data = {
+                var _data2 = {
                     photo: links.origin.href,
                     thumb: links.thumb.href,
                     alias: photo.alias,
                     height: photo.height,
                     width: photo.width
                 };
-                this.$emit('select', _data);
+                this.$emit('select', _data2);
                 //this.$store.commit('sendPhoto', data);
                 //console.log('sendPhoto');
                 //console.log(data);
@@ -2073,13 +2137,13 @@ Vue.component('security-settings', {
         }
     }),
     mounted: function mounted() {
-        var _this33 = this;
+        var _this34 = this;
 
         this.$store.dispatch('auth/SYNC').then(function () {
-            _this33.init();
-            _this33.process = false;
+            _this34.init();
+            _this34.process = false;
         }).catch(function () {
-            _this33.process = false;
+            _this34.process = false;
         });
         this.process = true;
         this.init();
@@ -2097,54 +2161,38 @@ Vue.component('security-settings', {
             this.virgin = false;
         },
         saveLogin: function saveLogin() {
-            var _this34 = this;
+            var _this35 = this;
 
             this.processLogin = true;
             this.$store.dispatch('auth/SAVE_LOGIN', this.inputLogin).then(function (response) {
                 var data = response.data;
                 if (data.err) {
-                    _this34.$emit('warning', data.say);
+                    _this35.$emit('warning', data.say);
                 }
-                _this34.processLogin = false;
+                _this35.processLogin = false;
             }).catch(function () {
-                _this34.processLogin = false;
+                _this35.processLogin = false;
             });
         },
         savePasswd: function savePasswd() {
-            var _this35 = this;
+            var _this36 = this;
 
             this.processPasswd = true;
             this.$store.dispatch('auth/SAVE_PASSWD', this.inputPasswd).then(function (response) {
                 var data = response.data;
                 if (data.err) {
-                    _this35.$emit('warning', data.say);
+                    _this36.$emit('warning', data.say);
                 }
-                _this35.processPasswd = false;
+                _this36.processPasswd = false;
             }).catch(function () {
-                _this35.processPasswd = false;
+                _this36.processPasswd = false;
             });
         },
         saveEmail: function saveEmail() {
-            var _this36 = this;
+            var _this37 = this;
 
             this.processEmail = true;
             this.$store.dispatch('auth/SAVE_EMAIL', this.inputEmail).then(function (response) {
-                var data = response.data;
-                if (data.err) {
-                    _this36.$emit('warning', data.say);
-                }
-                _this36.processEmail = false;
-            }).catch(function () {
-                _this36.processEmail = false;
-            });
-        },
-        removeEmail: function removeEmail() {
-            var _this37 = this;
-
-            this.confirmRemove = false;
-            this.processEmail = true;
-            console.log('REMOVE_EMAIL');
-            this.$store.dispatch('auth/REMOVE_EMAIL').then(function (response) {
                 var data = response.data;
                 if (data.err) {
                     _this37.$emit('warning', data.say);
@@ -2152,6 +2200,22 @@ Vue.component('security-settings', {
                 _this37.processEmail = false;
             }).catch(function () {
                 _this37.processEmail = false;
+            });
+        },
+        removeEmail: function removeEmail() {
+            var _this38 = this;
+
+            this.confirmRemove = false;
+            this.processEmail = true;
+            console.log('REMOVE_EMAIL');
+            this.$store.dispatch('auth/REMOVE_EMAIL').then(function (response) {
+                var data = response.data;
+                if (data.err) {
+                    _this38.$emit('warning', data.say);
+                }
+                _this38.processEmail = false;
+            }).catch(function () {
+                _this38.processEmail = false;
             });
         },
         saveSubscribe: function saveSubscribe() {
@@ -2328,10 +2392,10 @@ Vue.component('suggest-input', {
     },
     methods: {
         load: function load() {
-            var _this38 = this;
+            var _this39 = this;
 
             api.user.get({ q: this.query }, 'tag/suggest').then(function (response) {
-                _this38.loaded(response.data);
+                _this39.loaded(response.data);
             });
         },
         reset: function reset() {
@@ -2387,14 +2451,14 @@ Vue.component('upload-dialog', {
         preview: function preview(photo) {
             var links = photo._links;
             if (links.origin.href) {
-                var _data2 = {
+                var _data3 = {
                     photo: links.origin.href,
                     thumb: links.thumb.href,
                     alias: photo.alias,
                     height: photo.height,
                     width: photo.width
                 };
-                this.$store.commit('sendPhoto', _data2);
+                this.$store.commit('sendPhoto', _data3);
                 //console.log('sendPhoto');
                 //console.log(data);
             }
@@ -3112,7 +3176,7 @@ var store = new Vuex.Store({
     state: {
         apiToken: '',
         //photoServer: '127.0.0.1:8888',
-        photoServer: '195.154.54.70',
+        photoServer: '127.0.0.1:8008',
         count: 0,
         optionStatic: {
             view: null
@@ -3201,7 +3265,7 @@ var Api = function () {
         _classCallCheck(this, Api);
 
         // Delay requests sec
-        this.setDelay('0');
+        this.setDelay('2');
         // [!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]
         this.setRoot(host, version);
         this.setConfig(this.root, key);
@@ -3544,7 +3608,7 @@ var ApiSearch = function (_Api4) {
         _classCallCheck(this, ApiSearch);
 
         var key = '1234';
-        var host = 'http://212.83.162.58/';
+        var host = 'http://127.0.0.1:9000/';
         var routing = {
             route: 'users',
             get: '{tid}'
@@ -3562,7 +3626,7 @@ var ApiContact = function (_Api5) {
         _classCallCheck(this, ApiContact);
 
         var key = store.state.apiToken;
-        var host = 'http://212.83.134.89:9000/';
+        var host = 'http://127.0.0.1:8000/';
         return _possibleConstructorReturn(this, (ApiContact.__proto__ || Object.getPrototypeOf(ApiContact)).call(this, host, key, null, routing));
     }
 

@@ -1,4 +1,11 @@
+
 .default-activity {
+    .menu-user {
+        max-width: @activity-width;
+        margin-left: 0;
+        margin-right: auto;
+    }
+
     position: fixed;
     background: rgba(0, 0, 0, .2);
 
@@ -26,7 +33,7 @@
         max-height: 650px;
         margin-bottom: 1px;
         overflow: hidden;
-        max-width: 540px;
+        max-width: @activity-width;
         background: @white;
         border: 1px solid @gray;
         border-top: 0;

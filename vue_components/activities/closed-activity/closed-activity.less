@@ -7,6 +7,12 @@
 }
 
 .closed-activity {
+    .menu-closed {
+        max-width: @activity-width;
+        margin-left: auto;
+        margin-right: 0;
+    }
+
     position: fixed;
     background: rgba(0, 0, 0, .2);
 
@@ -31,12 +37,12 @@
     }
     &__wrapper {
         position: absolute;
+        top: 0;
         right: 0;
-        height: ~"calc(100% - 50px)";
-        max-height: @activity-height;
+        height: 100%;
+        max-height: @activity-height + 50;
         max-width:  @activity-width;
         width: 100%;
-        padding: @indent-md @indent-lg @indent-md;
         margin-bottom: 1px;
         overflow: hidden;
         background: @white;
@@ -45,6 +51,9 @@
         box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
         overflow-x: hidden;
         overflow-y: auto;
+    }
+    &__content {
+        padding: @indent-md @indent-lg @indent-md;
     }
     &__container {
         display: flex;

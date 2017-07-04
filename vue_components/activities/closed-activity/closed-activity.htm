@@ -1,18 +1,20 @@
 
 <script type="text/x-template" id="closed-activity">
   <div class="closed-activity" @click.self="close">
-    <nav id="menu-user" class="navbar navbar-inverse">
-      <div class="menu-user">
-        <div class="menu-user__wrapper">
-          <div class="menu-user__navbar"></div>
-          <div class="menu-user__navbar-right" @click="close">
-            <i class="btn-close material-icons" @click="close">&#xE14C;</i>
+    <div class="closed-activity__wrapper">
+      <nav id="menu-user" class="navbar navbar-inverse">
+        <div class="menu-user">
+          <div class="menu-user__wrapper">
+            <div class="menu-user__navbar"></div>
+            <div class="menu-user__navbar-right" @click="close">
+              <i class="btn-close material-icons" @click="close">&#xE14C;</i>
+            </div>
           </div>
         </div>
+      </nav>
+      <div class="closed-activity__content">
+        <slot></slot>
       </div>
-    </nav>
-    <div class="closed-activity__wrapper">
-      <slot></slot>
     </div>
   </div>
 </script>

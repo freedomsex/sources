@@ -141,6 +141,12 @@
 }
 
 .closed-activity {
+    .menu-closed {
+        max-width: @activity-width;
+        margin-left: auto;
+        margin-right: 0;
+    }
+
     position: fixed;
     background: rgba(0, 0, 0, .2);
 
@@ -165,12 +171,12 @@
     }
     &__wrapper {
         position: absolute;
+        top: 0;
         right: 0;
-        height: ~"calc(100% - 50px)";
-        max-height: @activity-height;
+        height: 100%;
+        max-height: @activity-height + 50;
         max-width:  @activity-width;
         width: 100%;
-        padding: @indent-md @indent-lg @indent-md;
         margin-bottom: 1px;
         overflow: hidden;
         background: @white;
@@ -180,12 +186,22 @@
         overflow-x: hidden;
         overflow-y: auto;
     }
+    &__content {
+        padding: @indent-md @indent-lg @indent-md;
+    }
     &__container {
         display: flex;
         height: 100%;
     }
 }
+
 .default-activity {
+    .menu-user {
+        max-width: @activity-width;
+        margin-left: 0;
+        margin-right: auto;
+    }
+
     position: fixed;
     background: rgba(0, 0, 0, .2);
 
@@ -213,7 +229,7 @@
         max-height: 650px;
         margin-bottom: 1px;
         overflow: hidden;
-        max-width: 540px;
+        max-width: @activity-width;
         background: @white;
         border: 1px solid @gray;
         border-top: 0;
@@ -694,7 +710,7 @@
 .menu-user {
     max-width: 750px;
     margin: 0 auto;
-    padding: 0 10px;
+//    padding: 0 10px;
     color: @white;
     &__wrapper {
         display: flex;
@@ -705,7 +721,8 @@
         flex: 1;
         display: flex;
         &-right {
-            flex: 0 1;
+            flex: 0 0;
+            display: flex;
         }
     }
 
@@ -786,24 +803,21 @@
     }
     .material-icons {
         min-width: 24px;
-        margin-right: @indent-xs;
         vertical-align: middle;
     }
     &:hover {
         background-color: @menu-hover;
     }
-    &:first-child {
-        margin-left: @indent-md;
-    }
 
     &__title {
-        &-search {
+        margin-left: @indent-xs;
+        &.button-search {
             @media (max-width: 640px) { display: none; }
         }
-        &-messages {
+        &.button-messages {
             @media (max-width: 560px) { display: none; }
         }
-        &-contacts {
+        &.button-contacts {
             @media (max-width: 500px) { display: none; }
         }
     }

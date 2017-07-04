@@ -2,6 +2,16 @@
 <script type="text/x-template" id="messages-activity">
   <default-activity @close="close">
     <span slot="caption">{{title}}</span>
+
+    <div class="menu-user__navbar-right" slot="option">
+      <div class="navbar-button">
+        <i class="material-icons" @click="videochat">&#xE04B;</i>
+      </div>
+      <div class="navbar-button">
+        <i class="material-icons" @click="incoming = humanId">&#xE3B6;</i>
+      </div>
+    </div>
+
     <div class="message-dialog" key="humanId">
       <div id="dialog-history" class="message-dialog__history">
         <message-list :humanId="humanId" ref="messages"></message-list>
@@ -27,6 +37,7 @@
     </div>
     <account-activity :humanId="account" v-if="account" @close="account = false"/>
     <photo-settings v-if="uploads" @select="select" @close="uploads = false"/>
+    <incoming-photo :humanId="incoming" v-if="incoming" @select="select" @close="incoming = false"/>
     <photo-send v-if="photo" :photo="photo" :options="true" @send="sendMessage" @close="photo = false"/>
 
     <captcha-dialog v-show="captcha" @close="close" @cancel="cancel" @send="setCode"/>

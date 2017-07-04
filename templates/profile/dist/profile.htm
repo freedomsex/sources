@@ -184,18 +184,20 @@
 
 <script type="text/x-template" id="closed-activity">
   <div class="closed-activity" @click.self="close">
-    <nav id="menu-user" class="navbar navbar-inverse">
-      <div class="menu-user">
-        <div class="menu-user__wrapper">
-          <div class="menu-user__navbar"></div>
-          <div class="menu-user__navbar-right" @click="close">
-            <i class="btn-close material-icons" @click="close">&#xE14C;</i>
+    <div class="closed-activity__wrapper">
+      <nav id="menu-user" class="navbar navbar-inverse">
+        <div class="menu-user">
+          <div class="menu-user__wrapper">
+            <div class="menu-user__navbar"></div>
+            <div class="menu-user__navbar-right" @click="close">
+              <i class="btn-close material-icons" @click="close">&#xE14C;</i>
+            </div>
           </div>
         </div>
+      </nav>
+      <div class="closed-activity__content">
+        <slot></slot>
       </div>
-    </nav>
-    <div class="closed-activity__wrapper">
-      <slot></slot>
     </div>
   </div>
 </script>
@@ -217,6 +219,8 @@
               <slot name="caption">Заголовок</slot>
             </div>
           </div>
+
+          <slot name="option"></slot>
         </div>
       </div>
     </nav>
@@ -231,6 +235,16 @@
 <script type="text/x-template" id="messages-activity">
   <default-activity @close="close">
     <span slot="caption">{{title}}</span>
+
+    <div class="menu-user__navbar-right" slot="option">
+      <div class="navbar-button">
+        <i class="material-icons" @click="videochat">&#xE04B;</i>
+      </div>
+      <div class="navbar-button">
+        <i class="material-icons" @click="incoming = humanId">&#xE3B6;</i>
+      </div>
+    </div>
+
     <div class="message-dialog" key="humanId">
       <div id="dialog-history" class="message-dialog__history">
         <message-list :humanId="humanId" ref="messages"></message-list>
@@ -256,6 +270,7 @@
     </div>
     <account-activity :humanId="account" v-if="account" @close="account = false"/>
     <photo-settings v-if="uploads" @select="select" @close="uploads = false"/>
+    <incoming-photo :humanId="incoming" v-if="incoming" @select="select" @close="incoming = false"/>
     <photo-send v-if="photo" :photo="photo" :options="true" @send="sendMessage" @close="photo = false"/>
 
     <captcha-dialog v-show="captcha" @close="close" @cancel="cancel" @send="setCode"/>
@@ -908,6 +923,21 @@
 </script>
 
 
+<script type="text/x-template" id="incoming-photo">
+  <closed-activity @close="close">
+    <div class="activity-section">
+      <div class="activity-section__title">Присланные фото</div>
+      <div class="incoming-photo__list" v-if="photos.length">
+        <img class="incoming-photo__item-photo" :src="item._links.thumb.href" v-for="(item, index) in photos" @click="show(index)">
+      </div>
+      <div class="incoming-photo__placeholder" v-else>
+        Фотографии будут здесь
+      </div>
+    </div>
+  </closed-activity>
+</script>
+
+
 <script type="text/x-template" id="login-account">
   <closed-activity @close="close">
     <div class="activity-section">
@@ -1280,12 +1310,8 @@
   <input id="edit_human_name" type="text" placeholder="Имя" style="width: 150px;">
   <input id="edit_human_btn"  type="submit" value=" Сохранить ">
 </div>
-<!-- build:[src]:dev /static/js/jquery/ -->
- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
- <!-- /build -->
- <!-- build:[src]:dev /static/js/jquery-ui/ -->
- <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
- <!-- /build -->
+ <script src="/static/js/jquery/jquery.min.js"></script>
+ <script src="/static/js/jquery-ui/jquery-ui.min.js"></script>
 
 <script type="text/javascript" src="%%JS_FILE%%"></script>
 <!-- Исходники можно найти в репозитории. Тамже собранные не сжатые файлы -->

@@ -79,18 +79,20 @@
 
 <script type="text/x-template" id="closed-activity">
   <div class="closed-activity" @click.self="close">
-    <nav id="menu-user" class="navbar navbar-inverse">
-      <div class="menu-user">
-        <div class="menu-user__wrapper">
-          <div class="menu-user__navbar"></div>
-          <div class="menu-user__navbar-right" @click="close">
-            <i class="btn-close material-icons" @click="close">&#xE14C;</i>
+    <div class="closed-activity__wrapper">
+      <nav id="menu-user" class="navbar navbar-inverse">
+        <div class="menu-user">
+          <div class="menu-user__wrapper">
+            <div class="menu-user__navbar"></div>
+            <div class="menu-user__navbar-right" @click="close">
+              <i class="btn-close material-icons" @click="close">&#xE14C;</i>
+            </div>
           </div>
         </div>
+      </nav>
+      <div class="closed-activity__content">
+        <slot></slot>
       </div>
-    </nav>
-    <div class="closed-activity__wrapper">
-      <slot></slot>
     </div>
   </div>
 </script>
@@ -112,6 +114,8 @@
               <slot name="caption">Заголовок</slot>
             </div>
           </div>
+
+          <slot name="option"></slot>
         </div>
       </div>
     </nav>
@@ -126,6 +130,16 @@
 <script type="text/x-template" id="messages-activity">
   <default-activity @close="close">
     <span slot="caption">{{title}}</span>
+
+    <div class="menu-user__navbar-right" slot="option">
+      <div class="navbar-button">
+        <i class="material-icons" @click="videochat">&#xE04B;</i>
+      </div>
+      <div class="navbar-button">
+        <i class="material-icons" @click="incoming = humanId">&#xE3B6;</i>
+      </div>
+    </div>
+
     <div class="message-dialog" key="humanId">
       <div id="dialog-history" class="message-dialog__history">
         <message-list :humanId="humanId" ref="messages"></message-list>
@@ -151,6 +165,7 @@
     </div>
     <account-activity :humanId="account" v-if="account" @close="account = false"/>
     <photo-settings v-if="uploads" @select="select" @close="uploads = false"/>
+    <incoming-photo :humanId="incoming" v-if="incoming" @select="select" @close="incoming = false"/>
     <photo-send v-if="photo" :photo="photo" :options="true" @send="sendMessage" @close="photo = false"/>
 
     <captcha-dialog v-show="captcha" @close="close" @cancel="cancel" @send="setCode"/>
@@ -799,6 +814,21 @@
 
 
 
+  </closed-activity>
+</script>
+
+
+<script type="text/x-template" id="incoming-photo">
+  <closed-activity @close="close">
+    <div class="activity-section">
+      <div class="activity-section__title">Присланные фото</div>
+      <div class="incoming-photo__list" v-if="photos.length">
+        <img class="incoming-photo__item-photo" :src="item._links.thumb.href" v-for="(item, index) in photos" @click="show(index)">
+      </div>
+      <div class="incoming-photo__placeholder" v-else>
+        Фотографии будут здесь
+      </div>
+    </div>
   </closed-activity>
 </script>
 
