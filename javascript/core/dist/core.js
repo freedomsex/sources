@@ -263,7 +263,7 @@ Vue.component('api-key-update', {
 
             console.log('upKey');
             axios.get('/sync/sess/').then(function (response) {
-                store.dispatch('LOAD_API_TOKEN');
+                _this4.$store.dispatch('LOAD_API_TOKEN');
                 _this4.upUser(response.data);
                 _this4.upSettings(response.data);
             });
@@ -277,7 +277,7 @@ Vue.component('api-key-update', {
                 contacts = data.contacts;
 
             console.log('upUser', data);
-            store.commit('resetUser', { uid: uid, city: city, sex: sex, age: age, name: name, contacts: contacts });
+            this.$store.commit('resetUser', { uid: uid, city: city, sex: sex, age: age, name: name, contacts: contacts });
             //store.commit('loadUser', data.contacts);
         },
         upSettings: function upSettings(data) {
@@ -287,7 +287,7 @@ Vue.component('api-key-update', {
                 town = data.close,
                 virt = data.virt;
 
-            store.commit('settings', { who: who, up: up, to: to, virt: virt, town: town });
+            this.$store.commit('settings', { who: who, up: up, to: to, virt: virt, town: town });
         }
     },
     mounted: function mounted() {

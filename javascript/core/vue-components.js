@@ -232,7 +232,7 @@ Vue.component('api-key-update', {
         upKey() {
             console.log('upKey');
             axios.get('/sync/sess/').then((response) => {
-                store.dispatch('LOAD_API_TOKEN');
+                this.$store.dispatch('LOAD_API_TOKEN');
                 this.upUser(response.data);
                 this.upSettings(response.data);
             });
@@ -240,12 +240,12 @@ Vue.component('api-key-update', {
         upUser(data) {
             let {uid, city, sex, age, name, contacts} = data;
             console.log('upUser', data);
-            store.commit('resetUser', {uid, city, sex, age, name, contacts});
+            this.$store.commit('resetUser', {uid, city, sex, age, name, contacts});
             //store.commit('loadUser', data.contacts);
         },
         upSettings(data) {
             let {who, years_up: up, years_to: to, close: town, virt} = data;
-            store.commit('settings', {who, up, to, virt, town});
+            this.$store.commit('settings', {who, up, to, virt, town});
         }
     },
     mounted() {
