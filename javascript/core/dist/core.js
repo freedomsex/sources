@@ -296,7 +296,7 @@ Vue.component('api-key-update', {
         this.upKey();
         setInterval(function () {
             _this5.upKey();
-        }, 1000 * 600);
+        }, 1000 * 6);
     },
 
     template: '#api-key-update'
@@ -3158,12 +3158,12 @@ var user = {
     },
     mutations: {
         loadUser: function loadUser(state, data) {
-            state = _.assign(state, data);
+            _.assign(state, data);
             ls.set('user.data', state, 23456);
         },
         resetUser: function resetUser(state, data) {
-            state = data;
-            ls.set('user.data', state, 23456);
+            _.assign(state, data);
+            ls.set('user.data', data, 23456);
         }
     }
 };

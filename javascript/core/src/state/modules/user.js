@@ -59,12 +59,12 @@ const user = {
     },
     mutations: {
         loadUser(state, data) {
-            state = _.assign(state, data);
+            _.assign(state, data);
             ls.set('user.data', state, 23456);
         },
         resetUser(state, data) {
-            state = data;
-            ls.set('user.data', state, 23456);
+            _.assign(state, data);
+            ls.set('user.data', data, 23456);
         },
     }
 }
