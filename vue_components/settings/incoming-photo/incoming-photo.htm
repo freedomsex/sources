@@ -10,5 +10,6 @@
         Фотографии будут здесь
       </div>
     </div>
+    <photo-send v-if="preview" :photo="preview" @close="preview = null"/>
   </closed-activity>
 </script>

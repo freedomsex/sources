@@ -165,7 +165,7 @@
     </div>
     <account-activity :humanId="account" v-if="account" @close="account = false"/>
     <photo-settings v-if="uploads" @select="select" @close="uploads = false"/>
-    <incoming-photo :humanId="incoming" v-if="incoming" @select="select" @close="incoming = false"/>
+    <incoming-photo :humanId="incoming" v-if="incoming" @close="incoming = false"/>
     <photo-send v-if="photo" :photo="photo" :options="true" @send="sendMessage" @close="photo = false"/>
 
     <captcha-dialog v-show="captcha" @close="close" @cancel="cancel" @send="setCode"/>
@@ -829,6 +829,7 @@
         Фотографии будут здесь
       </div>
     </div>
+    <photo-send v-if="preview" :photo="preview" @close="preview = null"/>
   </closed-activity>
 </script>
 
@@ -908,6 +909,17 @@
       <span class="link_simple" @click="$emit('about')">Задать вопрос</span>
     </div>
  -->
+
+    <div class="activity-section">
+      <div class="activity-section__title">Аккаунт</div>
+      ID: {{uid}}
+    </div>
+    <div class="activity-section">
+      <span class="btn btn-primary" @click="logout">Выйти с сайта</span>
+    </div>
+    <div class="activity-section">
+      <a class="link_simple" href="/блог/удаление-анкет-автоматическое/" target="_blank">Удалить аккаунт</a>
+    </div>
 
   </closed-activity>
 </script>

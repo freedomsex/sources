@@ -1714,6 +1714,7 @@ Vue.component('incoming-photo', {
             photos: [],
             user:   0,
             server: null,
+            preview: null
         }
     },
     created: function () {
@@ -1751,10 +1752,8 @@ Vue.component('incoming-photo', {
                     height: photo.height,
                     width:  photo.width,
                 }
-                store.commit('viewPhoto', data);
-                store.commit('optionDialog', 'photo');
+                this.preview = data;
             }
-            //console.log(this.photos[index].height);
         },
         close() {
             this.$emit('close');
@@ -1823,12 +1822,17 @@ Vue.component('other-settings', {
         }
     },
     computed: Vuex.mapState({
-
+        uid() {
+            return this.$store.state.user.uid;
+        }
     }),
     methods: {
         close() {
             this.$emit('close');
         },
+        logout() {
+            window.location = '/logout.php';
+        }
     },
     template: '#other-settings',
 });

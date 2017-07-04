@@ -76,6 +76,21 @@
 
   <div class="container search-results">
 
+<!-- build:remove:dev -->
+  <div class="container hidden-xs">
+    <div class="row">
+<iframe id="frame-id-01" style="position: relative; background-color: transparent; border: none; overflow: hidden;  height: 89px; width: 728px; " src="//data.freedomsex.me/din_new8.php?code=c1b2082d1105d784218299f23aa44f93&bid=35225&w=728&h=89&linkdest=&modelnick=&clickurl=&refresh=1&meffect=random&einterval=none&logo=black&bbgcolor=none&bg_none=none&btextcolor=222222&mbordercolor=000000&mhovercolor=F7941D&mbordertype=solid&shad=0&bfontfamily=Arial&mtextalign=right&id=28644&server=runetki.com&langs=ru&campaign=655683&size=728x89&header=1&modelname=1&modelicon=1&modelinfo=1&geoflag=1&geoheader=1&selgeoheader=0&mediagroup=0&mediatype=2&skins=def&no_ab=1&no_ab_sub_data=1&no_ab_sub_media=2&category=all&srv=0&no_ab=1&no_ab_sub_data=1&no_ab_sub_media=2&no_ab_domain=freedomsex.me"></iframe>
+    </div>
+  </div>
+
+  <div class="container visible-xs-block">
+    <div class="row">
+      <a href="https://runetki.com/" rel="nofollow" target="_blank" >
+        <img src="/static/img/ad-horizontal.gif" style="width: 100%;">
+      </a>
+    </div>
+  </div>
+<!-- /build -->
     <div class="row">
       <div class="col-md-12">
         %%ERROR_SEARCH_ALT%%
@@ -333,7 +348,7 @@
     </div>
     <account-activity :humanId="account" v-if="account" @close="account = false"/>
     <photo-settings v-if="uploads" @select="select" @close="uploads = false"/>
-    <incoming-photo :humanId="incoming" v-if="incoming" @select="select" @close="incoming = false"/>
+    <incoming-photo :humanId="incoming" v-if="incoming" @close="incoming = false"/>
     <photo-send v-if="photo" :photo="photo" :options="true" @send="sendMessage" @close="photo = false"/>
 
     <captcha-dialog v-show="captcha" @close="close" @cancel="cancel" @send="setCode"/>
@@ -997,6 +1012,7 @@
         Фотографии будут здесь
       </div>
     </div>
+    <photo-send v-if="preview" :photo="preview" @close="preview = null"/>
   </closed-activity>
 </script>
 
@@ -1076,6 +1092,17 @@
       <span class="link_simple" @click="$emit('about')">Задать вопрос</span>
     </div>
  -->
+
+    <div class="activity-section">
+      <div class="activity-section__title">Аккаунт</div>
+      ID: {{uid}}
+    </div>
+    <div class="activity-section">
+      <span class="btn btn-primary" @click="logout">Выйти с сайта</span>
+    </div>
+    <div class="activity-section">
+      <a class="link_simple" href="/блог/удаление-анкет-автоматическое/" target="_blank">Удалить аккаунт</a>
+    </div>
 
   </closed-activity>
 </script>
@@ -1373,8 +1400,12 @@
   <input id="edit_human_name" type="text" placeholder="Имя" style="width: 150px;">
   <input id="edit_human_btn"  type="submit" value=" Сохранить ">
 </div>
- <script src="/static/js/jquery/jquery.min.js"></script>
- <script src="/static/js/jquery-ui/jquery-ui.min.js"></script>
+<!-- build:[src]:dev /static/js/jquery/ -->
+ <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+ <!-- /build -->
+ <!-- build:[src]:dev /static/js/jquery-ui/ -->
+ <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+ <!-- /build -->
 
 <script type="text/javascript" src="%%JS_FILE%%"></script>
 <!-- Исходники можно найти в репозитории. Тамже собранные не сжатые файлы -->

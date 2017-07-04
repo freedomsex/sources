@@ -270,7 +270,7 @@
     </div>
     <account-activity :humanId="account" v-if="account" @close="account = false"/>
     <photo-settings v-if="uploads" @select="select" @close="uploads = false"/>
-    <incoming-photo :humanId="incoming" v-if="incoming" @select="select" @close="incoming = false"/>
+    <incoming-photo :humanId="incoming" v-if="incoming" @close="incoming = false"/>
     <photo-send v-if="photo" :photo="photo" :options="true" @send="sendMessage" @close="photo = false"/>
 
     <captcha-dialog v-show="captcha" @close="close" @cancel="cancel" @send="setCode"/>
@@ -934,6 +934,7 @@
         Фотографии будут здесь
       </div>
     </div>
+    <photo-send v-if="preview" :photo="preview" @close="preview = null"/>
   </closed-activity>
 </script>
 
@@ -1013,6 +1014,17 @@
       <span class="link_simple" @click="$emit('about')">Задать вопрос</span>
     </div>
  -->
+
+    <div class="activity-section">
+      <div class="activity-section__title">Аккаунт</div>
+      ID: {{uid}}
+    </div>
+    <div class="activity-section">
+      <span class="btn btn-primary" @click="logout">Выйти с сайта</span>
+    </div>
+    <div class="activity-section">
+      <a class="link_simple" href="/блог/удаление-анкет-автоматическое/" target="_blank">Удалить аккаунт</a>
+    </div>
 
   </closed-activity>
 </script>
@@ -1310,8 +1322,12 @@
   <input id="edit_human_name" type="text" placeholder="Имя" style="width: 150px;">
   <input id="edit_human_btn"  type="submit" value=" Сохранить ">
 </div>
- <script src="/static/js/jquery/jquery.min.js"></script>
- <script src="/static/js/jquery-ui/jquery-ui.min.js"></script>
+<!-- build:[src]:dev /static/js/jquery/ -->
+ <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+ <!-- /build -->
+ <!-- build:[src]:dev /static/js/jquery-ui/ -->
+ <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+ <!-- /build -->
 
 <script type="text/javascript" src="%%JS_FILE%%"></script>
 <!-- Исходники можно найти в репозитории. Тамже собранные не сжатые файлы -->

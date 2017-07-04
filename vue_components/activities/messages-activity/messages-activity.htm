@@ -37,7 +37,7 @@
     </div>
     <account-activity :humanId="account" v-if="account" @close="account = false"/>
     <photo-settings v-if="uploads" @select="select" @close="uploads = false"/>
-    <incoming-photo :humanId="incoming" v-if="incoming" @select="select" @close="incoming = false"/>
+    <incoming-photo :humanId="incoming" v-if="incoming" @close="incoming = false"/>
     <photo-send v-if="photo" :photo="photo" :options="true" @send="sendMessage" @close="photo = false"/>
 
     <captcha-dialog v-show="captcha" @close="close" @cancel="cancel" @send="setCode"/>

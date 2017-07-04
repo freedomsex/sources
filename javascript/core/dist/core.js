@@ -1798,7 +1798,8 @@ Vue.component('incoming-photo', {
         return {
             photos: [],
             user: 0,
-            server: null
+            server: null,
+            preview: null
         };
     },
 
@@ -1840,10 +1841,8 @@ Vue.component('incoming-photo', {
                     height: photo.height,
                     width: photo.width
                 };
-                store.commit('viewPhoto', _data);
-                store.commit('optionDialog', 'photo');
+                this.preview = _data;
             }
-            //console.log(this.photos[index].height);
         },
         close: function close() {
             this.$emit('close');
@@ -1911,10 +1910,17 @@ Vue.component('other-settings', {
         return {};
     },
 
-    computed: Vuex.mapState({}),
+    computed: Vuex.mapState({
+        uid: function uid() {
+            return this.$store.state.user.uid;
+        }
+    }),
     methods: {
         close: function close() {
             this.$emit('close');
+        },
+        logout: function logout() {
+            window.location = '/logout.php';
         }
     },
     template: '#other-settings'
@@ -3179,7 +3185,7 @@ var store = new Vuex.Store({
     state: {
         apiToken: '',
         //photoServer: '127.0.0.1:8888',
-        photoServer: '127.0.0.1:8008',
+        photoServer: '195.154.54.70',
         count: 0,
         optionStatic: {
             view: null
@@ -3268,7 +3274,7 @@ var Api = function () {
         _classCallCheck(this, Api);
 
         // Delay requests sec
-        this.setDelay('2');
+        this.setDelay('0');
         // [!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]
         this.setRoot(host, version);
         this.setConfig(this.root, key);
@@ -3611,7 +3617,7 @@ var ApiSearch = function (_Api4) {
         _classCallCheck(this, ApiSearch);
 
         var key = '1234';
-        var host = 'http://127.0.0.1:9000/';
+        var host = 'http://212.83.162.58/';
         var routing = {
             route: 'users',
             get: '{tid}'
@@ -3629,7 +3635,7 @@ var ApiContact = function (_Api5) {
         _classCallCheck(this, ApiContact);
 
         var key = store.state.apiToken;
-        var host = 'http://127.0.0.1:8000/';
+        var host = 'http://212.83.134.89:9000/';
         return _possibleConstructorReturn(this, (ApiContact.__proto__ || Object.getPrototypeOf(ApiContact)).call(this, host, key, null, routing));
     }
 
