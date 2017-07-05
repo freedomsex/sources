@@ -296,7 +296,7 @@ Vue.component('api-key-update', {
         this.upKey();
         setInterval(function () {
             _this5.upKey();
-        }, 1000 * 6);
+        }, 1000 * 600);
     },
 
     template: '#api-key-update'

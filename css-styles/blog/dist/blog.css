@@ -1,3 +1,6 @@
+body {
+  background-color: #ffffff;
+}
 #cent_info {
   border-left: 1px solid #cccccc;
   float: right;
