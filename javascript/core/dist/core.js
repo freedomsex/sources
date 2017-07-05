@@ -707,6 +707,7 @@ Vue.component('contact-item', {
             this.confirm = 'doit';
         },
         dialog: function dialog() {
+            this.$emit('read', this.index);
             this.$emit('dialog', { id: this.humanId, title: this.title });
         },
         confirmRemove: function confirmRemove() {
@@ -717,7 +718,6 @@ Vue.component('contact-item', {
         reply: function reply() {
             this.detail = true;
             this.$emit('read', this.index);
-            console.log('quick');
         },
         close: function close() {
             this.detail = false;

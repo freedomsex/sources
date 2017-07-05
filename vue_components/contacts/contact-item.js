@@ -59,6 +59,7 @@ Vue.component('contact-item', {
             this.confirm = 'doit';
         },
         dialog() {
+            this.$emit('read', this.index);
             this.$emit('dialog', {id: this.humanId, title: this.title});
         },
         confirmRemove() {
@@ -69,7 +70,6 @@ Vue.component('contact-item', {
         reply() {
             this.detail = true;
             this.$emit('read', this.index);
-            console.log('quick');
         },
         close() {
             this.detail = false;
