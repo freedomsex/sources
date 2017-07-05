@@ -493,7 +493,7 @@ const InitialDialog = Vue.component('initial-dialog', {
             this.$store.dispatch('initial/DELETE', index);
         },
         read(index) {
-            console.log('imm=read', index);
+            console.log('initial=read', index);
             this.$store.dispatch('initial/READ', index);
         },
         splice(index) {
@@ -537,7 +537,7 @@ const IntimateDialog = Vue.component('intimate-dialog', {
             this.$store.dispatch('intimate/DELETE', index);
         },
         read(index) {
-            console.log('imm=read', index);
+            console.log('intimate=read', index);
             this.$store.dispatch('intimate/READ', index);
         },
         splice(index) {
@@ -2202,6 +2202,10 @@ Vue.component('sex-confirm', {
             this.$store.dispatch('SAVE_SEX', sex);
             this.$emit('select', this.show);
             this.close();
+        },
+        login() {
+            this.$emit('login');
+            this.$emit('close');
         },
     },
     data() {

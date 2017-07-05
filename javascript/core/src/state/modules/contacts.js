@@ -99,7 +99,7 @@ const intimate = _.extend({
             return result;
         },
         READ({ state, commit, rootState }, index) {
-            let result = api.contacts.initial.put(null, {
+            let result = api.contacts.intimate.put(null, {
                 uid: rootState.user.uid,
                 resource_id: state.list[index].id
             });

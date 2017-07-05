@@ -20,7 +20,9 @@
   @close="accountSettings = false"
   @settings="otherSettings = true"
   @login="logIn = true"></account-settings>
-<sex-confirm v-if="sexConfirm" :show="sexConfirm" @close="sexConfirm = false" @select="selectSex"></sex-confirm>
+<sex-confirm v-if="sexConfirm" :show="sexConfirm" @close="sexConfirm = false"
+  @select="selectSex"
+  @login="logIn = true"></sex-confirm>
 <login-account v-if="logIn" @close="logIn = false"></login-account>
 <other-settings v-if="otherSettings" @close="otherSettings = false"
   @security="securitySettings = true"

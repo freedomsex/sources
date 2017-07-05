@@ -74,7 +74,9 @@
   @close="accountSettings = false"
   @settings="otherSettings = true"
   @login="logIn = true"></account-settings>
-<sex-confirm v-if="sexConfirm" :show="sexConfirm" @close="sexConfirm = false" @select="selectSex"></sex-confirm>
+<sex-confirm v-if="sexConfirm" :show="sexConfirm" @close="sexConfirm = false"
+  @select="selectSex"
+  @login="logIn = true"></sex-confirm>
 <login-account v-if="logIn" @close="logIn = false"></login-account>
 <other-settings v-if="otherSettings" @close="otherSettings = false"
   @security="securitySettings = true"
@@ -1225,16 +1227,19 @@
 
 <script type="text/x-template" id="sex-confirm">
   <modal-dialog @close="close">
-    <div class="modal-dialog__wrapper">
+    <div class="modal-dialog__wrapper" style="padding-bottom: 10px;">
       <div class="modal-dialog__caption">
         {{caption}}
       </div>
       <div class="modal-dialog__body">
         {{text}}
       </div>
-      <div class="modal-dialog__centred">
+      <div class="modal-dialog__centred" style="margin-bottom: 10px;">
         <button class="btn btn-primary btn-fat" @click="save(2)">   Девушка   </button>
         <button class="btn btn-primary btn-fat" @click="save(1)">   Парень   </button>
+      </div>
+      <div class="modal-dialog__centred">
+        <button class="btn btn-link btn-fat" @click="login">  Уже есть анкета?  </button>
       </div>
     </div>
   </modal-dialog>

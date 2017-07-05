@@ -20,6 +20,10 @@ Vue.component('sex-confirm', {
             this.$emit('select', this.show);
             this.close();
         },
+        login() {
+            this.$emit('login');
+            this.$emit('close');
+        },
     },
     data() {
         return {

@@ -1,15 +1,18 @@
 <script type="text/x-template" id="sex-confirm">
   <modal-dialog @close="close">
-    <div class="modal-dialog__wrapper">
+    <div class="modal-dialog__wrapper" style="padding-bottom: 10px;">
       <div class="modal-dialog__caption">
         {{caption}}
       </div>
       <div class="modal-dialog__body">
         {{text}}
       </div>
-      <div class="modal-dialog__centred">
+      <div class="modal-dialog__centred" style="margin-bottom: 10px;">
         <button class="btn btn-primary btn-fat" @click="save(2)">   Девушка   </button>
         <button class="btn btn-primary btn-fat" @click="save(1)">   Парень   </button>
+      </div>
+      <div class="modal-dialog__centred">
+        <button class="btn btn-link btn-fat" @click="login">  Уже есть анкета?  </button>
       </div>
     </div>
   </modal-dialog>
