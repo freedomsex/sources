@@ -17,7 +17,7 @@
 
     <div class="activity-section" v-show="error && captcha">
       <div class="activity-section__title">Код</div>
-      <simple-captcha @input="setCode"></simple-captcha>
+      <simple-captcha ref="captcha" @input="setCode"></simple-captcha>
     </div>
 
     <div class="activity-section">

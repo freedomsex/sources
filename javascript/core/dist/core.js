@@ -1892,6 +1892,7 @@ Vue.component('login-account', {
             });
         },
         onLogin: function onLogin() {
+            this.$refs.captcha.update();
             if (!this.error) {
                 this.hint = 'Успешно. Подождите.';
                 location.href = location.href;
