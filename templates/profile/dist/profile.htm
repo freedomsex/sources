@@ -66,10 +66,11 @@
 <upload-dialog  @close="close" v-if="view == 'upload'"></upload-dialog>
 <photo-dialog   @close="close" v-if="view == 'photo'"></photo-dialog>
 <messages-activity @close="close" v-if="view == 'history'"></messages-activity>
+<search-activity @close="search = false" v-if="search" @settings="openSearchSettings()" ref="search"></search-activity>
 
 <api-key-update></api-key-update>
 
-<search-settings v-if="searchSettings" @close="searchSettings = false; search()" @account="openAccountSettings()"></search-settings>
+<search-settings v-if="searchSettings" @close="searchSettings = false; searchOpen()" @account="openAccountSettings()"></search-settings>
 <account-settings v-if="accountSettings"
   @close="accountSettings = false"
   @settings="otherSettings = true"
@@ -279,6 +280,44 @@
   </default-activity>
 </script>
 
+
+
+<script type="text/x-template" id="search-activity">
+  <default-activity @close="close">
+    <span slot="caption">Поиск</span>
+
+    <div class="menu-user__navbar-right" slot="option">
+      <div class="navbar-button" @click="$emit('settings')">
+        <i class="material-icons">&#xE8B8;</i>
+        <span class="navbar-button__title"> Настроить</span>
+      </div>
+    </div>
+
+    <search-item v-for="(item, index) in users" :human="item" :key="index"/>
+
+  </default-activity>
+</script>
+
+
+
+<script type="text/x-template" id="search-item">
+  <div class="search-item">
+    <div class="search-item__content">
+      <div class="search-item__name">{{human.name}}</div>
+      <div class="search-item__age" v-if="human.age">{{human.age}}</div>
+      <div class="search-item__city" v-if="human.city">{{human.city}}</div>
+      <div class="search-item__search" v-if="search">{{search}}</div>
+    </div>
+    <div class="search-item__option">
+      <div class="search-item__virt" v-if="human.virt">вирт</div>
+      <div class="search-item__real" v-if="human.close">реал</div>
+      <div class="social-icon" :class="first" v-if="first"></div>
+      <div class="social-icon" :class="second" v-if="second"></div>
+      <div class="social-icon" :class="third" v-if="third"></div>
+      <div class="search-item__desires" v-if="tags">{{tags}}</div>
+    </div>
+  </div>
+</script>
 
 
 <script type="text/x-template" id="api-key-update">

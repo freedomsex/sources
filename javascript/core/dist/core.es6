@@ -14,7 +14,7 @@ Vue.component('account-activity', {
             return this.$store.state.search.human;
         },
         age() {
-            return moment.duration(this.human.age, "years").humanize();
+            return this.human.age ? moment.duration(this.human.age, "years").humanize() : null;
         },
         tags() {
             return ('tags' in this.human) ? this.human.tags : [];
@@ -217,6 +217,102 @@ Vue.component('messages-activity', {
         }
     },
     template: '#messages-activity',
+});
+
+
+Vue.component('search-activity', {
+    props: [],
+    data() {
+        return {
+            loading: false,
+            users: [],
+        };
+    },
+    mounted() {
+        this.load();
+    },
+    computed: {
+
+    },
+    methods: {
+        close() {
+            this.$emit('close');
+        },
+        load() {
+            let {who, city, up, to} = this.$store.state.search.settings;
+            let sex = this.$store.state.user.sex;
+            up = up ? up : null;
+            to = to ? to : null;
+            api.search.load({sex, who, city, up, to}).then((response) => {
+                this.users = response.data.users;
+            });
+        },
+        reload() {
+            this.load();
+        }
+    },
+    template: '#search-activity',
+});
+
+
+Vue.component('search-item', {
+    props: ['human'],
+    data() {
+        return {
+            first:  null,
+            second: null,
+            third:  null,
+            social: {
+                first:  ['em','ok','vk','fb','go','sk','ph'],
+                second: ['vk','ok','fb','go','sk','ph'],
+                third:  ['sk','ph','em','ok','vk','fb','go'],
+            }
+        };
+    },
+    mounted() {
+        _.find(_.pick(this.human, this.social.first), (value, key) => {
+            return value ? (this.first = key) : false;
+        });
+        _.find(_.pick(this.human, this.social.second), (value, key) => {
+            value = this.first == key ? false : value;
+            return value ? (this.second = key) : false;
+        });
+        _.find(_.pick(this.human, this.social.second), (value, key) => {
+            value = this.first == key ? false : value;
+            value = this.second == key ? false : value;
+            return value ? (this.third = key) : false;
+        });
+    },
+    computed: {
+        search() {
+            var result = 'парня или девушку ';
+            if (this.human.who) {
+                result = this.human.who == 1 ? 'парня ' : 'девушку ';
+            }
+            result = 'Ищет ' + result;
+            if (this.human.up || this.human.to) {
+                //result += ' в возрасте ';
+                result += this.human.up ? ' от ' + this.human.up : '';
+                result += this.human.to ? ' до ' + this.human.to : '';
+                result += ' лет ';
+            }
+            return result;
+        },
+        tags() {
+            return this.human.tags.length;
+        }
+    },
+    methods: {
+        close() {
+            this.$emit('close');
+        },
+        load() {
+            api.search.load(null).then((response) => {
+                this.users = response.data.users;
+            });
+        }
+    },
+    template: '#search-item',
 });
 
 Vue.component('api-key-update', {
@@ -3417,6 +3513,7 @@ new Vue({
         accountSettings: false,
         sexConfirm: false,
         logIn: false,
+        search: false,
         warning: '',
         alert: '',
         account: false,
@@ -3447,8 +3544,12 @@ new Vue({
         }
     },
     methods: {
-        search() {
-            window.location = this.$store.getters.searchURL;
+        searchOpen() {
+            //window.location = this.$store.getters.searchURL;
+            if (this.search) {
+                this.$refs.search.reload();
+            }
+            this.search = 1;
         },
         close() {
             this.$store.commit('closeAll');

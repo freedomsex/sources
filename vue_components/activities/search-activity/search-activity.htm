@@ -1,0 +1,17 @@
+
+<script type="text/x-template" id="search-activity">
+  <default-activity @close="close">
+    <span slot="caption">Поиск</span>
+
+    <div class="menu-user__navbar-right" slot="option">
+      <div class="navbar-button" @click="$emit('settings')">
+        <i class="material-icons">&#xE8B8;</i>
+        <span class="navbar-button__title"> Настроить</span>
+      </div>
+    </div>
+
+    <search-item v-for="(item, index) in users" :human="item" :key="index"/>
+
+  </default-activity>
+</script>
+

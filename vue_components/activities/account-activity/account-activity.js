@@ -14,7 +14,7 @@ Vue.component('account-activity', {
             return this.$store.state.search.human;
         },
         age() {
-            return moment.duration(this.human.age, "years").humanize();
+            return this.human.age ? moment.duration(this.human.age, "years").humanize() : null;
         },
         tags() {
             return ('tags' in this.human) ? this.human.tags : [];

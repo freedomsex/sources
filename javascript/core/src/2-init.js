@@ -5,6 +5,7 @@ new Vue({
         accountSettings: false,
         sexConfirm: false,
         logIn: false,
+        search: false,
         warning: '',
         alert: '',
         account: false,
@@ -35,8 +36,12 @@ new Vue({
         }
     },
     methods: {
-        search() {
-            window.location = this.$store.getters.searchURL;
+        searchOpen() {
+            //window.location = this.$store.getters.searchURL;
+            if (this.search) {
+                this.$refs.search.reload();
+            }
+            this.search = 1;
         },
         close() {
             this.$store.commit('closeAll');

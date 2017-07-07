@@ -1,0 +1,112 @@
+
+.search-item {
+
+    &:last-child {
+        border-bottom-width: 0px;
+    }
+    padding: @indent-sm @indent-xs;
+    border-bottom: 1px solid @light;
+    position: relative;
+    background: @white;
+    font-size: 14px;
+    color: @dark;
+    margin: 0px 10px;
+    display: flex;
+    justify-content: space-between;
+    &__content {
+        .link;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        flex: 1;
+        min-width: 0;
+    }
+    &__option {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        flex: none;
+        text-align: right;
+        margin-left: @indent-xs;
+    }
+
+    &__name {
+        margin-right: @indent-xs;
+        flex: none;
+    }
+    &__age {
+        color: @red-dark;
+        margin-right: @indent-xs;
+        flex: none;
+    }
+    &__city {
+        border-bottom: 0px dashed @link-color;
+        color: @link-color;
+        margin-right: @indent-xs;
+        flex: 0 1 auto;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &__search {
+        color: @gray-dark;
+        font-size: 12px;
+        margin-left: 10px;
+        white-space: nowrap;
+        overflow: hidden;
+        flex: 0 5 auto;
+        text-overflow: ellipsis;
+        &:hover {
+            color: @dark-light;
+        }
+    }
+
+    &__desires {
+        margin-left: @indent-xs;
+        font-size: 10px;
+        //margin: 0 @indent-xs;
+        padding: 2px 7px 0px;
+        border-radius: @radius-xs;
+        color: @dark-light;
+        background: #E8E5FF;
+    }
+    &__virt {
+        color: @green;
+        font-size: 11px;
+        margin-right: @indent-xs;
+    }
+    &__real {
+        color: @pink-dark;
+        font-size: 11px;
+        margin-right: @indent-xs;
+    }
+}
+
+.social-icon {
+    height: 16px;
+    width: 16px;
+    margin-right: 5px;
+    background-repeat: no-repeat;
+    background-position: left center;
+}
+.vk {
+    background: url(/img/icon/ct_vk.png);
+}
+.sk {
+    background: url(/img/icon/ct_sk.png);
+}
+.ok {
+    background: url(/img/icon/ct_ok.png);
+}
+.fb {
+    background: url(/img/icon/ct_fb.png);
+}
+.ph {
+    background: url(/img/icon/ct_ph.png);
+}
+.em {
+    background: url(/img/icon/ct_em.png);
+}
+.go {
+    background: url(/img/icon/ct_go.png);
+}

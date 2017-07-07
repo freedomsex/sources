@@ -1,0 +1,19 @@
+
+<script type="text/x-template" id="search-item">
+  <div class="search-item">
+    <div class="search-item__content">
+      <div class="search-item__name">{{human.name}}</div>
+      <div class="search-item__age" v-if="human.age">{{human.age}}</div>
+      <div class="search-item__city" v-if="human.city">{{human.city}}</div>
+      <div class="search-item__search" v-if="search">{{search}}</div>
+    </div>
+    <div class="search-item__option">
+      <div class="search-item__virt" v-if="human.virt">вирт</div>
+      <div class="search-item__real" v-if="human.close">реал</div>
+      <div class="social-icon" :class="first" v-if="first"></div>
+      <div class="social-icon" :class="second" v-if="second"></div>
+      <div class="social-icon" :class="third" v-if="third"></div>
+      <div class="search-item__desires" v-if="tags">{{tags}}</div>
+    </div>
+  </div>
+</script>
