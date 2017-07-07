@@ -589,7 +589,7 @@
     <loading-cover :show="process"/>
     <attention-wall :show="hold" v-if="hold" @close="cancel" @remove="remove"/>
 
-    <captcha-dialog v-show="captcha" @close="close" @cancel="cancel" @send="setCode"/>
+    <captcha-dialog v-if="captcha" @close="close" @cancel="cancel" @send="setCode"/>
   </modal-dialog>
 </script>
 
@@ -619,7 +619,7 @@
     <loading-cover :show="process"/>
     <attention-wall :show="hold" v-if="hold" @close="cancel" @remove="remove"/>
 
-    <captcha-dialog v-show="captcha" @close="close" @cancel="cancel" @send="setCode"/>
+    <captcha-dialog v-if="captcha" @close="close" @cancel="cancel" @send="setCode"/>
   </modal-dialog>
 </script>
 
