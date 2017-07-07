@@ -18,8 +18,9 @@ const desires = {
             });
         },
         DELETE({state, commit}, index) {
+            let result = api.user.desireDelete(state.list[index].id);
             commit('delete', index);
-            return api.user.desireDelete(state.list[index].id);
+            return result;
         }
     },
     mutations: {
