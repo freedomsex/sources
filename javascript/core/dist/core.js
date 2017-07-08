@@ -2189,7 +2189,10 @@ Vue.component('search-settings', {
         virt: function virt(state) {
             return state.search.settings.virt == true;
         },
-        virgin: function virgin() {
+        virgin: function virgin(state) {
+            if (state.search.settings.city != this.city) {
+                return false;
+            }
             return this.selectCity == this.city && this.selectWho == this.who && this.selectUp == this.up && this.selectTo == this.to && this.checkedTown == this.town && this.checkedVirt == this.virt;
         }
     }),
@@ -3216,7 +3219,7 @@ var search = {
                 try {
                     data = JSON.parse(data);
                 } catch (e) {}
-                state.settings.city = '';
+                state.settings.city = data.city;
                 state.settings.who = Number(data.who);
                 state.settings.up = Number(data.up);
                 state.settings.to = Number(data.to);

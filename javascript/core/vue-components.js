@@ -2089,7 +2089,10 @@ Vue.component('search-settings', {
         virt(state) {
             return state.search.settings.virt == true;
         },
-        virgin() {
+        virgin(state) {
+            if (state.search.settings.city != this.city) {
+                return false;
+            }
             return (
                 this.selectCity == this.city &&
                 this.selectWho == this.who &&

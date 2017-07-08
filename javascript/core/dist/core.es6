@@ -2089,7 +2089,10 @@ Vue.component('search-settings', {
         virt(state) {
             return state.search.settings.virt == true;
         },
-        virgin() {
+        virgin(state) {
+            if (state.search.settings.city != this.city) {
+                return false;
+            }
             return (
                 this.selectCity == this.city &&
                 this.selectWho == this.who &&
@@ -3040,7 +3043,7 @@ var search = {
                   data = JSON.parse(data);
                 }
                 catch(e) { }
-                state.settings.city = '';
+                state.settings.city = data.city;
                 state.settings.who = Number(data.who);
                 state.settings.up = Number(data.up);
                 state.settings.to = Number(data.to);

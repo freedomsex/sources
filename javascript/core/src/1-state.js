@@ -412,7 +412,7 @@ var search = {
                   data = JSON.parse(data);
                 }
                 catch(e) { }
-                state.settings.city = '';
+                state.settings.city = data.city;
                 state.settings.who = Number(data.who);
                 state.settings.up = Number(data.up);
                 state.settings.to = Number(data.to);
