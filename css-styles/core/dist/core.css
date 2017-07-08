@@ -1801,11 +1801,12 @@ a.name:hover {
 .send-form i {
   vertical-align: bottom;
 }
-.search-results {
+.search-list {
   margin: 0 0 10px;
   padding: 0;
 }
 .search-item {
+  margin: 0;
   padding: 10px 5px;
   border-bottom: 1px solid #f5f5f5;
   position: relative;
@@ -2306,6 +2307,7 @@ a.name:hover {
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
+  padding: 0 10px;
 }
 .menu-user__navbar {
   -webkit-box-flex: 1;

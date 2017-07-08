@@ -185,7 +185,7 @@
       </div>
     </div>
 
-    <div class="search-results">
+    <div class="search-list">
       <search-item v-for="(item, index) in users" :human="item" :key="index" @select="openMessage"/>
       <div class="messages__next" @click="loadNext" v-show="more">
         <span class="btn btn-default btn-xs" :disabled="!response">Следующие</span>
