@@ -254,21 +254,45 @@ Vue.component('search-activity', {
     data: function data() {
         return {
             loading: false,
-            users: []
+            users: [],
+            response: null,
+            error: 0,
+            next: null,
+            newCount: 0,
+            batch: 15,
+            received: 0,
+            attention: false,
+            toSlow: false,
+            humanId: null,
+            account: null,
+            sended: false
         };
     },
     mounted: function mounted() {
         this.load();
     },
 
-    computed: {},
+    computed: {
+        more: function more() {
+            if (this.received && this.received == this.batch) {
+                return true;
+            }
+            return false;
+        }
+    },
     methods: {
         close: function close() {
             this.$emit('close');
         },
+        reload: function reload() {
+            this.next = 0;
+            this.users = [];
+            this.load();
+        },
         load: function load() {
             var _this4 = this;
 
+            this.response = 0;
             var _$store$state$search$ = this.$store.state.search.settings,
                 who = _$store$state$search$.who,
                 city = _$store$state$search$.city,
@@ -276,15 +300,35 @@ Vue.component('search-activity', {
                 to = _$store$state$search$.to;
 
             var sex = this.$store.state.user.sex;
+            var next = this.next;
             up = up ? up : null;
             to = to ? to : null;
-            api.search.load({ sex: sex, who: who, city: city, up: up, to: to }).then(function (response) {
-                _this4.users = response.data.users;
+            api.search.load({ sex: sex, who: who, city: city, up: up, to: to, next: next }).then(function (response) {
+                _this4.onLoad(response.data);
             });
         },
-        reload: function reload() {
+        loadNext: function loadNext() {
+            //this.skipScroll = true;
             this.load();
-        }
+        },
+        onLoad: function onLoad(data) {
+            var users = data.users;
+            this.received = users ? users.length : 0;
+            if (!users && !this.users.length) {
+                this.noResult();
+            } else {
+                if (this.received) {
+                    this.users = _.union(this.users, users);
+                }
+                this.next += this.batch;
+            }
+            this.response = 200;
+            this.toSlow = false;
+        },
+        openMessage: function openMessage(id) {
+            this.humanId = id;
+        },
+        noResult: function noResult() {}
     },
     template: '#search-activity'
 });

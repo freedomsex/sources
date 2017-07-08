@@ -10,7 +10,7 @@ Vue.component('search-item', {
                 first:  ['em','ok','vk','fb','go','sk','ph'],
                 second: ['vk','ok','fb','go','sk','ph'],
                 third:  ['sk','ph','em','ok','vk','fb','go'],
-            }
+            },
         };
     },
     mounted() {

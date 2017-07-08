@@ -1801,6 +1801,10 @@ a.name:hover {
 .send-form i {
   vertical-align: bottom;
 }
+.search-results {
+  margin: 0 0 10px;
+  padding: 0;
+}
 .search-item {
   padding: 10px 5px;
   border-bottom: 1px solid #f5f5f5;
@@ -2648,7 +2652,7 @@ a.name:hover {
 }
 .messages__next {
   text-align: center;
-  margin-top: 20px;
+  margin-top: 15px;
 }
 .messages__new {
   text-align: center;

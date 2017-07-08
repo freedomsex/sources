@@ -10,7 +10,18 @@
       </div>
     </div>
 
-    <search-item v-for="(item, index) in users" :human="item" :key="index"/>
+    <div class="search-results">
+      <search-item v-for="(item, index) in users" :human="item" :key="index" @select="openMessage"/>
+      <div class="messages__next" @click="loadNext" v-show="more">
+        <span class="btn btn-default btn-xs" :disabled="!response">Следующие</span>
+      </div>
+    </div>
+
+
+
+    <quick-message v-if="humanId" :human-id="humanId" @sended="sended = true" @close="humanId = null" @account="account = humanId"></quick-message>
+    <snackbar v-if="sended" @close="sended = false">Сообщение отправлено.</snackbar>
+    <account-activity :human-id="account" v-if="account" @close="account = null"></account-activity>
 
   </default-activity>
 </script>
