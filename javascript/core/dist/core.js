@@ -216,7 +216,7 @@ Vue.component('messages-activity', {
             }).catch(function () {
                 _this3.onError();
             });
-            this.photo = null;
+            this.preview = null;
             this.process = true;
         },
         setCode: function setCode(code) {

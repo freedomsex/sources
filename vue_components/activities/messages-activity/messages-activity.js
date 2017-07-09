@@ -65,7 +65,7 @@ Vue.component('messages-activity', {
             }).catch(() => {
                 this.onError();
             });
-            this.photo = null;
+            this.preview = null;
             this.process = true;
         },
         setCode(code) {
