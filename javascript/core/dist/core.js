@@ -164,6 +164,7 @@ Vue.component('messages-activity', {
             account: false,
             uploads: false,
             incoming: false,
+            preview: false,
             photo: false
         };
     },
@@ -195,6 +196,7 @@ Vue.component('messages-activity', {
         },
         select: function select(data) {
             this.photo = data;
+            this.preview = data;
         },
         sendMessage: function sendMessage() {
             var _this3 = this;

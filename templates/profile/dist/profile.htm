@@ -274,9 +274,9 @@
     <account-activity :humanId="account" v-if="account" @close="account = false"/>
     <photo-settings v-if="uploads" @select="select" @close="uploads = false"/>
     <incoming-photo :humanId="incoming" v-if="incoming" @close="incoming = false"/>
-    <photo-send v-if="photo" :photo="photo" :options="true" @send="sendMessage" @close="photo = false"/>
+    <photo-send v-if="preview" :photo="photo" :options="true" @send="sendMessage" @close="preview = false"/>
 
-    <captcha-dialog v-show="captcha" @close="close" @cancel="cancel" @send="setCode"/>
+    <captcha-dialog v-if="captcha" @close="close" @cancel="cancel" @send="setCode"/>
   </default-activity>
 </script>
 
