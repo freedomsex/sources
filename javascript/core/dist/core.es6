@@ -363,6 +363,13 @@ Vue.component('search-item', {
         },
         tags() {
             return this.human.tags.length;
+        },
+        differ() {
+            result = false;
+            if (this.human.who && this.human.who != this.$store.state.user.sex) {
+                result = true;
+            }
+            return result;
         }
     },
     methods: {
@@ -3188,7 +3195,6 @@ const visited = {
         update(state, data) {
             if (data && data.length) {
                 state.list = _.union(state.list, data);
-                console.log('update', data);
             }
         },
         add(state, data) {

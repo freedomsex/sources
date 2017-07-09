@@ -314,9 +314,9 @@
 <script type="text/x-template" id="search-item">
   <div class="search-item" :class="{visited}" @click="$emit('select', human.id)">
     <div class="search-item__content">
-      <div class="search-item__name">{{name}}</div>
-      <div class="search-item__age" v-if="human.age">{{human.age}}</div>
-      <div class="search-item__city" v-if="human.city">{{human.city}}</div>
+      <div class="search-item__name" :class="{differ}">{{name}}</div>
+      <div class="search-item__age" :class="{differ}" v-if="human.age">{{human.age}}</div>
+      <div class="search-item__city" :class="{differ}" v-if="human.city">{{human.city}}</div>
       <div class="search-item__search" v-if="search">{{search}}</div>
     </div>
     <div class="search-item__option">

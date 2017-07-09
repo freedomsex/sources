@@ -400,6 +400,13 @@ Vue.component('search-item', {
         },
         tags: function tags() {
             return this.human.tags.length;
+        },
+        differ: function differ() {
+            result = false;
+            if (this.human.who && this.human.who != this.$store.state.user.sex) {
+                result = true;
+            }
+            return result;
         }
     },
     methods: {
@@ -3385,7 +3392,6 @@ var visited = {
         update: function update(state, data) {
             if (data && data.length) {
                 state.list = _.union(state.list, data);
-                console.log('update', data);
             }
         },
         add: function add(state, data) {

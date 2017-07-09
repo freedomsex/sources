@@ -28,7 +28,6 @@ const visited = {
         update(state, data) {
             if (data && data.length) {
                 state.list = _.union(state.list, data);
-                console.log('update', data);
             }
         },
         add(state, data) {

@@ -354,11 +354,17 @@
     &__name {
         margin-right: @indent-xs;
         flex: none;
+        &.differ {
+            color: @dark-light;
+        }
     }
     &__age {
         color: @red-dark;
         margin-right: @indent-xs;
         flex: none;
+        &.differ {
+            color: @dark-light;
+        }
     }
     &__city {
         border-bottom: 0px dashed @link-color;
@@ -368,6 +374,9 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        &.differ {
+            color: @dark-light;
+        }
     }
 
     &__search {

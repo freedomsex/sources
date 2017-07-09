@@ -363,6 +363,13 @@ Vue.component('search-item', {
         },
         tags() {
             return this.human.tags.length;
+        },
+        differ() {
+            result = false;
+            if (this.human.who && this.human.who != this.$store.state.user.sex) {
+                result = true;
+            }
+            return result;
         }
     },
     methods: {

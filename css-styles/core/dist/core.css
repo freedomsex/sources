@@ -1866,12 +1866,18 @@ a.name:hover {
       -ms-flex: none;
           flex: none;
 }
+.search-item__name.differ {
+  color: #666666;
+}
 .search-item__age {
   color: #ff3333;
   margin-right: 5px;
   -webkit-box-flex: 0;
       -ms-flex: none;
           flex: none;
+}
+.search-item__age.differ {
+  color: #666666;
 }
 .search-item__city {
   border-bottom: 0px dashed #0066cc;
@@ -1883,6 +1889,9 @@ a.name:hover {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.search-item__city.differ {
+  color: #666666;
 }
 .search-item__search {
   color: #999999;
