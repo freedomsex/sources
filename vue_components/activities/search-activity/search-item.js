@@ -42,6 +42,10 @@ Vue.component('search-item', {
             }
             return result;
         },
+        name() {
+            let sex = this.human.to == 1 ? 'Парень' : 'Девушка';
+            return this.human.name ? this.human.name : sex;
+        },
         tags() {
             return this.human.tags.length;
         }
