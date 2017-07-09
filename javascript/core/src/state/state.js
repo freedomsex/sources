@@ -11,6 +11,7 @@ const store = new Vuex.Store({
         search,
         contacts,
         desires,
+        visited,
         modals
     },
     state: {

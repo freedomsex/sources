@@ -1,6 +1,6 @@
 
 <script type="text/x-template" id="search-item">
-  <div class="search-item" @click="$emit('select', human.id)">
+  <div class="search-item" :class="{visited}" @click="$emit('select', human.id)">
     <div class="search-item__content">
       <div class="search-item__name">{{human.name}}</div>
       <div class="search-item__age" v-if="human.age">{{human.age}}</div>

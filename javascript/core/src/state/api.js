@@ -241,6 +241,13 @@ class ApiUser extends Api {
         return super.remove({id}, null, 'tag/del');
     }
 
+    visitedList() {
+        return super.load(null, 'contact/visited');
+    }
+    visitedAdd(uid, tid) {
+        return super.send({tid,uid}, 'contact/addvisit/{uid}');
+    }
+
 }
 
 class ApiSearch extends Api {

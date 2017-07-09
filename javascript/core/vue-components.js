@@ -243,6 +243,7 @@ Vue.component('search-activity', {
     },
     mounted() {
         this.load();
+        this.visitedSync();
     },
     computed: {
         more() {
@@ -250,6 +251,9 @@ Vue.component('search-activity', {
                 return true;
             }
             return false;
+        },
+        visited() {
+            return this.$store.state.visited.list;
         },
     },
     methods: {
@@ -261,6 +265,9 @@ Vue.component('search-activity', {
             this.users = [];
             this.load();
         },
+        visitedSync() {
+            this.$store.dispatch('visited/SYNC');
+        },
         load() {
             this.response = 0;
             let {who, city, up, to} = this.$store.state.search.settings;
@@ -268,8 +275,11 @@ Vue.component('search-activity', {
             let next = this.next;
             up = up ? up : null;
             to = to ? to : null;
+
+            //this.onLoad(ls.get('last-search'));
             api.search.load({sex, who, city, up, to, next}).then((response) => {
                 this.onLoad(response.data);
+                //ls.set('last-search', response.data, 31*24*60*60);
             });
         },
         loadNext() {
@@ -295,6 +305,9 @@ Vue.component('search-activity', {
         },
         noResult() {
 
+        },
+        old(id) {
+            return _.contains(this.visited, id);
         }
     },
     template: '#search-activity',
@@ -302,7 +315,7 @@ Vue.component('search-activity', {
 
 
 Vue.component('search-item', {
-    props: ['human'],
+    props: ['human', 'visited'],
     data() {
         return {
             first:  null,
@@ -1434,6 +1447,7 @@ var QuickMessage = Vue.component('quick-message', {
         },
         loaded() {
             this.loading = false;
+            this.visited();
             //console.log('hold:', this.human.hold);
             //console.log('tags:', this.human);
             //this.process = false;
@@ -1490,6 +1504,9 @@ var QuickMessage = Vue.component('quick-message', {
         },
         onError() {
             this.process = false;
+        },
+        visited() {
+            this.$store.dispatch('visited/ADD', this.humanId);
         }
     },
     template: '#quick-message',

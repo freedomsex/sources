@@ -1,6 +1,6 @@
 
 Vue.component('search-item', {
-    props: ['human'],
+    props: ['human', 'visited'],
     data() {
         return {
             first:  null,

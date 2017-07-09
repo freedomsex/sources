@@ -116,7 +116,7 @@ $(document).ready(function()
     //user_tag.init();
     //desire_clip.init();
 
-    result_list.init();
+    //result_list.init();
     //visited.init();
 
 });

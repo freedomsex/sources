@@ -428,7 +428,7 @@
     </div>
 
     <div class="search-list">
-      <search-item v-for="(item, index) in users" :human="item" :key="index" @select="openMessage"/>
+      <search-item v-for="(item, index) in users" :human="item" :visited="old(item.id)" :key="index" @select="openMessage"/>
       <div class="messages__next" @click="loadNext" v-show="more">
         <span class="btn btn-default btn-xs" :disabled="!response">Следующие</span>
       </div>
@@ -446,7 +446,7 @@
 
 
 <script type="text/x-template" id="search-item">
-  <div class="search-item" @click="$emit('select', human.id)">
+  <div class="search-item" :class="{visited}" @click="$emit('select', human.id)">
     <div class="search-item__content">
       <div class="search-item__name">{{human.name}}</div>
       <div class="search-item__age" v-if="human.age">{{human.age}}</div>

@@ -272,6 +272,7 @@ Vue.component('search-activity', {
     },
     mounted: function mounted() {
         this.load();
+        this.visitedSync();
     },
 
     computed: {
@@ -280,6 +281,9 @@ Vue.component('search-activity', {
                 return true;
             }
             return false;
+        },
+        visited: function visited() {
+            return this.$store.state.visited.list;
         }
     },
     methods: {
@@ -290,6 +294,9 @@ Vue.component('search-activity', {
             this.next = 0;
             this.users = [];
             this.load();
+        },
+        visitedSync: function visitedSync() {
+            this.$store.dispatch('visited/SYNC');
         },
         load: function load() {
             var _this4 = this;
@@ -305,8 +312,11 @@ Vue.component('search-activity', {
             var next = this.next;
             up = up ? up : null;
             to = to ? to : null;
+
+            //this.onLoad(ls.get('last-search'));
             api.search.load({ sex: sex, who: who, city: city, up: up, to: to, next: next }).then(function (response) {
                 _this4.onLoad(response.data);
+                //ls.set('last-search', response.data, 31*24*60*60);
             });
         },
         loadNext: function loadNext() {
@@ -330,13 +340,16 @@ Vue.component('search-activity', {
         openMessage: function openMessage(id) {
             this.humanId = id;
         },
-        noResult: function noResult() {}
+        noResult: function noResult() {},
+        old: function old(id) {
+            return _.contains(this.visited, id);
+        }
     },
     template: '#search-activity'
 });
 
 Vue.component('search-item', {
-    props: ['human'],
+    props: ['human', 'visited'],
     data: function data() {
         return {
             first: null,
@@ -1524,6 +1537,7 @@ var QuickMessage = Vue.component('quick-message', {
         },
         loaded: function loaded() {
             this.loading = false;
+            this.visited();
             //console.log('hold:', this.human.hold);
             //console.log('tags:', this.human);
             //this.process = false;
@@ -1586,6 +1600,9 @@ var QuickMessage = Vue.component('quick-message', {
         },
         onError: function onError() {
             this.process = false;
+        },
+        visited: function visited() {
+            this.$store.dispatch('visited/ADD', this.humanId);
         }
     },
     template: '#quick-message'
@@ -3328,6 +3345,51 @@ var user = {
     }
 };
 
+var visited = {
+    namespaced: true,
+    state: {
+        list: []
+    },
+    actions: {
+        SYNC: function SYNC(_ref32) {
+            var rootState = _ref32.rootState,
+                state = _ref32.state,
+                commit = _ref32.commit;
+
+            var index = 'visited-' + rootState.user.uid;
+            commit('update', ls.get(index));
+            return api.user.visitedList().then(function (response) {
+                var data = response.data;
+
+                commit('update', data);
+                ls.set(index, state.list, 31 * 24 * 60 * 60);
+            });
+        },
+        ADD: function ADD(_ref33, tid) {
+            var rootState = _ref33.rootState,
+                state = _ref33.state,
+                commit = _ref33.commit;
+
+            var uid = rootState.user.uid;
+            var index = 'visited-' + uid;
+            commit('add', tid);
+            ls.set(index, state.list, 31 * 24 * 60 * 60);
+            return api.user.visitedAdd(uid, tid).then(function (response) {});
+        }
+    },
+    mutations: {
+        update: function update(state, data) {
+            if (data && data.length) {
+                state.list = _.union(state.list, data);
+                console.log('update', data);
+            }
+        },
+        add: function add(state, data) {
+            state.list.unshift(data);
+        }
+    }
+};
+
 moment.locale('ru');
 
 var ls = lscache;
@@ -3340,6 +3402,7 @@ var store = new Vuex.Store({
         search: search,
         contacts: contacts,
         desires: desires,
+        visited: visited,
         modals: modals
     },
     state: {
@@ -3376,13 +3439,13 @@ var store = new Vuex.Store({
         }
     },
     actions: {
-        LOAD_API_TOKEN: function LOAD_API_TOKEN(_ref32) {
-            var commit = _ref32.commit;
+        LOAD_API_TOKEN: function LOAD_API_TOKEN(_ref34) {
+            var commit = _ref34.commit;
 
             commit('setApiToken', { apiToken: get_cookie('jwt') });
         },
-        LOAD_ACCEPTS: function LOAD_ACCEPTS(_ref33) {
-            var commit = _ref33.commit;
+        LOAD_ACCEPTS: function LOAD_ACCEPTS(_ref35) {
+            var commit = _ref35.commit;
 
             var accepts = ls.get('accepts');
             if (accepts && accepts.photo) {
@@ -3765,6 +3828,16 @@ var ApiUser = function (_Api3) {
         value: function desireDelete(id) {
             return _get(ApiUser.prototype.__proto__ || Object.getPrototypeOf(ApiUser.prototype), 'remove', this).call(this, { id: id }, null, 'tag/del');
         }
+    }, {
+        key: 'visitedList',
+        value: function visitedList() {
+            return _get(ApiUser.prototype.__proto__ || Object.getPrototypeOf(ApiUser.prototype), 'load', this).call(this, null, 'contact/visited');
+        }
+    }, {
+        key: 'visitedAdd',
+        value: function visitedAdd(uid, tid) {
+            return _get(ApiUser.prototype.__proto__ || Object.getPrototypeOf(ApiUser.prototype), 'send', this).call(this, { tid: tid, uid: uid }, 'contact/addvisit/{uid}');
+        }
     }]);
 
     return ApiUser;
@@ -3983,7 +4056,7 @@ $(document).ready(function () {
     //user_tag.init();
     //desire_clip.init();
 
-    result_list.init();
+    //result_list.init();
     //visited.init();
 });
 
@@ -4264,17 +4337,15 @@ var giper_chat = {
         if (device.width() > 1200 && mess.type && giper_chat.open_mess < 9) {
             /* */
             if (mess.type == 'air_user' || mess.type == 'new_client') {
-                visited.action.load_cache();
-                if (visited.list.length) {
-                    if (visited.list.indexOf(mess.user + '') >= 0) {
-                        giper_chat.reply_enable();
-                        giper_chat.idle_round = 0;
-                        setTimeout(function () {
-                            giper_chat.timer_set();
-                        }, 5000);
-                        return 0;
-                    }
-                }
+                //                visited.action.load_cache();
+                //                if (visited.list.length) {
+                //                    if (visited.list.indexOf(mess.user+'') >= 0) {
+                //                        giper_chat.reply_enable();
+                //                        giper_chat.idle_round = 0;
+                //                        setTimeout( function (){ giper_chat.timer_set(); },5000 );
+                //                        return 0;
+                //                    }
+                //                }
             }
             giper_chat.mess_stock.push(mess);
             giper_chat.stock.store();
@@ -4586,7 +4657,7 @@ var giper_chat = {
             giper_chat.close_message(giper_chat.mess_block);
 
             notepad.hide(); //////////////////////////////////////////////
-            visited.action.save(giper_chat.mess_block.data('user'));
+            //visited.action.save(giper_chat.mess_block.data('user'));
 
             setTimeout(function () {
                 if (giper_chat.cascade != 0) giper_chat.reply_all();
@@ -5851,42 +5922,6 @@ var report = {
 
 };
 
-// -- Список контактов ---
-var result_list = {
-
-    init: function init() {
-        //result_list.ajax.load_visited(); 
-    },
-
-    ajax: {
-
-        load_visited: function load_visited() {
-            $.get('/contact/visited/' + 'uid' + '/', result_list.ajax.parse_visited);
-        },
-
-        parse_visited: function parse_visited(data) {
-            // alert(typeof(result_list.visited))
-            if (data) {
-                result_list.visited = JSON.parse(data);
-            }
-        }
-    },
-
-    action: {
-
-        visited: function visited(list) {
-            if (list && list.length) $('.user').each(result_list.action.select);
-        },
-
-        select: function select(i, element) {
-            var tid = $(element).data('num') + '';
-            if (tid != uid) // alert(typeof());  return 0;
-                if (visited.list.indexOf(tid) < 0) $('i', $(element)).addClass('list_user_new');else $('i', $(element)).removeClass('list_user_new');
-        }
-
-    }
-};
-
 // -- Слайдер, главная ---
 var slider = {
 
@@ -6418,100 +6453,6 @@ var userinfo = {
         set_email: function set_email() {
             $('.option_email_value').val(userinfo.data.email);
             $('.profile_email_value').text(userinfo.data.email);
-        }
-
-    }
-};
-
-// -- Список посещенных страниц ---
-var visited = {
-
-    sync: 0,
-    list: [],
-
-    init: function init() {
-        if (storage.enable) {
-            visited.list = storage.array.load('visitor_list'); // alert(visited.list)
-            result_list.action.visited(visited.list);
-            visited.ajax.sync();
-        }
-    },
-
-    ajax: {
-
-        sync: function sync() {
-            $.get('/sync/visitor/' + uid + '/', visited.ajax.parse_sync);
-        },
-
-        parse_sync: function parse_sync(data) {
-            if (data) {
-                visited.sync = JSON.parse(data); // alert(visited.sync)             
-                visited.action.check();
-            }
-        },
-
-        load: function load() {
-            $.get('/contact/visited/' + uid + '/', visited.ajax.on_load);
-        },
-
-        on_load: function on_load(data) {
-            // alert(visited.list)   
-            if (data) {
-                visited.list = JSON.parse(data);
-                storage.array.save('visitor_list', visited.list);
-                result_list.action.visited(visited.list);
-            }
-        },
-
-        save: function save(tid) {
-            $.get('/contact/addvisit/' + uid + '/', { tid: tid }, visited.ajax.parse_save);
-        },
-
-        parse_save: function parse_save(data) {
-            // 
-            if (data) {
-                var sync = JSON.parse(data) * 1;
-                if (sync) {
-                    visited.sync = sync;
-                    storage.save('visitor_sync', visited.sync);
-                }
-            }
-        }
-
-    },
-
-    index: function index(data) {
-        var result = 0;
-        visited.action.load_cache();
-        if (visited.list.length && visited.list.indexOf(data + '')) {
-            result = 1; // alert('index')
-        }
-        return result;
-    },
-
-    action: {
-
-        check: function check() {
-            if (visited.sync != storage.load('visitor_sync')) {
-                visited.ajax.load();
-                storage.save('visitor_sync', visited.sync);
-            }
-        },
-
-        save: function save(data) {
-            console.log("save", data);
-            visited.list = storage.array.load('visitor_list');
-            if (visited.list.indexOf(data + '') < 0) {
-                visited.list.push(json.encode(data));
-                storage.array.save('visitor_list', visited.list);
-                visited.ajax.save(data);
-            }
-        },
-
-        load_cache: function load_cache() {
-            if (storage.enable) {
-                visited.list = storage.array.load('visitor_list');
-            } else visited.list = [];
         }
 
     }

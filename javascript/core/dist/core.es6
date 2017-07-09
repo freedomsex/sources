@@ -243,6 +243,7 @@ Vue.component('search-activity', {
     },
     mounted() {
         this.load();
+        this.visitedSync();
     },
     computed: {
         more() {
@@ -250,6 +251,9 @@ Vue.component('search-activity', {
                 return true;
             }
             return false;
+        },
+        visited() {
+            return this.$store.state.visited.list;
         },
     },
     methods: {
@@ -261,6 +265,9 @@ Vue.component('search-activity', {
             this.users = [];
             this.load();
         },
+        visitedSync() {
+            this.$store.dispatch('visited/SYNC');
+        },
         load() {
             this.response = 0;
             let {who, city, up, to} = this.$store.state.search.settings;
@@ -268,8 +275,11 @@ Vue.component('search-activity', {
             let next = this.next;
             up = up ? up : null;
             to = to ? to : null;
+
+            //this.onLoad(ls.get('last-search'));
             api.search.load({sex, who, city, up, to, next}).then((response) => {
                 this.onLoad(response.data);
+                //ls.set('last-search', response.data, 31*24*60*60);
             });
         },
         loadNext() {
@@ -295,6 +305,9 @@ Vue.component('search-activity', {
         },
         noResult() {
 
+        },
+        old(id) {
+            return _.contains(this.visited, id);
         }
     },
     template: '#search-activity',
@@ -302,7 +315,7 @@ Vue.component('search-activity', {
 
 
 Vue.component('search-item', {
-    props: ['human'],
+    props: ['human', 'visited'],
     data() {
         return {
             first:  null,
@@ -1434,6 +1447,7 @@ var QuickMessage = Vue.component('quick-message', {
         },
         loaded() {
             this.loading = false;
+            this.visited();
             //console.log('hold:', this.human.hold);
             //console.log('tags:', this.human);
             //this.process = false;
@@ -1490,6 +1504,9 @@ var QuickMessage = Vue.component('quick-message', {
         },
         onError() {
             this.process = false;
+        },
+        visited() {
+            this.$store.dispatch('visited/ADD', this.humanId);
         }
     },
     template: '#quick-message',
@@ -3138,6 +3155,45 @@ const user = {
 }
 
 
+const visited = {
+    namespaced: true,
+    state: {
+        list: [],
+    },
+    actions: {
+        SYNC({rootState, state, commit}) {
+            let index = 'visited-' + rootState.user.uid;
+            commit('update', ls.get(index));
+            return api.user.visitedList().then((response) => {
+                let {data} = response;
+                commit('update', data);
+                ls.set(index, state.list, 31*24*60*60);
+            });
+        },
+        ADD({rootState, state, commit}, tid) {
+            let uid = rootState.user.uid;
+            let index = 'visited-' + uid;
+            commit('add', tid);
+            ls.set(index, state.list, 31*24*60*60);
+            return api.user.visitedAdd(uid, tid).then((response) => {
+
+            });
+        }
+    },
+    mutations: {
+        update(state, data) {
+            if (data && data.length) {
+                state.list = _.union(state.list, data);
+                console.log('update', data);
+            }
+        },
+        add(state, data) {
+            state.list.unshift(data);
+        },
+    }
+};
+
+
 moment.locale('ru');
 
 var ls = lscache;
@@ -3150,6 +3206,7 @@ const store = new Vuex.Store({
         search,
         contacts,
         desires,
+        visited,
         modals
     },
     state: {
@@ -3480,6 +3537,13 @@ class ApiUser extends Api {
         return super.remove({id}, null, 'tag/del');
     }
 
+    visitedList() {
+        return super.load(null, 'contact/visited');
+    }
+    visitedAdd(uid, tid) {
+        return super.send({tid,uid}, 'contact/addvisit/{uid}');
+    }
+
 }
 
 class ApiSearch extends Api {
@@ -3673,7 +3737,7 @@ $(document).ready(function()
     //user_tag.init();
     //desire_clip.init();
 
-    result_list.init();
+    //result_list.init();
     //visited.init();
 
 });
@@ -4008,15 +4072,15 @@ var giper_chat = {
     {
         if (device.width() > 1200 && mess.type && giper_chat.open_mess < 9) {                               /* */
             if (mess.type == 'air_user' || mess.type == 'new_client') {
-                visited.action.load_cache();
-                if (visited.list.length) {
-                    if (visited.list.indexOf(mess.user+'') >= 0) {
-                        giper_chat.reply_enable();
-                        giper_chat.idle_round = 0;
-                        setTimeout( function (){ giper_chat.timer_set(); },5000 );
-                        return 0;
-                    }
-                }
+//                visited.action.load_cache();
+//                if (visited.list.length) {
+//                    if (visited.list.indexOf(mess.user+'') >= 0) {
+//                        giper_chat.reply_enable();
+//                        giper_chat.idle_round = 0;
+//                        setTimeout( function (){ giper_chat.timer_set(); },5000 );
+//                        return 0;
+//                    }
+//                }
             }
             giper_chat.mess_stock.push(mess);
             giper_chat.stock.store();
@@ -4387,7 +4451,7 @@ var giper_chat = {
             giper_chat.close_message(giper_chat.mess_block);
 
             notepad.hide();                 //////////////////////////////////////////////
-            visited.action.save(giper_chat.mess_block.data('user'));
+            //visited.action.save(giper_chat.mess_block.data('user'));
 
             setTimeout( function ()
             {
@@ -5772,52 +5836,6 @@ var report = {
  
 
 
-// -- Список контактов ---
-var result_list = {
-                  
-    init: function () 
-    {                                   
-        //result_list.ajax.load_visited(); 
-    } , 
-    
-    ajax: {   
-    
-        load_visited: function () 
-        {                               
-            $.get( '/contact/visited/'+ 'uid' +'/', result_list.ajax.parse_visited);
-        } ,  
-    
-        parse_visited: function (data) 
-        {                                            // alert(typeof(result_list.visited))
-            if (data) {
-                result_list.visited = JSON.parse(data);
-            }                    
-        }  
-    } ,
- 
-    action: {
-    
-        visited: function (list) 
-        {                  
-            if (list && list.length)
-                $('.user').each(result_list.action.select);       
-        } , 
-    
-        select: function (i,element) 
-        {                 
-            var tid = $(element).data('num')+'';
-            if (tid != uid)               // alert(typeof());  return 0;
-                if (visited.list.indexOf(tid) < 0)
-                    $('i', $(element)).addClass('list_user_new')
-                else       
-                    $('i', $(element)).removeClass('list_user_new')
-        }  
-        
-    } 
-} 
-
-
-
 // -- Слайдер, главная ---
 var slider = {
 
@@ -6417,109 +6435,4 @@ var userinfo = {
 
     }
 }
-
-
-   
-// -- Список посещенных страниц ---
-var visited = {
-                    
-    sync: 0,       
-    list: [],   
-    
-    init: function () 
-    {    
-        if (storage.enable) {
-            visited.list = storage.array.load('visitor_list');    // alert(visited.list)
-            result_list.action.visited(visited.list);
-            visited.ajax.sync();   
-        } 
-    } , 
-    
-    ajax: {   
-    
-        sync: function () 
-        {                               
-            $.get( '/sync/visitor/'+ uid +'/', visited.ajax.parse_sync);
-        } ,    
-    
-        parse_sync: function (data) 
-        {                                             
-            if (data) {
-                visited.sync = JSON.parse(data);  // alert(visited.sync)             
-                visited.action.check();             
-            }                                         
-        } , 
-    
-        load: function () 
-        {                                 
-            $.get( '/contact/visited/'+ uid +'/', visited.ajax.on_load);
-        } ,    
-    
-        on_load: function (data) 
-        {                                            // alert(visited.list)   
-            if (data) {                                     
-                visited.list = JSON.parse(data);       
-                storage.array.save('visitor_list',visited.list);                 
-                result_list.action.visited(visited.list);              
-            }                                         
-        } , 
-        
-        save: function (tid) 
-        {                               
-            $.get( '/contact/addvisit/'+ uid +'/', { tid: tid }, visited.ajax.parse_save);
-        } ,      
-    
-        parse_save: function (data) 
-        {                                          // 
-            if (data) {
-                var sync = JSON.parse(data)*1;       
-                if (sync) {       
-                    visited.sync = sync;     
-                    storage.save('visitor_sync', visited.sync);         
-                }                      
-            }                                         
-        } ,  
-    
-    } , 
-    
-    index: function (data) 
-    {      
-        var result = 0;
-        visited.action.load_cache();            
-        if (visited.list.length && visited.list.indexOf(data+'')) {
-            result = 1;  // alert('index')
-        }   
-        return result; 
-    } ,
- 
-    action: {
-    
-        check: function () 
-        {                              
-            if (visited.sync != storage.load('visitor_sync')) {
-                visited.ajax.load();                                    
-                storage.save('visitor_sync', visited.sync);  
-            }                         
-        } , 
-    
-        save: function (data) 
-        {                          console.log("save",data);
-            visited.list = storage.array.load('visitor_list');
-            if (visited.list.indexOf(data+'') < 0) {     
-                visited.list.push(json.encode(data));  
-                storage.array.save('visitor_list',visited.list); 
-                visited.ajax.save(data);  
-            }     
-        } , 
-    
-        load_cache: function () 
-        {                     
-            if (storage.enable) {
-                visited.list = storage.array.load('visitor_list'); 
-            } else 
-                visited.list = [];   
-        } 
-        
-    } 
-} 
 

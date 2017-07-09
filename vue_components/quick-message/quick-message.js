@@ -82,6 +82,7 @@ var QuickMessage = Vue.component('quick-message', {
         },
         loaded() {
             this.loading = false;
+            this.visited();
             //console.log('hold:', this.human.hold);
             //console.log('tags:', this.human);
             //this.process = false;
@@ -138,6 +139,9 @@ var QuickMessage = Vue.component('quick-message', {
         },
         onError() {
             this.process = false;
+        },
+        visited() {
+            this.$store.dispatch('visited/ADD', this.humanId);
         }
     },
     template: '#quick-message',

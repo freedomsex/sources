@@ -318,20 +318,22 @@
 
 
 .search-item {
-
     &:last-child {
         border-bottom-width: 0px;
     }
     margin: 0;
-    padding: @indent-sm @indent-xs;
+    padding: @indent-sm @indent-sm;
     border-bottom: 1px solid @light;
     position: relative;
     background: @white;
     font-size: 14px;
     color: @dark;
-    margin: 0px 10px;
     display: flex;
     justify-content: space-between;
+    &.visited {
+        background: @gray;
+        opacity: 0.2;
+    }
     &__content {
         .link;
         display: flex;
