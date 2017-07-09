@@ -8,7 +8,7 @@ Vue.component('photo-view', {
     ],
     methods: {
         approve() {
-            this.$store.commit('approveViewPhoto');
+            this.$store.commit('accepts/photo');
         },
         close() {
             this.$emit('close');

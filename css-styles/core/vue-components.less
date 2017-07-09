@@ -139,6 +139,9 @@
         font-size: @font-lg;
     }
 }
+.activity-content {
+    padding: @indent-md @indent-lg @indent-md;
+}
 
 .closed-activity {
     .menu-closed {
@@ -194,6 +197,14 @@
         display: flex;
         height: 100%;
     }
+}
+
+.hint-info {
+    background: @light;
+    //border: 1px solid @gray-light;
+    color: @dark;
+    margin-bottom: 10px;
+    padding: 10px 15px;
 }
 
 .default-activity {
@@ -331,8 +342,8 @@
     display: flex;
     justify-content: space-between;
     &.visited {
-        background: @gray;
-        opacity: 0.2;
+        background: @gray-light;
+        opacity: 0.5;
     }
     &__content {
         .link;

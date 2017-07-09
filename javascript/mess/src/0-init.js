@@ -8,10 +8,6 @@ $( document ).ready(function()
 
     part_info.init();
     dating_time.init();
-
-    if (tid) {
-        visited.action.save(tid);
-    }
  });
 
 

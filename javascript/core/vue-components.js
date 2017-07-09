@@ -255,6 +255,9 @@ Vue.component('search-activity', {
         visited() {
             return this.$store.state.visited.list;
         },
+        accept() {
+            return this.$store.state.accepts.search;
+        }
     },
     methods: {
         close() {
@@ -308,6 +311,9 @@ Vue.component('search-activity', {
         },
         old(id) {
             return _.contains(this.visited, id);
+        },
+        approve() {
+            this.$store.commit('accepts/search');
         }
     },
     template: '#search-activity',
@@ -1360,7 +1366,7 @@ Vue.component('photo-view', {
     ],
     methods: {
         approve() {
-            this.$store.commit('approveViewPhoto');
+            this.$store.commit('accepts/photo');
         },
         close() {
             this.$emit('close');

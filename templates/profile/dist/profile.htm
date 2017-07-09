@@ -306,6 +306,23 @@
     <snackbar v-if="sended" @close="sended = false">Сообщение отправлено.</snackbar>
     <account-activity :human-id="account" v-if="account" @close="account = null"></account-activity>
 
+    <modal-dialog @close="close" v-if="!accept">
+      <div class="modal-dialog__wrapper">
+        <div class="modal-dialog__caption">
+          Поднятие в ТОП Бесплатно!
+        </div>
+        <div class="modal-dialog__body">
+          Онлайн анкеты всегда наверху. Все самые активные пользователи на главной странице. Просто пишите тем, с кем ещё не общались.
+          Отдельный поиск онлайн анкет отсутствует, да он и не нужен.
+        </div>
+        <div class="modal-dialog__footer">
+          <button class="btn btn-primary btn-fat" @click="approve">
+            OK
+          </button>
+        </div>
+      </div>
+    </modal-dialog>
+
   </default-activity>
 </script>
 
@@ -412,6 +429,13 @@
         @sended="splice"
         @remove="remove"/>
     </div>
+    <div class="activity-content" v-else>
+      <div class="hint-info">
+        Здесь будет список поступивших вам предложений знакомства.
+        Список отправленных предложений посмотреть нельзя - все ответы приходят во вкладку "Общение".
+        Пишите сообщения - это Бесплатно, а значит всё честно и реально!
+      </div>
+    </div>
     <div class="contact-list__next">
       <div class="btn btn-default btn-xs" @click="next()" :disabled="response == false" v-show="more"> Следующие </div>
     </div>
@@ -433,6 +457,12 @@
         @close="close"
         @sended="splice"
         @remove="remove"/>
+    </div>
+    <div class="activity-content" v-else>
+      <div class="hint-info">
+        Здесь будет список ваших контактов, сообщений, диалогов. Чтобы начать общение, нужно Познакомиться.
+        Воспользуйтесь Поиском, отправьте первое сообщение, это и будет предложением знакомства.
+      </div>
     </div>
     <div class="contact-list__next">
       <div class="btn btn-default btn-xs" @click="next()" :disabled="response == false" v-show="more"> Следующие </div>
@@ -738,7 +768,8 @@
 
 
     <div class="message-input">
-      <textarea class="message-input__texarea" rows="1" placeholder="Введите текст" v-model="text" v-resized></textarea>
+      <textarea class="message-input__texarea" rows="1" placeholder="Введите текст" v-model="text" v-resized
+        @keyup.ctrl.enter.prevent="send()"></textarea>
         <button class="btn btn-primary" @click="send()">Отправить</button>
         <button class="btn btn-link" @click="$emit('account', humanId)">Смотреть анкету...</button>
     </div>
@@ -768,7 +799,8 @@
 
 
     <div class="message-input">
-      <textarea class="message-input__texarea" rows="1" placeholder="Введите текст" v-model="text" v-resized></textarea>
+      <textarea class="message-input__texarea" rows="1" placeholder="Введите текст" v-model="text" v-resized
+        @keyup.ctrl.enter.prevent="send()"></textarea>
         <button class="btn btn-primary" @click="send()">Отправить</button>
         <button class="btn btn-link" @click="$emit('account')">Смотреть анкету</button>
     </div>

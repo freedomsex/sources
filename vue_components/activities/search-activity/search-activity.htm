@@ -23,6 +23,23 @@
     <snackbar v-if="sended" @close="sended = false">Сообщение отправлено.</snackbar>
     <account-activity :human-id="account" v-if="account" @close="account = null"></account-activity>
 
+    <modal-dialog @close="close" v-if="!accept">
+      <div class="modal-dialog__wrapper">
+        <div class="modal-dialog__caption">
+          Поднятие в ТОП Бесплатно!
+        </div>
+        <div class="modal-dialog__body">
+          Онлайн анкеты всегда наверху. Все самые активные пользователи на главной странице. Просто пишите тем, с кем ещё не общались.
+          Отдельный поиск онлайн анкет отсутствует, да он и не нужен.
+        </div>
+        <div class="modal-dialog__footer">
+          <button class="btn btn-primary btn-fat" @click="approve">
+            OK
+          </button>
+        </div>
+      </div>
+    </modal-dialog>
+
   </default-activity>
 </script>
 

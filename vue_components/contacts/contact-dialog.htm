@@ -13,6 +13,13 @@
         @sended="splice"
         @remove="remove"/>
     </div>
+    <div class="activity-content" v-else>
+      <div class="hint-info">
+        Здесь будет список поступивших вам предложений знакомства.
+        Список отправленных предложений посмотреть нельзя - все ответы приходят во вкладку "Общение".
+        Пишите сообщения - это Бесплатно, а значит всё честно и реально!
+      </div>
+    </div>
     <div class="contact-list__next">
       <div class="btn btn-default btn-xs" @click="next()" :disabled="response == false" v-show="more"> Следующие </div>
     </div>
@@ -34,6 +41,12 @@
         @close="close"
         @sended="splice"
         @remove="remove"/>
+    </div>
+    <div class="activity-content" v-else>
+      <div class="hint-info">
+        Здесь будет список ваших контактов, сообщений, диалогов. Чтобы начать общение, нужно Познакомиться.
+        Воспользуйтесь Поиском, отправьте первое сообщение, это и будет предложением знакомства.
+      </div>
     </div>
     <div class="contact-list__next">
       <div class="btn btn-default btn-xs" @click="next()" :disabled="response == false" v-show="more"> Следующие </div>

@@ -12,6 +12,7 @@ const store = new Vuex.Store({
         contacts,
         desires,
         visited,
+        accepts,
         modals
     },
     state: {
@@ -43,20 +44,10 @@ const store = new Vuex.Store({
             },
             intimate: true,
         },
-        accepts: {
-            photo: false
-        },
     },
     actions: {
         LOAD_API_TOKEN({ commit }) {
             commit('setApiToken', { apiToken: get_cookie('jwt') });
-        },
-        LOAD_ACCEPTS({ commit }) {
-            let accepts = ls.get('accepts');
-            if (accepts && accepts.photo) {
-                commit('approveViewPhoto');
-            }
-            //console.log(ls.get('accepts'));
         },
     },
     mutations: {
@@ -76,10 +67,6 @@ const store = new Vuex.Store({
             console.log('sendPhoto');
             _.assign(state.formMess.sendPhoto, data);
         },
-        approveViewPhoto(state) {
-            state.accepts.photo = true;
-            ls.set('accepts', _.assign(state.accepts, {photo: true}));
-        },
         intimated(state, data) {
             state.formMess.intimate = (data === true);
         },
@@ -95,6 +82,6 @@ const store = new Vuex.Store({
 });
 
 store.dispatch('LOAD_API_TOKEN');
-store.dispatch('LOAD_ACCEPTS');
+store.dispatch('accepts/LOAD');
 store.dispatch('LOAD_USER');
 store.dispatch('SETTINGS');

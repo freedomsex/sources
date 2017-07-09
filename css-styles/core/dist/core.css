@@ -1632,6 +1632,9 @@ a.name:hover {
   margin: 10px 0;
   font-size: 18px;
 }
+.activity-content {
+  padding: 15px 20px 15px;
+}
 .closed-activity {
   z-index: 1;
   position: fixed;
@@ -1681,6 +1684,12 @@ a.name:hover {
   display: -ms-flexbox;
   display: flex;
   height: 100%;
+}
+.hint-info {
+  background: #f5f5f5;
+  color: #333333;
+  margin-bottom: 10px;
+  padding: 10px 15px;
 }
 .default-activity {
   position: fixed;
@@ -1824,8 +1833,8 @@ a.name:hover {
   border-bottom-width: 0px;
 }
 .search-item.visited {
-  background: #cccccc;
-  opacity: 0.2;
+  background: #e5e5e5;
+  opacity: 0.5;
 }
 .search-item__content {
   cursor: pointer;

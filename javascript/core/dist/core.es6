@@ -255,6 +255,9 @@ Vue.component('search-activity', {
         visited() {
             return this.$store.state.visited.list;
         },
+        accept() {
+            return this.$store.state.accepts.search;
+        }
     },
     methods: {
         close() {
@@ -308,6 +311,9 @@ Vue.component('search-activity', {
         },
         old(id) {
             return _.contains(this.visited, id);
+        },
+        approve() {
+            this.$store.commit('accepts/search');
         }
     },
     template: '#search-activity',
@@ -1360,7 +1366,7 @@ Vue.component('photo-view', {
     ],
     methods: {
         approve() {
-            this.$store.commit('approveViewPhoto');
+            this.$store.commit('accepts/photo');
         },
         close() {
             this.$emit('close');
@@ -2689,6 +2695,30 @@ const about = {
 };
 
 
+const accepts = {
+    namespaced: true,
+    state: {
+        photo: false,
+        search: false,
+    },
+    actions: {
+        LOAD() {
+            state = ls.get('accepts');
+        },
+    },
+    mutations: {
+        photo(state) {
+            state.photo = true;
+            ls.set('accepts', state);
+        },
+        search(state) {
+            state.search = true;
+            ls.set('accepts', state);
+        },
+    }
+};
+
+
 const auth = {
     namespaced: true,
     state: {
@@ -3217,6 +3247,7 @@ const store = new Vuex.Store({
         contacts,
         desires,
         visited,
+        accepts,
         modals
     },
     state: {
@@ -3248,20 +3279,10 @@ const store = new Vuex.Store({
             },
             intimate: true,
         },
-        accepts: {
-            photo: false
-        },
     },
     actions: {
         LOAD_API_TOKEN({ commit }) {
             commit('setApiToken', { apiToken: get_cookie('jwt') });
-        },
-        LOAD_ACCEPTS({ commit }) {
-            let accepts = ls.get('accepts');
-            if (accepts && accepts.photo) {
-                commit('approveViewPhoto');
-            }
-            //console.log(ls.get('accepts'));
         },
     },
     mutations: {
@@ -3281,10 +3302,6 @@ const store = new Vuex.Store({
             console.log('sendPhoto');
             _.assign(state.formMess.sendPhoto, data);
         },
-        approveViewPhoto(state) {
-            state.accepts.photo = true;
-            ls.set('accepts', _.assign(state.accepts, {photo: true}));
-        },
         intimated(state, data) {
             state.formMess.intimate = (data === true);
         },
@@ -3300,7 +3317,7 @@ const store = new Vuex.Store({
 });
 
 store.dispatch('LOAD_API_TOKEN');
-store.dispatch('LOAD_ACCEPTS');
+store.dispatch('accepts/LOAD');
 store.dispatch('LOAD_USER');
 store.dispatch('SETTINGS');
 
