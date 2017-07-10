@@ -2703,7 +2703,11 @@ const accepts = {
     },
     actions: {
         LOAD() {
-            state = ls.get('accepts');
+            let data = ls.get('accepts');
+            if (data) {
+                state = data.slice();
+            } 
+            console.log(state)
         },
     },
     mutations: {

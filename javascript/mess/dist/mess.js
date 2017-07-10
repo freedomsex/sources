@@ -31,10 +31,9 @@ var add_contact = {
             add_contact.ajax.add($(this).data('tag'));
         }
     }
-};
 
-// -- Подстановка дополнительной информации в отправку сообщения ---
-var added_info = {
+    // -- Подстановка дополнительной информации в отправку сообщения ---
+};var added_info = {
 
     init: function init() {
         if (user_sex && (!user_name || !user_age || !user_city)) {
@@ -75,10 +74,8 @@ var added_info = {
         $('#added_info').show('blind');
     }
 
-};
-
-// -- Анкетные данные --        
-var anketa = {
+    // -- Анкетные данные --        
+};var anketa = {
 
     init: function init() {
         $('#anketa_collaps_link').on('click', anketa.action.second_info.toggle);
@@ -118,10 +115,8 @@ var anketa = {
         }
     }
 
-};
-
-// -- Нижний блок Уведомлений ---
-var confirm_block_dn = {
+    // -- Нижний блок Уведомлений ---
+};var confirm_block_dn = {
 
     init: function init() {
         $('#confirm_block_dn').click(function () {
@@ -146,10 +141,8 @@ var confirm_block_dn = {
         confirm_block_dn.show_block();
     }
 
-};
-
-// -- Время свиданий ---
-var dating_time = {
+    // -- Время свиданий ---
+};var dating_time = {
 
     init: function init() {
         dating_time.show();
@@ -191,10 +184,9 @@ var dating_time = {
             $('#saved_dating').delay(2000).hide('fade');
         }
     }
-};
 
-// -- Изменение информации о контакте ---
-var edit_cont = {
+    // -- Изменение информации о контакте ---
+};var edit_cont = {
 
     init: function init() {
         $('#edit_cont_btn').click(function () {
@@ -235,10 +227,8 @@ var edit_cont = {
         $('#human_print_name').text(human_name);
     }
 
-};
-
-// -- Я модератор, кнопка, блок ---
-var moderator = {
+    // -- Я модератор, кнопка, блок ---
+};var moderator = {
 
     init: function init() {
         $('#moder_button').click(function () {
@@ -302,10 +292,8 @@ var moderator = {
         });
     }
 
-};
-
-// -- Предупреждение ф форме отправки сообщения ---        
-var notice_post = {
+    // -- Предупреждение ф форме отправки сообщения ---        
+};var notice_post = {
 
     show: function show() {
         //if ($.urlParam('notice_alert')) notice_post.alert(); 
@@ -316,10 +304,8 @@ var notice_post = {
         $('#notice_post').toggleClass("notice_post notice_alert");
     }
 
-};
-
-// -- Большие подсказки в анкете ---     
-var part_info = {
+    // -- Большие подсказки в анкете ---     
+};var part_info = {
 
     init: function init() {
         if ($('#part_tip_block').data('name')) part_info.reset();
@@ -341,43 +327,42 @@ var part_info = {
         var name = $('#part_tip_block').data('name');
         $.post('/user/closetip/', { tip: name });
     }
-};
 
-/* -- Установка динамической отправки формы ---  
-if( uid && user_sex ) $('#form_post_mess').bind('submit', function(){
- return post_mess();
-});  
-   
-function post_mess( user,text ) { 
-  if( !text ) text = $('#mess_text_val').val();
-  if( !user ) user = tid;
-   simple_hash();
-                    
-   
-  $.post("/mailer/post/", {mess: text, id: user, hash: hash},  
-   onAjaxSuccess );           
-  
-  function onAjaxSuccess(data) {       //  alert (data)     
-   if( !data ) return 0;  
-    var mess = JSON.parse( data );  
-    if( mess.error == 'captcha' ) { 
-     $('#form_post_mess').unbind('submit');
-     $('#form_post_mess').submit(); }
-    if( mess.saved == '1' ) {  
-     load_mess( user,'reload' );
-     $('#mess_text_val').val('');
-      } 
-    if( mess.error == 'reload' ) {     
-     ft = 0; //alert ('reload')  
-     $('#form_post_mess').unbind('submit');
-     $('#form_post_mess').submit();            
-    }                      
-  }            
-   return false;
-}             */
+    /* -- Установка динамической отправки формы ---  
+    if( uid && user_sex ) $('#form_post_mess').bind('submit', function(){
+     return post_mess();
+    });  
+       
+    function post_mess( user,text ) { 
+      if( !text ) text = $('#mess_text_val').val();
+      if( !user ) user = tid;
+       simple_hash();
+                        
+       
+      $.post("/mailer/post/", {mess: text, id: user, hash: hash},  
+       onAjaxSuccess );           
+      
+      function onAjaxSuccess(data) {       //  alert (data)     
+       if( !data ) return 0;  
+        var mess = JSON.parse( data );  
+        if( mess.error == 'captcha' ) { 
+         $('#form_post_mess').unbind('submit');
+         $('#form_post_mess').submit(); }
+        if( mess.saved == '1' ) {  
+         load_mess( user,'reload' );
+         $('#mess_text_val').val('');
+          } 
+        if( mess.error == 'reload' ) {     
+         ft = 0; //alert ('reload')  
+         $('#form_post_mess').unbind('submit');
+         $('#form_post_mess').submit();            
+        }                      
+      }            
+       return false;
+    }             */
 
-// -- Быстрые фотографии ---
-var quick_photo = {
+    // -- Быстрые фотографии ---
+};var quick_photo = {
 
     init: function init() {
         quick_photo.ajax.load();

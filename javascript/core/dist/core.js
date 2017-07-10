@@ -669,6 +669,8 @@ var ContactDialog = {
             api.bun.send({
                 id: item.cont_id,
                 tid: item.from
+                //text: this.item.message,
+                //token: 'super secret token'
             });
         },
         splice: function splice(index) {
@@ -2820,7 +2822,11 @@ var accepts = {
     },
     actions: {
         LOAD: function LOAD() {
-            state = ls.get('accepts');
+            var data = ls.get('accepts');
+            if (data) {
+                state = data.slice();
+            }
+            console.log(state);
         }
     },
     mutations: {
@@ -3448,7 +3454,7 @@ var store = new Vuex.Store({
     state: {
         apiToken: '',
         //photoServer: '127.0.0.1:8888',
-        photoServer: '195.154.54.70',
+        photoServer: '127.0.0.1:8008',
         count: 0,
         optionStatic: {
             view: null
@@ -3521,7 +3527,7 @@ var Api = function () {
         _classCallCheck(this, Api);
 
         // Delay requests sec
-        this.setDelay('0');
+        this.setDelay('2');
         // [!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]
         this.setRoot(host, version);
         this.setConfig(this.root, key);
@@ -3874,7 +3880,7 @@ var ApiSearch = function (_Api4) {
         _classCallCheck(this, ApiSearch);
 
         var key = '1234';
-        var host = 'http://212.83.162.58/';
+        var host = 'http://127.0.0.1:9000/';
         var routing = {
             route: 'users',
             get: '{tid}'
@@ -3892,7 +3898,7 @@ var ApiContact = function (_Api5) {
         _classCallCheck(this, ApiContact);
 
         var key = store.state.apiToken;
-        var host = 'http://212.83.134.89:9000/';
+        var host = 'http://127.0.0.1:8000/';
         return _possibleConstructorReturn(this, (ApiContact.__proto__ || Object.getPrototypeOf(ApiContact)).call(this, host, key, null, routing));
     }
 
@@ -4741,10 +4747,9 @@ var json = {
     encode: function encode(str) {
         return JSON.stringify(str);
     }
-};
 
-// Установки  почты        
-var mailsett = {
+    // Установки  почты        
+};var mailsett = {
 
     init: function init() {
         $('#link_virt_turn').on('click', mailsett.turn_virt);
@@ -4831,10 +4836,8 @@ var master_info = {
         }
     }
 
-};
-
-// Навигация с помошью клавиатуры
-var navigate = {
+    // Навигация с помошью клавиатуры
+};var navigate = {
 
     enable: 0,
 
@@ -4880,10 +4883,8 @@ var navigate = {
         }
     }
 
-};
-
-// -- Блокнот ---
-var notepad = {
+    // -- Блокнот ---
+};var notepad = {
 
     note_block: null,
     last_click: null,
@@ -5519,10 +5520,9 @@ var option_sex = {
             userinfo.action.set_sex();
         }
     }
-};
 
-// -- Статический блок опций ---
-var option_static = {
+    // -- Статический блок опций ---
+};var option_static = {
 
     click_enable: null,
     active_elem: null,
@@ -5854,10 +5854,9 @@ var profile_option = {
             profile_option.ajax.subscr();
         }
     }
-};
 
-// -- Обратная связь ---
-var report = {
+    // -- Обратная связь ---
+};var report = {
 
     is_report: 0,
 
@@ -5944,10 +5943,8 @@ var report = {
         $('#report_text').val('');
     }
 
-};
-
-// -- Слайдер, главная ---
-var slider = {
+    // -- Слайдер, главная ---
+};var slider = {
 
     timer: null,
     context: 0,
@@ -6008,10 +6005,8 @@ var slider = {
         clearTimeout(slider.timer);
     }
 
-};
-
-// -- Хранилище ---
-var storage = {
+    // -- Хранилище ---
+};var storage = {
 
     enable: 0,
 
@@ -6148,10 +6143,8 @@ var city_suggest = {
         city_suggest.hide_suggest();
     }
 
-};
-
-// -- Имена подсказки, поиск ---
-var name_suggest = {
+    // -- Имена подсказки, поиск ---
+};var name_suggest = {
 
     click_enable: null,
     active_elem: null,
@@ -6227,10 +6220,9 @@ var name_suggest = {
         name_suggest.active_elem.val($(this).data('name'));
         name_suggest.hide_suggest();
     }
-};
 
-// -- Таги подсказки, поиск ---
-var tag_suggest = {
+    // -- Таги подсказки, поиск ---
+};var tag_suggest = {
 
     click_enable: null,
     active_elem: null,
@@ -6331,10 +6323,9 @@ var user_tag = {
             if (user_tag.list.length) $('#user_desire_count').text(user_tag.list.length);
         }
     }
-};
 
-// -- Информация о пользователе ---
-var userinfo = {
+    // -- Информация о пользователе ---
+};var userinfo = {
 
     data: {
         uid: 0,
