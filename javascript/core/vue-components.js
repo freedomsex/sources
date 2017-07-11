@@ -209,6 +209,7 @@ Vue.component('messages-activity', {
             this.$refs.messages.reload();
             // TODO: очень старая зависимость
             giper_chat.timer_cut();
+            this.photo = null;
             this.reset();
         },
         onError() {

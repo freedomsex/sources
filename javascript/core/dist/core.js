@@ -239,6 +239,7 @@ Vue.component('messages-activity', {
             this.$refs.messages.reload();
             // TODO: очень старая зависимость
             giper_chat.timer_cut();
+            this.photo = null;
             this.reset();
         },
         onError: function onError() {
@@ -2820,7 +2821,10 @@ var accepts = {
     },
     actions: {
         LOAD: function LOAD() {
-            state = ls.get('accepts');
+            var data = ls.get('accepts');
+            if (data) {
+                _.assign(state, data);
+            }
         }
     },
     mutations: {

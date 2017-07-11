@@ -36,7 +36,10 @@ const accepts = {
     },
     actions: {
         LOAD() {
-            state = ls.get('accepts');
+            let data = ls.get('accepts');
+            if (data) {
+                _.assign(state, data);
+            }
         },
     },
     mutations: {
