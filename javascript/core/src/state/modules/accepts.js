@@ -6,7 +6,7 @@ const accepts = {
         search: false,
     },
     actions: {
-        LOAD() {
+        LOAD({state}) {
             let data = ls.get('accepts');
             if (data) {
                 _.assign(state, data);

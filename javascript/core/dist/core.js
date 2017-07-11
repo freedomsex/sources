@@ -670,8 +670,6 @@ var ContactDialog = {
             api.bun.send({
                 id: item.cont_id,
                 tid: item.from
-                //text: this.item.message,
-                //token: 'super secret token'
             });
         },
         splice: function splice(index) {
@@ -2822,7 +2820,9 @@ var accepts = {
         search: false
     },
     actions: {
-        LOAD: function LOAD() {
+        LOAD: function LOAD(_ref3) {
+            var state = _ref3.state;
+
             var data = ls.get('accepts');
             if (data) {
                 _.assign(state, data);
@@ -2860,35 +2860,35 @@ var auth = {
         error: ''
     },
     actions: {
-        SYNC: function SYNC(_ref3) {
-            var commit = _ref3.commit;
+        SYNC: function SYNC(_ref4) {
+            var commit = _ref4.commit;
 
             return api.user.syncAuth().then(function (response) {
                 commit('update', response.data);
             });
         },
-        SAVE_LOGIN: function SAVE_LOGIN(_ref4, data) {
-            var commit = _ref4.commit;
+        SAVE_LOGIN: function SAVE_LOGIN(_ref5, data) {
+            var commit = _ref5.commit;
 
             return api.user.saveLogin(data);
         },
-        SAVE_PASSWD: function SAVE_PASSWD(_ref5, data) {
-            var commit = _ref5.commit;
+        SAVE_PASSWD: function SAVE_PASSWD(_ref6, data) {
+            var commit = _ref6.commit;
 
             return api.user.savePasswd(data);
         },
-        SAVE_EMAIL: function SAVE_EMAIL(_ref6, data) {
-            var commit = _ref6.commit;
+        SAVE_EMAIL: function SAVE_EMAIL(_ref7, data) {
+            var commit = _ref7.commit;
 
             return api.user.saveEmail(data);
         },
-        REMOVE_EMAIL: function REMOVE_EMAIL(_ref7) {
-            var commit = _ref7.commit;
+        REMOVE_EMAIL: function REMOVE_EMAIL(_ref8) {
+            var commit = _ref8.commit;
 
             return api.user.removeEmail();
         },
-        SAVE_SUSCRIBE: function SAVE_SUSCRIBE(_ref8, data) {
-            var commit = _ref8.commit;
+        SAVE_SUSCRIBE: function SAVE_SUSCRIBE(_ref9, data) {
+            var commit = _ref9.commit;
 
             return api.user.saveSubscribe();
         }
@@ -2922,10 +2922,10 @@ var initial = _.extend({
         list: []
     },
     actions: {
-        LOAD: function LOAD(_ref9) {
-            var state = _ref9.state,
-                commit = _ref9.commit,
-                rootState = _ref9.rootState;
+        LOAD: function LOAD(_ref10) {
+            var state = _ref10.state,
+                commit = _ref10.commit,
+                rootState = _ref10.rootState;
 
             commit('load', ls.get('initial-contacts'));
             return api.contacts.initial.cget({
@@ -2936,10 +2936,10 @@ var initial = _.extend({
                 ls.set('initial-contacts', state.list);
             });
         },
-        NEXT: function NEXT(_ref10, offset) {
-            var state = _ref10.state,
-                commit = _ref10.commit,
-                rootState = _ref10.rootState;
+        NEXT: function NEXT(_ref11, offset) {
+            var state = _ref11.state,
+                commit = _ref11.commit,
+                rootState = _ref11.rootState;
 
             return api.contacts.initial.cget({
                 uid: rootState.user.uid,
@@ -2948,10 +2948,10 @@ var initial = _.extend({
                 commit('add', response.data);
             });
         },
-        DELETE: function DELETE(_ref11, index) {
-            var state = _ref11.state,
-                commit = _ref11.commit,
-                rootState = _ref11.rootState;
+        DELETE: function DELETE(_ref12, index) {
+            var state = _ref12.state,
+                commit = _ref12.commit,
+                rootState = _ref12.rootState;
 
             var result = api.contacts.initial.delete({
                 uid: rootState.user.uid,
@@ -2960,10 +2960,10 @@ var initial = _.extend({
             commit('delete', index);
             return result;
         },
-        READ: function READ(_ref12, index) {
-            var state = _ref12.state,
-                commit = _ref12.commit,
-                rootState = _ref12.rootState;
+        READ: function READ(_ref13, index) {
+            var state = _ref13.state,
+                commit = _ref13.commit,
+                rootState = _ref13.rootState;
 
             var result = api.contacts.initial.put(null, {
                 uid: rootState.user.uid,
@@ -2991,10 +2991,10 @@ var intimate = _.extend({
         list: []
     },
     actions: {
-        LOAD: function LOAD(_ref13) {
-            var state = _ref13.state,
-                commit = _ref13.commit,
-                rootState = _ref13.rootState;
+        LOAD: function LOAD(_ref14) {
+            var state = _ref14.state,
+                commit = _ref14.commit,
+                rootState = _ref14.rootState;
 
             commit('load', ls.get('intimate-contacts'));
             return api.contacts.intimate.cget({
@@ -3005,10 +3005,10 @@ var intimate = _.extend({
                 ls.set('intimate-contacts', state.list);
             });
         },
-        NEXT: function NEXT(_ref14, offset) {
-            var state = _ref14.state,
-                commit = _ref14.commit,
-                rootState = _ref14.rootState;
+        NEXT: function NEXT(_ref15, offset) {
+            var state = _ref15.state,
+                commit = _ref15.commit,
+                rootState = _ref15.rootState;
 
             return api.contacts.intimate.cget({
                 uid: rootState.user.uid,
@@ -3017,10 +3017,10 @@ var intimate = _.extend({
                 commit('add', response.data);
             });
         },
-        DELETE: function DELETE(_ref15, index) {
-            var state = _ref15.state,
-                commit = _ref15.commit,
-                rootState = _ref15.rootState;
+        DELETE: function DELETE(_ref16, index) {
+            var state = _ref16.state,
+                commit = _ref16.commit,
+                rootState = _ref16.rootState;
 
             var result = api.contacts.intimate.delete({
                 uid: rootState.user.uid,
@@ -3029,10 +3029,10 @@ var intimate = _.extend({
             commit('delete', index);
             return result;
         },
-        READ: function READ(_ref16, index) {
-            var state = _ref16.state,
-                commit = _ref16.commit,
-                rootState = _ref16.rootState;
+        READ: function READ(_ref17, index) {
+            var state = _ref17.state,
+                commit = _ref17.commit,
+                rootState = _ref17.rootState;
 
             var result = api.contacts.intimate.put(null, {
                 uid: rootState.user.uid,
@@ -3060,10 +3060,10 @@ var sends = _.extend({
         list: []
     },
     actions: {
-        LOAD: function LOAD(_ref17) {
-            var state = _ref17.state,
-                commit = _ref17.commit,
-                rootState = _ref17.rootState;
+        LOAD: function LOAD(_ref18) {
+            var state = _ref18.state,
+                commit = _ref18.commit,
+                rootState = _ref18.rootState;
 
             commit('load', ls.get('sends-contacts'));
             return api.contacts.sends.cget({
@@ -3074,10 +3074,10 @@ var sends = _.extend({
                 ls.set('sends-contacts', state.list);
             });
         },
-        NEXT: function NEXT(_ref18, offset) {
-            var state = _ref18.state,
-                commit = _ref18.commit,
-                rootState = _ref18.rootState;
+        NEXT: function NEXT(_ref19, offset) {
+            var state = _ref19.state,
+                commit = _ref19.commit,
+                rootState = _ref19.rootState;
 
             return api.contacts.sends.cget({
                 uid: rootState.user.uid,
@@ -3086,10 +3086,10 @@ var sends = _.extend({
                 commit('add', response.data);
             });
         },
-        DELETE: function DELETE(_ref19, index) {
-            var state = _ref19.state,
-                commit = _ref19.commit,
-                rootState = _ref19.rootState;
+        DELETE: function DELETE(_ref20, index) {
+            var state = _ref20.state,
+                commit = _ref20.commit,
+                rootState = _ref20.rootState;
 
             var result = api.contacts.sends.delete({
                 uid: rootState.user.uid,
@@ -3130,18 +3130,18 @@ var desires = {
         list: []
     },
     actions: {
-        SYNC: function SYNC(_ref20) {
-            var rootState = _ref20.rootState,
-                commit = _ref20.commit,
-                getters = _ref20.getters;
+        SYNC: function SYNC(_ref21) {
+            var rootState = _ref21.rootState,
+                commit = _ref21.commit,
+                getters = _ref21.getters;
 
             return api.user.desireList().then(function (response) {
                 commit('update', response.data);
             });
         },
-        ADD: function ADD(_ref21, tag) {
-            var state = _ref21.state,
-                commit = _ref21.commit;
+        ADD: function ADD(_ref22, tag) {
+            var state = _ref22.state,
+                commit = _ref22.commit;
 
             //commit('add', tag);
             return api.user.desireAdd(tag).then(function (response) {
@@ -3149,9 +3149,9 @@ var desires = {
                 commit('add', { id: id, tag: tag });
             });
         },
-        DELETE: function DELETE(_ref22, index) {
-            var state = _ref22.state,
-                commit = _ref22.commit;
+        DELETE: function DELETE(_ref23, index) {
+            var state = _ref23.state,
+                commit = _ref23.commit;
 
             var result = api.user.desireDelete(state.list[index].id);
             commit('delete', index);
@@ -3233,8 +3233,8 @@ var search = {
         }
     },
     actions: {
-        HUMAN: function HUMAN(_ref23, tid) {
-            var commit = _ref23.commit;
+        HUMAN: function HUMAN(_ref24, tid) {
+            var commit = _ref24.commit;
 
             var index = 'human.data.' + tid;
             commit('resetHuman', tid);
@@ -3244,16 +3244,16 @@ var search = {
                 ls.set(index, response.data, 1500);
             });
         },
-        SETTINGS: function SETTINGS(_ref24) {
-            var commit = _ref24.commit;
+        SETTINGS: function SETTINGS(_ref25) {
+            var commit = _ref25.commit;
 
             commit('settingsCookies');
             commit('settings', ls.get('search.settings'));
             //let index = 'search.settings';
         },
-        SAVE_SEARCH: function SAVE_SEARCH(_ref25, data) {
-            var state = _ref25.state,
-                commit = _ref25.commit;
+        SAVE_SEARCH: function SAVE_SEARCH(_ref26, data) {
+            var state = _ref26.state,
+                commit = _ref26.commit;
 
             commit('settings', data);
             ls.set('search.settings', data);
@@ -3326,17 +3326,17 @@ var user = {
         last: ''
     },
     actions: {
-        LOAD_USER: function LOAD_USER(_ref26) {
-            var commit = _ref26.commit;
+        LOAD_USER: function LOAD_USER(_ref27) {
+            var commit = _ref27.commit;
 
             // if (uid) {
             //     commit('loadUser', {uid});
             // }
             commit('loadUser', ls.get('user.data'));
         },
-        SAVE_SEX: function SAVE_SEX(_ref27, sex) {
-            var state = _ref27.state,
-                commit = _ref27.commit;
+        SAVE_SEX: function SAVE_SEX(_ref28, sex) {
+            var state = _ref28.state,
+                commit = _ref28.commit;
 
             if (sex && state.sex != sex) {
                 api.user.saveSex(sex).then(function (response) {});
@@ -3344,36 +3344,36 @@ var user = {
             }
             commit('loadUser', { name: '' });
         },
-        SAVE_AGE: function SAVE_AGE(_ref28, age) {
-            var state = _ref28.state,
-                commit = _ref28.commit;
+        SAVE_AGE: function SAVE_AGE(_ref29, age) {
+            var state = _ref29.state,
+                commit = _ref29.commit;
 
             if (age && state.age != age) {
                 api.user.saveAge(age).then(function (response) {});
                 commit('loadUser', { age: age });
             }
         },
-        SAVE_NAME: function SAVE_NAME(_ref29, name) {
-            var state = _ref29.state,
-                commit = _ref29.commit;
+        SAVE_NAME: function SAVE_NAME(_ref30, name) {
+            var state = _ref30.state,
+                commit = _ref30.commit;
 
             if (name && state.name != name) {
                 api.user.saveName(name).then(function (response) {});
                 commit('loadUser', { name: name });
             }
         },
-        SAVE_CITY: function SAVE_CITY(_ref30, city) {
-            var state = _ref30.state,
-                commit = _ref30.commit;
+        SAVE_CITY: function SAVE_CITY(_ref31, city) {
+            var state = _ref31.state,
+                commit = _ref31.commit;
 
             if (city && state.city != city) {
                 api.user.saveCity(city).then(function (response) {});
                 commit('loadUser', { city: city });
             }
         },
-        SAVE_CONTACTS: function SAVE_CONTACTS(_ref31, contacts) {
-            var state = _ref31.state,
-                commit = _ref31.commit;
+        SAVE_CONTACTS: function SAVE_CONTACTS(_ref32, contacts) {
+            var state = _ref32.state,
+                commit = _ref32.commit;
 
             api.user.saveContacts(contacts).then(function (response) {});
             commit('loadUser', { contacts: contacts });
@@ -3397,10 +3397,10 @@ var visited = {
         list: []
     },
     actions: {
-        SYNC: function SYNC(_ref32) {
-            var rootState = _ref32.rootState,
-                state = _ref32.state,
-                commit = _ref32.commit;
+        SYNC: function SYNC(_ref33) {
+            var rootState = _ref33.rootState,
+                state = _ref33.state,
+                commit = _ref33.commit;
 
             var index = 'visited-' + rootState.user.uid;
             commit('update', ls.get(index));
@@ -3411,10 +3411,10 @@ var visited = {
                 ls.set(index, state.list, 31 * 24 * 60 * 60);
             });
         },
-        ADD: function ADD(_ref33, tid) {
-            var rootState = _ref33.rootState,
-                state = _ref33.state,
-                commit = _ref33.commit;
+        ADD: function ADD(_ref34, tid) {
+            var rootState = _ref34.rootState,
+                state = _ref34.state,
+                commit = _ref34.commit;
 
             var uid = rootState.user.uid;
             var index = 'visited-' + uid;
@@ -3482,8 +3482,8 @@ var store = new Vuex.Store({
         }
     },
     actions: {
-        LOAD_API_TOKEN: function LOAD_API_TOKEN(_ref34) {
-            var commit = _ref34.commit;
+        LOAD_API_TOKEN: function LOAD_API_TOKEN(_ref35) {
+            var commit = _ref35.commit;
 
             commit('setApiToken', { apiToken: get_cookie('jwt') });
         }
@@ -4747,9 +4747,10 @@ var json = {
     encode: function encode(str) {
         return JSON.stringify(str);
     }
+};
 
-    // Установки  почты        
-};var mailsett = {
+// Установки  почты        
+var mailsett = {
 
     init: function init() {
         $('#link_virt_turn').on('click', mailsett.turn_virt);
@@ -4836,8 +4837,10 @@ var master_info = {
         }
     }
 
-    // Навигация с помошью клавиатуры
-};var navigate = {
+};
+
+// Навигация с помошью клавиатуры
+var navigate = {
 
     enable: 0,
 
@@ -4883,8 +4886,10 @@ var master_info = {
         }
     }
 
-    // -- Блокнот ---
-};var notepad = {
+};
+
+// -- Блокнот ---
+var notepad = {
 
     note_block: null,
     last_click: null,
@@ -5520,9 +5525,10 @@ var option_sex = {
             userinfo.action.set_sex();
         }
     }
+};
 
-    // -- Статический блок опций ---
-};var option_static = {
+// -- Статический блок опций ---
+var option_static = {
 
     click_enable: null,
     active_elem: null,
@@ -5854,9 +5860,10 @@ var profile_option = {
             profile_option.ajax.subscr();
         }
     }
+};
 
-    // -- Обратная связь ---
-};var report = {
+// -- Обратная связь ---
+var report = {
 
     is_report: 0,
 
@@ -5943,8 +5950,10 @@ var profile_option = {
         $('#report_text').val('');
     }
 
-    // -- Слайдер, главная ---
-};var slider = {
+};
+
+// -- Слайдер, главная ---
+var slider = {
 
     timer: null,
     context: 0,
@@ -6005,8 +6014,10 @@ var profile_option = {
         clearTimeout(slider.timer);
     }
 
-    // -- Хранилище ---
-};var storage = {
+};
+
+// -- Хранилище ---
+var storage = {
 
     enable: 0,
 
@@ -6143,8 +6154,10 @@ var city_suggest = {
         city_suggest.hide_suggest();
     }
 
-    // -- Имена подсказки, поиск ---
-};var name_suggest = {
+};
+
+// -- Имена подсказки, поиск ---
+var name_suggest = {
 
     click_enable: null,
     active_elem: null,
@@ -6220,9 +6233,10 @@ var city_suggest = {
         name_suggest.active_elem.val($(this).data('name'));
         name_suggest.hide_suggest();
     }
+};
 
-    // -- Таги подсказки, поиск ---
-};var tag_suggest = {
+// -- Таги подсказки, поиск ---
+var tag_suggest = {
 
     click_enable: null,
     active_elem: null,
@@ -6323,9 +6337,10 @@ var user_tag = {
             if (user_tag.list.length) $('#user_desire_count').text(user_tag.list.length);
         }
     }
+};
 
-    // -- Информация о пользователе ---
-};var userinfo = {
+// -- Информация о пользователе ---
+var userinfo = {
 
     data: {
         uid: 0,
