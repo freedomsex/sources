@@ -670,6 +670,8 @@ var ContactDialog = {
             api.bun.send({
                 id: item.cont_id,
                 tid: item.from
+                //text: this.item.message,
+                //token: 'super secret token'
             });
         },
         splice: function splice(index) {
@@ -4745,10 +4747,9 @@ var json = {
     encode: function encode(str) {
         return JSON.stringify(str);
     }
-};
 
-// Установки  почты        
-var mailsett = {
+    // Установки  почты        
+};var mailsett = {
 
     init: function init() {
         $('#link_virt_turn').on('click', mailsett.turn_virt);
@@ -4835,10 +4836,8 @@ var master_info = {
         }
     }
 
-};
-
-// Навигация с помошью клавиатуры
-var navigate = {
+    // Навигация с помошью клавиатуры
+};var navigate = {
 
     enable: 0,
 
@@ -4884,10 +4883,8 @@ var navigate = {
         }
     }
 
-};
-
-// -- Блокнот ---
-var notepad = {
+    // -- Блокнот ---
+};var notepad = {
 
     note_block: null,
     last_click: null,
@@ -5523,10 +5520,9 @@ var option_sex = {
             userinfo.action.set_sex();
         }
     }
-};
 
-// -- Статический блок опций ---
-var option_static = {
+    // -- Статический блок опций ---
+};var option_static = {
 
     click_enable: null,
     active_elem: null,
@@ -5858,10 +5854,9 @@ var profile_option = {
             profile_option.ajax.subscr();
         }
     }
-};
 
-// -- Обратная связь ---
-var report = {
+    // -- Обратная связь ---
+};var report = {
 
     is_report: 0,
 
@@ -5948,10 +5943,8 @@ var report = {
         $('#report_text').val('');
     }
 
-};
-
-// -- Слайдер, главная ---
-var slider = {
+    // -- Слайдер, главная ---
+};var slider = {
 
     timer: null,
     context: 0,
@@ -6012,10 +6005,8 @@ var slider = {
         clearTimeout(slider.timer);
     }
 
-};
-
-// -- Хранилище ---
-var storage = {
+    // -- Хранилище ---
+};var storage = {
 
     enable: 0,
 
@@ -6152,10 +6143,8 @@ var city_suggest = {
         city_suggest.hide_suggest();
     }
 
-};
-
-// -- Имена подсказки, поиск ---
-var name_suggest = {
+    // -- Имена подсказки, поиск ---
+};var name_suggest = {
 
     click_enable: null,
     active_elem: null,
@@ -6231,10 +6220,9 @@ var name_suggest = {
         name_suggest.active_elem.val($(this).data('name'));
         name_suggest.hide_suggest();
     }
-};
 
-// -- Таги подсказки, поиск ---
-var tag_suggest = {
+    // -- Таги подсказки, поиск ---
+};var tag_suggest = {
 
     click_enable: null,
     active_elem: null,
@@ -6335,10 +6323,9 @@ var user_tag = {
             if (user_tag.list.length) $('#user_desire_count').text(user_tag.list.length);
         }
     }
-};
 
-// -- Информация о пользователе ---
-var userinfo = {
+    // -- Информация о пользователе ---
+};var userinfo = {
 
     data: {
         uid: 0,
