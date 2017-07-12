@@ -2280,8 +2280,8 @@ Vue.component('search-settings', {
 
         this.selectCity = this.city ? this.city : city;
         this.selectWho = this.who ? this.who : who;
-        this.selectUp = this.up ? this.up : up;
-        this.selectTo = this.to ? this.to : to;
+        this.selectUp = this.up ? this.up : this.age(up);
+        this.selectTo = this.to ? this.to : this.age(to);
         this.checkedTown = this.town;
         this.checkedVirt = this.virt;
         this.checkedAnyCity = this.any;
