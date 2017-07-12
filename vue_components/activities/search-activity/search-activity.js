@@ -16,6 +16,7 @@ Vue.component('search-activity', {
             humanId: null,
             account: null,
             sended: false,
+            compact: true,
         };
     },
     mounted() {
@@ -56,8 +57,9 @@ Vue.component('search-activity', {
             let next = this.next;
             up = up ? up : null;
             to = to ? to : null;
-            if (any) {
+            if (!city || any) {
                 city = null;
+                this.compact = false;
             }
             //this.onLoad(ls.get('last-search'));
             api.search.load({sex, who, city, up, to, next}).then((response) => {

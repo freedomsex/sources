@@ -270,7 +270,8 @@ Vue.component('search-activity', {
             toSlow: false,
             humanId: null,
             account: null,
-            sended: false
+            sended: false,
+            compact: true
         };
     },
     mounted: function mounted() {
@@ -320,8 +321,9 @@ Vue.component('search-activity', {
             var next = this.next;
             up = up ? up : null;
             to = to ? to : null;
-            if (any) {
+            if (!city || any) {
                 city = null;
+                this.compact = false;
             }
             //this.onLoad(ls.get('last-search'));
             api.search.load({ sex: sex, who: who, city: city, up: up, to: to, next: next }).then(function (response) {
@@ -365,7 +367,7 @@ Vue.component('search-activity', {
 });
 
 Vue.component('search-item', {
-    props: ['human', 'visited'],
+    props: ['human', 'visited', 'compact'],
     data: function data() {
         return {
             first: null,
@@ -416,6 +418,9 @@ Vue.component('search-item', {
         },
         tags: function tags() {
             return this.human.tags.length;
+        },
+        online: function online() {
+            return this.human.last < 777 ? true : false;
         },
         differ: function differ() {
             result = false;

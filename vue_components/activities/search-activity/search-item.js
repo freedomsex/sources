@@ -1,6 +1,6 @@
 
 Vue.component('search-item', {
-    props: ['human', 'visited'],
+    props: ['human', 'visited', 'compact'],
     data() {
         return {
             first:  null,
@@ -48,6 +48,9 @@ Vue.component('search-item', {
         },
         tags() {
             return this.human.tags.length;
+        },
+        online() {
+            return (this.human.last < 777) ? true : false;
         },
         differ() {
             result = false;

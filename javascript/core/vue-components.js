@@ -242,6 +242,7 @@ Vue.component('search-activity', {
             humanId: null,
             account: null,
             sended: false,
+            compact: true,
         };
     },
     mounted() {
@@ -282,8 +283,9 @@ Vue.component('search-activity', {
             let next = this.next;
             up = up ? up : null;
             to = to ? to : null;
-            if (any) {
+            if (!city || any) {
                 city = null;
+                this.compact = false;
             }
             //this.onLoad(ls.get('last-search'));
             api.search.load({sex, who, city, up, to, next}).then((response) => {
@@ -330,7 +332,7 @@ Vue.component('search-activity', {
 
 
 Vue.component('search-item', {
-    props: ['human', 'visited'],
+    props: ['human', 'visited', 'compact'],
     data() {
         return {
             first:  null,
@@ -378,6 +380,9 @@ Vue.component('search-item', {
         },
         tags() {
             return this.human.tags.length;
+        },
+        online() {
+            return (this.human.last < 777) ? true : false;
         },
         differ() {
             result = false;
