@@ -391,6 +391,7 @@ var search = {
             to: null,
             town: false,
             virt: false,
+            any: false,
         }
     },
     actions: {

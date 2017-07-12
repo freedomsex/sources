@@ -43,6 +43,7 @@ Vue.component('search-activity', {
         reload() {
             this.next = 0;
             this.users = [];
+            this.received = 0;
             this.load();
         },
         visitedSync() {
@@ -50,16 +51,21 @@ Vue.component('search-activity', {
         },
         load() {
             this.response = 0;
-            let {who, city, up, to} = this.$store.state.search.settings;
+            let {who, city, up, to, any} = this.$store.state.search.settings;
             let sex = this.$store.state.user.sex;
             let next = this.next;
             up = up ? up : null;
             to = to ? to : null;
-
+            if (any) {
+                city = null;
+            }
             //this.onLoad(ls.get('last-search'));
             api.search.load({sex, who, city, up, to, next}).then((response) => {
                 this.onLoad(response.data);
                 //ls.set('last-search', response.data, 31*24*60*60);
+            }).catch((error) => {
+                this.response = 200;
+                this.toSlow = false;
             });
         },
         loadNext() {

@@ -33,10 +33,11 @@ Vue.component('account-settings', {
             return name ? name : auto;
         },
     }),
-    mounted() {
-        this.selectCity = this.city;
+    created() {
+        let {city, age} = defaultSettings; // GLOBAL
+        this.selectCity = this.city ? this.city : city;
+        this.selectAge = this.age ? this.age : age;
         this.selectSex = this.sex;
-        this.selectAge = this.age;
         this.selectName = this.name;
     },
     methods: {
@@ -45,10 +46,17 @@ Vue.component('account-settings', {
             this.resetName();
         },
         saveCity(city) {
-            this.$store.dispatch('SAVE_CITY', city);
+            if (city) {
+                this.selectCity = city;
+            }
+            if (this.selectCity != this.city) {
+                this.$store.dispatch('SAVE_CITY', this.selectCity);
+            }
         },
         saveAge() {
-            this.$store.dispatch('SAVE_AGE',  this.selectAge);
+            if (this.selectAge != this.age) {
+                this.$store.dispatch('SAVE_AGE',  this.selectAge);
+            }
         },
         saveName() {
             this.$store.dispatch('SAVE_NAME', this.selectName);
@@ -57,6 +65,8 @@ Vue.component('account-settings', {
             this.selectName = this.name;
         },
         save() {
+            this.saveCity();
+            this.saveAge();
             this.saveName();
         },
         close() {

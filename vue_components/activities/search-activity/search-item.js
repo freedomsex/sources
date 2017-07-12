@@ -51,7 +51,8 @@ Vue.component('search-item', {
         },
         differ() {
             result = false;
-            if (this.human.who && this.human.who != this.$store.state.user.sex) {
+            let sex = this.$store.state.user.sex;
+            if (sex && this.human.who && this.human.who != sex) {
                 result = true;
             }
             return result;

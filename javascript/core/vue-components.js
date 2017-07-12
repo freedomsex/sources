@@ -149,6 +149,7 @@ Vue.component('messages-activity', {
             this.process = false;
             this.approve = true;
             this.message = '';
+            this.photo = null;
         },
         isDirt: _.debounce(function() {
             let word = /\w{0,5}[хx]([хx\s\!@#\$%\^&*+-\|\/]{0,6})[уy]([уy\s\!@#\$%\^&*+-\|\/]{0,6})[ёiлeеюийя]\w{0,7}|\w{0,6}[пp]([пp\s\!@#\$%\^&*+-\|\/]{0,6})[iие]([iие\s\!@#\$%\^&*+-\|\/]{0,6})[3зс]([3зс\s\!@#\$%\^&*+-\|\/]{0,6})[дd]\w{0,10}|[сcs][уy]([уy\!@#\$%\^&*+-\|\/]{0,6})[4чkк]\w{1,3}|\w{0,4}[bб]([bб\s\!@#\$%\^&*+-\|\/]{0,6})[lл]([lл\s\!@#\$%\^&*+-\|\/]{0,6})[yя]\w{0,10}|\w{0,8}[её][bб][лске@eыиаa][наи@йвл]\w{0,8}|\w{0,4}[еe]([еe\s\!@#\$%\^&*+-\|\/]{0,6})[бb]([бb\s\!@#\$%\^&*+-\|\/]{0,6})[uу]([uу\s\!@#\$%\^&*+-\|\/]{0,6})[н4ч]\w{0,4}|\w{0,4}[еeё]([еeё\s\!@#\$%\^&*+-\|\/]{0,6})[бb]([бb\s\!@#\$%\^&*+-\|\/]{0,6})[нn]([нn\s\!@#\$%\^&*+-\|\/]{0,6})[уy]\w{0,4}|\w{0,4}[еe]([еe\s\!@#\$%\^&*+-\|\/]{0,6})[бb]([бb\s\!@#\$%\^&*+-\|\/]{0,6})[оoаa@]([оoаa@\s\!@#\$%\^&*+-\|\/]{0,6})[тnнt]\w{0,4}|\w{0,10}[ё]([ё\!@#\$%\^&*+-\|\/]{0,6})[б]\w{0,6}|\w{0,4}[pп]([pп\s\!@#\$%\^&*+-\|\/]{0,6})[иeеi]([иeеi\s\!@#\$%\^&*+-\|\/]{0,6})[дd]([дd\s\!@#\$%\^&*+-\|\/]{0,6})[oоаa@еeиi]([oоаa@еeиi\s\!@#\$%\^&*+-\|\/]{0,6})[рr]\w{0,12}/i;
@@ -170,6 +171,7 @@ Vue.component('messages-activity', {
             this.preview = data;
         },
         sendMessage() {
+            console.log(data);
             let data = {
                 id: this.humanId,
                 captcha_code: this.code
@@ -188,6 +190,7 @@ Vue.component('messages-activity', {
             });
             this.preview = null;
             this.process = true;
+            console.log(data);
         },
         setCode(code) {
             this.code = code;
@@ -209,7 +212,6 @@ Vue.component('messages-activity', {
             this.$refs.messages.reload();
             // TODO: очень старая зависимость
             giper_chat.timer_cut();
-            this.photo = null;
             this.reset();
         },
         onError() {
@@ -267,6 +269,7 @@ Vue.component('search-activity', {
         reload() {
             this.next = 0;
             this.users = [];
+            this.received = 0;
             this.load();
         },
         visitedSync() {
@@ -274,16 +277,21 @@ Vue.component('search-activity', {
         },
         load() {
             this.response = 0;
-            let {who, city, up, to} = this.$store.state.search.settings;
+            let {who, city, up, to, any} = this.$store.state.search.settings;
             let sex = this.$store.state.user.sex;
             let next = this.next;
             up = up ? up : null;
             to = to ? to : null;
-
+            if (any) {
+                city = null;
+            }
             //this.onLoad(ls.get('last-search'));
             api.search.load({sex, who, city, up, to, next}).then((response) => {
                 this.onLoad(response.data);
                 //ls.set('last-search', response.data, 31*24*60*60);
+            }).catch((error) => {
+                this.response = 200;
+                this.toSlow = false;
             });
         },
         loadNext() {
@@ -373,7 +381,8 @@ Vue.component('search-item', {
         },
         differ() {
             result = false;
-            if (this.human.who && this.human.who != this.$store.state.user.sex) {
+            let sex = this.$store.state.user.sex;
+            if (sex && this.human.who && this.human.who != sex) {
                 result = true;
             }
             return result;
@@ -501,7 +510,7 @@ Vue.component('captcha-dialog', {
 });
 
 Vue.component('city-suggest', {
-    props: ['value'],
+    props: ['city'],
     data() {
         return {
             query: '',
@@ -510,8 +519,8 @@ Vue.component('city-suggest', {
         };
     },
     mounted() {
-        if (this.value && this.value.length > 2) {
-            this.query = this.value;
+        if (!this.query && this.city && this.city.length > 2) {
+            this.query = this.city;
         }
     },
     computed: {
@@ -1803,10 +1812,11 @@ Vue.component('account-settings', {
             return name ? name : auto;
         },
     }),
-    mounted() {
-        this.selectCity = this.city;
+    created() {
+        let {city, age} = defaultSettings; // GLOBAL
+        this.selectCity = this.city ? this.city : city;
+        this.selectAge = this.age ? this.age : age;
         this.selectSex = this.sex;
-        this.selectAge = this.age;
         this.selectName = this.name;
     },
     methods: {
@@ -1815,10 +1825,17 @@ Vue.component('account-settings', {
             this.resetName();
         },
         saveCity(city) {
-            this.$store.dispatch('SAVE_CITY', city);
+            if (city) {
+                this.selectCity = city;
+            }
+            if (this.selectCity != this.city) {
+                this.$store.dispatch('SAVE_CITY', this.selectCity);
+            }
         },
         saveAge() {
-            this.$store.dispatch('SAVE_AGE',  this.selectAge);
+            if (this.selectAge != this.age) {
+                this.$store.dispatch('SAVE_AGE',  this.selectAge);
+            }
         },
         saveName() {
             this.$store.dispatch('SAVE_NAME', this.selectName);
@@ -1827,6 +1844,8 @@ Vue.component('account-settings', {
             this.selectName = this.name;
         },
         save() {
+            this.saveCity();
+            this.saveAge();
             this.saveName();
         },
         close() {
@@ -2101,6 +2120,7 @@ Vue.component('search-settings', {
              selectCity: '',
              checkedTown: 0,
              checkedVirt: 0,
+             checkedAnyCity: 0,
         }
     },
     computed: Vuex.mapState({
@@ -2112,7 +2132,8 @@ Vue.component('search-settings', {
             return 0;
         },
         city(state) {
-            return state.user.city; // [~!!!~] READ_ONLY
+            let {city} = defaultSettings; // GLOBAL
+            return state.user.city ? state.user.city : city; // [~!!!~] READ_ONLY
         },
         up(state) {
             return this.age(state.search.settings.up);
@@ -2126,8 +2147,19 @@ Vue.component('search-settings', {
         virt(state) {
             return state.search.settings.virt == true;
         },
+        any(state) {
+            return state.search.settings.any == true;
+        },
         virgin(state) {
+            // Хак для пустых настроек
             if (state.search.settings.city != this.city) {
+                return false;
+            }
+            // Хак для старых настроек NOT Range
+            if (state.search.settings.up != this.up) {
+                return false;
+            }
+            if (state.search.settings.to != this.to) {
                 return false;
             }
             return (
@@ -2136,17 +2168,20 @@ Vue.component('search-settings', {
                 this.selectUp == this.up &&
                 this.selectTo == this.to &&
                 this.checkedTown == this.town &&
-                this.checkedVirt == this.virt
+                this.checkedVirt == this.virt &&
+                this.checkedAnyCity == this.any
             );
         }
     }),
-    mounted() {
-        this.selectCity = this.city;
-        this.selectWho = this.who;
-        this.selectUp = this.up;
-        this.selectTo = this.to;
+    created() {
+        let {city, who, up, to} = defaultSettings; // GLOBAL
+        this.selectCity = this.city ? this.city : city;
+        this.selectWho = this.who ? this.who : who;
+        this.selectUp = this.up ? this.up : up;
+        this.selectTo = this.to ? this.to : to;
         this.checkedTown = this.town;
         this.checkedVirt = this.virt;
+        this.checkedAnyCity = this.any;
     },
     methods: {
         age(value) {
@@ -2173,9 +2208,6 @@ Vue.component('search-settings', {
         // setTo() {
         //     this.$store.commit('settings', {to: this.selectTo});
         // },
-        // setTown() {
-        //     this.$store.commit('settings', {town: this.town != true});
-        // },
         save() {
             var data = {
                 who:  this.selectWho,
@@ -2184,7 +2216,9 @@ Vue.component('search-settings', {
                 to:   this.selectTo,
                 town: this.checkedTown,
                 virt: this.checkedVirt,
+                any: this.checkedAnyCity,
             };
+            console.log(data);
             if (!this.virgin) {
                 this.$store.dispatch('SAVE_SEARCH', data);
             }

@@ -9,6 +9,7 @@ Vue.component('search-settings', {
              selectCity: '',
              checkedTown: 0,
              checkedVirt: 0,
+             checkedAnyCity: 0,
         }
     },
     computed: Vuex.mapState({
@@ -20,7 +21,8 @@ Vue.component('search-settings', {
             return 0;
         },
         city(state) {
-            return state.user.city; // [~!!!~] READ_ONLY
+            let {city} = defaultSettings; // GLOBAL
+            return state.user.city ? state.user.city : city; // [~!!!~] READ_ONLY
         },
         up(state) {
             return this.age(state.search.settings.up);
@@ -34,8 +36,19 @@ Vue.component('search-settings', {
         virt(state) {
             return state.search.settings.virt == true;
         },
+        any(state) {
+            return state.search.settings.any == true;
+        },
         virgin(state) {
+            // Хак для пустых настроек
             if (state.search.settings.city != this.city) {
+                return false;
+            }
+            // Хак для старых настроек NOT Range
+            if (state.search.settings.up != this.up) {
+                return false;
+            }
+            if (state.search.settings.to != this.to) {
                 return false;
             }
             return (
@@ -44,17 +57,20 @@ Vue.component('search-settings', {
                 this.selectUp == this.up &&
                 this.selectTo == this.to &&
                 this.checkedTown == this.town &&
-                this.checkedVirt == this.virt
+                this.checkedVirt == this.virt &&
+                this.checkedAnyCity == this.any
             );
         }
     }),
-    mounted() {
-        this.selectCity = this.city;
-        this.selectWho = this.who;
-        this.selectUp = this.up;
-        this.selectTo = this.to;
+    created() {
+        let {city, who, up, to} = defaultSettings; // GLOBAL
+        this.selectCity = this.city ? this.city : city;
+        this.selectWho = this.who ? this.who : who;
+        this.selectUp = this.up ? this.up : up;
+        this.selectTo = this.to ? this.to : to;
         this.checkedTown = this.town;
         this.checkedVirt = this.virt;
+        this.checkedAnyCity = this.any;
     },
     methods: {
         age(value) {
@@ -81,9 +97,6 @@ Vue.component('search-settings', {
         // setTo() {
         //     this.$store.commit('settings', {to: this.selectTo});
         // },
-        // setTown() {
-        //     this.$store.commit('settings', {town: this.town != true});
-        // },
         save() {
             var data = {
                 who:  this.selectWho,
@@ -92,7 +105,9 @@ Vue.component('search-settings', {
                 to:   this.selectTo,
                 town: this.checkedTown,
                 virt: this.checkedVirt,
+                any: this.checkedAnyCity,
             };
+            console.log(data);
             if (!this.virgin) {
                 this.$store.dispatch('SAVE_SEARCH', data);
             }

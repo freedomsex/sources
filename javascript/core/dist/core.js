@@ -177,6 +177,7 @@ Vue.component('messages-activity', {
             this.process = false;
             this.approve = true;
             this.message = '';
+            this.photo = null;
         },
 
         isDirt: _.debounce(function () {
@@ -201,6 +202,7 @@ Vue.component('messages-activity', {
         sendMessage: function sendMessage() {
             var _this3 = this;
 
+            console.log(data);
             var data = {
                 id: this.humanId,
                 captcha_code: this.code
@@ -218,6 +220,7 @@ Vue.component('messages-activity', {
             });
             this.preview = null;
             this.process = true;
+            console.log(data);
         },
         setCode: function setCode(code) {
             this.code = code;
@@ -239,7 +242,6 @@ Vue.component('messages-activity', {
             this.$refs.messages.reload();
             // TODO: очень старая зависимость
             giper_chat.timer_cut();
-            this.photo = null;
             this.reset();
         },
         onError: function onError() {
@@ -297,6 +299,7 @@ Vue.component('search-activity', {
         reload: function reload() {
             this.next = 0;
             this.users = [];
+            this.received = 0;
             this.load();
         },
         visitedSync: function visitedSync() {
@@ -310,17 +313,23 @@ Vue.component('search-activity', {
                 who = _$store$state$search$.who,
                 city = _$store$state$search$.city,
                 up = _$store$state$search$.up,
-                to = _$store$state$search$.to;
+                to = _$store$state$search$.to,
+                any = _$store$state$search$.any;
 
             var sex = this.$store.state.user.sex;
             var next = this.next;
             up = up ? up : null;
             to = to ? to : null;
-
+            if (any) {
+                city = null;
+            }
             //this.onLoad(ls.get('last-search'));
             api.search.load({ sex: sex, who: who, city: city, up: up, to: to, next: next }).then(function (response) {
                 _this4.onLoad(response.data);
                 //ls.set('last-search', response.data, 31*24*60*60);
+            }).catch(function (error) {
+                _this4.response = 200;
+                _this4.toSlow = false;
             });
         },
         loadNext: function loadNext() {
@@ -410,7 +419,8 @@ Vue.component('search-item', {
         },
         differ: function differ() {
             result = false;
-            if (this.human.who && this.human.who != this.$store.state.user.sex) {
+            var sex = this.$store.state.user.sex;
+            if (sex && this.human.who && this.human.who != sex) {
                 result = true;
             }
             return result;
@@ -551,7 +561,7 @@ Vue.component('captcha-dialog', {
 });
 
 Vue.component('city-suggest', {
-    props: ['value'],
+    props: ['city'],
     data: function data() {
         return {
             query: '',
@@ -560,8 +570,8 @@ Vue.component('city-suggest', {
         };
     },
     mounted: function mounted() {
-        if (this.value && this.value.length > 2) {
-            this.query = this.value;
+        if (!this.query && this.city && this.city.length > 2) {
+            this.query = this.city;
         }
     },
 
@@ -1892,10 +1902,14 @@ Vue.component('account-settings', {
             return name ? name : auto;
         }
     }),
-    mounted: function mounted() {
-        this.selectCity = this.city;
+    created: function created() {
+        var _defaultSettings = defaultSettings,
+            city = _defaultSettings.city,
+            age = _defaultSettings.age; // GLOBAL
+
+        this.selectCity = this.city ? this.city : city;
+        this.selectAge = this.age ? this.age : age;
         this.selectSex = this.sex;
-        this.selectAge = this.age;
         this.selectName = this.name;
     },
 
@@ -1905,10 +1919,17 @@ Vue.component('account-settings', {
             this.resetName();
         },
         saveCity: function saveCity(city) {
-            this.$store.dispatch('SAVE_CITY', city);
+            if (city) {
+                this.selectCity = city;
+            }
+            if (this.selectCity != this.city) {
+                this.$store.dispatch('SAVE_CITY', this.selectCity);
+            }
         },
         saveAge: function saveAge() {
-            this.$store.dispatch('SAVE_AGE', this.selectAge);
+            if (this.selectAge != this.age) {
+                this.$store.dispatch('SAVE_AGE', this.selectAge);
+            }
         },
         saveName: function saveName() {
             this.$store.dispatch('SAVE_NAME', this.selectName);
@@ -1917,6 +1938,8 @@ Vue.component('account-settings', {
             this.selectName = this.name;
         },
         save: function save() {
+            this.saveCity();
+            this.saveAge();
             this.saveName();
         },
         close: function close() {
@@ -2199,7 +2222,8 @@ Vue.component('search-settings', {
             selectTo: 0,
             selectCity: '',
             checkedTown: 0,
-            checkedVirt: 0
+            checkedVirt: 0,
+            checkedAnyCity: 0
         };
     },
 
@@ -2212,7 +2236,10 @@ Vue.component('search-settings', {
             return 0;
         },
         city: function city(state) {
-            return state.user.city; // [~!!!~] READ_ONLY
+            var _defaultSettings2 = defaultSettings,
+                city = _defaultSettings2.city; // GLOBAL
+
+            return state.user.city ? state.user.city : city; // [~!!!~] READ_ONLY
         },
         up: function up(state) {
             return this.age(state.search.settings.up);
@@ -2226,20 +2253,38 @@ Vue.component('search-settings', {
         virt: function virt(state) {
             return state.search.settings.virt == true;
         },
+        any: function any(state) {
+            return state.search.settings.any == true;
+        },
         virgin: function virgin(state) {
+            // Хак для пустых настроек
             if (state.search.settings.city != this.city) {
                 return false;
             }
-            return this.selectCity == this.city && this.selectWho == this.who && this.selectUp == this.up && this.selectTo == this.to && this.checkedTown == this.town && this.checkedVirt == this.virt;
+            // Хак для старых настроек NOT Range
+            if (state.search.settings.up != this.up) {
+                return false;
+            }
+            if (state.search.settings.to != this.to) {
+                return false;
+            }
+            return this.selectCity == this.city && this.selectWho == this.who && this.selectUp == this.up && this.selectTo == this.to && this.checkedTown == this.town && this.checkedVirt == this.virt && this.checkedAnyCity == this.any;
         }
     }),
-    mounted: function mounted() {
-        this.selectCity = this.city;
-        this.selectWho = this.who;
-        this.selectUp = this.up;
-        this.selectTo = this.to;
+    created: function created() {
+        var _defaultSettings3 = defaultSettings,
+            city = _defaultSettings3.city,
+            who = _defaultSettings3.who,
+            up = _defaultSettings3.up,
+            to = _defaultSettings3.to; // GLOBAL
+
+        this.selectCity = this.city ? this.city : city;
+        this.selectWho = this.who ? this.who : who;
+        this.selectUp = this.up ? this.up : up;
+        this.selectTo = this.to ? this.to : to;
         this.checkedTown = this.town;
         this.checkedVirt = this.virt;
+        this.checkedAnyCity = this.any;
     },
 
     methods: {
@@ -2274,9 +2319,6 @@ Vue.component('search-settings', {
         // setTo() {
         //     this.$store.commit('settings', {to: this.selectTo});
         // },
-        // setTown() {
-        //     this.$store.commit('settings', {town: this.town != true});
-        // },
         save: function save() {
             var data = {
                 who: this.selectWho,
@@ -2284,8 +2326,10 @@ Vue.component('search-settings', {
                 up: this.selectUp,
                 to: this.selectTo,
                 town: this.checkedTown,
-                virt: this.checkedVirt
+                virt: this.checkedVirt,
+                any: this.checkedAnyCity
             };
+            console.log(data);
             if (!this.virgin) {
                 this.$store.dispatch('SAVE_SEARCH', data);
             }
@@ -3229,7 +3273,8 @@ var search = {
             up: null,
             to: null,
             town: false,
-            virt: false
+            virt: false,
+            any: false
         }
     },
     actions: {

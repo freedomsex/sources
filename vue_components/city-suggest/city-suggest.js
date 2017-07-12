@@ -1,5 +1,5 @@
 Vue.component('city-suggest', {
-    props: ['value'],
+    props: ['city'],
     data() {
         return {
             query: '',
@@ -8,8 +8,8 @@ Vue.component('city-suggest', {
         };
     },
     mounted() {
-        if (this.value && this.value.length > 2) {
-            this.query = this.value;
+        if (!this.query && this.city && this.city.length > 2) {
+            this.query = this.city;
         }
     },
     computed: {
