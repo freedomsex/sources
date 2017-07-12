@@ -271,6 +271,7 @@ Vue.component('search-activity', {
             this.next = 0;
             this.users = [];
             this.received = 0;
+            this.compact = true;
             this.load();
         },
         visitedSync() {
