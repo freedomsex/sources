@@ -57,7 +57,11 @@ Vue.component('contact-item', {
         },
         reply() {
             this.$emit('read', this.index);
-            this.$router.push({ name: 'quickReply', params: {humanId: this.humanId, message: this.message} });
+            this.$router.push({ name: 'quickReply', params: {
+                humanId: this.humanId,
+                message: this.message,
+                index: this.index
+            } });
         },
         dialog() {
             this.$emit('read', this.index);

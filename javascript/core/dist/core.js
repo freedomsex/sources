@@ -951,7 +951,11 @@ Vue.component('contact-item', {
         },
         reply: function reply() {
             this.$emit('read', this.index);
-            this.$router.push({ name: 'quickReply', params: { humanId: this.humanId, message: this.message } });
+            this.$router.push({ name: 'quickReply', params: {
+                    humanId: this.humanId,
+                    message: this.message,
+                    index: this.index
+                } });
         },
         dialog: function dialog() {
             this.$emit('read', this.index);
@@ -1698,8 +1702,14 @@ var QuickMessage = Vue.component('quick-message', {
 });
 
 var QuickReply = Vue.component('quick-reply', {
-    props: ['humanId', 'message'],
+    props: ['humanId', 'message', 'index'],
     extends: QuickMessage,
+    methods: {
+        sended: function sended() {
+            this.$emit('sended', this.index);
+            this.close();
+        }
+    },
     template: '#quick-reply'
 });
 
