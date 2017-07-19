@@ -15,19 +15,19 @@
  -->
     <div class="activity-section">
       <div class="activity-section__title">Настройки</div>
-      <span class="link_simple" @click="$emit('security')">Безопасность</span>
+      <span class="link_simple" @click="$router.push('security')">Безопасность</span>
     </div>
 
     <div class="activity-section">
-      <span class="link_simple" @click="$emit('desires')">Желания и фантазии</span>
+      <span class="link_simple" @click="$router.push('desires')">Желания и фантазии</span>
     </div>
 
     <div class="activity-section">
-      <span class="link_simple" @click="$emit('social')">Контакты, соцсети</span>
+      <span class="link_simple" @click="$router.push('social')">Контакты, соцсети</span>
     </div>
 
     <div class="activity-section">
-      <span class="link_simple" @click="$emit('about')">Анкетные данные</span>
+      <span class="link_simple" @click="$router.push('about')">Анкетные данные</span>
     </div>
 
 <!--

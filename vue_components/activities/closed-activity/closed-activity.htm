@@ -5,9 +5,13 @@
       <nav id="menu-user" class="navbar navbar-inverse">
         <div class="menu-user">
           <div class="menu-user__wrapper">
-            <div class="menu-user__navbar"></div>
+            <div class="menu-user__navbar">
+              <div class="navbar-title">
+                <slot name="caption"></slot>
+              </div>
+            </div>
             <div class="menu-user__navbar-right" @click="close">
-              <i class="btn-close material-icons" @click="close">&#xE14C;</i>
+              <i class="btn-close material-icons">&#xE14C;</i>
             </div>
           </div>
         </div>

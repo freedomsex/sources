@@ -6,7 +6,7 @@
       <contact-item v-for="(item, index) in contacts" :key="index"
         :item="item"
         :index="index"
-        :quick="quick"
+        quick="true"
         @bun="bun"
         @read="read"
         @close="close"
@@ -23,6 +23,8 @@
     <div class="contact-list__next">
       <div class="btn btn-default btn-xs" @click="next()" :disabled="response == false" v-show="more"> Следующие </div>
     </div>
+
+    <router-view></router-view>
   </default-activity>
 </script>
 
@@ -52,5 +54,7 @@
       <div class="btn btn-default btn-xs" @click="next()" :disabled="response == false" v-show="more"> Следующие </div>
     </div>
     <messages-activity @close="dialog = false" :humanId="dialog" :title="title" v-if="dialog"/>
+
+    <router-view></router-view>
   </default-activity>
 </script>

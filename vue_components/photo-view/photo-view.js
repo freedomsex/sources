@@ -1,5 +1,6 @@
 
 Vue.component('photo-view', {
+    extends: ModalDialog,
     props: [
         'photo',
         'thumb',
@@ -11,7 +12,7 @@ Vue.component('photo-view', {
             this.$store.commit('accepts/photo');
         },
         close() {
-            this.$emit('close');
+            this.back();
         }
     },
     computed: {

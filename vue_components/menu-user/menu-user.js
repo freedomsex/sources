@@ -23,8 +23,9 @@ Vue.component('menu-user', {
             if (sex) {
                 results = sex == 1 ? 'Парень' : 'Девушка';
                 results = name ? name : results;
+                return results + ' ' + (age ? age : '') + ' ' + (city ? city : '');
             }
-            return results + ' ' + (age ? age : '') + ' ' + (city ? city : '');
+            return results;
         }
     },
     methods: {

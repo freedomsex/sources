@@ -1,5 +1,5 @@
 
-Vue.component('social-settings', {
+const SocialSettings = Vue.component('social-settings', {
     props: [],
     data() {
         return {

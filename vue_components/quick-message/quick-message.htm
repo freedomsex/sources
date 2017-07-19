@@ -1,30 +1,32 @@
 
 <script type="text/x-template" id="quick-message">
-  <modal-dialog @close="close">
-    <div class="human-dialog__caption">
-      Написать сообщение
-    </div>
-    <div class="human-dialog__body">
-      <div class="human-dialog__desire" v-show="tags.length">
-        <span class="link_simple" v-for="(tag, index) in tags" :key="index" v-show="tag">{{tag}} &#8226; </span>
+  <div>
+    <modal-dialog @close="close">
+      <div class="human-dialog__caption">
+        Написать сообщение
       </div>
-      <div class="human-dialog__warning" v-show="warning">
-        {{warning}}
+      <div class="human-dialog__body">
+        <div class="human-dialog__desire" v-show="tags.length">
+          <span class="link_simple" v-for="(tag, index) in tags" :key="index" v-show="tag">{{tag}} &#8226; </span>
+        </div>
+        <div class="human-dialog__warning" v-show="warning">
+          {{warning}}
+        </div>
       </div>
-    </div>
 
 
-    <div class="message-input">
-      <textarea class="message-input__texarea" rows="1" placeholder="Введите текст" v-model="text" v-resized
-        @keyup.ctrl.enter.prevent="send()"></textarea>
-        <button class="btn btn-primary" @click="send()">Отправить</button>
-        <button class="btn btn-link" @click="$emit('account', humanId)">Смотреть анкету...</button>
-    </div>
-    <loading-wall :show="loading"/>
-    <loading-cover :show="process"/>
-    <attention-wall :show="hold" v-if="hold" @close="cancel" @remove="remove"/>
+      <div class="message-input">
+        <textarea class="message-input__texarea" rows="1" placeholder="Введите текст" v-model="text" v-resized
+          @keyup.ctrl.enter.prevent="send()"></textarea>
+          <button class="btn btn-primary" @click="send()">Отправить</button>
+          <button class="btn btn-link" @click="account()">Смотреть анкету...</button>
+      </div>
+      <loading-wall :show="loading"/>
+      <loading-cover :show="process"/>
+      <attention-wall :show="hold" v-if="hold" @close="cancel" @remove="remove"/>
 
-    <captcha-dialog v-if="captcha" @close="close" @cancel="cancel" @send="setCode"/>
-  </modal-dialog>
+      <captcha-dialog v-if="captcha" @close="close" @cancel="cancel" @send="setCode"/>
+    </modal-dialog>
+  </div>
 </script>
 

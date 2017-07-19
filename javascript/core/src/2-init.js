@@ -1,5 +1,5 @@
 
-new Vue({
+var app = new Vue({
     data: {
         searchSettings: false,
         accountSettings: false,
@@ -90,6 +90,19 @@ new Vue({
     store,
     router
 });
+
+
+new Vue({
+    data: {},
+    el: '#settings',
+    store,
+    router: settingsRouter
+});
+
+
+
+
+
 
 
 

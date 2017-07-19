@@ -26,6 +26,7 @@ Vue.component('search-item', {
             value = this.second == key ? false : value;
             return value ? (this.third = key) : false;
         });
+        // console.log('item',this.human);
     },
     computed: {
         search() {
@@ -64,6 +65,12 @@ Vue.component('search-item', {
     methods: {
         close() {
             this.$emit('close');
+        },
+        quick() {
+            this.$router.push({
+                name: 'quickMessage',
+                params: {humanId: this.human.id}
+            });
         },
         load() {
             api.search.load(null).then((response) => {

@@ -1,6 +1,6 @@
-<search-wizard inline-template @change="openSearchSettings()">
+<search-wizard inline-template>
   <div id="search-wizard">
-    <div class="alert alert-warning" style="min-height: 62px;" @click="$emit('change')">
+    <div class="alert alert-warning" style="min-height: 62px;" @click="$router.push('/search/settings/search')">
         <p v-show="say" style="display: none;">
           <i class="material-icons">&#xE8B4;</i>
           Вы ищете: {{say}} &nbsp;

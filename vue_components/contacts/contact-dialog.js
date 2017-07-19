@@ -1,5 +1,6 @@
 
 var ContactDialog = {
+    extends: DefaultActivity,
     props: [
       'quick',
     ],
@@ -37,7 +38,8 @@ var ContactDialog = {
     },
     methods: {
         close() {
-            this.$emit('close');
+            //this.$emit('close');
+            this.back();
         },
         reset() {
             this.response = false;

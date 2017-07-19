@@ -11,12 +11,12 @@ Vue.directive('resized', {
 });
 
 
-var QuickMessage = Vue.component('quick-message', {
+const QuickMessage = Vue.component('quick-message', {
+    extends: ModalDialog,
     props: ['humanId'],
     data() {
         return {
             text: '',
-            account: 0,
             captcha: false,
             process: false,
             loading: false,
@@ -25,6 +25,9 @@ var QuickMessage = Vue.component('quick-message', {
             code: null
         }
     },
+    // beforeRouteLeave(to, from, next) {
+
+    // },
     computed: {
         human() {
             return this.$store.state.search.human;
@@ -88,7 +91,8 @@ var QuickMessage = Vue.component('quick-message', {
             //this.process = false;
         },
         close() {
-            this.$emit('close');
+            this.back();
+            //this.$emit('close');
         },
         remove() {
             console.log('::remove:: (!)');
@@ -136,6 +140,9 @@ var QuickMessage = Vue.component('quick-message', {
         sended() {
             this.$emit('sended');
             this.close();
+        },
+        account() {
+            this.$router.push(this.humanId + '/detail')
         },
         onError() {
             this.process = false;

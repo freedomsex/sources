@@ -55,21 +55,21 @@ Vue.component('contact-item', {
                 this.dialog();
             }
         },
-        confirmBun() {
-            this.confirm = 'doit';
+        reply() {
+            this.$router.push({ name: 'quickReply', params: {humanId: this.humanId} });
         },
         dialog() {
             this.$emit('read', this.index);
-            this.$emit('dialog', {id: this.humanId, title: this.title});
+            //this.$emit('dialog', {id: this.humanId, title: this.title});
+            this.$router.push({ name: 'dialog', params: {humanId: this.humanId, title: this.title} });
+        },
+        confirmBun() {
+            this.confirm = 'doit';
         },
         confirmRemove() {
             //this.$emit('remove');
             //console.log('initial-item REMOVE');
             this.confirm = !this.quick ? 'some' : 'must';
-        },
-        reply() {
-            this.detail = true;
-            this.$emit('read', this.index);
         },
         close() {
             this.detail = false;

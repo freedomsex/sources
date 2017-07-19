@@ -39,11 +39,11 @@
     </div>
 
     <div class="activity-section">
-      <a class="" href="/profile.php" target="_blank" @click.prevent="settings">Другие настройки</a>
+      <span class="link_simple" @click="$router.push('other')">Другие настройки</span>
     </div>
 
     <div class="activity-section">
-      <span class="link_simple" @click="login">Уже есть анкета?</span>
+      <span class="link_simple" @click="$router.push({ name: 'login' })">Уже есть анкета?</span>
     </div>
 
   </closed-activity>

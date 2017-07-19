@@ -343,7 +343,6 @@
     justify-content: space-between;
     &.visited {
         background: @light;
-        opacity: 0.7;
     }
     &__content {
         .link;
@@ -352,6 +351,9 @@
         justify-content: flex-start;
         flex: 1;
         min-width: 0;
+        &.visited {
+            opacity: 0.7;
+        }
     }
     &__option {
         display: flex;
@@ -360,6 +362,9 @@
         flex: none;
         text-align: right;
         margin-left: @indent-xs;
+        &.visited {
+            opacity: 0.5;
+        }
     }
 
     &__name {
@@ -1365,6 +1370,7 @@
     i {
         line-height: 1;
         font-size: 30px;
+        text-shadow: 0 0 7px rgba(0,0,0, 0.3);
     }
 }
 

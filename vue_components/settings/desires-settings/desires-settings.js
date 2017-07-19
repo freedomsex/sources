@@ -1,5 +1,5 @@
 
-Vue.component('desires-settings', {
+const DesiresSettings = Vue.component('desires-settings', {
     props: [],
     data() {
         return {

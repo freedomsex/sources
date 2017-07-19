@@ -1,5 +1,7 @@
 
-Vue.component('photo-settings', {
+const PhotoSettings = Vue.component('photo-settings', {
+    extends: ClosedActivity,
+    props: ['humanId'],
     data() {
         return {
             photos: [],
@@ -27,7 +29,7 @@ Vue.component('photo-settings', {
     },
     methods: {
         close() {
-            this.$emit('close');
+            this.back();
         },
         loadPhoto() {
             let server = this.$store.state.photoServer;
@@ -62,12 +64,15 @@ Vue.component('photo-settings', {
                     height: photo.height,
                     width:  photo.width,
                 }
+                //this.$router.push({ name: 'preview', params: {humanId: this.humanId, photo: data, options: true} });
                 this.$emit('select', data);
+                this.close();
                 //this.$store.commit('sendPhoto', data);
                 //console.log('sendPhoto');
                 //console.log(data);
+            } else {
+                this.close();
             }
-            this.close();
         }
     },
     template: '#photo-settings',

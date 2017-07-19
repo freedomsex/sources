@@ -1,5 +1,5 @@
 
-Vue.component('other-settings', {
+const OtherSettings = Vue.component('other-settings', {
     props: [],
     data() {
         return {

@@ -1,4 +1,5 @@
 Vue.component('quick-write', {
+    // extends: QuickMessage,
     props: ['humanId'],
     data() {
         return {
@@ -6,6 +7,11 @@ Vue.component('quick-write', {
             open: false,
             sended: false
         }
+    },
+    methods: {
+        write() {
+            this.$router.push('write/' + tid);
+        },
     },
     template: '#quick-write',
 });

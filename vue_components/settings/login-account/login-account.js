@@ -1,5 +1,5 @@
 
-Vue.component('login-account', {
+const LoginAccount = Vue.component('login-account', {
     props: [],
     data() {
         return {

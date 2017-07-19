@@ -1,4 +1,4 @@
-Vue.component('sex-confirm', {
+const SexConfirm = Vue.component('sex-confirm', {
     props: ['show'],
     computed: {
         variant() {
@@ -11,25 +11,68 @@ Vue.component('sex-confirm', {
             return this.content[this.variant].text;
         }
     },
+    // beforeRouteLeave(to, from, next) {
+    //     if (this.$store.state.user.sex) {
+    //         if (this.index('search')) {
+    //             console.log('leave-search', [this.$store.state.user.sex, store.state.user.sex, to]);
+    //             next({name: 'search-settings'});
+    //         }
+    //         if (this.index('contacts')) {
+    //             console.log('leave', 'contacts');
+    //             next({name: 'search-settings'});
+    //         }
+    //         if (this.index('account')) {
+    //             console.log('leave', 'account');
+    //             next({name: 'search-settings'});
+    //         }
+    //         if (this.index('message')) {
+    //             console.log('leave', 'message');
+    //             next({name: 'search-settings'});
+    //         }
+    //     }
+    //     console.log('leave', 'close');
+    //     next();
+    // },
     methods: {
         close() {
             this.$emit('close');
         },
+        index(val) {
+            return val == this.variant;
+        },
         save(sex) {
             this.$store.dispatch('SAVE_SEX', sex);
             this.$emit('select', this.show);
-            this.close();
+            this.redirect();
         },
         login() {
             this.$emit('login');
             this.$emit('close');
         },
+        redirect() {
+            if (this.index('search')) {
+                console.log('leave-search');
+                this.$router.replace({name: 'search-settings'});
+            }
+            // if (this.index('contacts')) {
+            //     console.log('leave', 'contacts');
+            //     next({name: 'search-settings'});
+            // }
+            // if (this.index('account')) {
+            //     console.log('leave', 'account');
+            //     next({name: 'search-settings'});
+            // }
+            // if (this.index('message')) {
+            //     console.log('leave', 'message');
+            //     next({name: 'search-settings'});
+            // }
+        }
     },
     data() {
         return {
             content: {
                 search: {
-                    caption: 'Подтвердите',
+                    caption: 'Легко начать',
                     text: 'Для правильного отображения результатов поиска необходимо указать пол. Вы парень или девушка?'
                 },
                 contacts: {

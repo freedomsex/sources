@@ -1,9 +1,11 @@
 
-Vue.component('messages-activity', {
+const MessagesActivity = Vue.component('messages-activity', {
+    extends: DefaultActivity,
     props: ['humanId', 'title'],
     data() {
         return {
             message: '',
+            caption: '',
         reply:  '',
         code:  '',
         show: true,
@@ -11,15 +13,19 @@ Vue.component('messages-activity', {
         approve: true,
         dirt: false,
             captcha: false,
-            account: false,
-            uploads: false,
-            incoming: false,
             preview: false,
             photo: false,
         }
     },
+    // beforeRouteUpdate(to, from, next) {
+    //     this.photo = this.preview;
+    //     console.log('MessagesActivity', this.photo);
+    //     next();
+    // },
     mounted: function () {
-
+        if (this.title) {
+            this.caption = this.title;
+        }
     },
     methods: {
         reset() {
@@ -37,7 +43,8 @@ Vue.component('messages-activity', {
         }, 700),
 
         close() {
-            this.$emit('close');
+            //this.$emit('close');
+            this.back();
         },
         cancel() {
             this.captcha = false;
@@ -96,6 +103,18 @@ Vue.component('messages-activity', {
         onError() {
             this.process = false;
         },
+        account() {
+            this.$router.push(this.humanId + '/detail')
+        },
+        uploads() {
+            this.$router.push(this.humanId + '/uploads')
+        },
+        incoming() {
+            this.$router.push(this.humanId + '/incoming')
+        },
+        // preview() {
+        //     this.$router.push(this.humanId + '/preview')
+        // },
         videochat() {
             window.open('/videochat.php?to='+this.humanId, 'videochat', 'width=432, height=280, resizable=yes, scrollbars=yes');
         }

@@ -1,6 +1,6 @@
 
-Vue.component('search-activity', {
-    props: [],
+const SearchActivity = Vue.component('search-activity', {
+    extends: DefaultActivity,
     data() {
         return {
             loading: false,
@@ -23,6 +23,12 @@ Vue.component('search-activity', {
         this.load();
         this.visitedSync();
     },
+    beforeRouteUpdate(to, from, next) {
+        if (to.fullPath == '/search' && from.fullPath == '/search/settings/search') {
+            this.reload();
+        }
+        next();
+    },
     computed: {
         more() {
             if (this.received && this.received == this.batch) {
@@ -35,11 +41,14 @@ Vue.component('search-activity', {
         },
         accept() {
             return this.$store.state.accepts.search;
+        },
+        items() {
+            return this.users;
         }
     },
     methods: {
         close() {
-            this.$emit('close');
+            this.back();
         },
         reload() {
             this.next = 0;

@@ -1,10 +1,5 @@
 
-var DefaultActivity = Vue.component('closed-activity', {
-    props: ['show'],
-    methods: {
-        close() {
-            this.$emit('close');
-        },
-    },
+var ClosedActivity = Vue.component('closed-activity', {
+    extends: ActivityActions,
     template: '#closed-activity',
 });

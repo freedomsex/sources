@@ -1,6 +1,7 @@
 
-Vue.component('account-settings', {
-    props: [],
+const AccountSettings = Vue.component('account-settings', {
+    extends: ClosedActivity,
+    props: ['root'],
     data() {
         return {
              selectCity: '',
@@ -71,14 +72,7 @@ Vue.component('account-settings', {
         },
         close() {
             this.save();
-            this.$emit('close');
-        },
-        login() {
-            this.$emit('login');
-            this.$emit('close');
-        },
-        settings() {
-            this.$emit('settings');
+            this.back();
         },
     },
     template: '#account-settings',

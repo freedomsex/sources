@@ -1,7 +1,7 @@
 
 <script type="text/x-template" id="contact-item">
   <div class="contact-list__item">
-    <div class="contact-list__item-content" @click.stop="show">
+    <div class="contact-list__item-content" @click="show">
       <div class="contact-list__item-info">
         <span class="user-list__name">{{name}}</span><span v-show="age || city">,</span>
         <span class="user-list__age" v-show="age">{{age}}</span>
@@ -30,12 +30,5 @@
       @bun="bun"
       @close="cancel"
       @remove="remove"/>
-    <quick-reply v-if="detail"
-     :message="message"
-     :humanId="item.human_id"
-      @sended="sended"
-      @account="account = humanId"
-      @close="close"/>
-    <account-activity :humanId="account" v-if="account" @close="account = false"/>
   </div>
 </script>

@@ -1,5 +1,7 @@
 
-Vue.component('search-settings', {
+const SearchSettings = Vue.component('search-settings', {
+    extends: ClosedActivity,
+    props: ['root'],
     data() {
         return {
              ageRange: [0,16,17,18,20,23,25,27,30,35,40,45,50,60,80],
@@ -12,6 +14,19 @@ Vue.component('search-settings', {
              checkedAnyCity: 0,
         }
     },
+    // beforeRouteEnter(to, from, next) {,
+    //     beforeEnter: (to, from, next) => {
+    //         console.log(store.state.user.sex);
+    //         if (!store.state.user.sex) {
+    //             console.log('settings-search', store.state.user.sex );
+    //             next('/confirm-sex/search');
+    //         } else {
+    //             console.log('next', to );
+    //             next();
+    //         }
+    //     }
+
+    // },
     computed: Vuex.mapState({
         who(state) {
             var who = Number(state.search.settings.who);
@@ -112,12 +127,16 @@ Vue.component('search-settings', {
                 this.$store.dispatch('SAVE_SEARCH', data);
             }
         },
-        account() {
-            this.$emit('account');
-        },
+        // account() {
+        //     if (this.root) {
+        //         this.$router.push({ name: 'account-settings', params: {root: true} })
+        //     } else {
+        //         this.$router.push({ name: 'account-settings'})
+        //     }
+        // },
         close() {
             this.save();
-            this.$emit('close');
+            this.back();
         },
     },
     template: '#search-settings',

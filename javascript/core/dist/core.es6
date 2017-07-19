@@ -1,5 +1,5 @@
 
-Vue.component('account-activity', {
+const AccountActivity = Vue.component('account-activity', {
     props: ['humanId'],
     data() {
         return {
@@ -97,34 +97,43 @@ Vue.component('account-activity', {
     template: '#account-activity',
 });
 
-
-var DefaultActivity = Vue.component('closed-activity', {
-    props: ['show'],
+const ActivityActions = {
+    beforeRouteLeave(to, from, next) {
+        console.log('Leave:', [to, from]);
+        next();
+    },
     methods: {
         close() {
             this.$emit('close');
         },
+        back(back) {
+            back = (back === undefined) ? this.$route.meta.back : back;
+            console.log('back:', back);
+            (back === undefined) ? this.$router.push('/') : this.$router.push(back);
+        },
     },
+}
+
+
+var ClosedActivity = Vue.component('closed-activity', {
+    extends: ActivityActions,
     template: '#closed-activity',
 });
 
 
 var DefaultActivity = Vue.component('default-activity', {
-    props: ['show'],
-    methods: {
-        close() {
-            this.$emit('close');
-        },
-    },
+    extends: ActivityActions,
     template: '#default-activity',
 });
 
 
-Vue.component('messages-activity', {
+const MessagesActivity = Vue.component('messages-activity', {
+    extends: DefaultActivity,
     props: ['humanId', 'title'],
     data() {
         return {
             message: '',
+            caption: '',
         reply:  '',
         code:  '',
         show: true,
@@ -132,15 +141,19 @@ Vue.component('messages-activity', {
         approve: true,
         dirt: false,
             captcha: false,
-            account: false,
-            uploads: false,
-            incoming: false,
             preview: false,
             photo: false,
         }
     },
+    // beforeRouteUpdate(to, from, next) {
+    //     this.photo = this.preview;
+    //     console.log('MessagesActivity', this.photo);
+    //     next();
+    // },
     mounted: function () {
-
+        if (this.title) {
+            this.caption = this.title;
+        }
     },
     methods: {
         reset() {
@@ -158,7 +171,8 @@ Vue.component('messages-activity', {
         }, 700),
 
         close() {
-            this.$emit('close');
+            //this.$emit('close');
+            this.back();
         },
         cancel() {
             this.captcha = false;
@@ -217,6 +231,18 @@ Vue.component('messages-activity', {
         onError() {
             this.process = false;
         },
+        account() {
+            this.$router.push(this.humanId + '/detail')
+        },
+        uploads() {
+            this.$router.push(this.humanId + '/uploads')
+        },
+        incoming() {
+            this.$router.push(this.humanId + '/incoming')
+        },
+        // preview() {
+        //     this.$router.push(this.humanId + '/preview')
+        // },
         videochat() {
             window.open('/videochat.php?to='+this.humanId, 'videochat', 'width=432, height=280, resizable=yes, scrollbars=yes');
         }
@@ -225,8 +251,8 @@ Vue.component('messages-activity', {
 });
 
 
-Vue.component('search-activity', {
-    props: [],
+const SearchActivity = Vue.component('search-activity', {
+    extends: DefaultActivity,
     data() {
         return {
             loading: false,
@@ -249,6 +275,12 @@ Vue.component('search-activity', {
         this.load();
         this.visitedSync();
     },
+    beforeRouteUpdate(to, from, next) {
+        if (to.fullPath == '/search' && from.fullPath == '/search/settings/search') {
+            this.reload();
+        }
+        next();
+    },
     computed: {
         more() {
             if (this.received && this.received == this.batch) {
@@ -261,11 +293,14 @@ Vue.component('search-activity', {
         },
         accept() {
             return this.$store.state.accepts.search;
+        },
+        items() {
+            return this.users;
         }
     },
     methods: {
         close() {
-            this.$emit('close');
+            this.back();
         },
         reload() {
             this.next = 0;
@@ -359,6 +394,7 @@ Vue.component('search-item', {
             value = this.second == key ? false : value;
             return value ? (this.third = key) : false;
         });
+        // console.log('item',this.human);
     },
     computed: {
         search() {
@@ -398,6 +434,12 @@ Vue.component('search-item', {
         close() {
             this.$emit('close');
         },
+        quick() {
+            this.$router.push({
+                name: 'quickMessage',
+                params: {humanId: this.human.id}
+            });
+        },
         load() {
             api.search.load(null).then((response) => {
                 this.users = response.data.users;
@@ -427,7 +469,7 @@ Vue.component('api-key-update', {
         },
         upUser(data) {
             let {uid, city, sex, age, name, contacts} = data;
-            console.log('upUser', data);
+            //console.log('upUser', data);
             this.$store.commit('resetUser', {uid, city, sex, age, name, contacts});
             //store.commit('loadUser', data.contacts);
         },
@@ -564,6 +606,7 @@ Vue.component('city-suggest', {
 
 
 var ContactDialog = {
+    extends: DefaultActivity,
     props: [
       'quick',
     ],
@@ -601,7 +644,8 @@ var ContactDialog = {
     },
     methods: {
         close() {
-            this.$emit('close');
+            //this.$emit('close');
+            this.back();
         },
         reset() {
             this.response = false;
@@ -826,21 +870,21 @@ Vue.component('contact-item', {
                 this.dialog();
             }
         },
-        confirmBun() {
-            this.confirm = 'doit';
+        reply() {
+            this.$router.push({ name: 'quickReply', params: {humanId: this.humanId} });
         },
         dialog() {
             this.$emit('read', this.index);
-            this.$emit('dialog', {id: this.humanId, title: this.title});
+            //this.$emit('dialog', {id: this.humanId, title: this.title});
+            this.$router.push({ name: 'dialog', params: {humanId: this.humanId, title: this.title} });
+        },
+        confirmBun() {
+            this.confirm = 'doit';
         },
         confirmRemove() {
             //this.$emit('remove');
             //console.log('initial-item REMOVE');
             this.confirm = !this.quick ? 'some' : 'must';
-        },
-        reply() {
-            this.detail = true;
-            this.$emit('read', this.index);
         },
         close() {
             this.detail = false;
@@ -977,8 +1021,9 @@ Vue.component('menu-user', {
             if (sex) {
                 results = sex == 1 ? 'Парень' : 'Девушка';
                 results = name ? name : results;
+                return results + ' ' + (age ? age : '') + ' ' + (city ? city : '');
             }
-            return results + ' ' + (age ? age : '') + ' ' + (city ? city : '');
+            return results;
         }
     },
     methods: {
@@ -1309,12 +1354,8 @@ Vue.component('message-list', {
     template: '#message-list'
 });
 
-Vue.component('modal-dialog', {
-    methods: {
-        close() {
-            this.$emit('close');
-        },
-    },
+const ModalDialog = Vue.component('modal-dialog', {
+    extends: ActivityActions,
     mounted() {
         // Close the modal when the escape key is pressed.
         var self = this;
@@ -1357,7 +1398,7 @@ Vue.component('option-dialog', {
     }
 });
 
-Vue.component('photo-send', {
+const PhotoViewer = Vue.component('photo-send', {
     props: ['photo', 'options'],
     data() {
         return {
@@ -1374,6 +1415,7 @@ Vue.component('photo-send', {
 
 
 Vue.component('photo-view', {
+    extends: ModalDialog,
     props: [
         'photo',
         'thumb',
@@ -1385,7 +1427,7 @@ Vue.component('photo-view', {
             this.$store.commit('accepts/photo');
         },
         close() {
-            this.$emit('close');
+            this.back();
         }
     },
     computed: {
@@ -1409,12 +1451,12 @@ Vue.directive('resized', {
 });
 
 
-var QuickMessage = Vue.component('quick-message', {
+const QuickMessage = Vue.component('quick-message', {
+    extends: ModalDialog,
     props: ['humanId'],
     data() {
         return {
             text: '',
-            account: 0,
             captcha: false,
             process: false,
             loading: false,
@@ -1423,6 +1465,9 @@ var QuickMessage = Vue.component('quick-message', {
             code: null
         }
     },
+    // beforeRouteLeave(to, from, next) {
+
+    // },
     computed: {
         human() {
             return this.$store.state.search.human;
@@ -1486,7 +1531,8 @@ var QuickMessage = Vue.component('quick-message', {
             //this.process = false;
         },
         close() {
-            this.$emit('close');
+            this.back();
+            //this.$emit('close');
         },
         remove() {
             console.log('::remove:: (!)');
@@ -1535,6 +1581,9 @@ var QuickMessage = Vue.component('quick-message', {
             this.$emit('sended');
             this.close();
         },
+        account() {
+            this.$router.push(this.humanId + '/detail')
+        },
         onError() {
             this.process = false;
         },
@@ -1547,7 +1596,7 @@ var QuickMessage = Vue.component('quick-message', {
 
 
 
-Vue.component('quick-reply', {
+const QuickReply = Vue.component('quick-reply', {
     props: ['humanId', 'message'],
     extends: QuickMessage,
     template: '#quick-reply',
@@ -1555,6 +1604,7 @@ Vue.component('quick-reply', {
 
 
 Vue.component('quick-write', {
+    // extends: QuickMessage,
     props: ['humanId'],
     data() {
         return {
@@ -1562,6 +1612,11 @@ Vue.component('quick-write', {
             open: false,
             sended: false
         }
+    },
+    methods: {
+        write() {
+            this.$router.push('write/' + tid);
+        },
     },
     template: '#quick-write',
 });
@@ -1725,7 +1780,7 @@ Vue.component('search-wizard', {
     },
 });
 
-Vue.component('about-settings', {
+const AboutSettings = Vue.component('about-settings', {
     props: [],
     data() {
         return {
@@ -1784,8 +1839,9 @@ Vue.component('about-settings', {
 });
 
 
-Vue.component('account-settings', {
-    props: [],
+const AccountSettings = Vue.component('account-settings', {
+    extends: ClosedActivity,
+    props: ['root'],
     data() {
         return {
              selectCity: '',
@@ -1856,21 +1912,14 @@ Vue.component('account-settings', {
         },
         close() {
             this.save();
-            this.$emit('close');
-        },
-        login() {
-            this.$emit('login');
-            this.$emit('close');
-        },
-        settings() {
-            this.$emit('settings');
+            this.back();
         },
     },
     template: '#account-settings',
 });
 
 
-Vue.component('desires-settings', {
+const DesiresSettings = Vue.component('desires-settings', {
     props: [],
     data() {
         return {
@@ -1909,7 +1958,8 @@ Vue.component('desires-settings', {
 });
 
 
-Vue.component('incoming-photo', {
+const IncomingPhoto = Vue.component('incoming-photo', {
+    extends: ClosedActivity,
     props: ['humanId'],
     data() {
         return {
@@ -1958,14 +2008,15 @@ Vue.component('incoming-photo', {
             }
         },
         close() {
-            this.$emit('close');
+            this.back();
+            //this.$emit('close');
         },
     },
     template: '#incoming-photo',
 });
 
 
-Vue.component('login-account', {
+const LoginAccount = Vue.component('login-account', {
     props: [],
     data() {
         return {
@@ -2017,7 +2068,7 @@ Vue.component('login-account', {
 });
 
 
-Vue.component('other-settings', {
+const OtherSettings = Vue.component('other-settings', {
     props: [],
     data() {
         return {
@@ -2041,7 +2092,9 @@ Vue.component('other-settings', {
 });
 
 
-Vue.component('photo-settings', {
+const PhotoSettings = Vue.component('photo-settings', {
+    extends: ClosedActivity,
+    props: ['humanId'],
     data() {
         return {
             photos: [],
@@ -2069,7 +2122,7 @@ Vue.component('photo-settings', {
     },
     methods: {
         close() {
-            this.$emit('close');
+            this.back();
         },
         loadPhoto() {
             let server = this.$store.state.photoServer;
@@ -2104,19 +2157,24 @@ Vue.component('photo-settings', {
                     height: photo.height,
                     width:  photo.width,
                 }
+                //this.$router.push({ name: 'preview', params: {humanId: this.humanId, photo: data, options: true} });
                 this.$emit('select', data);
+                this.close();
                 //this.$store.commit('sendPhoto', data);
                 //console.log('sendPhoto');
                 //console.log(data);
+            } else {
+                this.close();
             }
-            this.close();
         }
     },
     template: '#photo-settings',
 });
 
 
-Vue.component('search-settings', {
+const SearchSettings = Vue.component('search-settings', {
+    extends: ClosedActivity,
+    props: ['root'],
     data() {
         return {
              ageRange: [0,16,17,18,20,23,25,27,30,35,40,45,50,60,80],
@@ -2129,6 +2187,19 @@ Vue.component('search-settings', {
              checkedAnyCity: 0,
         }
     },
+    // beforeRouteEnter(to, from, next) {,
+    //     beforeEnter: (to, from, next) => {
+    //         console.log(store.state.user.sex);
+    //         if (!store.state.user.sex) {
+    //             console.log('settings-search', store.state.user.sex );
+    //             next('/confirm-sex/search');
+    //         } else {
+    //             console.log('next', to );
+    //             next();
+    //         }
+    //     }
+
+    // },
     computed: Vuex.mapState({
         who(state) {
             var who = Number(state.search.settings.who);
@@ -2229,19 +2300,23 @@ Vue.component('search-settings', {
                 this.$store.dispatch('SAVE_SEARCH', data);
             }
         },
-        account() {
-            this.$emit('account');
-        },
+        // account() {
+        //     if (this.root) {
+        //         this.$router.push({ name: 'account-settings', params: {root: true} })
+        //     } else {
+        //         this.$router.push({ name: 'account-settings'})
+        //     }
+        // },
         close() {
             this.save();
-            this.$emit('close');
+            this.back();
         },
     },
     template: '#search-settings',
 });
 
 
-Vue.component('security-settings', {
+const SecuritySettings = Vue.component('security-settings', {
     props: [],
     data() {
         return {
@@ -2360,7 +2435,7 @@ Vue.component('security-settings', {
 });
 
 
-Vue.component('social-settings', {
+const SocialSettings = Vue.component('social-settings', {
     props: [],
     data() {
         return {
@@ -2402,7 +2477,7 @@ Vue.component('social-settings', {
     template: '#social-settings',
 });
 
-Vue.component('sex-confirm', {
+const SexConfirm = Vue.component('sex-confirm', {
     props: ['show'],
     computed: {
         variant() {
@@ -2415,25 +2490,68 @@ Vue.component('sex-confirm', {
             return this.content[this.variant].text;
         }
     },
+    // beforeRouteLeave(to, from, next) {
+    //     if (this.$store.state.user.sex) {
+    //         if (this.index('search')) {
+    //             console.log('leave-search', [this.$store.state.user.sex, store.state.user.sex, to]);
+    //             next({name: 'search-settings'});
+    //         }
+    //         if (this.index('contacts')) {
+    //             console.log('leave', 'contacts');
+    //             next({name: 'search-settings'});
+    //         }
+    //         if (this.index('account')) {
+    //             console.log('leave', 'account');
+    //             next({name: 'search-settings'});
+    //         }
+    //         if (this.index('message')) {
+    //             console.log('leave', 'message');
+    //             next({name: 'search-settings'});
+    //         }
+    //     }
+    //     console.log('leave', 'close');
+    //     next();
+    // },
     methods: {
         close() {
             this.$emit('close');
         },
+        index(val) {
+            return val == this.variant;
+        },
         save(sex) {
             this.$store.dispatch('SAVE_SEX', sex);
             this.$emit('select', this.show);
-            this.close();
+            this.redirect();
         },
         login() {
             this.$emit('login');
             this.$emit('close');
         },
+        redirect() {
+            if (this.index('search')) {
+                console.log('leave-search');
+                this.$router.replace({name: 'search-settings'});
+            }
+            // if (this.index('contacts')) {
+            //     console.log('leave', 'contacts');
+            //     next({name: 'search-settings'});
+            // }
+            // if (this.index('account')) {
+            //     console.log('leave', 'account');
+            //     next({name: 'search-settings'});
+            // }
+            // if (this.index('message')) {
+            //     console.log('leave', 'message');
+            //     next({name: 'search-settings'});
+            // }
+        }
     },
     data() {
         return {
             content: {
                 search: {
-                    caption: 'Подтвердите',
+                    caption: 'Легко начать',
                     text: 'Для правильного отображения результатов поиска необходимо указать пол. Вы парень или девушка?'
                 },
                 contacts: {
@@ -2607,49 +2725,6 @@ Vue.component('photo-dialog', {
     }),
     template: '#photo-dialog'
 })
-
-
-////
-// РОУТЕР ==========================================================
-////
-
-// const routes = [
-//     { path: '/sends-contacts', name: 'sends', component: SendsDialog, props: { quick: false } },
-//     { path: '/initial-contacts', name: 'initial', component: InitialDialog, props: { quick: true } },
-//     { path: '/intimate-contacts',  name: 'intimate', component: IntimateDialog, props: { quick: false },
-//         // children: [
-//         //     {
-//         //         path: 'quick-reply',
-//         //         component: HumanDialog,
-//         //         props: {
-//         //             show : true
-//         //         }
-//         //     },
-//         // ]
-//     }
-// ];
-
-// // 3. Создаём инстанс роутера с опцией `routes`
-// // Можно передать и другие опции, но пока не будем усложнять
-const router = new VueRouter({
-  mode: 'history',
-  routes: [] // сокращение от routes: routes
-})
-
-// const RouterView = new Vue({
-//     el: '#router-view',
-//     store,
-//     router,
-//     created() {
-//         console.log('routerView created');
-//     },
-//     methods: {
-//         close() {
-//             router.go(-1);
-//         }
-//     }
-// });
-
 
 
 // -- Хранилище ---
@@ -3199,11 +3274,11 @@ const user = {
             commit('loadUser', ls.get('user.data'));
         },
         SAVE_SEX({ state, commit }, sex) {
+            commit('loadUser', { sex, name: '' });
             if (sex && state.sex != sex) {
                 api.user.saveSex(sex).then((response) => { });
                 commit('loadUser', { sex });
             }
-            commit('loadUser', {name: ''});
         },
         SAVE_AGE({ state, commit }, age) {
             if (age && state.age != age) {
@@ -3692,7 +3767,109 @@ var api = {
 //ApiMessages.send();
 
 
-new Vue({
+// window.onbeforeunload = function(e) {
+//   var dialogText = 'Вы действительно хотите покинуть приложение?';
+//   e.returnValue = dialogText;
+//   return dialogText;
+// };
+
+////
+// РОУТЕР ==========================================================
+////
+
+// const routes = [
+//     { path: '/sends-contacts', name: 'sends', component: SendsDialog, props: { quick: false } },
+//     { path: '/initial-contacts', name: 'initial', component: InitialDialog, props: { quick: true } },
+//     { path: '/intimate-contacts',  name: 'intimate', component: IntimateDialog, props: { quick: false },
+//         // children: [
+//         //     {
+//         //         path: 'quick-reply',
+//         //         component: HumanDialog,
+//         //         props: {
+//         //             show : true
+//         //         }
+//         //     },
+//         // ]
+//     }
+// ];
+
+var routes = [
+    { path: '/search/(.*)?', name: 'search', component: SearchActivity,
+        beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/search'),
+        children: [
+            { path: ':humanId(\\d+)', name: 'quickMessage', meta: {back: '/search'}, component: QuickMessage, props: true },
+        ]
+    },
+    { path: '/initial/(.*)?', name: 'initial', component: InitialDialog, props: true,
+        beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/messages'),
+        children: [
+            { path: ':humanId(\\d+)/(.*)?', name: 'quickReply', meta: {back: '/initial'}, component: QuickReply, props: true },
+        ]
+    },
+    { path: '/intimate/(.*)?', name: 'intimate', component: IntimateDialog, props: true,
+        beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/messages'),
+        children: [
+            { path: ':humanId(\\d+)/(.*)?', name: 'dialog', meta: {back: '/intimate'}, component: MessagesActivity, props: true,
+                children: [
+                    { path: 'uploads', name: 'uploads', meta: {back: '.'}, component: PhotoSettings, props: true },
+                    { path: 'incoming', name: 'incoming', meta: {back: '.'}, component: IncomingPhoto, props: true },
+                    // { path: 'preview', name: 'preview', component: PhotoViewer, props: true },
+                ]
+            },
+        ]
+    },
+    { path: '(.*)?/write/:humanId(\\d+)/(.*)?', meta: {back: '.'}, component: QuickMessage, props: true },
+
+];
+
+var router = new VueRouter({
+  //mode: 'history',
+  routes
+});
+
+// router.beforeEach((to, from, next) => {
+//     console.log('router:', [to, from]);
+//     next();
+// });
+
+// =================================================================
+//
+// =================================================================
+
+var settingsRouter = new VueRouter({
+    //mode: 'history',
+    routes: [
+        { path: '/search/settings/account', meta: {back: 'search'}, component: AccountSettings },
+        { path: '(.*)?/settings/search', meta: {back: '/search'}, component: SearchSettings,
+            beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/search')
+        },
+        { path: '(.*)?/settings/account', component: AccountSettings,
+            beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/account')
+        },
+        { path: '(.*)?/settings/other', meta: {back: 'account'}, component: OtherSettings },
+        { path: '(.*)?/settings/about', meta: {back: 'other'}, component: AboutSettings },
+        { path: '(.*)?/settings/social', meta: {back: 'other'}, component: SocialSettings },
+        { path: '(.*)?/settings/desires', meta: {back: 'other'}, component: DesiresSettings },
+        { path: '(.*)?/settings/security', meta: {back: 'other'}, component: SecuritySettings },
+
+        { path: '(.*)?/:humanId(\\d+)/detail', component: AccountActivity, props: true },
+        // { path: '(.*)?/uploads', component: PhotoSettings },
+        // { path: '(.*)?/preview', name: 'preview', component: PhotoViewer, props: true },
+
+        { path: '/login', name: 'login', component: LoginAccount },
+        { path: '/confirm-sex/:show?', component: SexConfirm, props: true },
+    ]
+});
+
+settingsRouter.beforeEach((to, from, next) => {
+    // console.log('sRouter:', [to, from]);
+    if (!to.meta.back) {
+        to.meta.back = from.fullPath;
+    }
+    next();
+});
+
+var app = new Vue({
     data: {
         searchSettings: false,
         accountSettings: false,
@@ -3783,6 +3960,19 @@ new Vue({
     store,
     router
 });
+
+
+new Vue({
+    data: {},
+    el: '#settings',
+    store,
+    router: settingsRouter
+});
+
+
+
+
+
 
 
 

@@ -1,5 +1,5 @@
 
-Vue.component('security-settings', {
+const SecuritySettings = Vue.component('security-settings', {
     props: [],
     data() {
         return {

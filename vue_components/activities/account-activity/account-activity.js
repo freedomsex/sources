@@ -1,5 +1,5 @@
 
-Vue.component('account-activity', {
+const AccountActivity = Vue.component('account-activity', {
     props: ['humanId'],
     data() {
         return {

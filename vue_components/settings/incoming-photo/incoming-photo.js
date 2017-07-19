@@ -1,5 +1,6 @@
 
-Vue.component('incoming-photo', {
+const IncomingPhoto = Vue.component('incoming-photo', {
+    extends: ClosedActivity,
     props: ['humanId'],
     data() {
         return {
@@ -48,7 +49,8 @@ Vue.component('incoming-photo', {
             }
         },
         close() {
-            this.$emit('close');
+            this.back();
+            //this.$emit('close');
         },
     },
     template: '#incoming-photo',

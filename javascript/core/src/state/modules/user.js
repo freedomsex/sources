@@ -28,11 +28,11 @@ const user = {
             commit('loadUser', ls.get('user.data'));
         },
         SAVE_SEX({ state, commit }, sex) {
+            commit('loadUser', { sex, name: '' });
             if (sex && state.sex != sex) {
                 api.user.saveSex(sex).then((response) => { });
                 commit('loadUser', { sex });
             }
-            commit('loadUser', {name: ''});
         },
         SAVE_AGE({ state, commit }, age) {
             if (age && state.age != age) {

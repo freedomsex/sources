@@ -1,9 +1,5 @@
-Vue.component('modal-dialog', {
-    methods: {
-        close() {
-            this.$emit('close');
-        },
-    },
+const ModalDialog = Vue.component('modal-dialog', {
+    extends: ActivityActions,
     mounted() {
         // Close the modal when the escape key is pressed.
         var self = this;

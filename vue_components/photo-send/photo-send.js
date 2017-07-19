@@ -1,4 +1,4 @@
-Vue.component('photo-send', {
+const PhotoViewer = Vue.component('photo-send', {
     props: ['photo', 'options'],
     data() {
         return {

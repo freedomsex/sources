@@ -34,6 +34,7 @@ module.exports = function (grunt) {
                         'javascript/core/src/state/modules/*.js',
                         'javascript/core/src/state/state.js',
                         'javascript/core/src/state/api.js',
+                        'javascript/core/src/state/router.js',
                     ],
                     'javascript/core/dist/core.es6': [
                         'javascript/core/vue-components.js',
