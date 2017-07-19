@@ -3475,7 +3475,7 @@ var user = {
                 commit = _ref28.commit;
 
             commit('loadUser', { sex: sex, name: '' });
-            if (sex && state.sex != sex) {
+            if (sex) {
                 api.user.saveSex(sex).then(function (response) {});
                 commit('loadUser', { sex: sex });
             }

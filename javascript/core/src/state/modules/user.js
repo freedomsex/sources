@@ -29,7 +29,7 @@ const user = {
         },
         SAVE_SEX({ state, commit }, sex) {
             commit('loadUser', { sex, name: '' });
-            if (sex && state.sex != sex) {
+            if (sex) {
                 api.user.saveSex(sex).then((response) => { });
                 commit('loadUser', { sex });
             }
