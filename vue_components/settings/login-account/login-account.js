@@ -40,7 +40,7 @@ const LoginAccount = Vue.component('login-account', {
             this.$refs.captcha.update();
             if (!this.error) {
                 this.hint = 'Успешно. Подождите.';
-                location.href = location.href;
+                location.href = '/';
             }
         },
         setCode(code) {
