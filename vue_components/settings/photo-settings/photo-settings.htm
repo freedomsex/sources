@@ -1,8 +1,8 @@
 
 <script type="text/x-template" id="photo-settings">
   <closed-activity @close="close">
+    <span slot="caption">Отправить фото</span>
     <div class="activity-section">
-      <div class="activity-section__title">Фотографии</div>
       <div class="galery-photo" v-show="photos.length" style="display: none;">
         <img class="galery-photo__item" :src="item._links.galery.href" v-for="(item, index) in photos" @click="show(index)">
       </div>

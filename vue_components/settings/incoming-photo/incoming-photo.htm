@@ -1,13 +1,13 @@
 
 <script type="text/x-template" id="incoming-photo">
   <closed-activity @close="close">
+    <span slot="caption">Галерея</span>
     <div class="activity-section">
-      <div class="activity-section__title">Присланные фото</div>
       <div class="incoming-photo__list" v-if="photos.length">
         <img class="incoming-photo__item-photo" :src="item._links.thumb.href" v-for="(item, index) in photos" @click="show(index)">
       </div>
       <div class="incoming-photo__placeholder" v-else>
-        Фотографии будут здесь
+        Присланные  фотографии будут здесь
       </div>
     </div>
     <photo-send v-if="preview" :photo="preview" @close="preview = null"/>
