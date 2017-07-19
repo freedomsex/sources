@@ -1028,17 +1028,18 @@ Vue.component('menu-user', {
     },
     methods: {
         initial() {
-            console.log('initial')
             store.commit('showInitial', 1);
             axios.get('/mailer/check_contact').then(() => {
                 this.contact = 8;
             });
+            this.$router.push({ name: 'initial' });
         },
         intimate() {
             store.commit('showIntimate', 1);
             axios.get('/mailer/check_message').then(() => {
                 this.message = 8;
             });
+            this.$router.push({ name: 'intimate' });
         },
         loadStatus() {
             axios.get('/mailer/status').then((response) => {

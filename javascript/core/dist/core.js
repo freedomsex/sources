@@ -1110,11 +1110,11 @@ Vue.component('menu-user', {
         initial: function initial() {
             var _this18 = this;
 
-            console.log('initial');
             store.commit('showInitial', 1);
             axios.get('/mailer/check_contact').then(function () {
                 _this18.contact = 8;
             });
+            this.$router.push({ name: 'initial' });
         },
         intimate: function intimate() {
             var _this19 = this;
@@ -1123,6 +1123,7 @@ Vue.component('menu-user', {
             axios.get('/mailer/check_message').then(function () {
                 _this19.message = 8;
             });
+            this.$router.push({ name: 'intimate' });
         },
         loadStatus: function loadStatus() {
             var _this20 = this;
