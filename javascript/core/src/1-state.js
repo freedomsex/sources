@@ -1014,17 +1014,17 @@ var routes = [
     { path: '/search/(.*)?', name: 'search', component: SearchActivity,
         beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/search'),
         children: [
-            { path: ':humanId(\\d+)', name: 'quickMessage', meta: {back: '/search'}, component: QuickMessage, props: true },
+            { path: ':humanId(\\d+)/(.*)?', name: 'quickMessage', meta: {back: '/search'}, component: QuickMessage, props: true },
         ]
     },
     { path: '/initial/(.*)?', name: 'initial', component: InitialDialog, props: true,
-        beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/messages'),
+        //beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/messages'),
         children: [
             { path: ':humanId(\\d+)/(.*)?', name: 'quickReply', meta: {back: '/initial'}, component: QuickReply, props: true },
         ]
     },
     { path: '/intimate/(.*)?', name: 'intimate', component: IntimateDialog, props: true,
-        beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/messages'),
+        //beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/messages'),
         children: [
             { path: ':humanId(\\d+)/(.*)?', name: 'dialog', meta: {back: '/intimate'}, component: MessagesActivity, props: true,
                 children: [
@@ -1036,6 +1036,7 @@ var routes = [
         ]
     },
     { path: '(.*)?/write/:humanId(\\d+)/(.*)?', meta: {back: '.'}, component: QuickMessage, props: true },
+    { path: '/confirm-sex/:show?', component: SexConfirm, props: true },
 
 ];
 
@@ -1074,7 +1075,6 @@ var settingsRouter = new VueRouter({
         // { path: '(.*)?/preview', name: 'preview', component: PhotoViewer, props: true },
 
         { path: '/login', name: 'login', component: LoginAccount },
-        { path: '/confirm-sex/:show?', component: SexConfirm, props: true },
     ]
 });
 

@@ -2606,6 +2606,7 @@ var SocialSettings = Vue.component('social-settings', {
 });
 
 var SexConfirm = Vue.component('sex-confirm', {
+    extends: ModalDialog,
     props: ['show'],
     computed: {
         variant: function variant() {
@@ -2640,9 +2641,12 @@ var SexConfirm = Vue.component('sex-confirm', {
     //     console.log('leave', 'close');
     //     next();
     // },
+    // mounted() {
+    //     console.log('confirm', this.variant);
+    // },
     methods: {
         close: function close() {
-            this.$emit('close');
+            this.back();
         },
         index: function index(val) {
             return val == this.variant;
@@ -2658,17 +2662,17 @@ var SexConfirm = Vue.component('sex-confirm', {
         },
         redirect: function redirect() {
             if (this.index('search')) {
-                console.log('leave-search');
-                this.$router.replace({ name: 'search-settings' });
+                // console.log('leave-search');
+                this.$router.replace('/search');
             }
             // if (this.index('contacts')) {
             //     console.log('leave', 'contacts');
             //     next({name: 'search-settings'});
             // }
-            // if (this.index('account')) {
-            //     console.log('leave', 'account');
-            //     next({name: 'search-settings'});
-            // }
+            if (this.index('account')) {
+                // console.log('leave', 'account');
+                this.$router.replace('/settings/account');
+            }
             // if (this.index('message')) {
             //     console.log('leave', 'message');
             //     next({name: 'search-settings'});
@@ -4135,20 +4139,16 @@ var routes = [{ path: '/search/(.*)?', name: 'search', component: SearchActivity
     beforeEnter: function beforeEnter(to, from, next) {
         return store.state.user.sex ? next() : next('/confirm-sex/search');
     },
-    children: [{ path: ':humanId(\\d+)', name: 'quickMessage', meta: { back: '/search' }, component: QuickMessage, props: true }]
+    children: [{ path: ':humanId(\\d+)/(.*)?', name: 'quickMessage', meta: { back: '/search' }, component: QuickMessage, props: true }]
 }, { path: '/initial/(.*)?', name: 'initial', component: InitialDialog, props: true,
-    beforeEnter: function beforeEnter(to, from, next) {
-        return store.state.user.sex ? next() : next('/confirm-sex/messages');
-    },
+    //beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/messages'),
     children: [{ path: ':humanId(\\d+)/(.*)?', name: 'quickReply', meta: { back: '/initial' }, component: QuickReply, props: true }]
 }, { path: '/intimate/(.*)?', name: 'intimate', component: IntimateDialog, props: true,
-    beforeEnter: function beforeEnter(to, from, next) {
-        return store.state.user.sex ? next() : next('/confirm-sex/messages');
-    },
+    //beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/messages'),
     children: [{ path: ':humanId(\\d+)/(.*)?', name: 'dialog', meta: { back: '/intimate' }, component: MessagesActivity, props: true,
         children: [{ path: 'uploads', name: 'uploads', meta: { back: '.' }, component: PhotoSettings, props: true }, { path: 'incoming', name: 'incoming', meta: { back: '.' }, component: IncomingPhoto, props: true }]
     }]
-}, { path: '(.*)?/write/:humanId(\\d+)/(.*)?', meta: { back: '.' }, component: QuickMessage, props: true }];
+}, { path: '(.*)?/write/:humanId(\\d+)/(.*)?', meta: { back: '.' }, component: QuickMessage, props: true }, { path: '/confirm-sex/:show?', component: SexConfirm, props: true }];
 
 var router = new VueRouter({
     //mode: 'history',
@@ -4178,7 +4178,7 @@ var settingsRouter = new VueRouter({
     // { path: '(.*)?/uploads', component: PhotoSettings },
     // { path: '(.*)?/preview', name: 'preview', component: PhotoViewer, props: true },
 
-    { path: '/login', name: 'login', component: LoginAccount }, { path: '/confirm-sex/:show?', component: SexConfirm, props: true }]
+    { path: '/login', name: 'login', component: LoginAccount }]
 });
 
 settingsRouter.beforeEach(function (to, from, next) {

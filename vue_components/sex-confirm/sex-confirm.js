@@ -1,4 +1,5 @@
 const SexConfirm = Vue.component('sex-confirm', {
+    extends: ModalDialog,
     props: ['show'],
     computed: {
         variant() {
@@ -33,9 +34,12 @@ const SexConfirm = Vue.component('sex-confirm', {
     //     console.log('leave', 'close');
     //     next();
     // },
+    // mounted() {
+    //     console.log('confirm', this.variant);
+    // },
     methods: {
         close() {
-            this.$emit('close');
+            this.back();
         },
         index(val) {
             return val == this.variant;
@@ -51,17 +55,17 @@ const SexConfirm = Vue.component('sex-confirm', {
         },
         redirect() {
             if (this.index('search')) {
-                console.log('leave-search');
-                this.$router.replace({name: 'search-settings'});
+                // console.log('leave-search');
+                this.$router.replace('/search');
             }
             // if (this.index('contacts')) {
             //     console.log('leave', 'contacts');
             //     next({name: 'search-settings'});
             // }
-            // if (this.index('account')) {
-            //     console.log('leave', 'account');
-            //     next({name: 'search-settings'});
-            // }
+            if (this.index('account')) {
+                // console.log('leave', 'account');
+                this.$router.replace('/settings/account');
+            }
             // if (this.index('message')) {
             //     console.log('leave', 'message');
             //     next({name: 'search-settings'});
