@@ -550,7 +550,6 @@
         @bun="bun"
         @read="read"
         @close="close"
-        @sended="splice"
         @remove="remove"/>
     </div>
     <div class="activity-content" v-else>
@@ -564,7 +563,7 @@
       <div class="btn btn-default btn-xs" @click="next()" :disabled="response == false" v-show="more"> Следующие </div>
     </div>
 
-    <router-view></router-view>
+    <router-view @sended="splice"></router-view>
   </default-activity>
 </script>
 
@@ -579,9 +578,7 @@
         :quick="quick"
         @bun="bun"
         @read="read"
-        @dialog="dialogOpen"
         @close="close"
-        @sended="splice"
         @remove="remove"/>
     </div>
     <div class="activity-content" v-else>
@@ -595,7 +592,7 @@
     </div>
     <messages-activity @close="dialog = false" :humanId="dialog" :title="title" v-if="dialog"/>
 
-    <router-view></router-view>
+    <router-view @sended="splice"></router-view>
   </default-activity>
 </script>
 

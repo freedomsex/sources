@@ -950,7 +950,8 @@ Vue.component('contact-item', {
             }
         },
         reply: function reply() {
-            this.$router.push({ name: 'quickReply', params: { humanId: this.humanId } });
+            this.$emit('read', this.index);
+            this.$router.push({ name: 'quickReply', params: { humanId: this.humanId, message: this.message } });
         },
         dialog: function dialog() {
             this.$emit('read', this.index);
