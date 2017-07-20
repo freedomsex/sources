@@ -10,17 +10,19 @@
     <div class="messages__next" @click="loadNext" v-show="more">
       <span class="btn btn-default btn-xs">Следующие</span>
     </div>
-    <div class="messages">
-      <message-item v-for="(item, index) in items"
-        :item="item"
-        :index="index"
-        :count="messages.length"
-        :alert="attention"
-        :key="index"
-        @admit="admit"
-        @remove="remove"
-        @set-new="setNew"
-      ></message-item>
+    <div class="messages" v-if="count">
+      <template  v-for="(item, index) in messages">
+        <list-date :list="messages" :index="index"/>
+        <message-item
+          :item="item"
+          :index="index"
+          :count="count"
+          :alert="attention"
+          :key="index"
+          @admit="admit"
+          @remove="remove"
+          @set-new="setNew"/>
+      </template>
     </div>
     <div class="messages__loader" v-show="!error && !response">
       <span>

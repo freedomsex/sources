@@ -1071,7 +1071,46 @@ Vue.component('menu-user', {
     },
 });
 
-var fdate = null;
+
+Vue.component('list-date', {
+    props: ['list','index'],
+    computed: {
+        count() {
+            return this.list.length;
+        },
+        item() {
+            return this.list[this.index];
+        },
+        currDate() {
+            return moment(this.item.date).date();
+        },
+        prevDate() {
+            if (this.index && this.index < this.count) {
+                return moment(this.list[this.index-1].date).date();
+            }
+        },
+        month() {
+            return moment(this.item.date).format('MMMM').substring(0,3);
+        },
+        formatted() {
+            var result = this.currDate + ' ' + this.month;
+            let today = moment().date();
+            let yestd = moment().subtract(1, 'day').date();
+            result = (this.currDate === today) ? 'Сегодня' : result;
+            result = (this.currDate === yestd) ? 'Вчера' : result;
+            return result;
+        },
+        date() {
+            if (this.prevDate != this.currDate) {
+                return this.formatted;
+            } else {
+                return null;
+            }
+        },
+    },
+    template: '#list-date',
+});
+
 var prev  = null;
 
 Vue.component('message-item', {
@@ -1079,8 +1118,7 @@ Vue.component('message-item', {
       'item',
       'index',
       'count',
-      'alert',
-      'first_date'
+      'alert'
     ],
     template: '#messages-item',
     data() {
@@ -1128,11 +1166,11 @@ Vue.component('message-item', {
                 id:  this.item.id
             };
             axios.post('/mess/delete/', data, config).then((response) => {
-                this.$emit('remove', this.index);
+                //this.$emit('remove', this.index);
             }).catch((error) => {
                 console.log(error);
             });
-            console.log('remove');
+            this.$emit('remove', this.index);
         },
         play() {
             let config = {
@@ -1179,9 +1217,10 @@ Vue.component('message-item', {
         if (!this.sent && !this.read) {
             this.$emit('set-new');
         }
+        //console.log('item', this.index +'+'+ this.date);
     },
-    beforeUpdate() {
-        //this.attention();
+    updated() {
+        //console.log('item', this.index +'+'+ this.date);
     },
     computed: {
         uid() {
@@ -1204,22 +1243,6 @@ Vue.component('message-item', {
         },
         time() {
             return moment(this.item.date).format('HH:mm');
-        },
-        date() {
-            let mdate = moment(this.item.date);
-            let date = mdate.date();
-            let first_date = fdate;
-            fdate = date;
-            date = (fdate == first_date) ? '' : fdate;
-            let today = moment().date();
-            let yestd = moment().subtract(1, 'day').date();
-
-            date = (date === today) ? 'Сегодня' : date;
-            date = (date === yestd) ? 'Вчера' : date;
-
-            mdate = mdate.date() + ' ' + mdate.format('MMMM').substring(0,3);
-            date = _.isString(date) ? date : mdate;
-            return date;
         },
         alias() {
             let result = false;
@@ -1304,7 +1327,7 @@ Vue.component('message-list', {
                 this.noMessages();
             } else {
                 if (this.received) {
-                    this.messages = _.union(this.messages, messages);
+                    this.messages = _.union(messages.reverse(), this.messages);
                 }
                 this.next += this.batch;
             }
@@ -1345,9 +1368,12 @@ Vue.component('message-list', {
         }
     },
     computed: {
-        items() {
-            //let arr = this.messages.slice();
-            return this.messages.slice().reverse();
+        // items() {
+        //     //let arr = this.messages.slice();
+        //     return this.messages.slice().reverse();
+        // },
+        count() {
+            return this.messages.length;
         },
         more() {
             if (this.received && this.received == this.batch) {

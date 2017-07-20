@@ -454,12 +454,14 @@
 </script>
 
 
-
-<script type="text/x-template" id="messages-item">
-<div class="message-item" @mouseleave="showOption = false">
+<script type="text/x-template" id="list-date">
   <div class="message-item__date" v-if="date">
     <span>{{date}}</span>
   </div>
+</script>
+
+<script type="text/x-template" id="messages-item">
+<div class="message-item" @mouseleave="showOption = false">
   <div class="message-item__spliter" v-show="!previous"></div>
   <div :class="[sent ? 'message-item__sent' : 'message-item__received']">
     <div class="message-item__balloon" @mouseover="showOption = true" @click="fix">
@@ -514,17 +516,19 @@
     <div class="messages__next" @click="loadNext" v-show="more">
       <span class="btn btn-default btn-xs">Следующие</span>
     </div>
-    <div class="messages">
-      <message-item v-for="(item, index) in items"
-        :item="item"
-        :index="index"
-        :count="messages.length"
-        :alert="attention"
-        :key="index"
-        @admit="admit"
-        @remove="remove"
-        @set-new="setNew"
-      ></message-item>
+    <div class="messages" v-if="count">
+      <template  v-for="(item, index) in messages">
+        <list-date :list="messages" :index="index"/>
+        <message-item
+          :item="item"
+          :index="index"
+          :count="count"
+          :alert="attention"
+          :key="index"
+          @admit="admit"
+          @remove="remove"
+          @set-new="setNew"/>
+      </template>
     </div>
     <div class="messages__loader" v-show="!error && !response">
       <span>

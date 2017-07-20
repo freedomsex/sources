@@ -56,7 +56,7 @@ Vue.component('message-list', {
                 this.noMessages();
             } else {
                 if (this.received) {
-                    this.messages = _.union(this.messages, messages);
+                    this.messages = _.union(messages.reverse(), this.messages);
                 }
                 this.next += this.batch;
             }
@@ -97,9 +97,12 @@ Vue.component('message-list', {
         }
     },
     computed: {
-        items() {
-            //let arr = this.messages.slice();
-            return this.messages.slice().reverse();
+        // items() {
+        //     //let arr = this.messages.slice();
+        //     return this.messages.slice().reverse();
+        // },
+        count() {
+            return this.messages.length;
         },
         more() {
             if (this.received && this.received == this.batch) {

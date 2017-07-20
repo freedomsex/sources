@@ -1,9 +1,6 @@
 
 <script type="text/x-template" id="messages-item">
 <div class="message-item" @mouseleave="showOption = false">
-  <div class="message-item__date" v-if="date">
-    <span>{{date}}</span>
-  </div>
   <div class="message-item__spliter" v-show="!previous"></div>
   <div :class="[sent ? 'message-item__sent' : 'message-item__received']">
     <div class="message-item__balloon" @mouseover="showOption = true" @click="fix">
