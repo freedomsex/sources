@@ -557,7 +557,7 @@
         <span class="contact-item__status-read" v-if="unread"></span>
         <span aria-hidden="true" class="glyphicon glyphicon-chevron-left contact-item__status-send" v-else v-show="sent"></span>
 
-        <span class="contact-item__message">{{message}}</span>
+        <span class="contact-item__message" v-html="message"></span>
       </div>
     </div>
     <div class="contact-list__item-option">
@@ -863,9 +863,7 @@
       <div class="human-dialog__desire" v-show="tags.length">
         <span class="link_simple" v-for="(tag, index) in tags" :key="index" v-show="tag">{{tag}} &#8226; </span>
       </div>
-      <div class="human-dialog__message" v-show="message">
-        {{message}}
-      </div>
+      <div class="human-dialog__message" v-show="message" v-html="message"></div>
     </div>
 
 

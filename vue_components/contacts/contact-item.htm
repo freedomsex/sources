@@ -12,7 +12,7 @@
         <span class="contact-item__status-read" v-if="unread"></span>
         <span aria-hidden="true" class="glyphicon glyphicon-chevron-left contact-item__status-send" v-else v-show="sent"></span>
 
-        <span class="contact-item__message">{{message}}</span>
+        <span class="contact-item__message" v-html="message"></span>
       </div>
     </div>
     <div class="contact-list__item-option">
