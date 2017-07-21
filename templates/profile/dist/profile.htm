@@ -1322,6 +1322,10 @@
           <button class="btn btn-primary btn-sm" @click="approve">{{title}}</button>
         </div>
       </div>
+        <audio v-if="1" preload autoplay>
+          <source src="/static/sound/incoming.mp3" type="audio/mpeg">
+          <source src="/static/sound/incoming.ogg" type="audio/ogg; codecs=vorbis">
+        </audio>
     </div>
   </transition>
 </script>

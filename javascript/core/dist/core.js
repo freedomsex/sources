@@ -1143,7 +1143,7 @@ var MenuUser = Vue.component('menu-user', {
             this.$store.commit('intimate/status', status);
 
             notified = !notified || status != current ? false : true;
-            if (!notified && this.newMessage) {
+            if (status == 1 && !notified && this.newMessage) {
                 var callback = function callback() {
                     return _this19.$router.push({ name: 'intimate' });
                 };
@@ -1161,7 +1161,7 @@ var MenuUser = Vue.component('menu-user', {
             this.$store.commit('initial/status', status);
 
             notified = !notified || status != current ? false : true;
-            if (!notified && this.newContact && !this.newMessage) {
+            if (status == 1 && !notified && this.newContact && !this.newMessage) {
                 var callback = function callback() {
                     return _this20.$router.push({ name: 'initial' });
                 };
