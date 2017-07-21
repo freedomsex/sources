@@ -1735,19 +1735,29 @@
     bottom: 0;
     left: 0;
     right: 0;
-    text-align: center;
     opacity: 0.95;
     z-index: 10000;
     &__body {
-        color: @white;
-        text-align: left;
-        display: inline-block;
+        display: flex;
+        margin: 0 auto;
+        justify-content: space-between;
+        align-items: center;
         background: @dark-light;
-        padding: @indent-sm @indent-lg;
         min-width: 200px;
         max-width: 550px;
         width: 100%;
         border-top: 3px solid @white;
+    }
+    &__message {
+        color: @white;
+        text-align: left;
+        padding: @indent-sm @indent-sm;
+        flex: 2 1 auto;
+    }
+    &__button {
+        flex: 1 0 auto;
+        text-align: right;
+        margin-right: @indent-sm;
     }
 }
 

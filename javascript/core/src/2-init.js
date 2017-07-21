@@ -1,89 +1,26 @@
 
 var app = new Vue({
     data: {
-        searchSettings: false,
-        accountSettings: false,
-        sexConfirm: false,
-        logIn: false,
-        search: false,
-        warning: '',
         alert: '',
-        account: false,
-        securitySettings: false,
-        desiresSettings: false,
-        socialSettings: false,
-        aboutSettings: false,
-        otherSettings: false,
+        snackbar: {
+            text: '',
+            callback: null,
+            action: ''
+        },
     },
     computed: {
-        initial() {
-            return this.$store.state.modals.initial;
-        },
-        intimate() {
-            return this.$store.state.modals.intimate;
-        },
-        sends() {
-            return this.$store.state.modals.sends;
-        },
-        view() {
-            return this.$store.state.optionStatic.view;
-        },
-        isSex() {
-            return this.$store.state.user.sex;
-        },
         humanId() {
             return Number(this.$route.path.substr(1));
         }
     },
     methods: {
-        searchOpen() {
-            //window.location = this.$store.getters.searchURL;
-            if (this.search) {
-                this.$refs.search.reload();
-            }
-            this.search = 1;
-        },
-        close() {
-            this.$store.commit('closeAll');
-            store.commit('optionDialog', false);
-        },
-
-        confirmSex(variant) {
-            if (!this.isSex) {
-                this.sexConfirm = variant;
-                return false;
-            }
-            return true;
-        },
-        selectSex(variant) {
-            if (variant == 'search') {
-                this.openSearchSettings();
-            }
-            if (variant == 'account') {
-                this.openAccountSettings();
-            }
-        },
-        openSearchSettings() {
-            if (this.confirmSex('search')) {
-                this.searchSettings = true;
-            }
-        },
-        openAccountSettings() {
-            if (this.confirmSex('account')) {
-                this.accountSettings = true;
-            }
-        },
-        openLogIn() {
-            this.logIn = true;
-        },
-        showSnackbar(text) {
-            this.warning = text;
+        showSnackbar(text, callback, action) {
+            this.snackbar.text = text;
+            this.snackbar.callback = callback;
+            this.snackbar.action = action;
         },
         showToast(text) {
             this.alert = text;
-        },
-        showAccount(humanId) {
-            this.account = humanId;
         },
     },
     el: '#app',

@@ -699,6 +699,9 @@ var ContactDialog = {
 
 const InitialDialog = Vue.component('initial-dialog', {
     extends: ContactDialog,
+    mounted() {
+        this.$store.dispatch('initial/CHECK');
+    },
     computed: {
         initial: () => true,
         simple:  () => true,
@@ -742,6 +745,9 @@ const IntimateDialog = Vue.component('intimate-dialog', {
         return {
             max: 100
         }
+    },
+    mounted() {
+        this.$store.dispatch('intimate/CHECK');
     },
     computed: {
         initial: () => true,
@@ -1002,23 +1008,23 @@ Vue.component('loading-wall', {
 
 
 
-Vue.component('menu-user', {
+const MenuUser = Vue.component('menu-user', {
     data() {
         return {
-            message: 8,
-            contact: 8
+
         }
     },
-    store,
     computed: {
         authorized() {
-            return (store.state.user.uid > 0) ? 1 : 0;
+            return (this.$store.state.user.uid > 0) ? 1 : 0;
         },
         newMessage() {
-            return (this.message == false) || this.message < 8;
+            let {status} = this.$store.state.contacts.intimate;
+            return (status == false) || status < 8;
         },
         newContact() {
-            return (this.contact == false) || this.contact < 8;
+            let {status} = this.$store.state.contacts.initial;
+            return (status == false) || status < 8;
         },
         signature() {
             var results = 'Кто вы?';
@@ -1033,31 +1039,40 @@ Vue.component('menu-user', {
     },
     methods: {
         initial() {
-            store.commit('showInitial', 1);
-            axios.get('/mailer/check_contact').then(() => {
-                this.contact = 8;
-            });
             this.$router.push({ name: 'initial' });
         },
         intimate() {
-            store.commit('showIntimate', 1);
-            axios.get('/mailer/check_message').then(() => {
-                this.message = 8;
-            });
             this.$router.push({ name: 'intimate' });
         },
         loadStatus() {
             axios.get('/mailer/status').then((response) => {
-                this.message = response.data.message;
-                this.contact = response.data.contact;
+                this.onIntimate(response.data.message);
+                this.onInitial(response.data.contact);
             });
         },
-        account() {
-            this.$emit('account');
+        onIntimate(status) {
+            let {notified, status: current} = this.$store.state.contacts.intimate;
+            this.$store.commit('intimate/status', status);
+
+            notified = (!notified || status != current) ? false : true;
+            if (!notified && this.newMessage) {
+                let callback = () => this.$router.push({ name: 'intimate' });
+                this.$store.commit('intimate/notifi', true);
+                this.$emit('snackbar', 'Новое сообщение', callback, 'Смотреть');
+            }
         },
-        login() {
-            this.$emit('login');
+        onInitial(status) {
+            let {notified, status: current} = this.$store.state.contacts.initial;
+            this.$store.commit('initial/status', status);
+
+            notified = (!notified || status != current) ? false : true;
+            if (!notified && this.newContact && !this.newMessage) {
+                let callback = () => this.$router.push({ name: 'initial' });
+                this.$store.commit('initial/notifi', true);
+                this.$emit('snackbar', 'Новое знакомство', callback, 'Смотреть');
+            }
         },
+
         regmy() {
             window.location = '/?regmy';
         },
@@ -2653,13 +2668,25 @@ Vue.component('slider-vertical', {
     }
 });
 Vue.component('snackbar', {
+    props: ['callback', 'action'],
+    computed: {
+        time() {
+            return this.callback ? 5000 : 3000;
+        },
+        title() {
+            return this.action ? this.action : 'Ok';
+        }
+    },
     methods: {
         close() {
             this.$emit('close');
         },
+        approve() {
+            this.callback();
+        }
     },
     mounted() {
-        _.delay(this.close, 3000);
+        _.delay(this.close, this.time);
     },
     template: '#snackbar',
 });
@@ -2940,6 +2967,12 @@ const mutations = {
         if (data && data instanceof Array && data.length > 0) {
             state.list = _.union(state.list, data);
         }
+    },
+    status(state, status) {
+        state.status = status;
+    },
+    notifi(state, status) {
+        state.notified = status == true;
     }
 }
 // // //
@@ -2947,6 +2980,8 @@ const mutations = {
 const initial = _.extend({
     namespaced: true,
     state: {
+        status: 8,
+        notified: false,
         list: []
     },
     actions: {
@@ -2984,6 +3019,12 @@ const initial = _.extend({
             commit('read', index);
             return result;
         },
+        CHECK({commit}) {
+            axios.get('/mailer/check_contact').then(() => {
+                commit('status', 8);
+                commit('notifi', false);
+            });
+        }
     },
     mutations: _.extend({
         delete(state, index) {
@@ -3000,6 +3041,8 @@ const initial = _.extend({
 const intimate = _.extend({
     namespaced: true,
     state: {
+        status: 8,
+        notified: false,
         list: []
     },
     actions: {
@@ -3037,6 +3080,12 @@ const intimate = _.extend({
             commit('read', index);
             return result;
         },
+        CHECK({commit}) {
+            axios.get('/mailer/check_message').then(() => {
+                commit('status', 8);
+                commit('notifi', false);
+            });
+        }
     },
     mutations: _.extend({
         delete(state, index) {
@@ -3913,89 +3962,26 @@ settingsRouter.beforeEach((to, from, next) => {
 
 var app = new Vue({
     data: {
-        searchSettings: false,
-        accountSettings: false,
-        sexConfirm: false,
-        logIn: false,
-        search: false,
-        warning: '',
         alert: '',
-        account: false,
-        securitySettings: false,
-        desiresSettings: false,
-        socialSettings: false,
-        aboutSettings: false,
-        otherSettings: false,
+        snackbar: {
+            text: '',
+            callback: null,
+            action: ''
+        },
     },
     computed: {
-        initial() {
-            return this.$store.state.modals.initial;
-        },
-        intimate() {
-            return this.$store.state.modals.intimate;
-        },
-        sends() {
-            return this.$store.state.modals.sends;
-        },
-        view() {
-            return this.$store.state.optionStatic.view;
-        },
-        isSex() {
-            return this.$store.state.user.sex;
-        },
         humanId() {
             return Number(this.$route.path.substr(1));
         }
     },
     methods: {
-        searchOpen() {
-            //window.location = this.$store.getters.searchURL;
-            if (this.search) {
-                this.$refs.search.reload();
-            }
-            this.search = 1;
-        },
-        close() {
-            this.$store.commit('closeAll');
-            store.commit('optionDialog', false);
-        },
-
-        confirmSex(variant) {
-            if (!this.isSex) {
-                this.sexConfirm = variant;
-                return false;
-            }
-            return true;
-        },
-        selectSex(variant) {
-            if (variant == 'search') {
-                this.openSearchSettings();
-            }
-            if (variant == 'account') {
-                this.openAccountSettings();
-            }
-        },
-        openSearchSettings() {
-            if (this.confirmSex('search')) {
-                this.searchSettings = true;
-            }
-        },
-        openAccountSettings() {
-            if (this.confirmSex('account')) {
-                this.accountSettings = true;
-            }
-        },
-        openLogIn() {
-            this.logIn = true;
-        },
-        showSnackbar(text) {
-            this.warning = text;
+        showSnackbar(text, callback, action) {
+            this.snackbar.text = text;
+            this.snackbar.callback = callback;
+            this.snackbar.action = action;
         },
         showToast(text) {
             this.alert = text;
-        },
-        showAccount(humanId) {
-            this.account = humanId;
         },
     },
     el: '#app',

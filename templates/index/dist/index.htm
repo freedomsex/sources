@@ -131,40 +131,17 @@
     <a class="nav-table_git-link" href="https://github.com/freedomsex/freedomsex" target="_blank" rel="nofollow"></a>
   </div>
 
-
 <div id="router-view">
   <router-view @close="$router.go(-1)"></router-view>
 </div>
 
-
-<sends-dialog v-if="sends" @close="close"></sends-dialog>
-
-<upload-dialog  @close="close" v-if="view == 'upload'"></upload-dialog>
-<photo-dialog   @close="close" v-if="view == 'photo'"></photo-dialog>
-<messages-activity @close="close" v-if="view == 'history'"></messages-activity>
-
 <api-key-update></api-key-update>
 
-<search-settings v-if="searchSettings" @close="searchSettings = false; searchOpen()" @account="openAccountSettings()"></search-settings>
-<account-settings v-if="accountSettings"
-  @close="accountSettings = false"
-  @settings="otherSettings = true"
-  @login="logIn = true"></account-settings>
-<sex-confirm v-if="sexConfirm" :show="sexConfirm" @close="sexConfirm = false"
-  @select="selectSex"
-  @login="logIn = true"></sex-confirm>
-<login-account v-if="logIn" @close="logIn = false"></login-account>
-<other-settings v-if="otherSettings" @close="otherSettings = false"
-  @security="securitySettings = true"
-  @desires="desiresSettings = true"
-  @social="socialSettings = true"
-  @about="aboutSettings = true"></other-settings>
-<security-settings v-if="securitySettings" @close="securitySettings = false" @warning="showSnackbar" @alert="showToast"></security-settings>
-<desires-settings v-if="desiresSettings" @close="desiresSettings = false"></desires-settings>
-<social-settings v-if="socialSettings" @close="socialSettings = false"></social-settings>
-<about-settings v-if="aboutSettings" @close="aboutSettings = false"></about-settings>
+<snackbar v-if="snackbar.text"
+  :callback="snackbar.callback"
+  :action="snackbar.action"
+  @close="snackbar.text = null">{{snackbar.text}}</snackbar>
 
-<snackbar v-if="warning" @close="warning = null">{{warning}}</snackbar>
 <toast v-if="alert" @close="alert = null">{{alert}}</toast>
 
 <!-- Статические опции, absolute -->
@@ -1419,7 +1396,12 @@
   <transition name="snackbar">
     <div class="snackbar" @click="close">
       <div class="snackbar__body">
-        <slot></slot>
+        <div class="snackbar__message">
+          <slot></slot>
+        </div>
+        <div class="snackbar__button" v-if="callback">
+          <button class="btn btn-primary btn-sm" @click="approve">{{title}}</button>
+        </div>
       </div>
     </div>
   </transition>

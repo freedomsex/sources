@@ -93,6 +93,9 @@ var ContactDialog = {
 
 const InitialDialog = Vue.component('initial-dialog', {
     extends: ContactDialog,
+    mounted() {
+        this.$store.dispatch('initial/CHECK');
+    },
     computed: {
         initial: () => true,
         simple:  () => true,
@@ -136,6 +139,9 @@ const IntimateDialog = Vue.component('intimate-dialog', {
         return {
             max: 100
         }
+    },
+    mounted() {
+        this.$store.dispatch('intimate/CHECK');
     },
     computed: {
         initial: () => true,

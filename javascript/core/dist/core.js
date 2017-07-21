@@ -756,6 +756,10 @@ var ContactDialog = {
 
 var InitialDialog = Vue.component('initial-dialog', {
     extends: ContactDialog,
+    mounted: function mounted() {
+        this.$store.dispatch('initial/CHECK');
+    },
+
     computed: {
         initial: function initial() {
             return true;
@@ -807,6 +811,9 @@ var IntimateDialog = Vue.component('intimate-dialog', {
         return {
             max: 100
         };
+    },
+    mounted: function mounted() {
+        this.$store.dispatch('intimate/CHECK');
     },
 
     computed: {
@@ -1076,24 +1083,24 @@ Vue.component('loading-wall', {
     template: '#loading-wall'
 });
 
-Vue.component('menu-user', {
+var MenuUser = Vue.component('menu-user', {
     data: function data() {
-        return {
-            message: 8,
-            contact: 8
-        };
+        return {};
     },
 
-    store: store,
     computed: {
         authorized: function authorized() {
-            return store.state.user.uid > 0 ? 1 : 0;
+            return this.$store.state.user.uid > 0 ? 1 : 0;
         },
         newMessage: function newMessage() {
-            return this.message == false || this.message < 8;
+            var status = this.$store.state.contacts.intimate.status;
+
+            return status == false || status < 8;
         },
         newContact: function newContact() {
-            return this.contact == false || this.contact < 8;
+            var status = this.$store.state.contacts.initial.status;
+
+            return status == false || status < 8;
         },
         signature: function signature() {
             var results = 'Кто вы?';
@@ -1113,36 +1120,54 @@ Vue.component('menu-user', {
     },
     methods: {
         initial: function initial() {
-            var _this18 = this;
-
-            store.commit('showInitial', 1);
-            axios.get('/mailer/check_contact').then(function () {
-                _this18.contact = 8;
-            });
             this.$router.push({ name: 'initial' });
         },
         intimate: function intimate() {
-            var _this19 = this;
-
-            store.commit('showIntimate', 1);
-            axios.get('/mailer/check_message').then(function () {
-                _this19.message = 8;
-            });
             this.$router.push({ name: 'intimate' });
         },
         loadStatus: function loadStatus() {
-            var _this20 = this;
+            var _this18 = this;
 
             axios.get('/mailer/status').then(function (response) {
-                _this20.message = response.data.message;
-                _this20.contact = response.data.contact;
+                _this18.onIntimate(response.data.message);
+                _this18.onInitial(response.data.contact);
             });
         },
-        account: function account() {
-            this.$emit('account');
+        onIntimate: function onIntimate(status) {
+            var _this19 = this;
+
+            var _$store$state$contact = this.$store.state.contacts.intimate,
+                notified = _$store$state$contact.notified,
+                current = _$store$state$contact.status;
+
+            this.$store.commit('intimate/status', status);
+
+            notified = !notified || status != current ? false : true;
+            if (!notified && this.newMessage) {
+                var callback = function callback() {
+                    return _this19.$router.push({ name: 'intimate' });
+                };
+                this.$store.commit('intimate/notifi', true);
+                this.$emit('snackbar', 'Новое сообщение', callback, 'Смотреть');
+            }
         },
-        login: function login() {
-            this.$emit('login');
+        onInitial: function onInitial(status) {
+            var _this20 = this;
+
+            var _$store$state$contact2 = this.$store.state.contacts.initial,
+                notified = _$store$state$contact2.notified,
+                current = _$store$state$contact2.status;
+
+            this.$store.commit('initial/status', status);
+
+            notified = !notified || status != current ? false : true;
+            if (!notified && this.newContact && !this.newMessage) {
+                var callback = function callback() {
+                    return _this20.$router.push({ name: 'initial' });
+                };
+                this.$store.commit('initial/notifi', true);
+                this.$emit('snackbar', 'Новое знакомство', callback, 'Смотреть');
+            }
         },
         regmy: function regmy() {
             window.location = '/?regmy';
@@ -2779,13 +2804,25 @@ Vue.component('slider-vertical', {
     }
 });
 Vue.component('snackbar', {
+    props: ['callback', 'action'],
+    computed: {
+        time: function time() {
+            return this.callback ? 5000 : 3000;
+        },
+        title: function title() {
+            return this.action ? this.action : 'Ok';
+        }
+    },
     methods: {
         close: function close() {
             this.$emit('close');
+        },
+        approve: function approve() {
+            this.callback();
         }
     },
     mounted: function mounted() {
-        _.delay(this.close, 3000);
+        _.delay(this.close, this.time);
     },
 
     template: '#snackbar'
@@ -3083,6 +3120,12 @@ var mutations = {
         if (data && data instanceof Array && data.length > 0) {
             state.list = _.union(state.list, data);
         }
+    },
+    status: function status(state, _status) {
+        state.status = _status;
+    },
+    notifi: function notifi(state, status) {
+        state.notified = status == true;
     }
 };
 // // //
@@ -3090,6 +3133,8 @@ var mutations = {
 var initial = _.extend({
     namespaced: true,
     state: {
+        status: 8,
+        notified: false,
         list: []
     },
     actions: {
@@ -3142,6 +3187,14 @@ var initial = _.extend({
             });
             commit('read', index);
             return result;
+        },
+        CHECK: function CHECK(_ref14) {
+            var commit = _ref14.commit;
+
+            axios.get('/mailer/check_contact').then(function () {
+                commit('status', 8);
+                commit('notifi', false);
+            });
         }
     },
     mutations: _.extend({
@@ -3159,13 +3212,15 @@ var initial = _.extend({
 var intimate = _.extend({
     namespaced: true,
     state: {
+        status: 8,
+        notified: false,
         list: []
     },
     actions: {
-        LOAD: function LOAD(_ref14) {
-            var state = _ref14.state,
-                commit = _ref14.commit,
-                rootState = _ref14.rootState;
+        LOAD: function LOAD(_ref15) {
+            var state = _ref15.state,
+                commit = _ref15.commit,
+                rootState = _ref15.rootState;
 
             commit('load', ls.get('intimate-contacts'));
             return api.contacts.intimate.cget({
@@ -3176,10 +3231,10 @@ var intimate = _.extend({
                 ls.set('intimate-contacts', state.list);
             });
         },
-        NEXT: function NEXT(_ref15, offset) {
-            var state = _ref15.state,
-                commit = _ref15.commit,
-                rootState = _ref15.rootState;
+        NEXT: function NEXT(_ref16, offset) {
+            var state = _ref16.state,
+                commit = _ref16.commit,
+                rootState = _ref16.rootState;
 
             return api.contacts.intimate.cget({
                 uid: rootState.user.uid,
@@ -3188,10 +3243,10 @@ var intimate = _.extend({
                 commit('add', response.data);
             });
         },
-        DELETE: function DELETE(_ref16, index) {
-            var state = _ref16.state,
-                commit = _ref16.commit,
-                rootState = _ref16.rootState;
+        DELETE: function DELETE(_ref17, index) {
+            var state = _ref17.state,
+                commit = _ref17.commit,
+                rootState = _ref17.rootState;
 
             var result = api.contacts.intimate.delete({
                 uid: rootState.user.uid,
@@ -3200,10 +3255,10 @@ var intimate = _.extend({
             commit('delete', index);
             return result;
         },
-        READ: function READ(_ref17, index) {
-            var state = _ref17.state,
-                commit = _ref17.commit,
-                rootState = _ref17.rootState;
+        READ: function READ(_ref18, index) {
+            var state = _ref18.state,
+                commit = _ref18.commit,
+                rootState = _ref18.rootState;
 
             var result = api.contacts.intimate.put(null, {
                 uid: rootState.user.uid,
@@ -3211,6 +3266,14 @@ var intimate = _.extend({
             });
             commit('read', index);
             return result;
+        },
+        CHECK: function CHECK(_ref19) {
+            var commit = _ref19.commit;
+
+            axios.get('/mailer/check_message').then(function () {
+                commit('status', 8);
+                commit('notifi', false);
+            });
         }
     },
     mutations: _.extend({
@@ -3231,10 +3294,10 @@ var sends = _.extend({
         list: []
     },
     actions: {
-        LOAD: function LOAD(_ref18) {
-            var state = _ref18.state,
-                commit = _ref18.commit,
-                rootState = _ref18.rootState;
+        LOAD: function LOAD(_ref20) {
+            var state = _ref20.state,
+                commit = _ref20.commit,
+                rootState = _ref20.rootState;
 
             commit('load', ls.get('sends-contacts'));
             return api.contacts.sends.cget({
@@ -3245,10 +3308,10 @@ var sends = _.extend({
                 ls.set('sends-contacts', state.list);
             });
         },
-        NEXT: function NEXT(_ref19, offset) {
-            var state = _ref19.state,
-                commit = _ref19.commit,
-                rootState = _ref19.rootState;
+        NEXT: function NEXT(_ref21, offset) {
+            var state = _ref21.state,
+                commit = _ref21.commit,
+                rootState = _ref21.rootState;
 
             return api.contacts.sends.cget({
                 uid: rootState.user.uid,
@@ -3257,10 +3320,10 @@ var sends = _.extend({
                 commit('add', response.data);
             });
         },
-        DELETE: function DELETE(_ref20, index) {
-            var state = _ref20.state,
-                commit = _ref20.commit,
-                rootState = _ref20.rootState;
+        DELETE: function DELETE(_ref22, index) {
+            var state = _ref22.state,
+                commit = _ref22.commit,
+                rootState = _ref22.rootState;
 
             var result = api.contacts.sends.delete({
                 uid: rootState.user.uid,
@@ -3301,18 +3364,18 @@ var desires = {
         list: []
     },
     actions: {
-        SYNC: function SYNC(_ref21) {
-            var rootState = _ref21.rootState,
-                commit = _ref21.commit,
-                getters = _ref21.getters;
+        SYNC: function SYNC(_ref23) {
+            var rootState = _ref23.rootState,
+                commit = _ref23.commit,
+                getters = _ref23.getters;
 
             return api.user.desireList().then(function (response) {
                 commit('update', response.data);
             });
         },
-        ADD: function ADD(_ref22, tag) {
-            var state = _ref22.state,
-                commit = _ref22.commit;
+        ADD: function ADD(_ref24, tag) {
+            var state = _ref24.state,
+                commit = _ref24.commit;
 
             //commit('add', tag);
             return api.user.desireAdd(tag).then(function (response) {
@@ -3320,9 +3383,9 @@ var desires = {
                 commit('add', { id: id, tag: tag });
             });
         },
-        DELETE: function DELETE(_ref23, index) {
-            var state = _ref23.state,
-                commit = _ref23.commit;
+        DELETE: function DELETE(_ref25, index) {
+            var state = _ref25.state,
+                commit = _ref25.commit;
 
             var result = api.user.desireDelete(state.list[index].id);
             commit('delete', index);
@@ -3405,8 +3468,8 @@ var search = {
         }
     },
     actions: {
-        HUMAN: function HUMAN(_ref24, tid) {
-            var commit = _ref24.commit;
+        HUMAN: function HUMAN(_ref26, tid) {
+            var commit = _ref26.commit;
 
             var index = 'human.data.' + tid;
             commit('resetHuman', tid);
@@ -3416,16 +3479,16 @@ var search = {
                 ls.set(index, response.data, 1500);
             });
         },
-        SETTINGS: function SETTINGS(_ref25) {
-            var commit = _ref25.commit;
+        SETTINGS: function SETTINGS(_ref27) {
+            var commit = _ref27.commit;
 
             commit('settingsCookies');
             commit('settings', ls.get('search.settings'));
             //let index = 'search.settings';
         },
-        SAVE_SEARCH: function SAVE_SEARCH(_ref26, data) {
-            var state = _ref26.state,
-                commit = _ref26.commit;
+        SAVE_SEARCH: function SAVE_SEARCH(_ref28, data) {
+            var state = _ref28.state,
+                commit = _ref28.commit;
 
             commit('settings', data);
             ls.set('search.settings', data);
@@ -3498,17 +3561,17 @@ var user = {
         last: ''
     },
     actions: {
-        LOAD_USER: function LOAD_USER(_ref27) {
-            var commit = _ref27.commit;
+        LOAD_USER: function LOAD_USER(_ref29) {
+            var commit = _ref29.commit;
 
             // if (uid) {
             //     commit('loadUser', {uid});
             // }
             commit('loadUser', ls.get('user.data'));
         },
-        SAVE_SEX: function SAVE_SEX(_ref28, sex) {
-            var state = _ref28.state,
-                commit = _ref28.commit;
+        SAVE_SEX: function SAVE_SEX(_ref30, sex) {
+            var state = _ref30.state,
+                commit = _ref30.commit;
 
             commit('loadUser', { sex: sex, name: '' });
             if (sex) {
@@ -3516,36 +3579,36 @@ var user = {
                 commit('loadUser', { sex: sex });
             }
         },
-        SAVE_AGE: function SAVE_AGE(_ref29, age) {
-            var state = _ref29.state,
-                commit = _ref29.commit;
+        SAVE_AGE: function SAVE_AGE(_ref31, age) {
+            var state = _ref31.state,
+                commit = _ref31.commit;
 
             if (age && state.age != age) {
                 api.user.saveAge(age).then(function (response) {});
                 commit('loadUser', { age: age });
             }
         },
-        SAVE_NAME: function SAVE_NAME(_ref30, name) {
-            var state = _ref30.state,
-                commit = _ref30.commit;
+        SAVE_NAME: function SAVE_NAME(_ref32, name) {
+            var state = _ref32.state,
+                commit = _ref32.commit;
 
             if (name && state.name != name) {
                 api.user.saveName(name).then(function (response) {});
                 commit('loadUser', { name: name });
             }
         },
-        SAVE_CITY: function SAVE_CITY(_ref31, city) {
-            var state = _ref31.state,
-                commit = _ref31.commit;
+        SAVE_CITY: function SAVE_CITY(_ref33, city) {
+            var state = _ref33.state,
+                commit = _ref33.commit;
 
             if (city && state.city != city) {
                 api.user.saveCity(city).then(function (response) {});
                 commit('loadUser', { city: city });
             }
         },
-        SAVE_CONTACTS: function SAVE_CONTACTS(_ref32, contacts) {
-            var state = _ref32.state,
-                commit = _ref32.commit;
+        SAVE_CONTACTS: function SAVE_CONTACTS(_ref34, contacts) {
+            var state = _ref34.state,
+                commit = _ref34.commit;
 
             api.user.saveContacts(contacts).then(function (response) {});
             commit('loadUser', { contacts: contacts });
@@ -3569,10 +3632,10 @@ var visited = {
         list: []
     },
     actions: {
-        SYNC: function SYNC(_ref33) {
-            var rootState = _ref33.rootState,
-                state = _ref33.state,
-                commit = _ref33.commit;
+        SYNC: function SYNC(_ref35) {
+            var rootState = _ref35.rootState,
+                state = _ref35.state,
+                commit = _ref35.commit;
 
             var index = 'visited-' + rootState.user.uid;
             commit('update', ls.get(index));
@@ -3583,10 +3646,10 @@ var visited = {
                 ls.set(index, state.list, 31 * 24 * 60 * 60);
             });
         },
-        ADD: function ADD(_ref34, tid) {
-            var rootState = _ref34.rootState,
-                state = _ref34.state,
-                commit = _ref34.commit;
+        ADD: function ADD(_ref36, tid) {
+            var rootState = _ref36.rootState,
+                state = _ref36.state,
+                commit = _ref36.commit;
 
             var uid = rootState.user.uid;
             var index = 'visited-' + uid;
@@ -3654,8 +3717,8 @@ var store = new Vuex.Store({
         }
     },
     actions: {
-        LOAD_API_TOKEN: function LOAD_API_TOKEN(_ref35) {
-            var commit = _ref35.commit;
+        LOAD_API_TOKEN: function LOAD_API_TOKEN(_ref37) {
+            var commit = _ref37.commit;
 
             commit('setApiToken', { apiToken: get_cookie('jwt') });
         }
@@ -4227,88 +4290,26 @@ settingsRouter.beforeEach(function (to, from, next) {
 
 var app = new Vue({
     data: {
-        searchSettings: false,
-        accountSettings: false,
-        sexConfirm: false,
-        logIn: false,
-        search: false,
-        warning: '',
         alert: '',
-        account: false,
-        securitySettings: false,
-        desiresSettings: false,
-        socialSettings: false,
-        aboutSettings: false,
-        otherSettings: false
+        snackbar: {
+            text: '',
+            callback: null,
+            action: ''
+        }
     },
     computed: {
-        initial: function initial() {
-            return this.$store.state.modals.initial;
-        },
-        intimate: function intimate() {
-            return this.$store.state.modals.intimate;
-        },
-        sends: function sends() {
-            return this.$store.state.modals.sends;
-        },
-        view: function view() {
-            return this.$store.state.optionStatic.view;
-        },
-        isSex: function isSex() {
-            return this.$store.state.user.sex;
-        },
         humanId: function humanId() {
             return Number(this.$route.path.substr(1));
         }
     },
     methods: {
-        searchOpen: function searchOpen() {
-            //window.location = this.$store.getters.searchURL;
-            if (this.search) {
-                this.$refs.search.reload();
-            }
-            this.search = 1;
-        },
-        close: function close() {
-            this.$store.commit('closeAll');
-            store.commit('optionDialog', false);
-        },
-        confirmSex: function confirmSex(variant) {
-            if (!this.isSex) {
-                this.sexConfirm = variant;
-                return false;
-            }
-            return true;
-        },
-        selectSex: function selectSex(variant) {
-            if (variant == 'search') {
-                this.openSearchSettings();
-            }
-            if (variant == 'account') {
-                this.openAccountSettings();
-            }
-        },
-        openSearchSettings: function openSearchSettings() {
-            if (this.confirmSex('search')) {
-                this.searchSettings = true;
-            }
-        },
-        openAccountSettings: function openAccountSettings() {
-            if (this.confirmSex('account')) {
-                this.accountSettings = true;
-            }
-        },
-        openLogIn: function openLogIn() {
-            this.logIn = true;
-        },
-        showSnackbar: function showSnackbar(text) {
-            this.warning = text;
+        showSnackbar: function showSnackbar(text, callback, action) {
+            this.snackbar.text = text;
+            this.snackbar.callback = callback;
+            this.snackbar.action = action;
         },
         showToast: function showToast(text) {
             this.alert = text;
-        },
-        showAccount: function showAccount(humanId) {
-            this.account = humanId;
         }
     },
     el: '#app',

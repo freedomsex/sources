@@ -9,6 +9,12 @@ const mutations = {
         if (data && data instanceof Array && data.length > 0) {
             state.list = _.union(state.list, data);
         }
+    },
+    status(state, status) {
+        state.status = status;
+    },
+    notifi(state, status) {
+        state.notified = status == true;
     }
 }
 // // //
@@ -16,6 +22,8 @@ const mutations = {
 const initial = _.extend({
     namespaced: true,
     state: {
+        status: 8,
+        notified: false,
         list: []
     },
     actions: {
@@ -53,6 +61,12 @@ const initial = _.extend({
             commit('read', index);
             return result;
         },
+        CHECK({commit}) {
+            axios.get('/mailer/check_contact').then(() => {
+                commit('status', 8);
+                commit('notifi', false);
+            });
+        }
     },
     mutations: _.extend({
         delete(state, index) {
@@ -69,6 +83,8 @@ const initial = _.extend({
 const intimate = _.extend({
     namespaced: true,
     state: {
+        status: 8,
+        notified: false,
         list: []
     },
     actions: {
@@ -106,6 +122,12 @@ const intimate = _.extend({
             commit('read', index);
             return result;
         },
+        CHECK({commit}) {
+            axios.get('/mailer/check_message').then(() => {
+                commit('status', 8);
+                commit('notifi', false);
+            });
+        }
     },
     mutations: _.extend({
         delete(state, index) {

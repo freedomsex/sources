@@ -2,7 +2,12 @@
   <transition name="snackbar">
     <div class="snackbar" @click="close">
       <div class="snackbar__body">
-        <slot></slot>
+        <div class="snackbar__message">
+          <slot></slot>
+        </div>
+        <div class="snackbar__button" v-if="callback">
+          <button class="btn btn-primary btn-sm" @click="approve">{{title}}</button>
+        </div>
       </div>
     </div>
   </transition>
