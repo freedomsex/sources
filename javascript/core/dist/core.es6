@@ -197,6 +197,7 @@ const MessagesActivity = Vue.component('messages-activity', {
                 data['mess'] = this.message;
                 data['re'] = this.reply;
             }
+            this.$store.commit('intimate/notifi', false);
             api.messages.send(data).then((response) => {
                 this.onMessageSend(response.data);
             }).catch(() => {
@@ -1058,7 +1059,7 @@ const MenuUser = Vue.component('menu-user', {
             if (status == 1 && !notified && this.newMessage) {
                 let callback = () => this.$router.push({ name: 'intimate' });
                 this.$store.commit('intimate/notifi', true);
-                this.$emit('snackbar', 'Новое сообщение', callback, 'Смотреть');
+                this.$emit('snackbar', 'Новое сообщение', callback, 'Смотреть', true);
             }
         },
         onInitial(status) {
@@ -1069,7 +1070,7 @@ const MenuUser = Vue.component('menu-user', {
             if (status == 1 && !notified && this.newContact && !this.newMessage) {
                 let callback = () => this.$router.push({ name: 'initial' });
                 this.$store.commit('initial/notifi', true);
-                this.$emit('snackbar', 'Новое знакомство', callback, 'Смотреть');
+                this.$emit('snackbar', 'Новое знакомство', callback, 'Смотреть', true);
             }
         },
 
@@ -2376,7 +2377,7 @@ const SecuritySettings = Vue.component('security-settings', {
             inputLogin: '',
             inputPasswd: '',
             inputEmail: '',
-            checkSubscribe: false,
+            checkSubscribe: 0,
             process: false,
             processLogin: false,
             processPasswd: false,
@@ -2418,7 +2419,7 @@ const SecuritySettings = Vue.component('security-settings', {
             this.inputPasswd = this.passwd;
             this.inputEmail = this.email;
             this.checkSubscribe = this.subscr;
-            // this.selectFigure = this.figure;
+                console.log('subscr', [this.subscr, this.checkSubscribe ]);
         },
         deflower() {
             this.virgin = false;
@@ -2668,7 +2669,7 @@ Vue.component('slider-vertical', {
     }
 });
 Vue.component('snackbar', {
-    props: ['callback', 'action'],
+    props: ['callback', 'action', 'play'],
     computed: {
         time() {
             return this.callback ? 5000 : 3000;
@@ -2683,10 +2684,16 @@ Vue.component('snackbar', {
         },
         approve() {
             this.callback();
+        },
+        autoplay(event) {
+            if (this.play) {
+                this.$refs.autoplay.play();
+            }
         }
     },
     mounted() {
         _.delay(this.close, this.time);
+        this.autoplay();
     },
     template: '#snackbar',
 });
@@ -2943,7 +2950,8 @@ const auth = {
         REMOVE_EMAIL({commit}) {
             return api.user.removeEmail();
         },
-        SAVE_SUSCRIBE({commit}, data) {
+        SAVE_SUSCRIBE({store, commit}, data) {
+            commit('subscr');
             return api.user.saveSubscribe();
         }
     },
@@ -2953,6 +2961,9 @@ const auth = {
                 _.assign(state, data);
             }
         },
+        subscr(state) {
+            state.subscr = state.subscr ? false : true;
+        }
     }
 };
 
@@ -3975,10 +3986,11 @@ var app = new Vue({
         }
     },
     methods: {
-        showSnackbar(text, callback, action) {
+        showSnackbar(text, callback, action, play) {
             this.snackbar.text = text;
             this.snackbar.callback = callback;
             this.snackbar.action = action;
+            this.snackbar.play = (play == true);
         },
         showToast(text) {
             this.alert = text;
@@ -3991,7 +4003,18 @@ var app = new Vue({
 
 
 new Vue({
-    data: {},
+    data: {
+        warning: '',
+        alert: '',
+    },
+    methods: {
+        snackbar(text) {
+            this.warning = text;
+        },
+        toast(text) {
+            this.alert = text;
+        },
+    },
     el: '#settings',
     store,
     router: settingsRouter

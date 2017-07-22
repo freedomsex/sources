@@ -8,6 +8,7 @@
 <snackbar v-if="snackbar.text"
   :callback="snackbar.callback"
   :action="snackbar.action"
+  :play="snackbar.play"
   @close="snackbar.text = null">{{snackbar.text}}</snackbar>
 
 <toast v-if="alert" @close="alert = null">{{alert}}</toast>

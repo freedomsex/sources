@@ -140,6 +140,7 @@
 <snackbar v-if="snackbar.text"
   :callback="snackbar.callback"
   :action="snackbar.action"
+  :play="snackbar.play"
   @close="snackbar.text = null">{{snackbar.text}}</snackbar>
 
 <toast v-if="alert" @close="alert = null">{{alert}}</toast>
@@ -162,9 +163,10 @@
    %%BLOCK_COUNTER_ALL%%
 
 <div id="settings">
-  <div id="router-view">
-    <router-view @close="$router.go(-1)"></router-view>
-  </div>
+  <router-view @close="$router.go(-1)" @warning="snackbar" @alert="toast"></router-view>
+
+  <snackbar v-if="warning" @close="warning = null">{{warning}}</snackbar>
+  <toast v-if="alert" @close="alert = null">{{alert}}</toast>
 </div>
 
 
@@ -1277,11 +1279,11 @@
       <div class="activity-section__title">Уведомления:</div>
       <div class="radio">
         <label class="radio-inline">
-          <input type="radio" id="input-figure" v-model.number="checkSubscribe" value="1" @change="saveSubscribe" :disabled="process || !promt || !email">
+          <input type="radio" id="input-subscribe" v-model="checkSubscribe" :value="true" @change="saveSubscribe" :disabled="process || !promt || !email">
           Принимать
         </label>
         <label class="radio-inline">
-          <input type="radio" id="input-figure" v-model.number="checkSubscribe" value="0" @change="saveSubscribe" :disabled="process || !promt || !email">
+          <input type="radio" id="input-subscribe" v-model="checkSubscribe" :value="false" @change="saveSubscribe" :disabled="process || !promt || !email">
           Отклонить
         </label>
       </div>
@@ -1294,8 +1296,11 @@
           в письме которое будет отправлено на ваш емаил.
         </div>
         <div class="modal-dialog__footer">
+          <button class="btn btn-default" @click="close">
+            Отмена
+          </button>
           <button class="btn btn-danger" @click="removeEmail">
-            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
             Удалить
           </button>
         </div>
@@ -1403,7 +1408,7 @@
           <button class="btn btn-primary btn-sm" @click="approve">{{title}}</button>
         </div>
       </div>
-        <audio v-if="1" preload autoplay>
+        <audio v-if="play" ref="autoplay" preload>
           <source src="/static/sound/incoming.mp3" type="audio/mpeg">
           <source src="/static/sound/incoming.ogg" type="audio/ogg; codecs=vorbis">
         </audio>

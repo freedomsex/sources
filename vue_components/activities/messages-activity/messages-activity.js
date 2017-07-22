@@ -69,6 +69,7 @@ const MessagesActivity = Vue.component('messages-activity', {
                 data['mess'] = this.message;
                 data['re'] = this.reply;
             }
+            this.$store.commit('intimate/notifi', false);
             api.messages.send(data).then((response) => {
                 this.onMessageSend(response.data);
             }).catch(() => {

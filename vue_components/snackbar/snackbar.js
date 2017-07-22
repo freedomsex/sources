@@ -1,5 +1,5 @@
 Vue.component('snackbar', {
-    props: ['callback', 'action'],
+    props: ['callback', 'action', 'play'],
     computed: {
         time() {
             return this.callback ? 5000 : 3000;
@@ -14,10 +14,16 @@ Vue.component('snackbar', {
         },
         approve() {
             this.callback();
+        },
+        autoplay(event) {
+            if (this.play) {
+                this.$refs.autoplay.play();
+            }
         }
     },
     mounted() {
         _.delay(this.close, this.time);
+        this.autoplay();
     },
     template: '#snackbar',
 });

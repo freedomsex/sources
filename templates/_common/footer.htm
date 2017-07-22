@@ -1,8 +1,9 @@
 
 <div id="settings">
-  <div id="router-view">
-    <router-view @close="$router.go(-1)"></router-view>
-  </div>
+  <router-view @close="$router.go(-1)" @warning="snackbar" @alert="toast"></router-view>
+
+  <snackbar v-if="warning" @close="warning = null">{{warning}}</snackbar>
+  <toast v-if="alert" @close="alert = null">{{alert}}</toast>
 </div>
 
 

@@ -14,10 +14,11 @@ var app = new Vue({
         }
     },
     methods: {
-        showSnackbar(text, callback, action) {
+        showSnackbar(text, callback, action, play) {
             this.snackbar.text = text;
             this.snackbar.callback = callback;
             this.snackbar.action = action;
+            this.snackbar.play = (play == true);
         },
         showToast(text) {
             this.alert = text;
@@ -30,7 +31,18 @@ var app = new Vue({
 
 
 new Vue({
-    data: {},
+    data: {
+        warning: '',
+        alert: '',
+    },
+    methods: {
+        snackbar(text) {
+            this.warning = text;
+        },
+        toast(text) {
+            this.alert = text;
+        },
+    },
     el: '#settings',
     store,
     router: settingsRouter

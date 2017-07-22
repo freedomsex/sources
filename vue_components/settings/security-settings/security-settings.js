@@ -6,7 +6,7 @@ const SecuritySettings = Vue.component('security-settings', {
             inputLogin: '',
             inputPasswd: '',
             inputEmail: '',
-            checkSubscribe: false,
+            checkSubscribe: 0,
             process: false,
             processLogin: false,
             processPasswd: false,
@@ -48,7 +48,7 @@ const SecuritySettings = Vue.component('security-settings', {
             this.inputPasswd = this.passwd;
             this.inputEmail = this.email;
             this.checkSubscribe = this.subscr;
-            // this.selectFigure = this.figure;
+                console.log('subscr', [this.subscr, this.checkSubscribe ]);
         },
         deflower() {
             this.virgin = false;

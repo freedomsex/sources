@@ -230,6 +230,7 @@ var MessagesActivity = Vue.component('messages-activity', {
                 data['mess'] = this.message;
                 data['re'] = this.reply;
             }
+            this.$store.commit('intimate/notifi', false);
             api.messages.send(data).then(function (response) {
                 _this3.onMessageSend(response.data);
             }).catch(function () {
@@ -1148,7 +1149,7 @@ var MenuUser = Vue.component('menu-user', {
                     return _this19.$router.push({ name: 'intimate' });
                 };
                 this.$store.commit('intimate/notifi', true);
-                this.$emit('snackbar', 'Новое сообщение', callback, 'Смотреть');
+                this.$emit('snackbar', 'Новое сообщение', callback, 'Смотреть', true);
             }
         },
         onInitial: function onInitial(status) {
@@ -1166,7 +1167,7 @@ var MenuUser = Vue.component('menu-user', {
                     return _this20.$router.push({ name: 'initial' });
                 };
                 this.$store.commit('initial/notifi', true);
-                this.$emit('snackbar', 'Новое знакомство', callback, 'Смотреть');
+                this.$emit('snackbar', 'Новое знакомство', callback, 'Смотреть', true);
             }
         },
         regmy: function regmy() {
@@ -2499,7 +2500,7 @@ var SecuritySettings = Vue.component('security-settings', {
             inputLogin: '',
             inputPasswd: '',
             inputEmail: '',
-            checkSubscribe: false,
+            checkSubscribe: 0,
             process: false,
             processLogin: false,
             processPasswd: false,
@@ -2545,7 +2546,7 @@ var SecuritySettings = Vue.component('security-settings', {
             this.inputPasswd = this.passwd;
             this.inputEmail = this.email;
             this.checkSubscribe = this.subscr;
-            // this.selectFigure = this.figure;
+            console.log('subscr', [this.subscr, this.checkSubscribe]);
         },
         deflower: function deflower() {
             this.virgin = false;
@@ -2804,7 +2805,7 @@ Vue.component('slider-vertical', {
     }
 });
 Vue.component('snackbar', {
-    props: ['callback', 'action'],
+    props: ['callback', 'action', 'play'],
     computed: {
         time: function time() {
             return this.callback ? 5000 : 3000;
@@ -2819,10 +2820,16 @@ Vue.component('snackbar', {
         },
         approve: function approve() {
             this.callback();
+        },
+        autoplay: function autoplay(event) {
+            if (this.play) {
+                this.$refs.autoplay.play();
+            }
         }
     },
     mounted: function mounted() {
         _.delay(this.close, this.time);
+        this.autoplay();
     },
 
     template: '#snackbar'
@@ -3096,8 +3103,10 @@ var auth = {
             return api.user.removeEmail();
         },
         SAVE_SUSCRIBE: function SAVE_SUSCRIBE(_ref9, data) {
-            var commit = _ref9.commit;
+            var store = _ref9.store,
+                commit = _ref9.commit;
 
+            commit('subscr');
             return api.user.saveSubscribe();
         }
     },
@@ -3106,6 +3115,9 @@ var auth = {
             if (data) {
                 _.assign(state, data);
             }
+        },
+        subscr: function subscr(state) {
+            state.subscr = state.subscr ? false : true;
         }
     }
 };
@@ -4303,10 +4315,11 @@ var app = new Vue({
         }
     },
     methods: {
-        showSnackbar: function showSnackbar(text, callback, action) {
+        showSnackbar: function showSnackbar(text, callback, action, play) {
             this.snackbar.text = text;
             this.snackbar.callback = callback;
             this.snackbar.action = action;
+            this.snackbar.play = play == true;
         },
         showToast: function showToast(text) {
             this.alert = text;
@@ -4318,7 +4331,18 @@ var app = new Vue({
 });
 
 new Vue({
-    data: {},
+    data: {
+        warning: '',
+        alert: ''
+    },
+    methods: {
+        snackbar: function snackbar(text) {
+            this.warning = text;
+        },
+        toast: function toast(text) {
+            this.alert = text;
+        }
+    },
     el: '#settings',
     store: store,
     router: settingsRouter

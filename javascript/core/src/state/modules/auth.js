@@ -35,7 +35,8 @@ const auth = {
         REMOVE_EMAIL({commit}) {
             return api.user.removeEmail();
         },
-        SAVE_SUSCRIBE({commit}, data) {
+        SAVE_SUSCRIBE({store, commit}, data) {
+            commit('subscr');
             return api.user.saveSubscribe();
         }
     },
@@ -45,5 +46,8 @@ const auth = {
                 _.assign(state, data);
             }
         },
+        subscr(state) {
+            state.subscr = state.subscr ? false : true;
+        }
     }
 };

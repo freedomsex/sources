@@ -49,7 +49,7 @@ const MenuUser = Vue.component('menu-user', {
             if (status == 1 && !notified && this.newMessage) {
                 let callback = () => this.$router.push({ name: 'intimate' });
                 this.$store.commit('intimate/notifi', true);
-                this.$emit('snackbar', 'Новое сообщение', callback, 'Смотреть');
+                this.$emit('snackbar', 'Новое сообщение', callback, 'Смотреть', true);
             }
         },
         onInitial(status) {
@@ -60,7 +60,7 @@ const MenuUser = Vue.component('menu-user', {
             if (status == 1 && !notified && this.newContact && !this.newMessage) {
                 let callback = () => this.$router.push({ name: 'initial' });
                 this.$store.commit('initial/notifi', true);
-                this.$emit('snackbar', 'Новое знакомство', callback, 'Смотреть');
+                this.$emit('snackbar', 'Новое знакомство', callback, 'Смотреть', true);
             }
         },
 
