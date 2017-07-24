@@ -814,7 +814,7 @@
     <quick-message v-if="humanId" :human-id="humanId" @sended="sended = true" @close="humanId = null" @account="account = humanId"></quick-message>
     <snackbar v-if="sended" @close="sended = false">Сообщение отправлено.</snackbar>
 
-    <modal-dialog @close="close" v-if="!accept">
+    <modal-dialog @close="close" v-if="!accept && next">
       <div class="modal-dialog__wrapper">
         <div class="modal-dialog__caption">
           Поднятие в ТОП Бесплатно!

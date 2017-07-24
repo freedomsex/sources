@@ -2002,8 +2002,8 @@ Vue.component('search-list', {
             let {who, city, up, to, any} = this.$store.state.search.settings;
             let sex = this.$store.state.user.sex;
             let next = this.next;
-            up = up ? up : null;
-            to = to ? to : null;
+            up = up ? up : 0;
+            to = to ? to : 0;
             if (!city || any) {
                 city = null;
                 this.compact = false;

@@ -2045,8 +2045,8 @@ Vue.component('search-list', {
 
             var sex = this.$store.state.user.sex;
             var next = this.next;
-            up = up ? up : null;
-            to = to ? to : null;
+            up = up ? up : 0;
+            to = to ? to : 0;
             if (!city || any) {
                 city = null;
                 this.compact = false;
