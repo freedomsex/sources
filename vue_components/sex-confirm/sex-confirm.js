@@ -55,7 +55,6 @@ const SexConfirm = Vue.component('sex-confirm', {
         },
         redirect() {
             if (this.index('search')) {
-                // console.log('leave-search');
                 this.$router.replace('/search');
             }
             // if (this.index('contacts')) {
@@ -63,13 +62,11 @@ const SexConfirm = Vue.component('sex-confirm', {
             //     next({name: 'search-settings'});
             // }
             if (this.index('account')) {
-                // console.log('leave', 'account');
                 this.$router.replace('/settings/account');
             }
-            // if (this.index('message')) {
-            //     console.log('leave', 'message');
-            //     next({name: 'search-settings'});
-            // }
+            if (this.index('message')) {
+                this.$router.replace('/');
+            }
         }
     },
     data() {

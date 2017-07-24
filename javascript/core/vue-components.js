@@ -1724,6 +1724,7 @@ Vue.component('search-list', {
             account: null,
             sended: false,
             compact: true,
+            ignore: false,
         };
     },
     mounted() {
@@ -1747,7 +1748,7 @@ Vue.component('search-list', {
             return this.$store.state.visited.list;
         },
         accept() {
-            return this.$store.state.accepts.search;
+            return !this.ignore && !this.$store.state.accepts.search && (this.next > this.batch);
         },
         defaults() {
             var result = defaultResults ? json.parse(defaultResults) : null;
@@ -2640,7 +2641,6 @@ const SexConfirm = Vue.component('sex-confirm', {
         },
         redirect() {
             if (this.index('search')) {
-                // console.log('leave-search');
                 this.$router.replace('/search');
             }
             // if (this.index('contacts')) {
@@ -2648,13 +2648,11 @@ const SexConfirm = Vue.component('sex-confirm', {
             //     next({name: 'search-settings'});
             // }
             if (this.index('account')) {
-                // console.log('leave', 'account');
                 this.$router.replace('/settings/account');
             }
-            // if (this.index('message')) {
-            //     console.log('leave', 'message');
-            //     next({name: 'search-settings'});
-            // }
+            if (this.index('message')) {
+                this.$router.replace('/');
+            }
         }
     },
     data() {

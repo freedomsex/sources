@@ -16,6 +16,7 @@ Vue.component('search-list', {
             account: null,
             sended: false,
             compact: true,
+            ignore: false,
         };
     },
     mounted() {
@@ -39,7 +40,7 @@ Vue.component('search-list', {
             return this.$store.state.visited.list;
         },
         accept() {
-            return this.$store.state.accepts.search;
+            return !this.ignore && !this.$store.state.accepts.search && (this.next > this.batch);
         },
         defaults() {
             var result = defaultResults ? json.parse(defaultResults) : null;

@@ -1014,13 +1014,15 @@ var api = {
 // ];
 
 var routes = [
-    { path: '/write/:humanId(\\d+)/(.*)?', name: 'quickWrite', component: QuickMessage, props: true },
-    { path: '/search/(.*)?', name: 'search', component: SearchActivity,
-        beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/search'),
-        children: [
-            { path: ':humanId(\\d+)/(.*)?', name: 'quickMessage', meta: {back: '/search'}, component: QuickMessage, props: true },
-        ]
+    { path: '/write/:humanId(\\d+)/(.*)?', name: 'quickWrite', component: QuickMessage, props: true,
+            beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/message')
     },
+    // { path: '/', name: 'search', component: SearchActivity,
+    //     beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/search'),
+    //     children: [
+    //         { path: ':humanId(\\d+)/(.*)?', name: 'quickMessage', meta: {back: '/search'}, component: QuickMessage, props: true },
+    //     ]
+    // },
     { path: '/initial/(.*)?', name: 'initial', component: InitialDialog, props: true,
         //beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/messages'),
         children: [

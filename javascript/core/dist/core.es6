@@ -1940,6 +1940,7 @@ Vue.component('search-list', {
             account: null,
             sended: false,
             compact: true,
+            ignore: false,
         };
     },
     mounted() {
@@ -1963,7 +1964,7 @@ Vue.component('search-list', {
             return this.$store.state.visited.list;
         },
         accept() {
-            return this.$store.state.accepts.search;
+            return !this.ignore && !this.$store.state.accepts.search && (this.next > this.batch);
         },
         defaults() {
             var result = defaultResults ? json.parse(defaultResults) : null;
@@ -2856,7 +2857,6 @@ const SexConfirm = Vue.component('sex-confirm', {
         },
         redirect() {
             if (this.index('search')) {
-                // console.log('leave-search');
                 this.$router.replace('/search');
             }
             // if (this.index('contacts')) {
@@ -2864,13 +2864,11 @@ const SexConfirm = Vue.component('sex-confirm', {
             //     next({name: 'search-settings'});
             // }
             if (this.index('account')) {
-                // console.log('leave', 'account');
                 this.$router.replace('/settings/account');
             }
-            // if (this.index('message')) {
-            //     console.log('leave', 'message');
-            //     next({name: 'search-settings'});
-            // }
+            if (this.index('message')) {
+                this.$router.replace('/');
+            }
         }
     },
     data() {
@@ -4141,13 +4139,15 @@ var api = {
 // ];
 
 var routes = [
-    { path: '/write/:humanId(\\d+)/(.*)?', name: 'quickWrite', component: QuickMessage, props: true },
-    { path: '/search/(.*)?', name: 'search', component: SearchActivity,
-        beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/search'),
-        children: [
-            { path: ':humanId(\\d+)/(.*)?', name: 'quickMessage', meta: {back: '/search'}, component: QuickMessage, props: true },
-        ]
+    { path: '/write/:humanId(\\d+)/(.*)?', name: 'quickWrite', component: QuickMessage, props: true,
+            beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/message')
     },
+    // { path: '/', name: 'search', component: SearchActivity,
+    //     beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/search'),
+    //     children: [
+    //         { path: ':humanId(\\d+)/(.*)?', name: 'quickMessage', meta: {back: '/search'}, component: QuickMessage, props: true },
+    //     ]
+    // },
     { path: '/initial/(.*)?', name: 'initial', component: InitialDialog, props: true,
         //beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/messages'),
         children: [
