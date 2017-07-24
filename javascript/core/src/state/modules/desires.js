@@ -5,9 +5,14 @@ const desires = {
         list: [],
     },
     actions: {
-        SYNC({rootState, commit, getters}) {
+        PICK({commit}) {
+            commit('update', ls.get('desires'));
+        },
+        SYNC({state, commit}) {
+            commit('update', ls.get('desires'));
             return api.user.desireList().then((response) => {
                 commit('update', response.data);
+                ls.set('desires', state.list);
             });
         },
         ADD({state, commit}, tag) {
@@ -31,9 +36,11 @@ const desires = {
         },
         add(state, data) {
             state.list.unshift(data);
+            ls.set('desires', state.list);
         },
         delete(state, index) {
             state.list.splice(index, 1);
+            ls.set('desires', state.list);
         },
     }
 };

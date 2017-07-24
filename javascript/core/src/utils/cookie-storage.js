@@ -32,18 +32,8 @@ var cookie_storage = {
     } ,  
     
     get_data: function (name) 
-    {  
-        var data = get_cookie(name); 
-        var result = null;     
-         
-        if (data)   
-        try 
-        {
-          result = JSON.parse(data);
-        } 
-        catch(e) { }      
-        
-        return result;     
+    {   
+        return json.parse(get_cookie(name));     
     } ,  
     
     set_data: function () 

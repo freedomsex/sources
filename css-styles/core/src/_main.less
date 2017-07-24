@@ -49,8 +49,14 @@ body {
     }*/
 }
 
-.paper() {
+
+
+.split-top {
     margin-top: @indent-md;
+}
+
+.paper() {
+    .split-top();
     padding-top: @indent-md;
     padding-bottom: @indent-md;
     background: @white;

@@ -11,6 +11,12 @@ var app = new Vue({
     computed: {
         humanId() {
             return Number(this.$route.path.substr(1));
+        },
+        simple() {
+            return this.$store.state.simple;
+        },
+        ready() {
+            return this.$store.state.ready;
         }
     },
     methods: {
@@ -23,6 +29,9 @@ var app = new Vue({
         showToast(text) {
             this.alert = text;
         },
+        reload() {
+            this.$refs.results.reload();
+        }
     },
     el: '#app',
     store,

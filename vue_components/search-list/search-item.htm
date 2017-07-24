@@ -1,11 +1,11 @@
 
 <script type="text/x-template" id="search-item">
-  <div class="search-item" :class="{visited: visited}" @click="quick()">
+  <div class="search-item" :class="{visited: visited, gold: gold && !visited}" @click="quick()">
     <div class="search-item__content" :class="{visited: visited}">
       <div class="search-item__name" :class="{differ: differ}">{{name}}</div>
       <div class="search-item__age" :class="{differ: differ}" v-if="human.age">{{human.age}}</div>
       <div class="search-item__city" :class="{differ: differ}" v-if="human.city && !compact">{{human.city}}</div>
-      <div class="search-item__search" v-if="search">{{search}}</div>
+      <a class="search-item__search" v-if="search" :href="'/' + human.id" @click.prevent>{{search}}</a>
     </div>
     <div class="search-item__option" :class="{visited: visited}">
       <div class="social-icon" :class="first" v-if="first"></div>

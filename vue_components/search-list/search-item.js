@@ -1,6 +1,6 @@
 
 Vue.component('search-item', {
-    props: ['human', 'visited', 'compact'],
+    props: ['human', 'visited', 'gold', 'compact'],
     data() {
         return {
             first:  null,
@@ -68,7 +68,7 @@ Vue.component('search-item', {
         },
         quick() {
             this.$router.push({
-                name: 'quickMessage',
+                name: 'quickWrite',
                 params: {humanId: this.human.id}
             });
         },

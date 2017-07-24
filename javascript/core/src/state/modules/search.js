@@ -81,6 +81,10 @@ var search = {
                 '&years_up=' + settings.up + '&years_to=' + settings.to +
                 '&who=' + settings.who +'';
             return result;
+        },
+        virgin(state, getters, rootState) {
+            let {who, up, to} = state.settings;
+            return (!who && !rootState.user.city && !up && !to);
         }
     }
 };

@@ -136,6 +136,7 @@ const SearchSettings = Vue.component('search-settings', {
         // },
         close() {
             this.save();
+            this.$root.reload();
             this.back();
         },
     },

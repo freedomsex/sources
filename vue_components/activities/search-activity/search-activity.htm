@@ -2,43 +2,13 @@
 <script type="text/x-template" id="search-activity">
   <default-activity @close="close">
     <span slot="caption">Поиск</span>
-
     <div class="menu-user__navbar-right" slot="option">
       <div class="navbar-button" @click="$router.push('/search/settings/search')">
         <i class="material-icons">&#xE8B8;</i>
         <span class="navbar-button__title"> Настроить</span>
       </div>
     </div>
-
-    <div class="search-list">
-      <search-item v-for="item in items" :human="item" :visited="old(item.id)" :key="item.id" :compact="compact"/>
-      <div class="messages__next" @click="loadNext" v-show="1 || more">
-        <span class="btn btn-default btn-xs" :disabled="!response">Следующие</span>
-      </div>
-    </div>
-
-
-    <quick-message v-if="humanId" :human-id="humanId" @sended="sended = true" @close="humanId = null" @account="account = humanId"></quick-message>
-    <snackbar v-if="sended" @close="sended = false">Сообщение отправлено.</snackbar>
-
-    <modal-dialog @close="close" v-if="!accept">
-      <div class="modal-dialog__wrapper">
-        <div class="modal-dialog__caption">
-          Поднятие в ТОП Бесплатно!
-        </div>
-        <div class="modal-dialog__body">
-          Онлайн анкеты всегда наверху. Все самые активные пользователи на первой странице. Просто пишите тем, с кем ещё не общались.
-          Отдельный поиск онлайн анкет отсутствует, да он и не нужен.
-        </div>
-        <div class="modal-dialog__footer">
-          <button class="btn btn-primary btn-fat" @click="approve">
-            OK
-          </button>
-        </div>
-      </div>
-    </modal-dialog>
-
-    <router-view></router-view>
+    <search-list ref="results"/>
   </default-activity>
 </script>
 

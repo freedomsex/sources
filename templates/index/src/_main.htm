@@ -9,13 +9,8 @@
 <div id="app">
   %%MENU_HEADER%%
   <div class="container content">
-    <div class="row">
+    <div class="row" v-show="!simple">
       %%TOP_INFO_BLOCK%%
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        <!-- build:include ../../_common/search-wizard.htm --><!-- /build -->
-      </div>
     </div>
     <div class="row">
       %%TIP_FORM_BLOCK%%
@@ -25,8 +20,9 @@
 
 
 <!-- build:include search-results.htm --><!-- /build -->
-
+<div v-show="!simple">
 %%SLIDER_FOOTER%%
+</div>
 
 <!-- build:include ../../_common/info-links.htm --><!-- /build -->
 <!-- build:include ../../_common/option-static.htm --><!-- /build -->

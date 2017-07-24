@@ -16,34 +16,10 @@ const store = new Vuex.Store({
         modals
     },
     state: {
+        ready: false,
         apiToken: '',
-        //photoServer: '127.0.0.1:8888',
         photoServer: '@@API-PHOTO',
-        count: 0,
-        optionStatic: {
-            view: null
-        },
-        photoView: {
-            thumb:  null,
-            photo:  null,
-            height: null,
-        },
-        uploadView: {
-            show: false
-        },
-        contactView: {
-            show: false
-        },
-        formMess: {
-            sendTo: null,
-            sendPhoto: {
-                thumb:  null,
-                photo:  null,
-                height: null,
-                width:  null,
-            },
-            intimate: true,
-        },
+        simple: false
     },
     actions: {
         LOAD_API_TOKEN({ commit }) {
@@ -57,21 +33,11 @@ const store = new Vuex.Store({
             }
             //console.log(state)
         },
-        viewPhoto(state, data) {
-            _.assign(state.photoView, data);
+        simple(state, data) {
+            state.simple = (data == true);
         },
-        viewUpload(state, data) {
-            state.uploadView.show = (data === true);
-        },
-        sendPhoto(state, data) {
-            console.log('sendPhoto');
-            _.assign(state.formMess.sendPhoto, data);
-        },
-        intimated(state, data) {
-            state.formMess.intimate = (data === true);
-        },
-        optionDialog(state, data) {
-            state.optionStatic.view = data ? data : null;
+        ready(state, data) {
+            state.ready = (data == true);
         },
     },
     getters: {

@@ -322,9 +322,14 @@ const desires = {
         list: [],
     },
     actions: {
-        SYNC({rootState, commit, getters}) {
+        PICK({commit}) {
+            commit('update', ls.get('desires'));
+        },
+        SYNC({state, commit}) {
+            commit('update', ls.get('desires'));
             return api.user.desireList().then((response) => {
                 commit('update', response.data);
+                ls.set('desires', state.list);
             });
         },
         ADD({state, commit}, tag) {
@@ -348,9 +353,11 @@ const desires = {
         },
         add(state, data) {
             state.list.unshift(data);
+            ls.set('desires', state.list);
         },
         delete(state, index) {
             state.list.splice(index, 1);
+            ls.set('desires', state.list);
         },
     }
 };
@@ -483,6 +490,10 @@ var search = {
                 '&years_up=' + settings.up + '&years_to=' + settings.to +
                 '&who=' + settings.who +'';
             return result;
+        },
+        virgin(state, getters, rootState) {
+            let {who, up, to} = state.settings;
+            return (!who && !rootState.user.city && !up && !to);
         }
     }
 };
@@ -614,34 +625,10 @@ const store = new Vuex.Store({
         modals
     },
     state: {
+        ready: false,
         apiToken: '',
-        //photoServer: '127.0.0.1:8888',
         photoServer: '@@API-PHOTO',
-        count: 0,
-        optionStatic: {
-            view: null
-        },
-        photoView: {
-            thumb:  null,
-            photo:  null,
-            height: null,
-        },
-        uploadView: {
-            show: false
-        },
-        contactView: {
-            show: false
-        },
-        formMess: {
-            sendTo: null,
-            sendPhoto: {
-                thumb:  null,
-                photo:  null,
-                height: null,
-                width:  null,
-            },
-            intimate: true,
-        },
+        simple: false
     },
     actions: {
         LOAD_API_TOKEN({ commit }) {
@@ -655,21 +642,11 @@ const store = new Vuex.Store({
             }
             //console.log(state)
         },
-        viewPhoto(state, data) {
-            _.assign(state.photoView, data);
+        simple(state, data) {
+            state.simple = (data == true);
         },
-        viewUpload(state, data) {
-            state.uploadView.show = (data === true);
-        },
-        sendPhoto(state, data) {
-            console.log('sendPhoto');
-            _.assign(state.formMess.sendPhoto, data);
-        },
-        intimated(state, data) {
-            state.formMess.intimate = (data === true);
-        },
-        optionDialog(state, data) {
-            state.optionStatic.view = data ? data : null;
+        ready(state, data) {
+            state.ready = (data == true);
         },
     },
     getters: {
@@ -1037,6 +1014,7 @@ var api = {
 // ];
 
 var routes = [
+    { path: '/write/:humanId(\\d+)/(.*)?', name: 'quickWrite', component: QuickMessage, props: true },
     { path: '/search/(.*)?', name: 'search', component: SearchActivity,
         beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/search'),
         children: [
@@ -1061,8 +1039,19 @@ var routes = [
             },
         ]
     },
-    { path: '(.*)?/write/:humanId(\\d+)/(.*)?', meta: {back: '.'}, component: QuickMessage, props: true },
     { path: '/confirm-sex/:show?', component: SexConfirm, props: true },
+
+        { path: '(.*)?/settings/search', meta: {back: '/'}, component: SearchSettings,
+            beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/search')
+        },
+        { path: '(.*)?/settings/account', component: AccountSettings,
+            beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/account')
+        },
+        { path: '(.*)?/settings/other', component: OtherSettings },
+        { path: '(.*)?/settings/about', meta: {back: 'other'}, component: AboutSettings },
+        { path: '(.*)?/settings/social', meta: {back: 'other'}, component: SocialSettings },
+        { path: '(.*)?/settings/desires', meta: {back: 'other'}, component: DesiresSettings },
+        { path: '(.*)?/settings/security', meta: {back: 'other'}, component: SecuritySettings },
 
 ];
 
@@ -1084,17 +1073,6 @@ var settingsRouter = new VueRouter({
     //mode: 'history',
     routes: [
         { path: '/search/settings/account', meta: {back: 'search'}, component: AccountSettings },
-        { path: '(.*)?/settings/search', meta: {back: '/search'}, component: SearchSettings,
-            beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/search')
-        },
-        { path: '(.*)?/settings/account', component: AccountSettings,
-            beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/account')
-        },
-        { path: '(.*)?/settings/other', meta: {back: 'account'}, component: OtherSettings },
-        { path: '(.*)?/settings/about', meta: {back: 'other'}, component: AboutSettings },
-        { path: '(.*)?/settings/social', meta: {back: 'other'}, component: SocialSettings },
-        { path: '(.*)?/settings/desires', meta: {back: 'other'}, component: DesiresSettings },
-        { path: '(.*)?/settings/security', meta: {back: 'other'}, component: SecuritySettings },
 
         { path: '(.*)?/:humanId(\\d+)/detail', component: AccountActivity, props: true },
         // { path: '(.*)?/uploads', component: PhotoSettings },

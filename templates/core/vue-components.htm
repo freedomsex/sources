@@ -163,67 +163,16 @@
 <script type="text/x-template" id="search-activity">
   <default-activity @close="close">
     <span slot="caption">Поиск</span>
-
     <div class="menu-user__navbar-right" slot="option">
       <div class="navbar-button" @click="$router.push('/search/settings/search')">
         <i class="material-icons">&#xE8B8;</i>
         <span class="navbar-button__title"> Настроить</span>
       </div>
     </div>
-
-    <div class="search-list">
-      <search-item v-for="item in items" :human="item" :visited="old(item.id)" :key="item.id" :compact="compact"/>
-      <div class="messages__next" @click="loadNext" v-show="1 || more">
-        <span class="btn btn-default btn-xs" :disabled="!response">Следующие</span>
-      </div>
-    </div>
-
-
-    <quick-message v-if="humanId" :human-id="humanId" @sended="sended = true" @close="humanId = null" @account="account = humanId"></quick-message>
-    <snackbar v-if="sended" @close="sended = false">Сообщение отправлено.</snackbar>
-
-    <modal-dialog @close="close" v-if="!accept">
-      <div class="modal-dialog__wrapper">
-        <div class="modal-dialog__caption">
-          Поднятие в ТОП Бесплатно!
-        </div>
-        <div class="modal-dialog__body">
-          Онлайн анкеты всегда наверху. Все самые активные пользователи на первой странице. Просто пишите тем, с кем ещё не общались.
-          Отдельный поиск онлайн анкет отсутствует, да он и не нужен.
-        </div>
-        <div class="modal-dialog__footer">
-          <button class="btn btn-primary btn-fat" @click="approve">
-            OK
-          </button>
-        </div>
-      </div>
-    </modal-dialog>
-
-    <router-view></router-view>
+    <search-list ref="results"/>
   </default-activity>
 </script>
 
-
-
-<script type="text/x-template" id="search-item">
-  <div class="search-item" :class="{visited: visited}" @click="quick()">
-    <div class="search-item__content" :class="{visited: visited}">
-      <div class="search-item__name" :class="{differ: differ}">{{name}}</div>
-      <div class="search-item__age" :class="{differ: differ}" v-if="human.age">{{human.age}}</div>
-      <div class="search-item__city" :class="{differ: differ}" v-if="human.city && !compact">{{human.city}}</div>
-      <div class="search-item__search" v-if="search">{{search}}</div>
-    </div>
-    <div class="search-item__option" :class="{visited: visited}">
-      <div class="social-icon" :class="first" v-if="first"></div>
-      <div class="social-icon" :class="second" v-if="second"></div>
-      <div class="social-icon" :class="third" v-if="third"></div>
-      <div class="search-item__virt" v-if="human.virt">вирт</div>
-      <div class="search-item__real" v-if="human.close">реал</div>
-      <div class="search-item__desires" v-if="tags">{{tags}}</div>
-      <div class="search-item__online" v-if="online">онлайн</div>
-    </div>
-  </div>
-</script>
 
 
 <script type="text/x-template" id="api-key-update">
@@ -737,6 +686,64 @@
 
 
 
+<script type="text/x-template" id="search-item">
+  <div class="search-item" :class="{visited: visited, gold: gold && !visited}" @click="quick()">
+    <div class="search-item__content" :class="{visited: visited}">
+      <div class="search-item__name" :class="{differ: differ}">{{name}}</div>
+      <div class="search-item__age" :class="{differ: differ}" v-if="human.age">{{human.age}}</div>
+      <div class="search-item__city" :class="{differ: differ}" v-if="human.city && !compact">{{human.city}}</div>
+      <a class="search-item__search" v-if="search" :href="'/' + human.id" @click.prevent>{{search}}</a>
+    </div>
+    <div class="search-item__option" :class="{visited: visited}">
+      <div class="social-icon" :class="first" v-if="first"></div>
+      <div class="social-icon" :class="second" v-if="second"></div>
+      <div class="social-icon" :class="third" v-if="third"></div>
+      <div class="search-item__virt" v-if="human.virt">вирт</div>
+      <div class="search-item__real" v-if="human.close">реал</div>
+      <div class="search-item__desires" v-if="tags">{{tags}}</div>
+      <div class="search-item__online" v-if="online">онлайн</div>
+    </div>
+  </div>
+</script>
+
+<script type="text/x-template" id="search-list">
+  <div>
+    <div class="search-list">
+      <search-item v-for="item in items" :human="item" :visited="old(item.id)" :gold="gold(item.tags)" :key="item.id" :compact="compact"/>
+      <div class="messages__next" @click="loadNext" v-show="more">
+        <span class="btn btn-default btn-xs" :disabled="!response">Следующие</span>
+      </div>
+    </div>
+
+    <div class="search-list__loader" v-show="loader">
+      Загружаю...
+    </div>
+
+
+    <quick-message v-if="humanId" :human-id="humanId" @sended="sended = true" @close="humanId = null" @account="account = humanId"></quick-message>
+    <snackbar v-if="sended" @close="sended = false">Сообщение отправлено.</snackbar>
+
+    <modal-dialog @close="close" v-if="!accept">
+      <div class="modal-dialog__wrapper">
+        <div class="modal-dialog__caption">
+          Поднятие в ТОП Бесплатно!
+        </div>
+        <div class="modal-dialog__body">
+          Онлайн анкеты всегда наверху. Все самые активные пользователи на первой странице. Просто пишите тем, с кем ещё не общались.
+          Отдельный поиск онлайн анкет отсутствует, да он и не нужен.
+        </div>
+        <div class="modal-dialog__footer">
+          <button class="btn btn-primary btn-fat" @click="approve">
+            OK
+          </button>
+        </div>
+      </div>
+    </modal-dialog>
+
+    <router-view></router-view>
+  </div>
+</script>
+
 <script type="text/x-template" id="about-settings">
   <closed-activity @close="close">
     <div class="activity-section">
@@ -849,7 +856,7 @@
 <script type="text/x-template" id="desires-settings">
   <closed-activity @close="close">
     <div class="activity-section">
-      <div class="activity-section__title">Желания</div>
+      <div class="activity-section__title">Желания и фантазии</div>
       <suggest-input @select="add" :disabled="process"/>
     </div>
 
@@ -860,6 +867,13 @@
          :id="item.id"
          @select="confirmRemove = index"/>
       </div>
+    </div>
+
+    <div class="activity-section">
+      <div class="activity-section__title">Фильтр желаний</div>
+      Позволяет находить тех, чьи желания и фантазии совпадают с вашими.
+      Просто заполните ваш список ваших Желаний. Когда желания вашего собеседника и ваши совпадут,
+      его анкета будет выделена в Поиске.
     </div>
 
     <modal-dialog @close="confirmRemove = null" v-if="confirmRemove !== null">

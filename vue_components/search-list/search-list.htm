@@ -1,0 +1,37 @@
+<script type="text/x-template" id="search-list">
+  <div>
+    <div class="search-list">
+      <search-item v-for="item in items" :human="item" :visited="old(item.id)" :gold="gold(item.tags)" :key="item.id" :compact="compact"/>
+      <div class="messages__next" @click="loadNext" v-show="more">
+        <span class="btn btn-default btn-xs" :disabled="!response">Следующие</span>
+      </div>
+    </div>
+
+    <div class="search-list__loader" v-show="loader">
+      Загружаю...
+    </div>
+
+
+    <quick-message v-if="humanId" :human-id="humanId" @sended="sended = true" @close="humanId = null" @account="account = humanId"></quick-message>
+    <snackbar v-if="sended" @close="sended = false">Сообщение отправлено.</snackbar>
+
+    <modal-dialog @close="close" v-if="!accept">
+      <div class="modal-dialog__wrapper">
+        <div class="modal-dialog__caption">
+          Поднятие в ТОП Бесплатно!
+        </div>
+        <div class="modal-dialog__body">
+          Онлайн анкеты всегда наверху. Все самые активные пользователи на первой странице. Просто пишите тем, с кем ещё не общались.
+          Отдельный поиск онлайн анкет отсутствует, да он и не нужен.
+        </div>
+        <div class="modal-dialog__footer">
+          <button class="btn btn-primary btn-fat" @click="approve">
+            OK
+          </button>
+        </div>
+      </div>
+    </modal-dialog>
+
+    <router-view></router-view>
+  </div>
+</script>

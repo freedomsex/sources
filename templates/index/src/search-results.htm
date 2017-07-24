@@ -1,12 +1,31 @@
-
-  <div class="container search-results">
-<!-- build:include ../../_common/ad-top.htm --><!-- /build -->
+  <div class="container content split-top">
     <div class="row">
       <div class="col-md-12">
         %%ERROR_SEARCH_ALT%%
-        %%SEARCH_LIST_USER%%
-        %%SEARCH_PAGE_LINKS%%
       </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <!-- build:include ../../_common/search-wizard.htm --><!-- /build -->
+      </div>
+      <!-- build:include ../../_common/ad-top.htm --><!-- /build -->
+    </div>
+    <div class="row">
+      <div class="preloader" v-show="!ready">
+        <div class="preloader__img"></div>
+<!--    <svg width="80px" height="80px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-heart" style="">
+          <g transform="translate(50 50)">
+            <path d="M40.7-34.3c-9.8-9.8-25.6-9.8-35.4,0L0-29l-5.3-5.3c-9.8-9.8-25.6-9.8-35.4,0l0,0c-9.8,9.8-9.8,25.6,0,35.4l5.3,5.3L-23,18.7l23,23l23-23L35.4,6.3L40.7,1C50.4-8.8,50.4-24.6,40.7-34.3z" fill="#f81b24" transform="scale(0.803928 0.803928)">
+              <animateTransform attributeName="transform" type="scale" calcMode="spline" values="0.85;1;0.75;0.9;0.85;0.8" keyTimes="0;0.05;0.39;0.45;0.6;1" dur="1s" keySplines="0.215 0.61,0.355 1;0.215 0.61,0.355 1;0.215 0.61,0.355 1;0.215 0.61,0.355 1;0.215 0.61,0.355 1" begin="0s" repeatCount="indefinite"></animateTransform>
+            </path>
+          </g>
+        </svg> -->
+        <div class="preloader__hint">
+          Поиск анкет, всегда бесплатно.
+        </div>
+      </div>
+
+      <search-list ref="results"></search-list>
     </div>
   </div>
 

@@ -2,7 +2,7 @@
 <script type="text/x-template" id="desires-settings">
   <closed-activity @close="close">
     <div class="activity-section">
-      <div class="activity-section__title">Желания</div>
+      <div class="activity-section__title">Желания и фантазии</div>
       <suggest-input @select="add" :disabled="process"/>
     </div>
 
@@ -13,6 +13,13 @@
          :id="item.id"
          @select="confirmRemove = index"/>
       </div>
+    </div>
+
+    <div class="activity-section">
+      <div class="activity-section__title">Фильтр желаний</div>
+      Позволяет находить тех, чьи желания и фантазии совпадают с вашими.
+      Просто заполните ваш список ваших Желаний. Когда желания вашего собеседника и ваши совпадут,
+      его анкета будет выделена в Поиске.
     </div>
 
     <modal-dialog @close="confirmRemove = null" v-if="confirmRemove !== null">
