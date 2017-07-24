@@ -69,6 +69,7 @@ Vue.component('search-list', {
             this.users = [];
             this.received = 0;
             this.compact = true;
+            this.$store.commit('ready', false);
             this.load();
         },
         visitedSync() {

@@ -31,6 +31,7 @@ const MenuUser = Vue.component('menu-user', {
     methods: {
         search() {
             this.$store.commit('simple', true);
+            this.$root.reload();
             this.$router.push('/');
         },
         initial() {

@@ -867,6 +867,7 @@ const MenuUser = Vue.component('menu-user', {
     methods: {
         search() {
             this.$store.commit('simple', true);
+            this.$root.reload();
             this.$router.push('/');
         },
         initial() {
@@ -1180,7 +1181,7 @@ Vue.component('message-list', {
             this.response = 200;
             this.toSlow = false;
             this.$nextTick(() => {
-                this.scroll();
+                //this.scroll();
             });
             //console.log(response);
         },
@@ -1189,7 +1190,9 @@ Vue.component('message-list', {
                 return this.skipScroll = false;
             }
             var objDiv = document.getElementById("dialog-history");
+            console.log('scroll', objDiv.scrollTop);
             objDiv.scrollTop = objDiv.scrollHeight+30;
+            console.log('scroll', objDiv.scrollTop);
         },
         noMessages() {
             // TODO: Заменить на компоненты, страрые зависимости
@@ -1777,6 +1780,7 @@ Vue.component('search-list', {
             this.users = [];
             this.received = 0;
             this.compact = true;
+            this.$store.commit('ready', false);
             this.load();
         },
         visitedSync() {
