@@ -642,7 +642,7 @@
         <textarea class="message-input__texarea" rows="1" placeholder="Введите текст" v-model="text" v-resized
           @keyup.ctrl.enter.prevent="send()"></textarea>
           <button class="btn btn-primary" @click="send()">Отправить</button>
-          <button class="btn btn-link" @click="account()">Смотреть анкету...</button>
+          <button class="btn btn-default" @click="account()">Смотреть анкету...</button>
       </div>
       <loading-wall :show="loading"/>
       <loading-cover :show="process"/>
@@ -672,7 +672,7 @@
       <textarea class="message-input__texarea" rows="1" placeholder="Введите текст" v-model="text" v-resized
         @keyup.ctrl.enter.prevent="send()"></textarea>
         <button class="btn btn-primary" @click="send()">Отправить</button>
-        <button class="btn btn-link" @click="account()">Смотреть анкету</button>
+        <button class="btn btn-default" @click="account()">Смотреть анкету</button>
     </div>
     <loading-wall :show="loading"/>
     <loading-cover :show="process"/>
