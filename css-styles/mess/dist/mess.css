@@ -35,7 +35,7 @@
   background: #fff2e5 !important;
 }
 .bg_oyel {
-  background: #fff5cc !important;
+  background: #FCF8E3 !important;
 }
 .bg_ogra {
   background: #f5f5f5 !important;
@@ -581,7 +581,7 @@ div.alert_block_mess b {
   text-decoration: underline;
 }
 #block_mail_setting {
-  background: #fff5cc;
+  background: #FCF8E3;
   background-image: url(/img/icon/nastroika_big.png);
   background-position: 100% 0%;
   background-repeat: no-repeat;
@@ -648,7 +648,7 @@ div.alert_block_mess b {
   padding-top: 5px;
 }
 #mess_shab_text_caption {
-  background: #fff5cc;
+  background: #FCF8E3;
   border-bottom: 0px solid #cccccc;
   border: 1px solid #cccccc;
   font-size: 14px;
@@ -796,7 +796,7 @@ div.alert_block_mess b {
   border-top: 1px solid #ffffff;
 }
 #abuse-form {
-  background: #fff5cc;
+  background: #FCF8E3;
   border: 1px solid #cccccc;
   margin-bottom: 0px;
   margin-bottom: 5px;
@@ -850,7 +850,7 @@ div.alert_block_mess b {
   background: #f5f5f5;
 }
 .abuse_list_hint {
-  background: #fff5cc;
+  background: #FCF8E3;
   border-width: 1px 0;
   border: 1px solid #cccccc;
   font-size: 10px;

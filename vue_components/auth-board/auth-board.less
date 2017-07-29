@@ -1,0 +1,20 @@
+.auth-board {
+    background-color: @yellow-light;
+    padding: @indent-sm @indent-md;
+    border-bottom: 2px solid #faebcc;
+    text-align: center;
+    color: #8a6d3b;
+    .btn {
+        margin-left: @indent-sm;
+    }
+    .glyphicon {
+        margin-right: @indent-sm;
+    }
+}
+
+.auth-board-enter-active, .snackbar-leave-active {
+    transition: all .5s
+}
+.auth-board-enter, .snackbar-leave-to /* .fade-leave-active для <2.1.8 */ {
+    opacity: 0;
+}

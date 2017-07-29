@@ -8,6 +8,9 @@ var app = new Vue({
             action: ''
         },
     },
+    mounted() {
+
+    },
     computed: {
         humanId() {
             return Number(this.$route.path.substr(1));
@@ -17,16 +20,21 @@ var app = new Vue({
         },
         ready() {
             return this.$store.state.ready;
+        },
+        promt() {
+            let {promt} = this.$store.state.user;
+            return !promt || promt == 'no';
         }
     },
     methods: {
         showSnackbar(text, callback, action, play) {
+            console.log('snackbar', text);
             this.snackbar.text = text;
             this.snackbar.callback = callback;
             this.snackbar.action = action;
             this.snackbar.play = (play == true);
         },
-        showToast(text) {
+        toast(text) {
             this.alert = text;
         },
         reload() {
@@ -49,6 +57,7 @@ new Vue({
             this.warning = text;
         },
         toast(text) {
+
             this.alert = text;
         },
     },

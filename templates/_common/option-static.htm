@@ -1,6 +1,6 @@
 
 <div id="router-view">
-  <router-view @close="$router.go(-1)"></router-view>
+  <router-view @close="$router.go(-1)" @warning="showSnackbar" @alert="toast"></router-view>
 </div>
 
 <api-key-update></api-key-update>

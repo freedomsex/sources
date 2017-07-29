@@ -7,38 +7,41 @@
     overflow: hidden;
     padding-top: 0px;
     padding-bottom: @indent-sm;
+
+    &__new {
+        text-align: center;
+        margin-top: 10px;
+        &-lamp {
+            padding: 3px @indent-sm;
+            background-color: @orange;
+            color: @white;
+            display: inline-block;
+            border-radius: 10px;
+        }
+    }
+
+    &__loader {
+        border-top: 1px dotted @gray-dark;
+        height: 10px;
+        text-align: center;
+        margin-top: 8px;
+        span {
+            padding: 0px 5px;
+            background-color: @white;
+            font-size: 11px;
+            margin: 0px auto 5px;
+            position: relative;
+            top: -8px;
+        }
+    }
+
+    &__next {
+        text-align: center;
+        margin-top: @indent-md;
+    }
 }
 
-.messages__loader {
-  border-top: 1px dotted @gray-dark;
-  height: 10px;
-  text-align: center;
-  margin-top: 8px;
-  span {
-    padding: 0px 5px;
-    background-color: @white;
-    font-size: 11px;
-    margin: 0px auto 5px;
-    position: relative;
-    top: -8px;
-  }
-}
 
-.messages__next {
-  text-align: center;
-  margin-top: @indent-md;
-}
-
-.messages__new {
-  text-align: center;
-  &-lamp {
-    padding: 3px @indent-sm;
-    background-color: @orange;
-    color: @white;
-    display: inline-block;
-    border-radius: 10px;
-  }
-}
 
 
 .form-message__buttons {

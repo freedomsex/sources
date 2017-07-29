@@ -18,6 +18,7 @@ const user = {
             str: ''
         },
         status: 0,
+        promt: null,
         last: ''
     },
     actions: {

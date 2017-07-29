@@ -1,0 +1,45 @@
+<script type="text/x-template" id="auth-board">
+  <div>
+    <div class="auth-board">
+      <div v-show="!loaded">
+        Запомните или запишите ваш пароль.
+      </div>
+      <transition name="auth-board">
+        <div v-show="loaded">
+          Ваш логин: <b>{{login}}</b> пароль: <b>{{password}}</b>
+          <button class="btn btn-default btn-sm" @click="confirmSend = true">
+            Отправить на почту
+          </button>
+        </div>
+      </transition>
+    </div>
+
+    <modal-dialog @close="confirmSend = false" v-if="confirmSend">
+      <div class="modal-dialog__wrapper">
+        <div class="modal-dialog__body">
+          <div class="modal-dialog__section">
+          Логин и пароль будут отправлены на этот адрес. Подсказака с логином будет убрана.
+          </div>
+          <div class="modal-dialog__section">
+            <div class="form-inline">
+              <input class="form-control" type="email" name="email" v-model="email" placeholder="Ваш емайл адрес">
+            </div>
+          </div>
+          <div class="modal-dialog__section">
+            {{hint}}
+          </div>
+        </div>
+        <div class="modal-dialog__footer">
+          <button class="btn btn-default" @click="confirmSend = false">
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            Закрыть
+          </button>
+          <button class="btn btn-primary" @click="send()">
+            <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+            Отправить
+          </button>
+        </div>
+      </div>
+    </modal-dialog>
+  </div>
+</script>

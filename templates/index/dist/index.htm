@@ -44,8 +44,8 @@
 %%JS_USER_VARS%%
 <div id="app">
   %%MENU_HEADER%%
-  <div class="container content">
-    <div class="row" v-show="!simple">
+  <div class="container content split-bottom" v-show="!simple">
+    <div class="row">
       %%TOP_INFO_BLOCK%%
     </div>
     <div class="row">
@@ -54,34 +54,31 @@
     </div>
   </div>
 
-
-  <div class="container content split-top">
+  <div class="container content">
     <div class="row">
       <div class="col-md-12">
         %%ERROR_SEARCH_ALT%%
       </div>
     </div>
     <div class="row">
-      <div class="col-md-12">
+        <auth-board v-if="promt"></auth-board>
         <search-wizard inline-template>
   <div id="search-wizard">
-    <div class="alert alert-warning" style="min-height: 62px; margin-bottom: 15px;" @click="$router.push('/settings/search')">
-        <p v-show="say" style="display: none;">
-          <i class="material-icons">&#xE8B4;</i>
-          Вы ищете: {{say}} &nbsp;
-          <button class="btn btn-primary btn-sm">
-              <span aria-hidden="true" class="glyphicon glyphicon-cog"></span>
-              Настроить поиск
-          </button>
-          <button class="btn btn-default btn-sm" @click.stop="$router.push('/settings/desires')">
-              <span aria-hidden="true" class="glyphicon glyphicon-flash"></span>
-              Желания ({{desires}})
-          </button>
-      </p>
+    <div @click="$router.push('/settings/search')" style="display: none;" v-show="say">
+      <i class="material-icons">&#xE8B4;</i>
+      Вы ищете: {{say}} &nbsp;
+      <div class="clearfix visible-xs"></div>
+      <button class="btn btn-primary btn-sm">
+        <span aria-hidden="true" class="glyphicon glyphicon-cog"></span>
+        Настроить поиск
+      </button>
+      <button class="btn btn-default btn-sm" @click.stop="$router.push('/settings/desires')">
+        <span aria-hidden="true" class="glyphicon glyphicon-flash"></span>
+        Желания ({{desires}})
+      </button>
     </div>
   </div>
 </search-wizard>
-      </div>
     </div>
     <div class="row">
       <div class="preloader" v-show="!ready">
@@ -152,7 +149,7 @@
   </div>
 
 <div id="router-view">
-  <router-view @close="$router.go(-1)"></router-view>
+  <router-view @close="$router.go(-1)" @warning="showSnackbar" @alert="toast"></router-view>
 </div>
 
 <api-key-update></api-key-update>
@@ -385,6 +382,51 @@
       </div>
     </div>
   </modal-dialog>
+</script>
+<script type="text/x-template" id="auth-board">
+  <div>
+    <div class="auth-board">
+      <div v-show="!loaded">
+        Запомните или запишите ваш пароль.
+      </div>
+      <transition name="auth-board">
+        <div v-show="loaded">
+          Ваш логин: <b>{{login}}</b> пароль: <b>{{password}}</b>
+          <button class="btn btn-default btn-sm" @click="confirmSend = true">
+            Отправить на почту
+          </button>
+        </div>
+      </transition>
+    </div>
+
+    <modal-dialog @close="confirmSend = false" v-if="confirmSend">
+      <div class="modal-dialog__wrapper">
+        <div class="modal-dialog__body">
+          <div class="modal-dialog__section">
+          Логин и пароль будут отправлены на этот адрес. Подсказака с логином будет убрана.
+          </div>
+          <div class="modal-dialog__section">
+            <div class="form-inline">
+              <input class="form-control" type="email" name="email" v-model="email" placeholder="Ваш емайл адрес">
+            </div>
+          </div>
+          <div class="modal-dialog__section">
+            {{hint}}
+          </div>
+        </div>
+        <div class="modal-dialog__footer">
+          <button class="btn btn-default" @click="confirmSend = false">
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            Закрыть
+          </button>
+          <button class="btn btn-primary" @click="send()">
+            <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+            Отправить
+          </button>
+        </div>
+      </div>
+    </modal-dialog>
+  </div>
 </script>
 
 <script type="text/x-template" id="captcha-dialog">
@@ -1038,7 +1080,7 @@
     </div>
 
     <div class="activity-section">
-      <span class="link_simple" @click="$router.push({ name: 'login' })">Уже есть анкета?</span>
+      <span class="link_simple" @click="$router.push('/login')">Уже есть анкета?</span>
     </div>
 
   </closed-activity>
@@ -1321,6 +1363,10 @@
           Отклонить
         </label>
       </div>
+    </div>
+    <div class="activity-section" v-if="login">
+      <div v-if="!email">Мгновенные уведомления на емайл. Укажите ваш адрес электронной почты для восстановления пароля и получения уведомлений.</div>
+      <div v-else-if="!promt">Емайл необходимо подтвердить. Простые инструкции высланы в письме на указанный вами адрес электронной почты.</div>
     </div>
 
     <modal-dialog @close="confirmRemove = false" v-if="confirmRemove">

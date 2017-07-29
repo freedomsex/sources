@@ -8,8 +8,8 @@
 %%JS_USER_VARS%%
 <div id="app">
   %%MENU_HEADER%%
-  <div class="container content">
-    <div class="row" v-show="!simple">
+  <div class="container content split-bottom" v-show="!simple">
+    <div class="row">
       %%TOP_INFO_BLOCK%%
     </div>
     <div class="row">
@@ -17,7 +17,6 @@
       %%INFO_TEXT_SCH%%
     </div>
   </div>
-
 
 <!-- build:include search-results.htm --><!-- /build -->
 <div v-show="!simple">

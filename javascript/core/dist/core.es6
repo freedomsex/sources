@@ -511,9 +511,9 @@ Vue.component('api-key-update', {
             });
         },
         upUser(data) {
-            let {uid, city, sex, age, name, contacts} = data;
+            let {uid, city, sex, age, name, contacts, apromt: promt} = data;
             //console.log('upUser', data);
-            this.$store.commit('resetUser', {uid, city, sex, age, name, contacts});
+            this.$store.commit('resetUser', {uid, city, sex, age, name, contacts, promt});
             //store.commit('loadUser', data.contacts);
         },
         upSettings(data) {
@@ -571,6 +571,55 @@ Vue.component('attention-wall', {
 
 
 
+Vue.component('auth-board', {
+    data() {
+        return {
+            confirmSend: false,
+            hint: 'Введите ваш емаил.',
+            process: false,
+            email: ''
+        }
+    },
+    mounted() {
+        _.delay(() => {
+            this.$store.dispatch('auth/SYNC').then(() => {
+                this.email = this.$store.state.auth.email;
+            });
+        }, 2500);
+    },
+    computed: {
+        login() {
+            return this.$store.state.auth.login;
+        },
+        password() {
+            return this.$store.state.auth.pass;
+        },
+        loaded() {
+            return this.login && this.password;
+        },
+    },
+    methods: {
+        send() {
+            if (!this.email) {
+                return;
+            }
+            this.process = true;
+            this.hint = 'Отправляю...';
+            this.$store.dispatch('auth/SAVE_EMAIL', this.email).then((response) => {
+                this.hint = response.data.say;
+                this.error = response.data.err;
+                this.sended();
+            });
+        },
+        sended() {
+            this.process = false;
+            if (!this.error) {
+                this.emit('close');
+            }
+        },
+    },
+    template: '#auth-board'
+});
 
 Vue.component('captcha-dialog', {
     data() {
@@ -2692,7 +2741,6 @@ const SecuritySettings = Vue.component('security-settings', {
             this.inputPasswd = this.passwd;
             this.inputEmail = this.email;
             this.checkSubscribe = this.subscr;
-                console.log('subscr', [this.subscr, this.checkSubscribe ]);
         },
         deflower() {
             this.virgin = false;
@@ -2884,11 +2932,12 @@ const SexConfirm = Vue.component('sex-confirm', {
                 },
                 contacts: {
                     caption: 'Вы девушка?',
-                    text: 'Начало быстрого общения в один клик. Хотите получать сообщения и новые знакомства. Достаточно подтвердить, парень вы или девушка.'
+                    text: 'Начало быстрого общения в один клик. Хотите получать сообщения и новые знакомства? Достаточно подтвердить, парень вы или девушка.'
                 },
                 message: {
-                    caption: 'Подтвердите',
-                    text: 'Все пользователи желают знать с кем будут общаться. Чтобы продолжить укажите, парень вы или девушка.'
+                    caption: 'Общение в один клик',
+                    text: 'Начать общение просто. Хотите получать сообщения и новые знакомства? Достаточно подтвердить, парень вы или девушка.'
+                    //text: 'Все пользователи желают знать с кем будут общаться. Чтобы продолжить укажите, парень вы или девушка.'
                 },
                 account: {
                     caption: 'Кто вы?',
@@ -3647,6 +3696,7 @@ const user = {
             str: ''
         },
         status: 0,
+        promt: null,
         last: ''
     },
     actions: {
@@ -4172,17 +4222,19 @@ var routes = [
     },
     { path: '/confirm-sex/:show?', component: SexConfirm, props: true },
 
-        { path: '(.*)?/settings/search', meta: {back: '/'}, component: SearchSettings,
+    { path: '(.*)?/settings/search', meta: {back: '/'}, component: SearchSettings,
+        beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/search')
+    },
+    { path: '(.*)?/settings/account', component: AccountSettings,
+        beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/account')
+    },
+    { path: '(.*)?/settings/other', component: OtherSettings },
+    { path: '(.*)?/settings/about', meta: {back: 'other'}, component: AboutSettings },
+    { path: '(.*)?/settings/social', meta: {back: 'other'}, component: SocialSettings },
+    { path: '(.*)?/settings/desires', meta: {back: 'other'}, component: DesiresSettings ,
             beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/search')
-        },
-        { path: '(.*)?/settings/account', component: AccountSettings,
-            beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/account')
-        },
-        { path: '(.*)?/settings/other', component: OtherSettings },
-        { path: '(.*)?/settings/about', meta: {back: 'other'}, component: AboutSettings },
-        { path: '(.*)?/settings/social', meta: {back: 'other'}, component: SocialSettings },
-        { path: '(.*)?/settings/desires', meta: {back: 'other'}, component: DesiresSettings },
-        { path: '(.*)?/settings/security', meta: {back: 'other'}, component: SecuritySettings },
+    },
+    { path: '(.*)?/settings/security', meta: {back: 'other'}, component: SecuritySettings },
 
 ];
 
@@ -4230,6 +4282,9 @@ var app = new Vue({
             action: ''
         },
     },
+    mounted() {
+
+    },
     computed: {
         humanId() {
             return Number(this.$route.path.substr(1));
@@ -4239,16 +4294,21 @@ var app = new Vue({
         },
         ready() {
             return this.$store.state.ready;
+        },
+        promt() {
+            let {promt} = this.$store.state.user;
+            return !promt || promt == 'no';
         }
     },
     methods: {
         showSnackbar(text, callback, action, play) {
+            console.log('snackbar', text);
             this.snackbar.text = text;
             this.snackbar.callback = callback;
             this.snackbar.action = action;
             this.snackbar.play = (play == true);
         },
-        showToast(text) {
+        toast(text) {
             this.alert = text;
         },
         reload() {
@@ -4271,6 +4331,7 @@ new Vue({
             this.warning = text;
         },
         toast(text) {
+
             this.alert = text;
         },
     },

@@ -48,7 +48,6 @@ const SecuritySettings = Vue.component('security-settings', {
             this.inputPasswd = this.passwd;
             this.inputEmail = this.email;
             this.checkSubscribe = this.subscr;
-                console.log('subscr', [this.subscr, this.checkSubscribe ]);
         },
         deflower() {
             this.virgin = false;

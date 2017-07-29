@@ -348,6 +348,26 @@
     }
 }
 
+.auth-board {
+    background-color: @yellow-light;
+    padding: @indent-sm @indent-md;
+    border-bottom: 2px solid #faebcc;
+    text-align: center;
+    color: #8a6d3b;
+    .btn {
+        margin-left: @indent-sm;
+    }
+    .glyphicon {
+        margin-right: @indent-sm;
+    }
+}
+
+.auth-board-enter-active, .snackbar-leave-active {
+    transition: all .5s
+}
+.auth-board-enter, .snackbar-leave-to /* .fade-leave-active для <2.1.8 */ {
+    opacity: 0;
+}
 .city-suggest-ed {
     position: relative;
     .dropdown-menu {
@@ -1030,38 +1050,41 @@
     overflow: hidden;
     padding-top: 0px;
     padding-bottom: @indent-sm;
+
+    &__new {
+        text-align: center;
+        margin-top: 10px;
+        &-lamp {
+            padding: 3px @indent-sm;
+            background-color: @orange;
+            color: @white;
+            display: inline-block;
+            border-radius: 10px;
+        }
+    }
+
+    &__loader {
+        border-top: 1px dotted @gray-dark;
+        height: 10px;
+        text-align: center;
+        margin-top: 8px;
+        span {
+            padding: 0px 5px;
+            background-color: @white;
+            font-size: 11px;
+            margin: 0px auto 5px;
+            position: relative;
+            top: -8px;
+        }
+    }
+
+    &__next {
+        text-align: center;
+        margin-top: @indent-md;
+    }
 }
 
-.messages__loader {
-  border-top: 1px dotted @gray-dark;
-  height: 10px;
-  text-align: center;
-  margin-top: 8px;
-  span {
-    padding: 0px 5px;
-    background-color: @white;
-    font-size: 11px;
-    margin: 0px auto 5px;
-    position: relative;
-    top: -8px;
-  }
-}
 
-.messages__next {
-  text-align: center;
-  margin-top: @indent-md;
-}
-
-.messages__new {
-  text-align: center;
-  &-lamp {
-    padding: 3px @indent-sm;
-    background-color: @orange;
-    color: @white;
-    display: inline-block;
-    border-radius: 10px;
-  }
-}
 
 
 .form-message__buttons {
@@ -1666,18 +1689,24 @@
     background: url(/img/icon/ct_go.png);
 }
 
-
-
-
 #search-wizard {
+    padding: @indent-sm @indent-md;
     text-align: center;
-    margin-top: 10px;
+    margin-top: 0px;
     .material-icons {
         vertical-align: middle;
         position: relative;
         top: -3px;
     }
+    color: @dark-light;
+    min-height: 30px;
+    border-bottom: 2px solid @gray-light;
+
+    .clearfix {
+        margin-bottom: @indent-xs;
+    }
 }
+
 
 
 .town_line {

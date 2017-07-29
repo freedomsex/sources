@@ -1,13 +1,12 @@
-  <div class="container content split-top">
+  <div class="container content">
     <div class="row">
       <div class="col-md-12">
         %%ERROR_SEARCH_ALT%%
       </div>
     </div>
     <div class="row">
-      <div class="col-md-12">
+        <auth-board v-if="promt"></auth-board>
         <!-- build:include ../../_common/search-wizard.htm --><!-- /build -->
-      </div>
     </div>
     <div class="row">
       <div class="preloader" v-show="!ready">

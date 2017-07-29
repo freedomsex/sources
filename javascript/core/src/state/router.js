@@ -55,17 +55,19 @@ var routes = [
     },
     { path: '/confirm-sex/:show?', component: SexConfirm, props: true },
 
-        { path: '(.*)?/settings/search', meta: {back: '/'}, component: SearchSettings,
+    { path: '(.*)?/settings/search', meta: {back: '/'}, component: SearchSettings,
+        beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/search')
+    },
+    { path: '(.*)?/settings/account', component: AccountSettings,
+        beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/account')
+    },
+    { path: '(.*)?/settings/other', component: OtherSettings },
+    { path: '(.*)?/settings/about', meta: {back: 'other'}, component: AboutSettings },
+    { path: '(.*)?/settings/social', meta: {back: 'other'}, component: SocialSettings },
+    { path: '(.*)?/settings/desires', meta: {back: 'other'}, component: DesiresSettings ,
             beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/search')
-        },
-        { path: '(.*)?/settings/account', component: AccountSettings,
-            beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/account')
-        },
-        { path: '(.*)?/settings/other', component: OtherSettings },
-        { path: '(.*)?/settings/about', meta: {back: 'other'}, component: AboutSettings },
-        { path: '(.*)?/settings/social', meta: {back: 'other'}, component: SocialSettings },
-        { path: '(.*)?/settings/desires', meta: {back: 'other'}, component: DesiresSettings },
-        { path: '(.*)?/settings/security', meta: {back: 'other'}, component: SecuritySettings },
+    },
+    { path: '(.*)?/settings/security', meta: {back: 'other'}, component: SecuritySettings },
 
 ];
 
