@@ -2794,6 +2794,7 @@ var SecuritySettings = Vue.component('security-settings', {
     mounted: function mounted() {
         var _this37 = this;
 
+        console.log('auth/SYNC');
         this.$store.dispatch('auth/SYNC').then(function () {
             _this37.init();
             _this37.process = false;
@@ -2861,7 +2862,6 @@ var SecuritySettings = Vue.component('security-settings', {
 
             this.confirmRemove = false;
             this.processEmail = true;
-            console.log('REMOVE_EMAIL');
             this.$store.dispatch('auth/REMOVE_EMAIL').then(function (response) {
                 var data = response.data;
                 if (data.err) {

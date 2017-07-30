@@ -876,7 +876,6 @@
       </div>
     </modal-dialog>
 
-    <router-view></router-view>
   </div>
 </script>
 
@@ -1278,7 +1277,7 @@
           в письме которое будет отправлено на ваш емаил.
         </div>
         <div class="modal-dialog__footer">
-          <button class="btn btn-default" @click="close">
+          <button class="btn btn-default" @click="confirmRemove = false">
             Отмена
           </button>
           <button class="btn btn-danger" @click="removeEmail">
