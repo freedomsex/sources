@@ -1302,7 +1302,7 @@
   <closed-activity @close="close">
     <div class="activity-section">
       <div class="activity-section__title">Мой город:</div>
-      <div class="form-inline" @click="$router.push('account')">
+      <div class="form-inline" @click="$router.push({path: 'account', query: {back: 'search'}})">
         <input class="form-control" type="text" :value.trim="city" disabled>
         <button class="btn btn-default"> Изменить </button>
       </div>

@@ -298,6 +298,7 @@ var ActivityActions = {
         },
         back: function back(_back) {
             _back = _back === undefined ? this.$route.meta.back : _back;
+            _back = _back === undefined ? this.$route.query.back : _back;
             console.log('back:', _back);
             _back === undefined ? this.$router.push('/') : this.$router.push(_back);
         }
