@@ -171,11 +171,13 @@
 
 <div class="addthis_inline_share_toolbox" style="margin-bottom: 15px; min-height: 35px;"></div>
 
-Только реальные анкеты. Проверить действительность анкетных данных или реальность намерений очень просто,
-предложив обменяться адресами страниц вконтакте или одноклассников,
-при помощи видеозвонка Skype или позвонив собеседнику предварительно спросив номер телефона.
-Также легко можно
-<a href="/блог/проверить-подлинность-фотографии/" rel="nofollow" target="_blank">проверить подлинность фото</a>.
+<div style="padding-bottom: 25px;">
+  Только реальные анкеты. Проверить действительность анкетных данных или реальность намерений очень просто,
+  предложив обменяться адресами страниц вконтакте или одноклассников,
+  при помощи видеозвонка Skype или позвонив собеседнику предварительно спросив номер телефона.
+  Также легко можно
+  <a href="/блог/проверить-подлинность-фотографии/" rel="nofollow" target="_blank">проверить подлинность фото</a>.
+</div>
 
 
 
@@ -871,7 +873,7 @@
         <div class="human-dialog__desire" v-show="tags.length">
           <span class="link_simple" v-for="(tag, index) in tags" :key="index" v-show="tag">{{tag}} &#8226; </span>
         </div>
-        <div class="human-dialog__warning" v-show="warning">
+        <div class="human-dialog__warning" v-show="warning" @click="action()">
           {{warning}}
         </div>
       </div>
@@ -901,30 +903,38 @@
 
 
 <script type="text/x-template" id="quick-reply">
-  <modal-dialog @close="close">
-    <div class="human-dialog__caption">
-      Быстрый ответ
-    </div>
-    <div class="human-dialog__body">
-      <div class="human-dialog__desire" v-show="tags.length">
-        <span class="link_simple" v-for="(tag, index) in tags" :key="index" v-show="tag">{{tag}} &#8226; </span>
+  <div>
+    <modal-dialog @close="close">
+      <div class="human-dialog__caption">
+        Быстрый ответ
       </div>
-      <div class="human-dialog__message" v-show="message" v-html="message"></div>
-    </div>
+      <div class="human-dialog__body">
+        <div class="human-dialog__desire" v-show="tags.length">
+          <span class="link_simple" v-for="(tag, index) in tags" :key="index" v-show="tag">{{tag}} &#8226; </span>
+        </div>
+        <div class="human-dialog__message" v-show="message" v-html="message"></div>
+      </div>
 
 
-    <div class="message-input">
-      <textarea class="message-input__texarea" rows="1" placeholder="Введите текст" v-model="text" v-resized
-        @keyup.ctrl.enter.prevent="send()"></textarea>
-        <button class="btn btn-primary" @click="send()">Отправить</button>
-        <button class="btn btn-default" @click="account()">Смотреть анкету</button>
-    </div>
-    <loading-wall :show="loading"/>
-    <loading-cover :show="process"/>
-    <attention-wall :show="hold" v-if="hold" @close="cancel" @remove="remove"/>
+      <div class="message-input">
+        <textarea class="message-input__texarea" rows="1" placeholder="Введите текст" v-model="text" v-resized
+          @keyup.ctrl.enter.prevent="send()"></textarea>
+          <button class="btn btn-primary" @click="added ? (addition = true) : send()">Отправить</button>
+          <button class="btn btn-default" @click="account()">Смотреть анкету</button>
+      </div>
+      <loading-wall :show="loading"/>
+      <loading-cover :show="process"/>
+    </modal-dialog>
 
-    <captcha-dialog v-if="captcha" @close="close" @cancel="cancel" @send="setCode"/>
-  </modal-dialog>
+      <attention-wall :show="hold" v-if="hold" @close="cancel" @remove="remove"/>
+      <captcha-dialog v-if="captcha" @close="close" @cancel="cancel" @send="setCode"/>
+
+    <contact-wizard v-if="addition"
+      :humanCity = "human.city"
+      :humanAge = "human.age"
+      @approve="send()"
+      @close="addition = false"/>
+  </div>
 </script>
 
 
@@ -1660,7 +1670,7 @@
 </div>
  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/static/js/core.min.js?rel=1501535866371"></script>
+<script type="text/javascript" src="/static/js/core.min.js?rel=1501538514738"></script>
 <!-- Исходники можно найти в репозитории. Там же собранные не сжатые файлы -->
 
 
@@ -1677,7 +1687,7 @@
 %%LOAD_AVEREGE_COUNT%%
 </div>
 
-<script type="text/javascript" src="/static/js/mess.min.js?rel=1501535866372"></script>
+<script type="text/javascript" src="/static/js/mess.min.js?rel=1501538514739"></script>
 
 <script type="text/javascript">
     // var addthis_config = {"data_track_addressbar":false};

@@ -1537,6 +1537,14 @@ const QuickMessage = Vue.component('quick-message', {
         account() {
             this.$router.push(this.humanId + '/detail')
         },
+        action() {
+            if (!this.user.city) {
+                this.$router.push('wizard/city');
+            } else
+            if (!this.user.age) {
+                this.$router.push('settings/account')
+            }
+        },
         onError() {
             this.process = false;
         },

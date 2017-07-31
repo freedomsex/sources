@@ -2917,6 +2917,7 @@ a.name:hover {
   padding: 10px 10px;
   background: #fff2e5;
   margin-bottom: 5px;
+  cursor: pointer;
 }
 .human-dialog__form {
   position: relative;

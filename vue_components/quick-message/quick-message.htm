@@ -9,7 +9,7 @@
         <div class="human-dialog__desire" v-show="tags.length">
           <span class="link_simple" v-for="(tag, index) in tags" :key="index" v-show="tag">{{tag}} &#8226; </span>
         </div>
-        <div class="human-dialog__warning" v-show="warning">
+        <div class="human-dialog__warning" v-show="warning" @click="action()">
           {{warning}}
         </div>
       </div>
