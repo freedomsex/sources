@@ -464,6 +464,24 @@ var SearchActivity = Vue.component('search-activity', {
     template: '#search-activity'
 });
 
+var AdTop = Vue.component('ad-top', {
+    data: function data() {
+        return {
+            width: 0
+        };
+    },
+    mounted: function mounted() {
+        this.width = this.$el.offsetWidth;
+        console.log('cc', [this.desktop, this.width]);
+    },
+
+    computed: {
+        desktop: function desktop() {
+            return this.width >= 700;
+        }
+    },
+    template: '#ad-top'
+});
 Vue.component('api-key-update', {
     props: ['item'],
     data: function data() {

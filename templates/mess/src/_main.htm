@@ -9,6 +9,14 @@
 %%JS_DEFAULTS%%
 <div id="app">
 %%USER_MENUE_BLOCK%%
+
+  <div class="container content">
+    <div class="row">
+      <ad-top></ad-top>
+      <!-- build:include ../../_common/search-wizard.htm --><!-- /build -->
+    </div>
+  </div>
+
     <div class="container content">
       <div class="row">
         <div class="col-md-12">
@@ -23,7 +31,10 @@
 <!-- build:include key-session.htm -->Мутная штука для простановки сессий на зеркалах<!-- /build -->
 %%BLOCK_COUNTER_ALL%% <!-- счетчики статистики -->
 <!-- build:include dev-info.htm -->Информация для отладки, если включено<!-- /build -->
-<script type="text/javascript" src="%%JS_MESS%%"></script>
+
+<!-- build:[src]:dev /static/js/mess.js -->
+<script type="text/javascript" src="/static/js/mess.min.js"></script>
+ <!-- /build -->
 
 <script type="text/javascript">
     // var addthis_config = {"data_track_addressbar":false};

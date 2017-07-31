@@ -1,0 +1,20 @@
+.ad_45 {
+    @background: #e80092;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+        box-shadow: 0 0 2px @white;
+    &__btn {
+        color: @white;
+        background: @background;
+        border-radius: 5px;
+        padding: 3px 10px 4px 7px;
+        box-shadow: 0 0 5px 3px @white;
+        &:hover {
+            text-decoration: none;
+            background: lighten(@background, 3%);
+            color: @white;
+        }
+    }
+
+}

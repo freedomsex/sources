@@ -1519,6 +1519,24 @@ a.name:hover {
   padding: 10px 0;
   text-transform: uppercase;
 }
+.ad_45 {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  box-shadow: 0 0 2px #ffffff;
+}
+.ad_45__btn {
+  color: #ffffff;
+  background: #e80092;
+  border-radius: 5px;
+  padding: 3px 10px 4px 7px;
+  box-shadow: 0 0 5px 3px #ffffff;
+}
+.ad_45__btn:hover {
+  text-decoration: none;
+  background: #f7009c;
+  color: #ffffff;
+}
 .human-info {
   padding: 20px 15px;
 }

@@ -53,11 +53,11 @@ module.exports = function (grunt) {
             },
             bundle_dev: {
                 files: {
-                    'javascript/core/dist/core.min.js': [
+                    'javascript/core/dist/core.js': [
                         'bower_components/bower-components.js',
                         'javascript/core/dist/core.js'
                     ],
-                    'javascript/mess/dist/mess.min.js': [
+                    'javascript/mess/dist/mess.js': [
                         'javascript/mess/dist/mess.js'
                     ],
                 }
@@ -102,6 +102,7 @@ module.exports = function (grunt) {
         processhtml: {
             options: {
                 recursive: true,
+                strip: true,
             },
             dist: {
                 files: {
@@ -236,7 +237,7 @@ module.exports = function (grunt) {
                     'templates/_common/**/*.htm',
                     '../inc/*.htm',
                 ],
-                tasks: ['processhtml:dev'],
+                tasks: ['processhtml:dev', 'cachebreaker'],
                 options: {
                     livereload: true,
                     spawn: false,
@@ -262,6 +263,16 @@ module.exports = function (grunt) {
                     "css-styles/mess/dist/mess.css": "css-styles/mess/dist/mess.css"
                 }
             }
+        },
+        cachebreaker: {
+            dev: {
+                options: {
+                    match: ['core.min.js', 'mess.min.js', 'core.js', 'mess.js'] 
+                },
+                files: {
+                    src: ['templates/mess/dist/mess.htm', 'templates/index/dist/index.htm']
+                }
+            }
         }
     });
 
@@ -275,6 +286,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-babel');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-autoprefixer');
+    grunt.loadNpmTasks('grunt-cache-breaker');
 
     // Эти задания будут выполнятся сразу же когда вы в консоли напечатание grunt, и нажмете Enter
     grunt.registerTask('core', [
@@ -283,8 +295,8 @@ module.exports = function (grunt) {
         'less:dev'
     ]);
     //grunt.registerTask('default', ['concat', 'babel', 'uglify', 'less', 'processhtml']);
-    grunt.registerTask('dev',  ['core', 'replace:dev', 'concat:bundle_dev', 'processhtml:dev']);
-    grunt.registerTask('prod', ['core', 'replace:dist', 'uglify', 'concat:bundle_prod', 'processhtml:dist', 'autoprefixer' ]);
+    grunt.registerTask('dev',  ['core', 'replace:dev', 'concat:bundle_dev', 'processhtml:dev', 'cachebreaker']);
+    grunt.registerTask('prod', ['core', 'replace:dist', 'uglify', 'concat:bundle_prod', 'processhtml:dist', 'autoprefixer', 'cachebreaker']);
     grunt.registerTask('p',    ['prod', 'watch']);
     grunt.registerTask('d',    ['dev', 'watch']);
     grunt.registerTask('img',  ['image_resize']);
