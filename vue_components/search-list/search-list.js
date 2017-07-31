@@ -62,6 +62,12 @@ Vue.component('search-list', {
         loader() {
             return this.$store.state.ready && !this.count;
         },
+        city() {
+            return this.$store.state.user.city;
+        },
+        age() {
+            return this.$store.state.user.age;
+        },
     },
     methods: {
         reload() {

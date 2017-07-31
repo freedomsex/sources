@@ -1609,6 +1609,7 @@ const QuickMessage = Vue.component('quick-message', {
             loading: false,
             confirm: false,
             ignore: false,
+            addition: false,
             code: null
         }
     },
@@ -1627,6 +1628,9 @@ const QuickMessage = Vue.component('quick-message', {
         },
         hold() {
             return this.ignore ? 0 : this.human.hold;
+        },
+        added() {
+            return (this.user.city && this.user.age && this.user.name) ? false : true;
         },
         warning() {
             var result = '';
@@ -2039,6 +2043,12 @@ Vue.component('search-list', {
         loader() {
             return this.$store.state.ready && !this.count;
         },
+        city() {
+            return this.$store.state.user.city;
+        },
+        age() {
+            return this.$store.state.user.age;
+        },
     },
     methods: {
         reload() {
@@ -2281,6 +2291,10 @@ const AccountSettings = Vue.component('account-settings', {
         resetName() {
             this.selectName = this.name;
         },
+        randomAge() {
+            this.selectAge = _.random(19, 30);
+            this.saveAge();
+        },
         save() {
             this.saveCity();
             this.saveAge();
@@ -2292,6 +2306,62 @@ const AccountSettings = Vue.component('account-settings', {
         },
     },
     template: '#account-settings',
+});
+
+
+const CityWizard = Vue.component('city-wizard', {
+    extends: AccountSettings,
+    data() {
+        return {
+            cities: [
+                'Москва','Санкт-Петербург','Минск','Алматы','Краснодар','Екатеринбург','Новосибирск','Киев','Омск',
+                'Воронеж','Нижний Новгород','Бишкек','Челябинск','Самара','Красноярск','Уфа','Казань','Иркутск','Волгоград',
+                'Харьков','Саратов','Ростов-на-Дону','Одесса','Барнаул','Пермь','Тюмень','Ташкент','Гомель','Томск',
+                'Хабаровск','Тольятти','Астана','Ставрополь','Тула','Астрахань','Гродно','Пенза','Оренбург','Владивосток',
+                'Чита','Рязань','Караганда','Тверь','Ульяновск','Кемерово','Сургут','Ярославль','Улан-Удэ','Брянск',
+                'Шымкент','Витебск','Симферополь','Калининград','Сочи','Липецк','Ижевск','Курск','Белгород','Павлодар',
+                'Брест','Могилев','Запорожье','Киров','Новокузнецк','Кривой Рог','Калуга','Усть-Каменогорск','Севастополь',
+                'Тамбов','Днепропетровск','Чебоксары','Иваново','Смоленск','Донецк','Душанбе','Владимир','Орел','Магнитогорск',
+                'Кострома','Нижневартовск'
+            ]
+        };
+    },
+    methods: {
+        select(city) {
+            this.saveCity(city);
+            this.back();
+        },
+        close() {
+            this.saveCity();
+            this.back();
+        },
+    },
+    template: '#city-wizard',
+});
+
+
+const ContactWizard = Vue.component('contact-wizard', {
+    extends: AccountSettings,
+    props: ['humanCity', 'humanAge'],
+    created() {
+        if (!this.selectCity && this.humanCity) {
+            this.selectCity = this.humanCity;
+        }
+        if (!this.selectAge && this.humanAge) {
+            this.selectAge = this.humanAge;
+        }
+    },
+    methods: {
+        approve() {
+            this.save();
+            this.$emit('approve');
+            this.$emit('close');
+        },
+        close() {
+            this.$emit('close');
+        }
+    },
+    template: '#contact-wizard',
 });
 
 
@@ -2861,7 +2931,7 @@ const SexConfirm = Vue.component('sex-confirm', {
             return this.show ? this.show : 'message';
         },
         caption() {
-            return this.content[this.variant].caption;
+            return this.content[this.variant].caption ;
         },
         text() {
             return this.content[this.variant].text;
@@ -2911,41 +2981,46 @@ const SexConfirm = Vue.component('sex-confirm', {
         redirect() {
             if (this.index('search')) {
                 this.$router.replace('/search');
-            }
+            } else
             // if (this.index('contacts')) {
             //     console.log('leave', 'contacts');
             //     next({name: 'search-settings'});
             // }
             if (this.index('account')) {
                 this.$router.replace('/settings/account');
-            }
+            } else
             if (this.index('message')) {
+                this.$router.replace('/');
+            } else
+            if (this.index('city')) {
+                this.$router.replace('/wizard/city');
+            } else {
                 this.$router.replace('/');
             }
         }
     },
     data() {
-        return {
-            content: {
-                search: {
-                    caption: 'Легко начать',
-                    text: 'Для правильного отображения результатов поиска необходимо указать пол. Вы парень или девушка?'
-                },
-                contacts: {
-                    caption: 'Вы девушка?',
-                    text: 'Начало быстрого общения в один клик. Хотите получать сообщения и новые знакомства? Достаточно подтвердить, парень вы или девушка.'
-                },
-                message: {
-                    caption: 'Общение в один клик',
-                    text: 'Начать общение просто. Хотите получать сообщения и новые знакомства? Достаточно подтвердить, парень вы или девушка.'
-                    //text: 'Все пользователи желают знать с кем будут общаться. Чтобы продолжить укажите, парень вы или девушка.'
-                },
-                account: {
-                    caption: 'Кто вы?',
-                    text: 'Приватная анкета в один клик. Самое быстрое общение. Достаточно указать кто вы, парень или девушка. И начинайте общаться.'
-                }
+        let content = {
+            search: {
+                caption: 'Легко начать',
+                text: 'Для правильного отображения результатов поиска необходимо указать пол. Вы парень или девушка?'
+            },
+            contacts: {
+                caption: 'Вы девушка?',
+                text: 'Начало быстрого общения в один клик. Хотите получать сообщения и новые знакомства? Достаточно подтвердить, парень вы или девушка.'
+            },
+            message: {
+                caption: 'Общение в один клик',
+                text: 'Начать общение просто. Хотите получать сообщения и новые знакомства? Достаточно подтвердить, парень вы или девушка.'
+                //text: 'Все пользователи желают знать с кем будут общаться. Чтобы продолжить укажите, парень вы или девушка.'
+            },
+            account: {
+                caption: 'Кто вы?',
+                text: 'Приватная анкета в один клик. Самое быстрое общение. Достаточно указать кто вы, парень или девушка. И начинайте общаться.'
             }
-        }
+        };
+        content.city = content.contacts;
+        return {content};
     },
     template: '#sex-confirm'
 });
@@ -4236,6 +4311,9 @@ var routes = [
             beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/search')
     },
     { path: '(.*)?/settings/security', meta: {back: 'other'}, component: SecuritySettings },
+    { path: '(.*)?/wizard/city', meta: {back: '/settings/account'}, component: CityWizard,
+        beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/city')
+    },
 
 ];
 

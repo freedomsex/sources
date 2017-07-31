@@ -65,6 +65,10 @@ const AccountSettings = Vue.component('account-settings', {
         resetName() {
             this.selectName = this.name;
         },
+        randomAge() {
+            this.selectAge = _.random(19, 30);
+            this.saveAge();
+        },
         save() {
             this.saveCity();
             this.saveAge();

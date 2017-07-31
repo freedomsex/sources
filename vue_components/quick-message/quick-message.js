@@ -22,6 +22,7 @@ const QuickMessage = Vue.component('quick-message', {
             loading: false,
             confirm: false,
             ignore: false,
+            addition: false,
             code: null
         }
     },
@@ -40,6 +41,9 @@ const QuickMessage = Vue.component('quick-message', {
         },
         hold() {
             return this.ignore ? 0 : this.human.hold;
+        },
+        added() {
+            return (this.user.city && this.user.age && this.user.name) ? false : true;
         },
         warning() {
             var result = '';

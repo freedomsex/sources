@@ -1639,6 +1639,7 @@ var QuickMessage = Vue.component('quick-message', {
             loading: false,
             confirm: false,
             ignore: false,
+            addition: false,
             code: null
         };
     },
@@ -1658,6 +1659,9 @@ var QuickMessage = Vue.component('quick-message', {
         },
         hold: function hold() {
             return this.ignore ? 0 : this.human.hold;
+        },
+        added: function added() {
+            return this.user.city && this.user.age && this.user.name ? false : true;
         },
         warning: function warning() {
             var result = '';
@@ -2078,6 +2082,12 @@ Vue.component('search-list', {
         },
         loader: function loader() {
             return this.$store.state.ready && !this.count;
+        },
+        city: function city() {
+            return this.$store.state.user.city;
+        },
+        age: function age() {
+            return this.$store.state.user.age;
         }
     },
     methods: {
@@ -2329,6 +2339,10 @@ var AccountSettings = Vue.component('account-settings', {
         resetName: function resetName() {
             this.selectName = this.name;
         },
+        randomAge: function randomAge() {
+            this.selectAge = _.random(19, 30);
+            this.saveAge();
+        },
         save: function save() {
             this.saveCity();
             this.saveAge();
@@ -2340,6 +2354,52 @@ var AccountSettings = Vue.component('account-settings', {
         }
     },
     template: '#account-settings'
+});
+
+var CityWizard = Vue.component('city-wizard', {
+    extends: AccountSettings,
+    data: function data() {
+        return {
+            cities: ['Москва', 'Санкт-Петербург', 'Минск', 'Алматы', 'Краснодар', 'Екатеринбург', 'Новосибирск', 'Киев', 'Омск', 'Воронеж', 'Нижний Новгород', 'Бишкек', 'Челябинск', 'Самара', 'Красноярск', 'Уфа', 'Казань', 'Иркутск', 'Волгоград', 'Харьков', 'Саратов', 'Ростов-на-Дону', 'Одесса', 'Барнаул', 'Пермь', 'Тюмень', 'Ташкент', 'Гомель', 'Томск', 'Хабаровск', 'Тольятти', 'Астана', 'Ставрополь', 'Тула', 'Астрахань', 'Гродно', 'Пенза', 'Оренбург', 'Владивосток', 'Чита', 'Рязань', 'Караганда', 'Тверь', 'Ульяновск', 'Кемерово', 'Сургут', 'Ярославль', 'Улан-Удэ', 'Брянск', 'Шымкент', 'Витебск', 'Симферополь', 'Калининград', 'Сочи', 'Липецк', 'Ижевск', 'Курск', 'Белгород', 'Павлодар', 'Брест', 'Могилев', 'Запорожье', 'Киров', 'Новокузнецк', 'Кривой Рог', 'Калуга', 'Усть-Каменогорск', 'Севастополь', 'Тамбов', 'Днепропетровск', 'Чебоксары', 'Иваново', 'Смоленск', 'Донецк', 'Душанбе', 'Владимир', 'Орел', 'Магнитогорск', 'Кострома', 'Нижневартовск']
+        };
+    },
+
+    methods: {
+        select: function select(city) {
+            this.saveCity(city);
+            this.back();
+        },
+        close: function close() {
+            this.saveCity();
+            this.back();
+        }
+    },
+    template: '#city-wizard'
+});
+
+var ContactWizard = Vue.component('contact-wizard', {
+    extends: AccountSettings,
+    props: ['humanCity', 'humanAge'],
+    created: function created() {
+        if (!this.selectCity && this.humanCity) {
+            this.selectCity = this.humanCity;
+        }
+        if (!this.selectAge && this.humanAge) {
+            this.selectAge = this.humanAge;
+        }
+    },
+
+    methods: {
+        approve: function approve() {
+            this.save();
+            this.$emit('approve');
+            this.$emit('close');
+        },
+        close: function close() {
+            this.$emit('close');
+        }
+    },
+    template: '#contact-wizard'
 });
 
 var DesiresSettings = Vue.component('desires-settings', {
@@ -2989,41 +3049,44 @@ var SexConfirm = Vue.component('sex-confirm', {
         redirect: function redirect() {
             if (this.index('search')) {
                 this.$router.replace('/search');
-            }
-            // if (this.index('contacts')) {
-            //     console.log('leave', 'contacts');
-            //     next({name: 'search-settings'});
-            // }
-            if (this.index('account')) {
-                this.$router.replace('/settings/account');
-            }
-            if (this.index('message')) {
-                this.$router.replace('/');
-            }
+            } else
+                // if (this.index('contacts')) {
+                //     console.log('leave', 'contacts');
+                //     next({name: 'search-settings'});
+                // }
+                if (this.index('account')) {
+                    this.$router.replace('/settings/account');
+                } else if (this.index('message')) {
+                    this.$router.replace('/');
+                } else if (this.index('city')) {
+                    this.$router.replace('/wizard/city');
+                } else {
+                    this.$router.replace('/');
+                }
         }
     },
     data: function data() {
-        return {
-            content: {
-                search: {
-                    caption: 'Легко начать',
-                    text: 'Для правильного отображения результатов поиска необходимо указать пол. Вы парень или девушка?'
-                },
-                contacts: {
-                    caption: 'Вы девушка?',
-                    text: 'Начало быстрого общения в один клик. Хотите получать сообщения и новые знакомства? Достаточно подтвердить, парень вы или девушка.'
-                },
-                message: {
-                    caption: 'Общение в один клик',
-                    text: 'Начать общение просто. Хотите получать сообщения и новые знакомства? Достаточно подтвердить, парень вы или девушка.'
-                    //text: 'Все пользователи желают знать с кем будут общаться. Чтобы продолжить укажите, парень вы или девушка.'
-                },
-                account: {
-                    caption: 'Кто вы?',
-                    text: 'Приватная анкета в один клик. Самое быстрое общение. Достаточно указать кто вы, парень или девушка. И начинайте общаться.'
-                }
+        var content = {
+            search: {
+                caption: 'Легко начать',
+                text: 'Для правильного отображения результатов поиска необходимо указать пол. Вы парень или девушка?'
+            },
+            contacts: {
+                caption: 'Вы девушка?',
+                text: 'Начало быстрого общения в один клик. Хотите получать сообщения и новые знакомства? Достаточно подтвердить, парень вы или девушка.'
+            },
+            message: {
+                caption: 'Общение в один клик',
+                text: 'Начать общение просто. Хотите получать сообщения и новые знакомства? Достаточно подтвердить, парень вы или девушка.'
+                //text: 'Все пользователи желают знать с кем будут общаться. Чтобы продолжить укажите, парень вы или девушка.'
+            },
+            account: {
+                caption: 'Кто вы?',
+                text: 'Приватная анкета в один клик. Самое быстрое общение. Достаточно указать кто вы, парень или девушка. И начинайте общаться.'
             }
         };
+        content.city = content.contacts;
+        return { content: content };
     },
 
     template: '#sex-confirm'
@@ -3980,7 +4043,7 @@ var store = new Vuex.Store({
     state: {
         ready: false,
         apiToken: '',
-        photoServer: '195.154.54.70',
+        photoServer: '127.0.0.1:8008',
         simple: false
     },
     actions: {
@@ -4019,7 +4082,7 @@ var Api = function () {
         _classCallCheck(this, Api);
 
         // Delay requests sec
-        this.setDelay('0');
+        this.setDelay('2');
         // [!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]
         this.setRoot(host, version);
         this.setConfig(this.root, key);
@@ -4372,7 +4435,7 @@ var ApiSearch = function (_Api4) {
         _classCallCheck(this, ApiSearch);
 
         var key = '1234';
-        var host = 'http://212.83.162.58/';
+        var host = 'http://127.0.0.1:9000/';
         var routing = {
             route: 'users',
             get: '{tid}'
@@ -4390,7 +4453,7 @@ var ApiContact = function (_Api5) {
         _classCallCheck(this, ApiContact);
 
         var key = store.state.apiToken;
-        var host = 'http://212.83.134.89:9000/';
+        var host = 'http://127.0.0.1:8000/';
         return _possibleConstructorReturn(this, (ApiContact.__proto__ || Object.getPrototypeOf(ApiContact)).call(this, host, key, null, routing));
     }
 
@@ -4522,7 +4585,11 @@ var routes = [{ path: '/write/:humanId(\\d+)/(.*)?', name: 'quickWrite', compone
     beforeEnter: function beforeEnter(to, from, next) {
         return store.state.user.sex ? next() : next('/confirm-sex/search');
     }
-}, { path: '(.*)?/settings/security', meta: { back: 'other' }, component: SecuritySettings }];
+}, { path: '(.*)?/settings/security', meta: { back: 'other' }, component: SecuritySettings }, { path: '(.*)?/wizard/city', meta: { back: '/settings/account' }, component: CityWizard,
+    beforeEnter: function beforeEnter(to, from, next) {
+        return store.state.user.sex ? next() : next('/confirm-sex/city');
+    }
+}];
 
 var router = new VueRouter({
     //mode: 'history',

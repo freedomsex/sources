@@ -370,7 +370,7 @@
 
 <script type="text/x-template" id="city-suggest">
   <div class="city-suggest-ed">
-    <input class="city-suggest-ed__input form-control" type="text" autocomplete="off"
+    <input class="city-suggest-ed__input form-control" type="text" autocomplete="off" placeholder="Введите название"
       v-model="query" @keyup="load()">
     <ul class="dropdown-menu" v-show="suggested">
       <li v-for="(item, index) in cities" :key="index" @click="select(item)"><a href="#" @click.prevent>{{item}}</a></li>
@@ -732,15 +732,21 @@
       <div class="message-input">
         <textarea class="message-input__texarea" rows="1" placeholder="Введите текст" v-model="text" v-resized
           @keyup.ctrl.enter.prevent="send()"></textarea>
-          <button class="btn btn-primary" @click="send()">Отправить</button>
+          <button class="btn btn-primary" @click="added ? (addition = true) : send()">Отправить</button>
           <button class="btn btn-default" @click="account()">Смотреть анкету...</button>
       </div>
       <loading-wall :show="loading"/>
       <loading-cover :show="process"/>
-      <attention-wall :show="hold" v-if="hold" @close="cancel" @remove="remove"/>
-
-      <captcha-dialog v-if="captcha" @close="close" @cancel="cancel" @send="setCode"/>
     </modal-dialog>
+
+    <attention-wall :show="hold" v-if="hold" @close="cancel" @remove="remove"/>
+    <captcha-dialog v-if="captcha" @close="close" @cancel="cancel" @send="setCode"/>
+
+    <contact-wizard v-if="addition"
+      :humanCity = "human.city"
+      :humanAge = "human.age"
+      @approve="send()"
+      @close="addition = false"/>
   </div>
 </script>
 
@@ -846,6 +852,15 @@
   <div>
     <div class="search-list">
       <search-item v-for="item in items" :human="item" :visited="old(item.id)" :gold="gold(item.tags)" :key="item.id" :compact="compact"/>
+
+      <div class="search-list__alert" v-if="!city" @click="$router.push('wizard/city')">
+        Получайте в десять раз больше новых знакомств. Укажите <span class="link_dashed">ваш город</span>  в анкете. Вы редко появляетесь в результатах поиска. Ведь все ищут по Городу, а он у вас не указан.
+      </div>
+      <div class="search-list__alert" v-else-if="!age" @click="$router.push('settings/account')">
+        Укажите <span class="link_dashed">возраст в анкете</span> и получайте больше интересных знакомств.
+        Вашу анкету находят только те, кому безразличен возраст. Таких мало, и вам очень редко пишут.
+      </div>
+
       <div class="messages__next" @click="loadNext" v-show="more">
         <span class="btn btn-default btn-xs" :disabled="!response">Следующие</span>
       </div>
@@ -966,6 +981,9 @@
         <select class="form-control" v-model.number="selectAge" @change="saveAge">
           <option v-for="(item, index) in _.range(16, 81)" :value="item" >{{item ? item : ''}}</option>
         </select>
+        <button class="btn btn-success" v-if="!selectAge" @click="randomAge()">
+          <span aria-hidden="true" class="glyphicon glyphicon-arrow-left"></span>
+        </button>
       </div>
     </div>
 
@@ -987,6 +1005,43 @@
   </closed-activity>
 </script>
 
+<script type="text/x-template" id="city-wizard">
+  <closed-activity @close="close">
+    <span slot="caption">Мой город</span>
+    <div class="activity-section">
+      <div class="form-inline">
+        <city-suggest :city="selectCity" @select="select"/>
+      </div>
+    </div>
+    <div class="activity-section">
+      <span class="city-list__item btn btn-default btn-xs" v-for="item in cities" @click="select(item)"> {{item}} </span>
+    </div>
+  </closed-activity>
+</script>
+
+<script type="text/x-template" id="contact-wizard">
+  <modal-dialog @close="close">
+    <div class="modal-dialog__wrapper">
+      <div class="modal-dialog__section">
+        Ваше имя:<br>
+        <input class="form-control" type="text" v-model="selectName" @blur="saveName" placeholder="Ваше имя">
+      </div>
+      <div class="modal-dialog__section">
+        Город:<br>
+        <city-suggest :city="selectCity" @select="saveCity"/>
+      </div>
+      <div class="modal-dialog__section">
+        Возраст:<br>
+        <select class="form-control" v-model.number="selectAge" @change="saveAge">
+          <option v-for="(item, index) in _.range(16, 81)" :value="item" >{{item ? item : ''}}</option>
+        </select>
+      </div>
+      <div class="human-dialog__footer">
+        <button class="btn btn-primary" @click="approve">Продолжить</button>
+      </div>
+    </div>
+  </modal-dialog>
+</script>
 
 <script type="text/x-template" id="desires-settings">
   <closed-activity @close="close">
@@ -1455,12 +1510,8 @@
   <input id="edit_human_name" type="text" placeholder="Имя" style="width: 150px;">
   <input id="edit_human_btn"  type="submit" value=" Сохранить ">
 </div>
-<!-- build:[src]:dev /static/js/jquery/ -->
- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
- <!-- /build -->
- <!-- build:[src]:dev /static/js/jquery-ui/ -->
- <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
- <!-- /build -->
+ <script src="/static/js/jquery/jquery.min.js"></script>
+ <script src="/static/js/jquery-ui/jquery-ui.min.js"></script>
 
 <script type="text/javascript" src="%%JS_FILE%%"></script>
 <!-- Исходники можно найти в репозитории. Тамже собранные не сжатые файлы -->

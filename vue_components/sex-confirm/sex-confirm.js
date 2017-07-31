@@ -6,7 +6,7 @@ const SexConfirm = Vue.component('sex-confirm', {
             return this.show ? this.show : 'message';
         },
         caption() {
-            return this.content[this.variant].caption;
+            return this.content[this.variant].caption ;
         },
         text() {
             return this.content[this.variant].text;
@@ -56,41 +56,46 @@ const SexConfirm = Vue.component('sex-confirm', {
         redirect() {
             if (this.index('search')) {
                 this.$router.replace('/search');
-            }
+            } else
             // if (this.index('contacts')) {
             //     console.log('leave', 'contacts');
             //     next({name: 'search-settings'});
             // }
             if (this.index('account')) {
                 this.$router.replace('/settings/account');
-            }
+            } else
             if (this.index('message')) {
+                this.$router.replace('/');
+            } else
+            if (this.index('city')) {
+                this.$router.replace('/wizard/city');
+            } else {
                 this.$router.replace('/');
             }
         }
     },
     data() {
-        return {
-            content: {
-                search: {
-                    caption: 'Легко начать',
-                    text: 'Для правильного отображения результатов поиска необходимо указать пол. Вы парень или девушка?'
-                },
-                contacts: {
-                    caption: 'Вы девушка?',
-                    text: 'Начало быстрого общения в один клик. Хотите получать сообщения и новые знакомства? Достаточно подтвердить, парень вы или девушка.'
-                },
-                message: {
-                    caption: 'Общение в один клик',
-                    text: 'Начать общение просто. Хотите получать сообщения и новые знакомства? Достаточно подтвердить, парень вы или девушка.'
-                    //text: 'Все пользователи желают знать с кем будут общаться. Чтобы продолжить укажите, парень вы или девушка.'
-                },
-                account: {
-                    caption: 'Кто вы?',
-                    text: 'Приватная анкета в один клик. Самое быстрое общение. Достаточно указать кто вы, парень или девушка. И начинайте общаться.'
-                }
+        let content = {
+            search: {
+                caption: 'Легко начать',
+                text: 'Для правильного отображения результатов поиска необходимо указать пол. Вы парень или девушка?'
+            },
+            contacts: {
+                caption: 'Вы девушка?',
+                text: 'Начало быстрого общения в один клик. Хотите получать сообщения и новые знакомства? Достаточно подтвердить, парень вы или девушка.'
+            },
+            message: {
+                caption: 'Общение в один клик',
+                text: 'Начать общение просто. Хотите получать сообщения и новые знакомства? Достаточно подтвердить, парень вы или девушка.'
+                //text: 'Все пользователи желают знать с кем будут общаться. Чтобы продолжить укажите, парень вы или девушка.'
+            },
+            account: {
+                caption: 'Кто вы?',
+                text: 'Приватная анкета в один клик. Самое быстрое общение. Достаточно указать кто вы, парень или девушка. И начинайте общаться.'
             }
-        }
+        };
+        content.city = content.contacts;
+        return {content};
     },
     template: '#sex-confirm'
 });
