@@ -560,6 +560,14 @@
 <script type="text/x-template" id="intimate-dialog">
   <default-activity @close="close">
     <span slot="caption">Общение</span>
+
+    <div class="menu-user__navbar-right" slot="option">
+      <div class="navbar-button">
+        <i class="material-icons">&#xE53F;</i> &nbsp;
+        Защитить
+      </div>
+    </div>
+
     <div class="contact-list" v-if="count">
       <contact-item v-for="(item, index) in contacts" :key="index"
         :item="item"
@@ -1670,7 +1678,7 @@
 </div>
  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/static/js/core.min.js?rel=1501538514738"></script>
+<script type="text/javascript" src="/static/js/core.min.js?rel=1501608943393"></script>
 <!-- Исходники можно найти в репозитории. Там же собранные не сжатые файлы -->
 
 
@@ -1687,7 +1695,7 @@
 %%LOAD_AVEREGE_COUNT%%
 </div>
 
-<script type="text/javascript" src="/static/js/mess.min.js?rel=1501538514739"></script>
+<script type="text/javascript" src="/static/js/mess.min.js?rel=1501608943396"></script>
 
 <script type="text/javascript">
     // var addthis_config = {"data_track_addressbar":false};

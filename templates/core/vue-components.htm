@@ -339,6 +339,14 @@
 <script type="text/x-template" id="intimate-dialog">
   <default-activity @close="close">
     <span slot="caption">Общение</span>
+
+    <div class="menu-user__navbar-right" slot="option">
+      <div class="navbar-button">
+        <i class="material-icons">&#xE53F;</i> &nbsp;
+        Защитить
+      </div>
+    </div>
+
     <div class="contact-list" v-if="count">
       <contact-item v-for="(item, index) in contacts" :key="index"
         :item="item"

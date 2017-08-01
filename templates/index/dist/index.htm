@@ -133,6 +133,7 @@
 
    <a class="info-table__link" rel="nofollow" href="/блог/реклама-на-сайте/">Реклама на сайте</a>
    <a class="info-table__link" rel="nofollow" href="/envelope.htm" target="_blank">Написать разработчикам</a>
+   <a class="info-table__link" rel="nofollow" href="/security/action" target="_blank">Администрирование</a>
   </div>
 
   <div style="text-align: center; margin: 10px 0 40px;">
@@ -517,6 +518,14 @@
 <script type="text/x-template" id="intimate-dialog">
   <default-activity @close="close">
     <span slot="caption">Общение</span>
+
+    <div class="menu-user__navbar-right" slot="option">
+      <div class="navbar-button">
+        <i class="material-icons">&#xE53F;</i> &nbsp;
+        Защитить
+      </div>
+    </div>
+
     <div class="contact-list" v-if="count">
       <contact-item v-for="(item, index) in contacts" :key="index"
         :item="item"
@@ -1627,7 +1636,7 @@
 </div>
  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/static/js/core.min.js?rel=1501538514742"></script>
+<script type="text/javascript" src="/static/js/core.min.js?rel=1501608943400"></script>
 <!-- Исходники можно найти в репозитории. Там же собранные не сжатые файлы -->
 
 

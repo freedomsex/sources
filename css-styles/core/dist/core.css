@@ -1523,14 +1523,13 @@ a.name:hover {
   position: absolute;
   top: 15px;
   right: 15px;
-  box-shadow: 0 0 2px #ffffff;
 }
 .ad_45__btn {
   color: #ffffff;
   background: #e80092;
   border-radius: 5px;
-  padding: 3px 10px 4px 7px;
-  box-shadow: 0 0 2px 2px #ffffff;
+  padding: 4px 15px 5px 10px;
+  box-shadow: 0 0 0px 3px #ffffff;
 }
 .ad_45__btn:hover {
   text-decoration: none;
@@ -1810,8 +1809,8 @@ a.name:hover {
 }
 .send-form__textarea {
   -webkit-box-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
+      -ms-flex: 1 1 auto;
+          flex: 1 1 auto;
   border: 0px solid gray;
   padding: 7px 0;
   line-height: 1;
@@ -1831,16 +1830,16 @@ a.name:hover {
 .send-form__button-send {
   cursor: pointer;
   -webkit-box-flex: 0;
-      -ms-flex: 0;
-          flex: 0;
+      -ms-flex: 0 0 auto;
+          flex: 0 0 auto;
   color: #666666;
   padding: 0 10px 12px;
 }
 .send-form__button-account {
   cursor: pointer;
   -webkit-box-flex: 0;
-      -ms-flex: 0;
-          flex: 0;
+      -ms-flex: 0 0 auto;
+          flex: 0 0 auto;
   color: #666666;
   padding: 0 10px 12px;
 }
@@ -2357,6 +2356,12 @@ a.name:hover {
           align-items: center;
   cursor: pointer;
   overflow: hidden;
+}
+.navbar-button a {
+  color: #ffffff;
+}
+.navbar-button a:hover {
+  text-decoration: none;
 }
 .navbar-button div {
   overflow: hidden;
