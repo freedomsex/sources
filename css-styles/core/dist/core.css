@@ -2251,8 +2251,8 @@ a.name:hover {
 }
 .menu-user__navbar {
   -webkit-box-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
+      -ms-flex: 1 0 auto;
+          flex: 1 0 auto;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -2267,8 +2267,8 @@ a.name:hover {
 }
 .menu-user__getlogin {
   -webkit-box-flex: 1;
-      -ms-flex: 1 1;
-          flex: 1 1;
+      -ms-flex: 1 1 auto;
+          flex: 1 1 auto;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -2277,8 +2277,8 @@ a.name:hover {
 }
 .menu-user__login {
   -webkit-box-flex: 0;
-      -ms-flex: 0 0;
-          flex: 0 0;
+      -ms-flex: 0 0 auto;
+          flex: 0 0 auto;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
