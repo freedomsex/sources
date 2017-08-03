@@ -502,11 +502,14 @@ const ModeratorActivity = Vue.component('moderator-activity', {
         load() {
             this.process = true;
             api.moderator.load().then((response) => {
-                let error = response.data.error;
-                if (error == 'promt') {
+                this.error = response.data.error;
+                if (this.error == 'promt') {
                     this.needPromt();
                 } else
-                if (!error) {
+                if (this.error == 'count') {
+
+                } else
+                if (!this.error) {
                     this.loaded(response.data);
                 }
                 this.process = false;
