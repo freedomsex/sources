@@ -743,23 +743,35 @@
   <div>
     <modal-dialog @close="close">
       <div class="human-dialog__caption">
-        Написать сообщение
+        {{caption}}
       </div>
-      <div class="human-dialog__body">
-        <div class="human-dialog__desire" v-show="tags.length">
-          <span class="link_simple" v-for="(tag, index) in tags" :key="index" v-show="tag">{{tag}} &#8226; </span>
-        </div>
-        <div class="human-dialog__warning" v-show="warning" @click="action()">
-          {{warning}}
-        </div>
-      </div>
+      <div class="modal-dialog__wrapper capped">
+        <div class="modal-dialog__section">
+          <div class="human-dialog__desire" v-show="tags.length">
+            <span class="link_simple" v-for="(tag, index) in tags" :key="index" v-show="tag">{{tag}} &#8226; </span>
+          </div>
 
 
-      <div class="message-input">
-        <textarea class="message-input__texarea" rows="1" placeholder="Введите текст" v-model="text" v-resized
-          @keyup.ctrl.enter.prevent="send()"></textarea>
-          <button class="btn btn-primary" @click="added ? (addition = true) : send()">Отправить</button>
-          <button class="btn btn-default" @click="account()">Смотреть анкету...</button>
+    <div slot="content" class="human-dialog__text" :class="reply ? 'message' : 'warning'" v-show="information" @click="action()">
+      {{information}}
+    </div>
+
+
+        </div>
+        <div class="modal-dialog__section">
+          <textarea class="message-input__texarea" rows="1" placeholder="Введите текст" v-model="text" v-resized
+            @keyup.ctrl.enter.prevent="send()"></textarea>
+        </div>
+        <div class="modal-dialog__options">
+          <button class="btn btn-primary" @click="added ? (addition = true) : send()">
+            <i class="material-icons">&#xE163;</i>
+            Отправить
+          </button>
+          <button class="btn btn-default" @click="account()">
+            <i class="material-icons">&#xE853;</i>
+            Смотреть анкету
+          </button>
+        </div>
       </div>
       <loading-wall :show="loading"/>
       <loading-cover :show="process"/>
@@ -776,42 +788,6 @@
   </div>
 </script>
 
-
-
-<script type="text/x-template" id="quick-reply">
-  <div>
-    <modal-dialog @close="close">
-      <div class="human-dialog__caption">
-        Быстрый ответ
-      </div>
-      <div class="human-dialog__body">
-        <div class="human-dialog__desire" v-show="tags.length">
-          <span class="link_simple" v-for="(tag, index) in tags" :key="index" v-show="tag">{{tag}} &#8226; </span>
-        </div>
-        <div class="human-dialog__message" v-show="message" v-html="message"></div>
-      </div>
-
-
-      <div class="message-input">
-        <textarea class="message-input__texarea" rows="1" placeholder="Введите текст" v-model="text" v-resized
-          @keyup.ctrl.enter.prevent="send()"></textarea>
-          <button class="btn btn-primary" @click="added ? (addition = true) : send()">Отправить</button>
-          <button class="btn btn-default" @click="account()">Смотреть анкету</button>
-      </div>
-      <loading-wall :show="loading"/>
-      <loading-cover :show="process"/>
-    </modal-dialog>
-
-      <attention-wall :show="hold" v-if="hold" @close="cancel" @remove="remove"/>
-      <captcha-dialog v-if="captcha" @close="close" @cancel="cancel" @send="setCode"/>
-
-    <contact-wizard v-if="addition"
-      :humanCity = "human.city"
-      :humanAge = "human.age"
-      @approve="send()"
-      @close="addition = false"/>
-  </div>
-</script>
 
 
 <script type="text/x-template" id="remind-login">

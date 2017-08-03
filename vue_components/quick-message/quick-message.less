@@ -24,16 +24,17 @@
         margin-bottom: @indent-sm;
         font-size: 14px;
     }
-    &__message {
+    &__text {
         padding: @indent-sm @indent-sm;
         background: @light;
         margin-bottom: @indent-xs;
-    }
-    &__warning {
-        padding: @indent-sm @indent-sm;
-        background: @alert-sand;
-        margin-bottom: @indent-xs;
         cursor: pointer;
+        &.message {
+            background: @light;
+        }
+        &.warning {
+            background: @alert-sand;
+        }
     }
 }
 
@@ -68,5 +69,3 @@
         }
     }
 }
-
-

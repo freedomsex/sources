@@ -35,7 +35,7 @@ var routes = [
     //         { path: ':humanId(\\d+)/(.*)?', name: 'quickMessage', meta: {back: '/search'}, component: QuickMessage, props: true },
     //     ]
     // },
-    { path: '/initial/(.*)?', name: 'initial', component: InitialDialog, props: true,
+    { path: '/initial/(.*)?', name: 'initial', component: InitialDialog, props: {reply: true},
         //beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/messages'),
         children: [
             { path: ':humanId(\\d+)/(.*)?', name: 'quickReply', meta: {back: '/initial'}, component: QuickReply, props: true },

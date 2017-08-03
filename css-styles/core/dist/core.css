@@ -2677,8 +2677,11 @@ a.name:hover {
           justify-content: center;
 }
 .modal-dialog__wrapper {
-  padding: 20px;
+  padding: 15px;
   text-align: left;
+}
+.modal-dialog__wrapper.capped {
+  padding-top: 10px;
 }
 .modal-dialog__container {
   min-width: 200px;
@@ -2698,16 +2701,22 @@ a.name:hover {
 }
 .modal-dialog__body {
   font-size: 14px;
-  padding: 5px 0 15px;
+  margin: 5px 0 15px;
 }
 .modal-dialog__section {
-  padding: 0 0 10px;
+  margin: 0 0 10px;
 }
 .modal-dialog__footer {
   text-align: right;
 }
 .modal-dialog__centred {
   text-align: center;
+}
+.modal-dialog__options button .material-icons {
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+  font-size: 20px;
 }
 .modal-enter,
 .modal-leave {
@@ -2913,81 +2922,17 @@ a.name:hover {
   margin-bottom: 10px;
   font-size: 14px;
 }
-.human-dialog__message {
+.human-dialog__text {
   padding: 10px 10px;
   background: #f5f5f5;
   margin-bottom: 5px;
+  cursor: pointer;
 }
-.human-dialog__warning {
-  padding: 10px 10px;
+.human-dialog__text.message {
+  background: #f5f5f5;
+}
+.human-dialog__text.warning {
   background: #fff2e5;
-  margin-bottom: 5px;
-  cursor: pointer;
-}
-.human-dialog__form {
-  position: relative;
-  padding-bottom: 10px;
-}
-.human-dialog__form-send {
-  cursor: pointer;
-  text-decoration: none;
-  color: #ffffff;
-  padding: 7px;
-  display: inline-block;
-  border-radius: 50px;
-  line-height: 1;
-  background: #3A5795;
-  position: absolute;
-  padding: 10px;
-  right: 10px;
-  bottom: 10px;
-}
-.human-dialog__form-send .glyphicon {
-  position: relative;
-  left: -2px;
-}
-.human-dialog__form-anketa {
-  width: 40px;
-  position: absolute;
-  left: 10px;
-  bottom: 10px;
-}
-.human-dialog__form-input {
-  margin: 0 55px 0 45px;
-  padding: 10px 10px;
-}
-.human-dialog__form-input:empty:not(:focus):before {
-  color: #999999;
-  content: attr(placeholder);
-  display: block;
-}
-.human-dialog__caption {
-  background: #3A5795;
-  color: #ffffff;
-  font-weight: bold;
-  font-size: 16px;
-  padding: 12px 15px 10px;
-}
-.human-dialog__option {
-  float: right;
-}
-.human-dialog__option-remove {
-  margin-left: 10px;
-}
-.human-dialog__input {
-  border-width: 0px;
-}
-.human-dialog__body {
-  padding: 10px 15px 0;
-}
-.human-dialog__desire {
-  margin-bottom: 10px;
-  font-size: 14px;
-}
-.human-dialog__message {
-  padding: 10px 10px;
-  background: #f5f5f5;
-  margin-bottom: 5px;
 }
 .human-dialog__form {
   position: relative;

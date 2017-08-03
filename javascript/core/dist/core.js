@@ -1646,9 +1646,9 @@ Vue.directive('resized', {
     }
 });
 
-var QuickMessage = Vue.component('quick-message', {
+var QuickDialog = {
     extends: ModalDialog,
-    props: ['humanId'],
+    props: ['humanId', 'message', 'index'],
     data: function data() {
         return {
             text: '',
@@ -1665,7 +1665,15 @@ var QuickMessage = Vue.component('quick-message', {
     // beforeRouteLeave(to, from, next) {
 
     // },
+    mounted: function mounted() {
+        this.reload();
+        console.log('reply', this.reply);
+    },
+
     computed: {
+        caption: function caption() {
+            return this.reply ? 'Быстрый ответ' : 'Написать сообщение';
+        },
         human: function human() {
             return this.$store.state.search.human;
         },
@@ -1680,37 +1688,8 @@ var QuickMessage = Vue.component('quick-message', {
         },
         added: function added() {
             return this.user.city && this.user.age && this.user.name ? false : true;
-        },
-        warning: function warning() {
-            var result = '';
-            var who = { 1: 'парни', 2: 'девушки' };
-            if (this.human.close && this.user.city && this.user.city != this.human.city) {
-                result = 'Мне интересно общение только в моём городе';
-            }
-            if (this.human.who && this.human.who != this.user.sex) {
-                result = 'Мне интересны только ' + who[this.human.who];
-            } else if (this.human.who) {
-                var age = this.user.age;
-                if (this.human.up && age && this.human.up > age) {
-                    result = 'Мне интересны ' + who[this.human.who] + ' в возрасте от ' + this.human.up + ' лет ';
-                }
-                if (this.human.to && age && this.human.to < age) {
-                    result = 'Мне интересны ' + who[this.human.who] + ' в возрасте до ' + this.human.to + ' лет ';
-                }
-            }
-            if (!this.user.age) {
-                result = 'Укажите ваш возраст в анкете, для меня это важно';
-            }
-            if (!this.user.city) {
-                result = 'Укажите ваш город в анкете, для меня это важно';
-            }
-            return result;
         }
     },
-    mounted: function mounted() {
-        this.reload();
-    },
-
     methods: {
         reload: function reload() {
             var _this24 = this;
@@ -1722,10 +1701,8 @@ var QuickMessage = Vue.component('quick-message', {
             store.dispatch('HUMAN', this.humanId).then(function (response) {
                 _this24.loaded();
             }).catch(function (error) {
-                console.log(error);
                 _this24.loading = false;
             });
-            console.log('reload*reload');
         },
         loaded: function loaded() {
             this.loading = false;
@@ -1733,10 +1710,6 @@ var QuickMessage = Vue.component('quick-message', {
             //console.log('hold:', this.human.hold);
             //console.log('tags:', this.human);
             //this.process = false;
-        },
-        close: function close() {
-            this.back();
-            //this.$emit('close');
         },
         remove: function remove() {
             console.log('::remove:: (!)');
@@ -1794,33 +1767,80 @@ var QuickMessage = Vue.component('quick-message', {
         account: function account() {
             this.$router.push(this.humanId + '/detail');
         },
+        onError: function onError() {
+            this.process = false;
+        },
+        visited: function visited() {
+            this.$store.dispatch('visited/ADD', this.humanId);
+        },
+        close: function close() {
+            this.back();
+            //this.$emit('close');
+        }
+    },
+    template: '#quick-message'
+};
+
+var QuickMessage = Vue.component('quick-message', {
+    extends: QuickDialog,
+    computed: {
+        reply: function reply() {
+            return false;
+        },
+        information: function information() {
+            var result = '';
+            var who = { 1: 'парни', 2: 'девушки' };
+            if (this.human.close && this.user.city && this.user.city != this.human.city) {
+                result = 'Мне интересно общение только в моём городе';
+            }
+            if (this.human.who && this.human.who != this.user.sex) {
+                result = 'Мне интересны только ' + who[this.human.who];
+            } else if (this.human.who) {
+                var age = this.user.age;
+                if (this.human.up && age && this.human.up > age) {
+                    result = 'Мне интересны ' + who[this.human.who] + ' в возрасте от ' + this.human.up + ' лет ';
+                }
+                if (this.human.to && age && this.human.to < age) {
+                    result = 'Мне интересны ' + who[this.human.who] + ' в возрасте до ' + this.human.to + ' лет ';
+                }
+            }
+            if (!this.user.age) {
+                result = 'Укажите ваш возраст в анкете, для меня это важно';
+            }
+            if (!this.user.city) {
+                result = 'Укажите ваш город в анкете, для меня это важно';
+            }
+            return result;
+        }
+    },
+    methods: {
         action: function action() {
             if (!this.user.city) {
                 this.$router.push('wizard/city');
             } else if (!this.user.age) {
                 this.$router.push('settings/account');
             }
-        },
-        onError: function onError() {
-            this.process = false;
-        },
-        visited: function visited() {
-            this.$store.dispatch('visited/ADD', this.humanId);
         }
-    },
-    template: '#quick-message'
+    }
 });
 
 var QuickReply = Vue.component('quick-reply', {
-    props: ['humanId', 'message', 'index'],
-    extends: QuickMessage,
+    extends: QuickDialog,
+    computed: {
+        reply: function reply() {
+            return true;
+        },
+        information: function information() {
+            return this.message;
+        }
+    },
     methods: {
         sended: function sended() {
             this.$emit('sended', this.index);
             this.close();
-        }
-    },
-    template: '#quick-reply'
+        },
+        action: function action() {}
+    }
 });
 
 Vue.component('quick-write', {
@@ -3844,6 +3864,7 @@ var search = {
             var index = 'human.data.' + tid;
             commit('resetHuman', tid);
             commit('setHuman', ls.get(index));
+            console.log('HUMAN', tid);
             return api.search.get({ tid: tid }).then(function (response) {
                 commit('setHuman', response.data);
                 ls.set(index, response.data, 1500);
@@ -4590,7 +4611,7 @@ var routes = [{ path: '/write/:humanId(\\d+)/(.*)?', name: 'quickWrite', compone
 //         { path: ':humanId(\\d+)/(.*)?', name: 'quickMessage', meta: {back: '/search'}, component: QuickMessage, props: true },
 //     ]
 // },
-{ path: '/initial/(.*)?', name: 'initial', component: InitialDialog, props: true,
+{ path: '/initial/(.*)?', name: 'initial', component: InitialDialog, props: { reply: true },
     //beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/messages'),
     children: [{ path: ':humanId(\\d+)/(.*)?', name: 'quickReply', meta: { back: '/initial' }, component: QuickReply, props: true }]
 }, { path: '/intimate/(.*)?', name: 'intimate', component: IntimateDialog, props: true,

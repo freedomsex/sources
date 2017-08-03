@@ -23,6 +23,7 @@ var search = {
             let index = 'human.data.'+tid;
             commit('resetHuman', tid);
             commit('setHuman', ls.get(index));
+                console.log('HUMAN', tid);
             return api.search.get({tid}).then((response) => {
                 commit('setHuman', response.data);
                 ls.set(index, response.data, 1500);

@@ -432,6 +432,7 @@ var search = {
             let index = 'human.data.'+tid;
             commit('resetHuman', tid);
             commit('setHuman', ls.get(index));
+                console.log('HUMAN', tid);
             return api.search.get({tid}).then((response) => {
                 commit('setHuman', response.data);
                 ls.set(index, response.data, 1500);
@@ -1024,7 +1025,7 @@ var routes = [
     //         { path: ':humanId(\\d+)/(.*)?', name: 'quickMessage', meta: {back: '/search'}, component: QuickMessage, props: true },
     //     ]
     // },
-    { path: '/initial/(.*)?', name: 'initial', component: InitialDialog, props: true,
+    { path: '/initial/(.*)?', name: 'initial', component: InitialDialog, props: {reply: true},
         //beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/messages'),
         children: [
             { path: ':humanId(\\d+)/(.*)?', name: 'quickReply', meta: {back: '/initial'}, component: QuickReply, props: true },

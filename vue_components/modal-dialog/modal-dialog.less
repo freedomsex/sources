@@ -14,8 +14,11 @@
 
 .modal-dialog {
     &__wrapper {
-        padding: @indent-lg;
+        padding: @indent-md;
         text-align: left;
+        &.capped {
+            padding-top: @indent-sm;
+        }
     }
     &__container {
         min-width: 200px;
@@ -35,16 +38,26 @@
     }
     &__body {
         font-size: 14px;
-        padding: @indent-xs 0 @indent-md;
+        margin: @indent-xs 0 @indent-md;
     }
     &__section {
-        padding: 0 0 @indent-sm;
+        margin: 0 0 @indent-sm;
     }
     &__footer {
         text-align: right;
     }
     &__centred {
         text-align: center;
+    }
+    &__options {
+        button {
+            .material-icons {
+                vertical-align: middle;
+                position: relative;
+                top: -1px;
+                font-size: 20px;
+            }
+        }
     }
 }
 
