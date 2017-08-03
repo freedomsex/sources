@@ -1,0 +1,69 @@
+
+<script type="text/x-template" id="moderator-activity">
+  <div>
+    <default-activity @close="close">
+      <span slot="caption">Защитить</span>
+      <div class="default-activity__content" v-if="accept">
+        <div class="activity-section">
+          <div class="activity-section__title">Нужно ли наказать за это?</div>
+          <div class="hint-info" style="font-size: 14px; ">
+             {{message.text}}
+          </div>
+        </div>
+        <div class="activity-section">
+          <button class="btn btn-warning" @click="action(1)" :disabled="process"> Да, наказать </button>
+          <button class="btn btn-success" @click="action(-1)" :disabled="process"> Нет, отклонить </button>
+          <button class="btn btn-link" @click="action(0)" :disabled="process"> Пропустить </button>
+          <!--
+          <select>
+            <option>Без отметки</option>
+            <option>Предложение интим услуг</option>
+            <option>Мошенники, просьба перевода денег</option>
+            <option>Ссылка на другой сайт, спам</option>
+            <option>Грубые намеренные оскорбления</option>
+          </select>-->
+        </div>
+
+          <div id="" class="" style="font-size: 14px; margin-bottom: 10px; color: #777;">
+              Просто ответьте, соответствует ли текст сообщения нарушению или нет.
+              Нарушитель получит новую порцию наказания, если вы подтвердите это.
+          </div>
+
+          <div id="" class="" style="font-size: 12px; color: #999; margin-bottom: 0px;">
+            Нажмите "Да", если текст содержит грубое оскорбление собеседника, предложение интим услуг
+            или мошеннические схемы. Нажмите "Нет", если не считаете нужным наказывать за содержание текста.
+            <a class="link_simple"  href="/блог/интерфейс-модератора/" target="_blank">Подробнее..</a>
+          </div>
+
+      </div>
+
+
+    </default-activity>
+
+    <modal-dialog @close="close" v-if="!accept">
+      <div class="modal-dialog__wrapper">
+        <div class="modal-dialog__caption">
+          Защитить ресурс
+        </div>
+        <div class="modal-dialog__body">
+          Присоединяйтесь к группе модераторов сайта, сделайте жизнь троллей и фейков ещё сложнее,
+          испортите им настроение и весь день на сегодня, это просто.
+        </div>
+        <div class="modal-dialog__section">
+          <button class="btn btn-primary" @click="approve">
+            <span aria-hidden="true" class="glyphicon glyphicon-ok"></span>
+            Стать модератором
+          </button>
+          <button class="btn btn-default" @click="close">
+            Попробую позже
+          </button>
+        </div>
+        <div style="font-size: 10px; color: #999;">
+          Модератором может стать любой совершеннолетний пользоватеть. Нажимая кнопку "Стать модератором"
+          вы подтверждаете что вам 18 лет или более.
+        </div>
+      </div>
+    </modal-dialog>
+  </div>
+</script>
+

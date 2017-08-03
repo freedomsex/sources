@@ -4,6 +4,7 @@ const accepts = {
     state: {
         photo: false,
         search: false,
+        moderator: false,
     },
     actions: {
         LOAD({state}) {
@@ -20,6 +21,10 @@ const accepts = {
         },
         search(state) {
             state.search = true;
+            ls.set('accepts', state);
+        },
+        moderator(state) {
+            state.moderator = true;
             ls.set('accepts', state);
         },
     }

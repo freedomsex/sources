@@ -1,0 +1,9 @@
+
+<script type="text/x-template" id="moderator-activity">
+  <default-activity @close="close">
+    <span slot="caption">Защитить</span>
+
+
+  </default-activity>
+</script>
+

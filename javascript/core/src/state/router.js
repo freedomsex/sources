@@ -54,6 +54,7 @@ var routes = [
         ]
     },
     { path: '/confirm-sex/:show?', component: SexConfirm, props: true },
+    { path: '/protect', component: ModeratorActivity },
 
     { path: '(.*)?/settings/search', meta: {back: '/'}, component: SearchSettings,
         beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/search')

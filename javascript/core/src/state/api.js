@@ -171,6 +171,20 @@ class ApiMessages extends Api {
     }
 }
 
+class ApiModerator extends Api {
+    constructor() {
+        let key = '1234';
+        let host = '/';
+        super(host, key);
+    }
+    load() {
+        return this.post(null, null, 'moder/auth');
+    }
+    press(data) {
+        return this.post(data, null, 'moder/press');
+    }
+}
+
 class ApiUser extends Api {
     constructor() {
         let key = '1234';
@@ -317,6 +331,7 @@ var api = {
         sends: new ApiSends(),
     },
     messages: new ApiMessages(),
+    moderator: new ApiModerator(),
 };
 
 

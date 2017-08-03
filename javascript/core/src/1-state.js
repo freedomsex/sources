@@ -33,6 +33,7 @@ const accepts = {
     state: {
         photo: false,
         search: false,
+        moderator: false,
     },
     actions: {
         LOAD({state}) {
@@ -49,6 +50,10 @@ const accepts = {
         },
         search(state) {
             state.search = true;
+            ls.set('accepts', state);
+        },
+        moderator(state) {
+            state.moderator = true;
             ls.set('accepts', state);
         },
     }
@@ -836,6 +841,20 @@ class ApiMessages extends Api {
     }
 }
 
+class ApiModerator extends Api {
+    constructor() {
+        let key = '1234';
+        let host = '/';
+        super(host, key);
+    }
+    load() {
+        return this.post(null, null, 'moder/auth');
+    }
+    press(data) {
+        return this.post(data, null, 'moder/press');
+    }
+}
+
 class ApiUser extends Api {
     constructor() {
         let key = '1234';
@@ -982,6 +1001,7 @@ var api = {
         sends: new ApiSends(),
     },
     messages: new ApiMessages(),
+    moderator: new ApiModerator(),
 };
 
 
@@ -1044,6 +1064,7 @@ var routes = [
         ]
     },
     { path: '/confirm-sex/:show?', component: SexConfirm, props: true },
+    { path: '/protect', component: ModeratorActivity },
 
     { path: '(.*)?/settings/search', meta: {back: '/'}, component: SearchSettings,
         beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/search')

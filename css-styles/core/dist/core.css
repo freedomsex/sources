@@ -1756,6 +1756,9 @@ a.name:hover {
   display: flex;
   height: 100%;
 }
+.default-activity__content {
+  padding: 15px 20px 15px;
+}
 .message-dialog {
   display: -webkit-box;
   display: -ms-flexbox;
