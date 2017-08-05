@@ -302,7 +302,7 @@ const AccountActivity = Vue.component('account-activity', {
         load() {
             this.loading = true;
             this.hope();
-            store.dispatch('HUMAN', this.humanId).then((response) => {
+            store.dispatch('search/HUMAN', this.humanId).then((response) => {
                 this.loaded();
             }).catch((error) => {
                 console.log(error);
@@ -613,7 +613,7 @@ Vue.component('api-key-update', {
         },
         upSettings(data) {
             let {who, years_up: up, years_to: to, close: town, virt} = data;
-            this.$store.commit('settings', {who, up, to, virt, town});
+            this.$store.commit('search/settings', {who, up, to, virt, town});
         }
     },
     mounted() {
@@ -1110,7 +1110,7 @@ Vue.component('contact-item', {
 
 
 Vue.component('desire-tag-item', {
-    props: ['id', 'tag'],
+    props: ['id', 'tag', 'added'],
     data() {
         return {
             active: false,
@@ -1118,13 +1118,75 @@ Vue.component('desire-tag-item', {
         }
     },
     methods: {
+        activate() {
+            this.active = true;
+            _.delay(() => this.active = false, 3000);
+        },
         select() {
-            this.$emit('select');
+            this.activate();
+            this.$emit('select', this.tag);
         }
     },
     template: '#desire-tag-item'
 });
-
+Vue.component('desire-list', {
+    props: ['tags'],
+    data() {
+        return {
+            batch: 50,
+            position: 0,
+            list: []
+        }
+    },
+    watch: {
+        tags() {
+            if (!this.position || this.offset != this.batch) {
+                this.load();
+            }
+        }
+    },
+    computed: {
+        avaible() {
+            let result = this.tags.length - this.position;
+            return (result > 0) ? result : 0;
+        },
+        more() {
+            return this.tags ? this.avaible : false;
+        },
+        offset() {
+            let result = this.batch;
+            if (this.list.length && this.list.length < this.batch) {
+                result = this.batch - this.list.length;
+            }
+            return result;
+        },
+        next() {
+            let result = this.tags.slice(this.position, this.position + this.offset);
+            return _.shuffle(result);
+        },
+        desires() {
+            return this.$store.getters['desires/tags'];
+        },
+    },
+    methods: {
+        load() {
+            if (this.more) {
+                console.log('load', [this.list, this.next]);
+                this.list = _.union(this.list, this.next);
+                this.position = this.list.length;
+            }
+        },
+        add(tag) {
+            if (!this.added(tag)) {
+                this.$store.dispatch('desires/ADD', tag).then((response) => {});
+            }
+        },
+        added(tag) {
+            return _.contains(this.desires, tag);
+        },
+    },
+    template: '#desire-list'
+});
 Vue.component('email-sended', {
     template: '#email-sended'
 });
@@ -1737,7 +1799,7 @@ const QuickDialog = {
         reload() {
             this.loading = true;
             setTimeout(() => this.loading = false, 4 * 1000);
-            store.dispatch('HUMAN', this.humanId).then((response) => {
+            store.dispatch('search/HUMAN', this.humanId).then((response) => {
                 this.loaded();
             }).catch((error) => {
                 this.loading = false;
@@ -2101,25 +2163,20 @@ Vue.component('search-list', {
         return {
             loading: false,
             users: [],
-            response: null,
+            response: true,
             error: 0,
-            next: null,
             newCount: 0,
-            batch: 15,
-            received: 0,
             attention: false,
             toSlow: false,
             humanId: null,
             account: null,
             sended: false,
-            compact: true,
             ignore: false,
         };
     },
     mounted() {
         if (this.virgin && this.defaults) {
-            this.compact = false;
-            this.onLoad(this.defaults);
+            this.preload()
         } else {
             this.load();
         }
@@ -2127,37 +2184,36 @@ Vue.component('search-list', {
         this.$store.dispatch('desires/PICK');
     },
     computed: {
+        items() {
+            return this.$store.state.search.list;
+        },
         more() {
-            if (this.received && this.received == this.batch) {
-                return true;
-            }
-            return false;
+            return this.$store.getters['search/more'];
+        },
+        compact() {
+            let {city, any} = this.$store.state.search.settings;
+            return city && !any;
         },
         visited() {
             return this.$store.state.visited.list;
         },
         accept() {
-            return !this.ignore && !this.$store.state.accepts.search && (this.next > this.batch);
+            let {next, batch} = this.$store.state.search;
+            let accept = this.$store.state.accepts.search;
+            return !this.ignore && !accept && (next > batch);
         },
         defaults() {
             var result = defaultResults ? json.parse(defaultResults) : null;
-            console.log(result)
             return (result && _.isObject(result) && _.has(result, 'users') && result.users.length) ? result : [];
         },
-        items() {
-            return this.users;
-        },
         virgin() {
-            return this.$store.getters.virgin;
+            return this.$store.getters['search/virgin'];
         },
         desires() {
             return _.pluck(this.$store.state.desires.list, 'tag');
         },
-        count() {
-            return this.users.length;
-        },
         loader() {
-            return this.$store.state.ready && !this.count;
+            return this.$store.state.ready && (!this.response || !this.items.length);
         },
         city() {
             return this.$store.state.user.city;
@@ -2167,12 +2223,15 @@ Vue.component('search-list', {
         },
     },
     methods: {
+        preload() {
+            this.compact = false;
+            this.$store.commit('search/results', this.defaults);
+            console.log('defaults', this.defaults);
+            this.onLoad();
+        },
         reload() {
-            this.next = 0;
-            this.users = [];
-            this.received = 0;
-            this.compact = true;
             this.$store.commit('ready', false);
+            this.$store.commit('search/reset', false);
             this.load();
         },
         visitedSync() {
@@ -2180,19 +2239,8 @@ Vue.component('search-list', {
         },
         load() {
             this.response = 0;
-            let {who, city, up, to, any} = this.$store.state.search.settings;
-            let sex = this.$store.state.user.sex;
-            let next = this.next;
-            up = up ? up : 0;
-            to = to ? to : 0;
-            if (!city || any) {
-                city = null;
-                this.compact = false;
-            }
-            //this.onLoad(ls.get('last-search'));
-            api.search.load({sex, who, city, up, to, next}).then((response) => {
-                this.onLoad(response.data);
-                //ls.set('last-search', response.data, 31*24*60*60);
+            this.$store.dispatch('search/LOAD').then((response) => {
+                this.onLoad();
             }).catch((error) => {
                 this.response = 200;
                 this.toSlow = false;
@@ -2202,17 +2250,7 @@ Vue.component('search-list', {
             //this.skipScroll = true;
             this.load();
         },
-        onLoad(data) {
-            let users = data.users;
-            this.received = users ? users.length : 0;
-            if (!users && !this.users.length) {
-                this.noResult();
-            } else {
-                if (this.received) {
-                    this.users = _.union(this.users, users);
-                }
-                this.next += this.batch;
-            }
+        onLoad() {
             this.$store.commit('ready', true);
             this.response = 200;
             this.toSlow = false;
@@ -3695,6 +3733,7 @@ const desires = {
     namespaced: true,
     state: {
         list: [],
+        limit: 20,
     },
     actions: {
         PICK({commit}) {
@@ -3728,12 +3767,18 @@ const desires = {
         },
         add(state, data) {
             state.list.unshift(data);
+            state.list = state.list.slice(0, state.limit);
             ls.set('desires', state.list);
         },
         delete(state, index) {
             state.list.splice(index, 1);
             ls.set('desires', state.list);
         },
+    },
+    getters: {
+        tags(state) {
+            return _.pluck(state.list, 'tag');
+        }
     }
 };
 
@@ -3784,8 +3829,13 @@ const moderator = {
 
 
 var search = {
+    namespaced: true,
     state: {
         list: [],
+        last: [],
+        received: 0,
+        next: null,
+        batch: 15,
         url: '',
         human: {
             name: '',
@@ -3813,18 +3863,40 @@ var search = {
                 ls.set(index, response.data, 1500);
             });
         },
+        LOAD({state, rootState, commit}) {
+            let {who, city, up, to, any} = state.settings;
+            let sex = rootState.user.sex;
+            up = up ? up : 0;
+            to = to ? to : 0;
+            if (!city || any) {
+                city = null;
+            }
+            return api.search.load({sex, who, city, up, to, next: state.next}).then(({data}) => {
+                commit('results', data);
+                commit('last', data);
+                commit('next');
+            });
+        },
+        RESET_SEARCH() {
+
+        },
         SETTINGS({ commit }) {
             commit('settingsCookies');
             commit('settings', ls.get('search.settings'));
             //let index = 'search.settings';
         },
         SAVE_SEARCH({state, commit}, data) {
-                commit('settings', data);
-                ls.set('search.settings', data);
-                return api.user.saveSearch(data).then((response) => { });
+            commit('settings', data);
+            ls.set('search.settings', data);
+            return api.user.saveSearch(data).then((response) => { });
         },
     },
     mutations: {
+        reset(state) {
+            state.next = 0;
+            state.list = [];
+            state.received = 0;
+        },
         // Сбросить предыдущие данные, если там что-то не то
         resetHuman(state, tid) {
             if (state.human && state.human.id != tid) {
@@ -3836,10 +3908,30 @@ var search = {
                 state.human = data;
             }
         },
+        results(state, {users}) {
+            state.received = users ? users.length : 0;
+            if (users && state.received) {
+                state.list = _.union(state.list, users);
+            }
+            state.next += state.batch;
+        },
+        last(state, {users}) {
+            if (users && !state.last) {
+                state.last = users;
+                ls.set('last-search', users, 31*24*60*60);
+            }
+        },
         settings(state, data) {
             if (data) {
                 //console.log('settings:', data);
                 _.assign(state.settings, data);
+            }
+        },
+        next(state, reset) {
+            if (reset) {
+                state.next = 0;
+            } else {
+                state.next += state.batch;
             }
         },
         settingsCookies(state) {
@@ -3860,16 +3952,15 @@ var search = {
         }
     },
     getters: {
-        searchURL(state, getters, rootState) {
-            let settings = state.settings;
-            let result = '/index.php?view=simple&town=' + rootState.user.city +
-                '&years_up=' + settings.up + '&years_to=' + settings.to +
-                '&who=' + settings.who +'';
-            return result;
-        },
         virgin(state, getters, rootState) {
             let {who, up, to} = state.settings;
             return (!who && !rootState.user.city && !up && !to);
+        },
+        more(state) {
+            return (state.received && state.received == state.batch) ? true : false;
+        },
+        tags(state) {
+            return _.compact(_.union(_.flatten(_.pluck(state.list, 'tags'))));
         }
     }
 };
@@ -4036,7 +4127,7 @@ const store = new Vuex.Store({
 store.dispatch('LOAD_API_TOKEN');
 store.dispatch('accepts/LOAD');
 store.dispatch('LOAD_USER');
-store.dispatch('SETTINGS');
+store.dispatch('search/SETTINGS');
 
 
 class Api {
@@ -4515,6 +4606,9 @@ var app = new Vue({
         promt() {
             let {promt} = this.$store.state.user;
             return !promt || promt == 'no';
+        },
+        tags() {
+            return this.$store.getters['search/tags'];
         }
     },
     methods: {

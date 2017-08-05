@@ -1,5 +1,5 @@
 Vue.component('desire-tag-item', {
-    props: ['id', 'tag'],
+    props: ['id', 'tag', 'added'],
     data() {
         return {
             active: false,
@@ -7,8 +7,13 @@ Vue.component('desire-tag-item', {
         }
     },
     methods: {
+        activate() {
+            this.active = true;
+            _.delay(() => this.active = false, 3000);
+        },
         select() {
-            this.$emit('select');
+            this.activate();
+            this.$emit('select', this.tag);
         }
     },
     template: '#desire-tag-item'

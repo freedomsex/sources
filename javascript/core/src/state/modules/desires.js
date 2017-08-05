@@ -3,6 +3,7 @@ const desires = {
     namespaced: true,
     state: {
         list: [],
+        limit: 20,
     },
     actions: {
         PICK({commit}) {
@@ -36,11 +37,17 @@ const desires = {
         },
         add(state, data) {
             state.list.unshift(data);
+            state.list = state.list.slice(0, state.limit);
             ls.set('desires', state.list);
         },
         delete(state, index) {
             state.list.splice(index, 1);
             ls.set('desires', state.list);
         },
+    },
+    getters: {
+        tags(state) {
+            return _.pluck(state.list, 'tag');
+        }
     }
 };

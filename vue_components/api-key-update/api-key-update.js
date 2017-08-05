@@ -24,7 +24,7 @@ Vue.component('api-key-update', {
         },
         upSettings(data) {
             let {who, years_up: up, years_to: to, close: town, virt} = data;
-            this.$store.commit('settings', {who, up, to, virt, town});
+            this.$store.commit('search/settings', {who, up, to, virt, town});
         }
     },
     mounted() {

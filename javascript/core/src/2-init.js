@@ -24,6 +24,9 @@ var app = new Vue({
         promt() {
             let {promt} = this.$store.state.user;
             return !promt || promt == 'no';
+        },
+        tags() {
+            return this.$store.getters['search/tags'];
         }
     },
     methods: {

@@ -544,6 +544,23 @@
   background-image: url('/static/img/icon/send.png');
 }
 
+.desire-list {
+    &__caption {
+        padding: 10px 15px;
+        text-align: center;
+        font-size: 16px;
+        color: #666666;
+        min-height: 30px;
+        border-bottom: 2px solid #e5e5e5;
+    }
+    &__wrapper {
+        margin: 10px 15px;
+    }
+    &__next {
+        text-align: center;
+    }
+}
+
 .desire-tag {
     &__item {
         background-color: @white;
@@ -551,21 +568,21 @@
         background-position: left top;
         background-repeat: no-repeat;
         border-radius: @radius-xs;
-        border: 1px solid @gray-light;
+        border: 1px solid @gray;
         color: @dark-light;
         cursor: pointer;
         display: inline-block;
         font-size: @font-sm;
         font-style: normal;
-        margin-bottom: @indent-xs;
+        margin-bottom: @indent-sm;
         margin-right:  @indent-xs;
-        padding: @indent-xs @indent-xs+2;
+        padding: @indent-xs+2 @indent-sm;
         line-height: 1;
         &.deleted {
             background-color: @gray;
             text-decoration: line-through;
         }
-        &.added {
+        &.active {
             background-color: @yellow-light;
             border-color: @orange-light;
         }
@@ -573,7 +590,7 @@
             background-color: @pink-light;
             border-color: @pink;
         }
-        &.active {
+        &.added {
             background-image: url(/static/img/icon/desire_corner_blue.png);
             border-color: @purpur-dark;
         }
@@ -1472,19 +1489,25 @@
 }
 
 .search-list {
-    margin: 0 0  @indent-md;
-        padding: 0;
-    &__loader {
-        margin: 0 auto @indent-lg ;
-        text-align: center;
-        color: @gray-dark;
-    }
+    margin: 0 0 @indent-sm;
+    padding: 0;
     &__alert {
         background: @alert-sand;
         padding: @indent-md @indent-md;
         border: 1px solid #f6e4a2;
         border-width: 1px 0 1px;
         cursor: pointer;
+    }
+    &__options {
+        text-align: center;
+        margin-top: 15px;
+    }
+    &__next {
+        text-align: center;
+        margin-top: @indent-sm;
+    }
+    &__loader {
+
     }
 }
 

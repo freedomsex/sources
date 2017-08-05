@@ -1,0 +1,17 @@
+<script type="text/x-template" id="desire-list">
+  <div>
+    <div class="desire-list__caption">Желания и фантазии</div>
+    <div class="desire-list__wrapper">
+      <desire-tag-item v-for="(item, index) in list"
+       :key="index"
+       :tag="item"
+       :added="added(item)"
+       @select="add"/>
+      <div class="desire-list__next" v-show="more">
+        <span class="btn btn-default btn-sm" @click="load">
+          Ещё
+        </span>
+      </div>
+    </div>
+  </div>
+</script>

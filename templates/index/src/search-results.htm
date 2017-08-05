@@ -29,10 +29,9 @@
     </div>
   </div>
 
-  <div class="container desires-list">
+
+  <div class="container desires-widget" v-show="tags.length">
     <div class="row">
-      <div class="col-md-12">
-        %%SEARCH_TAG_LIST%%
-      </div>
+      <desire-list :tags="tags"></desire-list>
     </div>
   </div>

@@ -56,7 +56,7 @@ const QuickDialog = {
         reload() {
             this.loading = true;
             setTimeout(() => this.loading = false, 4 * 1000);
-            store.dispatch('HUMAN', this.humanId).then((response) => {
+            store.dispatch('search/HUMAN', this.humanId).then((response) => {
                 this.loaded();
             }).catch((error) => {
                 this.loading = false;

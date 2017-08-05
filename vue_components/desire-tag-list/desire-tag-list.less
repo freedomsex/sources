@@ -1,3 +1,20 @@
+.desire-list {
+    &__caption {
+        padding: 10px 15px;
+        text-align: center;
+        font-size: 16px;
+        color: #666666;
+        min-height: 30px;
+        border-bottom: 2px solid #e5e5e5;
+    }
+    &__wrapper {
+        margin: 10px 15px;
+    }
+    &__next {
+        text-align: center;
+    }
+}
+
 .desire-tag {
     &__item {
         background-color: @white;
@@ -5,21 +22,21 @@
         background-position: left top;
         background-repeat: no-repeat;
         border-radius: @radius-xs;
-        border: 1px solid @gray-light;
+        border: 1px solid @gray;
         color: @dark-light;
         cursor: pointer;
         display: inline-block;
         font-size: @font-sm;
         font-style: normal;
-        margin-bottom: @indent-xs;
+        margin-bottom: @indent-sm;
         margin-right:  @indent-xs;
-        padding: @indent-xs @indent-xs+2;
+        padding: @indent-xs+2 @indent-sm;
         line-height: 1;
         &.deleted {
             background-color: @gray;
             text-decoration: line-through;
         }
-        &.added {
+        &.active {
             background-color: @yellow-light;
             border-color: @orange-light;
         }
@@ -27,7 +44,7 @@
             background-color: @pink-light;
             border-color: @pink;
         }
-        &.active {
+        &.added {
             background-image: url(/static/img/icon/desire_corner_blue.png);
             border-color: @purpur-dark;
         }

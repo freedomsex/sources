@@ -86,7 +86,7 @@ const AccountActivity = Vue.component('account-activity', {
         load() {
             this.loading = true;
             this.hope();
-            store.dispatch('HUMAN', this.humanId).then((response) => {
+            store.dispatch('search/HUMAN', this.humanId).then((response) => {
                 this.loaded();
             }).catch((error) => {
                 console.log(error);

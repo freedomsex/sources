@@ -497,7 +497,24 @@
 
 
 <script type="text/x-template" id="desire-tag-item">
-  <div class="desire-tag__item" :class="{active, error}" @click="select">{{tag}}</div>
+  <div class="desire-tag__item" :class="{active, error, added}" @click="select">{{tag}}</div>
+</script>
+<script type="text/x-template" id="desire-list">
+  <div>
+    <div class="desire-list__caption">Желания и фантазии</div>
+    <div class="desire-list__wrapper">
+      <desire-tag-item v-for="(item, index) in list"
+       :key="index"
+       :tag="item"
+       :added="added(item)"
+       @select="add"/>
+      <div class="desire-list__next" v-show="more">
+        <span class="btn btn-default btn-sm" @click="load">
+          Ещё
+        </span>
+      </div>
+    </div>
+  </div>
 </script>
 
 <script type="text/x-template" id="email-sended">
@@ -869,13 +886,14 @@
         Вашу анкету находят только те, кому безразличен возраст. Таких мало, и вам очень редко пишут.
       </div>
 
-      <div class="messages__next" @click="loadNext" v-show="more">
-        <span class="btn btn-default btn-xs" :disabled="!response">Следующие</span>
+      <div class="search-list__next">
+        <span class="btn btn-default btn-sm" @click="loadNext" v-show="more && !loader" :disabled="!response">
+          Следующие
+        </span>
+        <span class="btn btn-default btn-sm" v-show="loader" disabled>
+          Загружаю...
+        </span>
       </div>
-    </div>
-
-    <div class="search-list__loader" v-show="loader">
-      Загружаю...
     </div>
 
 
@@ -1063,6 +1081,7 @@
         <desire-tag-item v-for="(item, index) in tags" :key="index"
          :tag="item.tag"
          :id="item.id"
+         added="true"
          @select="confirmRemove = index"/>
       </div>
     </div>

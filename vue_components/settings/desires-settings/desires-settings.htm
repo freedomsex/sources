@@ -11,6 +11,7 @@
         <desire-tag-item v-for="(item, index) in tags" :key="index"
          :tag="item.tag"
          :id="item.id"
+         added="true"
          @select="confirmRemove = index"/>
       </div>
     </div>
