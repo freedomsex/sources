@@ -855,10 +855,10 @@ var ContactDialog = {
         bun: function bun(index) {
             var item = this.contacts[index];
             console.log('bun', item);
-            this.remove(index);return;
+            this.remove(index);
             api.bun.send({
-                id: item.cont_id,
-                tid: item.from
+                id: item.message.mess_id,
+                tid: item.human_id
             });
         },
         splice: function splice(index) {
@@ -1096,6 +1096,7 @@ Vue.component('contact-item', {
         },
         confirmBun: function confirmBun() {
             this.confirm = 'doit';
+            console.log('confirmBun');
         },
         confirmRemove: function confirmRemove() {
             //this.$emit('remove');

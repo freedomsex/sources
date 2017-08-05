@@ -857,10 +857,10 @@ var ContactDialog = {
         bun(index) {
             let item = this.contacts[index];
             console.log('bun', item);
-            this.remove(index); return;
+            this.remove(index);
             api.bun.send({
-                id: item.cont_id,
-                tid: item.from,
+                id: item.message.mess_id,
+                tid: item.human_id,
                 //text: this.item.message,
                 //token: 'super secret token'
             });
@@ -1078,6 +1078,7 @@ Vue.component('contact-item', {
         },
         confirmBun() {
             this.confirm = 'doit';
+            console.log('confirmBun');
         },
         confirmRemove() {
             //this.$emit('remove');

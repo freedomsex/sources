@@ -274,7 +274,10 @@
       <div class="account-section" v-if="tags.length">
         <div class="account-section__header">Мои желания и фантазии</div>
         <div class="desire-tag__list">
-          <desire-tag-item v-for="(item, index) in tags" :key="index" :tag="item"/>
+          <desire-tag-item v-for="(item, index) in tags"
+            :key="index"
+            :tag="item"
+            :added="added(item)"/>
         </div>
       </div>
     </div>
@@ -709,7 +712,7 @@
     </div>
 
 
-    <remove-contact v-show="confirm"
+    <remove-contact v-show="confirm" :show="confirm"
       @bun="bun"
       @close="cancel"
       @remove="remove"/>
@@ -1760,7 +1763,7 @@
 </div>
  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/static/js/core.min.js?rel=1501949263862"></script>
+<script type="text/javascript" src="/static/js/core.min.js?rel=1501970895353"></script>
 <!-- Исходники можно найти в репозитории. Там же собранные не сжатые файлы -->
 
 
@@ -1777,7 +1780,7 @@
 %%LOAD_AVEREGE_COUNT%%
 </div>
 
-<script type="text/javascript" src="/static/js/mess.min.js?rel=1501949263863"></script>
+<script type="text/javascript" src="/static/js/mess.min.js?rel=1501970895354"></script>
 
 <script type="text/javascript">
     // var addthis_config = {"data_track_addressbar":false};

@@ -70,6 +70,7 @@ Vue.component('contact-item', {
         },
         confirmBun() {
             this.confirm = 'doit';
+            console.log('confirmBun');
         },
         confirmRemove() {
             //this.$emit('remove');
