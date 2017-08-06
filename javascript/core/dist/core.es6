@@ -509,6 +509,9 @@ const ModeratorActivity = Vue.component('moderator-activity', {
                 if (this.error == 'count') {
 
                 } else
+                if (this.error == 'other') {
+
+                } else
                 if (!this.error) {
                     this.loaded(response.data);
                 }

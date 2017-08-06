@@ -482,7 +482,7 @@ var ModeratorActivity = Vue.component('moderator-activity', {
                 _this4.error = response.data.error;
                 if (_this4.error == 'promt') {
                     _this4.needPromt();
-                } else if (_this4.error == 'count') {} else if (!_this4.error) {
+                } else if (_this4.error == 'count') {} else if (_this4.error == 'other') {} else if (!_this4.error) {
                     _this4.loaded(response.data);
                 }
                 _this4.process = false;

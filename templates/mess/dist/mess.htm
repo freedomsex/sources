@@ -405,6 +405,17 @@
         </div>
       </div>
 
+      <div class="default-activity__content" v-if="error == 'other'">
+        <div class="activity-section__title">Что-то пошло не так ;(</div>
+        <div id="" class="" style="font-size: 14px; margin-bottom: 10px; color: #777;">
+          Время ожидания истекло, данные сессии устарели. Возможно вариант сообщения уже был рассмотрен. Обновите данные. Спасибо.
+        </div>
+        <button class="btn btn-primary btn-block" @click="load" :disabled="process">
+          <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
+          Обновить
+        </button>
+      </div>
+
 
 
       <div class="default-activity__content" v-if="accept && !error">
@@ -1762,7 +1773,7 @@
 </div>
  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/static/js/core.min.js?rel=1501973566138"></script>
+<script type="text/javascript" src="/static/js/core.min.js?rel=1502006200911"></script>
 <!-- Исходники можно найти в репозитории. Там же собранные не сжатые файлы -->
 
 
@@ -1779,7 +1790,7 @@
 %%LOAD_AVEREGE_COUNT%%
 </div>
 
-<script type="text/javascript" src="/static/js/mess.min.js?rel=1501973566139"></script>
+<script type="text/javascript" src="/static/js/mess.min.js?rel=1502006200912"></script>
 
 <script type="text/javascript">
     // var addthis_config = {"data_track_addressbar":false};
