@@ -124,7 +124,7 @@ const SearchSettings = Vue.component('search-settings', {
             };
             console.log(data);
             if (!this.virgin) {
-                this.$store.dispatch('SAVE_SEARCH', data);
+                this.$store.dispatch('search/SAVE_SEARCH', data);
             }
         },
         // account() {
