@@ -41,8 +41,8 @@ const store = new Vuex.Store({
         },
     },
     getters: {
-        accept() {
-
+        registered(state) {
+            return state.apiToken ? true : false;
         }
     }
 });

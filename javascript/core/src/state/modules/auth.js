@@ -38,6 +38,9 @@ const auth = {
         SAVE_SUSCRIBE({store, commit}, data) {
             commit('subscr');
             return api.user.saveSubscribe();
+        },
+        UPDATE_KEY({store, commit}) {
+            return axios.get('/sync/sess/');
         }
     },
     mutations: {

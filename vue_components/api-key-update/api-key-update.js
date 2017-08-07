@@ -4,17 +4,54 @@ Vue.component('api-key-update', {
     ],
     data() {
         return {
-            showOption:  false,
+            attempt: 0,
         }
     },
+    mounted() {
+        this.load();
+    },
     methods: {
-        upKey() {
-            console.log('upKey');
-            axios.get('/sync/sess/').then((response) => {
-                this.$store.dispatch('LOAD_API_TOKEN');
-                this.upUser(response.data);
-                this.upSettings(response.data);
+        tick(delay) {
+            setTimeout(() => {
+                this.load();
+            }, 1000 * delay);
+        },
+        reload() {
+            let delay = 1;
+            if (this.attempt >= 10) {
+                delay = 300;
+            } else
+            if (this.attempt >= 5) {
+                delay = 5;
+            } else
+            if (this.attempt >= 2) {
+                delay = 3;
+            }
+            this.attempt++;
+            this.tick(delay);
+        },
+        load() {
+            this.$store.dispatch('auth/UPDATE_KEY').then(({data}) => {
+                if (data.uid) {
+                    this.upKey(data);
+                } else
+                if (data.reg) {
+                    this.noReg(data);
+                } else {
+                    this.reload();
+                }
             });
+        },
+        noReg(data) {
+            // зарегистрирован / не авторизован
+            this.upKey(data);
+        },
+        upKey(data) {
+            this.$store.dispatch('LOAD_API_TOKEN');
+            this.upUser(data);
+            this.upSettings(data);
+            this.attempt = 0;
+            this.tick(600);
         },
         upUser(data) {
             let {uid, city, sex, age, name, contacts, apromt: promt} = data;
@@ -26,12 +63,6 @@ Vue.component('api-key-update', {
             let {who, years_up: up, years_to: to, close: town, virt} = data;
             this.$store.commit('search/settings', {who, up, to, virt, town});
         }
-    },
-    mounted() {
-        this.upKey();
-        setInterval(() => {
-            this.upKey();
-        }, 1000 * 600);
     },
     template: '#api-key-update'
 });

@@ -54,21 +54,11 @@
         </a>
       </div>
     </div>
-    <div class="row">
-      %%TIP_FORM_BLOCK%%
-      %%INFO_TEXT_SCH%%
-    </div>
   </div>
-
-  <div class="container content">
+    <div class="container content">
     <div class="row">
-      <div class="col-md-12">
-        %%ERROR_SEARCH_ALT%%
-      </div>
-    </div>
-    <div class="row">
-        <auth-board v-if="promt"></auth-board>
-        <search-wizard inline-template>
+      <auth-board v-if="promt"></auth-board>
+      <search-wizard inline-template>
   <div id="search-wizard">
     <div @click="$router.push('/settings/search')" style="display: none;" v-show="say">
       <i class="material-icons">&#xE8B4;</i>
@@ -107,38 +97,35 @@
     </div>
   </div>
 
-
   <div class="container desires-widget" v-show="tags.length">
     <div class="row">
       <desire-list :tags="tags"></desire-list>
     </div>
   </div>
-<div v-show="!simple">
-%%SLIDER_FOOTER%%
-</div>
-
-
+  <div v-show="!simple">
+  %%SLIDER_FOOTER%%
+  </div>
+  
   <div class="addthis_inline_share_toolbox" style="margin: 20px 0 0px; min-height: 35px; text-align: center;"></div>
 
-  <div style="text-align: center; margin: 5px auto; max-width: 750px;">
+  <div style="text-align: center; margin: 5px auto; max-width: 750px; padding: 0 5px;">
 
    <a class="info-table__link" rel="nofollow" href="/rules.php" target="_blank">Правила сайта</a>
-   <a class="info-table__link" rel="nofollow" href="/блог/регистрация-автоматическая/">Регистрация автоматическая</a>
+   <a class="info-table__link" rel="nofollow" href="/блог/регистрация-автоматическая/" target="_blank">Регистрация автоматическая</a>
    <a class="info-table__link" rel="nofollow" href="/блог/как-найти-девушку-или-парня-для-секса/" target="_blank">Способ знакомства</a>
-   <a class="info-table__link" rel="nofollow" href="/блог/как-пользоваться-сайтом/">Как пользоваться сайтом</a>
+   <a class="info-table__link" rel="nofollow" href="/блог/как-пользоваться-сайтом/" target="_blank">Как пользоваться сайтом</a>
 
-   <a class="info-table__link" rel="nofollow" href="/блог/соглашение-о-предоставлении-услуг/">Пользовательское соглашение</a>
-   <a class="info-table__link" rel="nofollow" href="/10336">Помощник по сайту</a>
+   <a class="info-table__link" rel="nofollow" href="/блог/соглашение-о-предоставлении-услуг/" target="_blank">Пользовательское соглашение</a>
+   <a class="info-table__link" rel="nofollow" href="/10336" target="_blank">Помощник по сайту</a>
 
-   <a class="info-table__link" rel="nofollow" href="/блог/реклама-на-сайте/">Реклама на сайте</a>
+   <a class="info-table__link" rel="nofollow" href="/блог/реклама-на-сайте/" target="_blank">Реклама на сайте</a>
    <a class="info-table__link" rel="nofollow" href="/envelope.htm" target="_blank">Написать разработчикам</a>
-   <a class="info-table__link" rel="nofollow" href="/security/action" target="_blank">Администрирование</a>
   </div>
 
   <div style="text-align: center; margin: 10px 0 40px;">
     <a class="nav-table_git-link" href="https://github.com/freedomsex/freedomsex" target="_blank" rel="nofollow"></a>
   </div>
-
+  
 <div id="router-view">
   <router-view @close="$router.go(-1)" @warning="showSnackbar" @alert="toast"></router-view>
 </div>
@@ -163,12 +150,9 @@
      <div id="option-static__close">Закрыть</div>
    </div>
  </div>
-
-
 </div>
 
-
-   %%BLOCK_COUNTER_ALL%%
+%%BLOCK_COUNTER_ALL%%
 
 <div id="settings">
   <router-view @close="$router.go(-1)" @warning="snackbar" @alert="toast"></router-view>
@@ -1730,9 +1714,8 @@
 </div>
  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/static/js/core.min.js?rel=1502007261940"></script>
+<script type="text/javascript" src="/static/js/core.min.js?rel=1502109071482"></script>
 <!-- Исходники можно найти в репозитории. Там же собранные не сжатые файлы -->
-
 
 <script type="text/javascript">
     // var addthis_config = {"data_track_addressbar":false};

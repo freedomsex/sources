@@ -1,12 +1,7 @@
   <div class="container content">
     <div class="row">
-      <div class="col-md-12">
-        %%ERROR_SEARCH_ALT%%
-      </div>
-    </div>
-    <div class="row">
-        <auth-board v-if="promt"></auth-board>
-        <!-- build:include ../../_common/search-wizard.htm --><!-- /build -->
+      <auth-board v-if="promt"></auth-board>
+      <!-- build:include ../../_common/search-wizard.htm --><!-- /build -->
     </div>
     <div class="row">
       <div class="preloader" v-show="!ready">
@@ -28,7 +23,6 @@
       <search-list ref="results"></search-list>
     </div>
   </div>
-
 
   <div class="container desires-widget" v-show="tags.length">
     <div class="row">

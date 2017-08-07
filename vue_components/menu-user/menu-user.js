@@ -2,12 +2,17 @@
 const MenuUser = Vue.component('menu-user', {
     data() {
         return {
-
+            attempt: 0
         }
+    },
+    mounted() {
+        this.loadStatus();
     },
     computed: {
         authorized() {
-            return (this.$store.state.user.uid > 0) ? 1 : 0;
+            let uid = this.$store.state.user.uid;
+            let reg = this.$store.getters.registered;
+            return (uid > 0) ? 1 : 0;
         },
         newMessage() {
             let {status} = this.$store.state.contacts.intimate;
@@ -40,11 +45,30 @@ const MenuUser = Vue.component('menu-user', {
         intimate() {
             this.$router.push({ name: 'intimate' });
         },
-        loadStatus() {
+        check() {
             axios.get('/mailer/status').then((response) => {
                 this.onIntimate(response.data.message);
                 this.onInitial(response.data.contact);
+                this.attempt = 0;
+            }).catch(() => {
+                this.attempt++;
             });
+        },
+        loadStatus() {
+            let {auth} = this.$store.state.auth;
+            let delay = !auth ? 1 : 15;
+            if (auth) {
+                this.check();
+            }
+            if (this.attempt > 4) {
+                delay = 5;
+            } else
+            if (this.attempt > 2) {
+                delay = 3;
+            }
+            setTimeout(() => {
+                this.loadStatus();
+            }, delay * 1000);
         },
         onIntimate(status) {
             let {notified, status: current} = this.$store.state.contacts.intimate;
@@ -70,14 +94,7 @@ const MenuUser = Vue.component('menu-user', {
         },
 
         regmy() {
-            window.location = '/?regmy';
+            window.location = '/user/regnow';
         },
-    },
-    mounted() {
-        let delay = 15;
-        this.loadStatus();
-        setInterval(() => {
-            this.loadStatus();
-        }, delay * 1000);
     },
 });

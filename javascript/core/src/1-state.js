@@ -99,6 +99,9 @@ const auth = {
         SAVE_SUSCRIBE({store, commit}, data) {
             commit('subscr');
             return api.user.saveSubscribe();
+        },
+        UPDATE_KEY({store, commit}) {
+            return axios.get('/sync/sess/');
         }
     },
     mutations: {
@@ -710,8 +713,8 @@ const store = new Vuex.Store({
         },
     },
     getters: {
-        accept() {
-
+        registered(state) {
+            return state.apiToken ? true : false;
         }
     }
 });

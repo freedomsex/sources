@@ -596,17 +596,54 @@ Vue.component('api-key-update', {
     ],
     data() {
         return {
-            showOption:  false,
+            attempt: 0,
         }
     },
+    mounted() {
+        this.load();
+    },
     methods: {
-        upKey() {
-            console.log('upKey');
-            axios.get('/sync/sess/').then((response) => {
-                this.$store.dispatch('LOAD_API_TOKEN');
-                this.upUser(response.data);
-                this.upSettings(response.data);
+        tick(delay) {
+            setTimeout(() => {
+                this.load();
+            }, 1000 * delay);
+        },
+        reload() {
+            let delay = 1;
+            if (this.attempt >= 10) {
+                delay = 300;
+            } else
+            if (this.attempt >= 5) {
+                delay = 5;
+            } else
+            if (this.attempt >= 2) {
+                delay = 3;
+            }
+            this.attempt++;
+            this.tick(delay);
+        },
+        load() {
+            this.$store.dispatch('auth/UPDATE_KEY').then(({data}) => {
+                if (data.uid) {
+                    this.upKey(data);
+                } else
+                if (data.reg) {
+                    this.noReg(data);
+                } else {
+                    this.reload();
+                }
             });
+        },
+        noReg(data) {
+            // зарегистрирован / не авторизован
+            this.upKey(data);
+        },
+        upKey(data) {
+            this.$store.dispatch('LOAD_API_TOKEN');
+            this.upUser(data);
+            this.upSettings(data);
+            this.attempt = 0;
+            this.tick(600);
         },
         upUser(data) {
             let {uid, city, sex, age, name, contacts, apromt: promt} = data;
@@ -618,12 +655,6 @@ Vue.component('api-key-update', {
             let {who, years_up: up, years_to: to, close: town, virt} = data;
             this.$store.commit('search/settings', {who, up, to, virt, town});
         }
-    },
-    mounted() {
-        this.upKey();
-        setInterval(() => {
-            this.upKey();
-        }, 1000 * 600);
     },
     template: '#api-key-update'
 });
@@ -1264,12 +1295,17 @@ Vue.component('loading-wall', {
 const MenuUser = Vue.component('menu-user', {
     data() {
         return {
-
+            attempt: 0
         }
+    },
+    mounted() {
+        this.loadStatus();
     },
     computed: {
         authorized() {
-            return (this.$store.state.user.uid > 0) ? 1 : 0;
+            let uid = this.$store.state.user.uid;
+            let reg = this.$store.getters.registered;
+            return (uid > 0) ? 1 : 0;
         },
         newMessage() {
             let {status} = this.$store.state.contacts.intimate;
@@ -1302,11 +1338,30 @@ const MenuUser = Vue.component('menu-user', {
         intimate() {
             this.$router.push({ name: 'intimate' });
         },
-        loadStatus() {
+        check() {
             axios.get('/mailer/status').then((response) => {
                 this.onIntimate(response.data.message);
                 this.onInitial(response.data.contact);
+                this.attempt = 0;
+            }).catch(() => {
+                this.attempt++;
             });
+        },
+        loadStatus() {
+            let {auth} = this.$store.state.auth;
+            let delay = !auth ? 1 : 15;
+            if (auth) {
+                this.check();
+            }
+            if (this.attempt > 4) {
+                delay = 5;
+            } else
+            if (this.attempt > 2) {
+                delay = 3;
+            }
+            setTimeout(() => {
+                this.loadStatus();
+            }, delay * 1000);
         },
         onIntimate(status) {
             let {notified, status: current} = this.$store.state.contacts.intimate;
@@ -1332,15 +1387,8 @@ const MenuUser = Vue.component('menu-user', {
         },
 
         regmy() {
-            window.location = '/?regmy';
+            window.location = '/user/regnow';
         },
-    },
-    mounted() {
-        let delay = 15;
-        this.loadStatus();
-        setInterval(() => {
-            this.loadStatus();
-        }, delay * 1000);
     },
 });
 
@@ -3511,6 +3559,9 @@ const auth = {
         SAVE_SUSCRIBE({store, commit}, data) {
             commit('subscr');
             return api.user.saveSubscribe();
+        },
+        UPDATE_KEY({store, commit}) {
+            return axios.get('/sync/sess/');
         }
     },
     mutations: {
@@ -4122,8 +4173,8 @@ const store = new Vuex.Store({
         },
     },
     getters: {
-        accept() {
-
+        registered(state) {
+            return state.apiToken ? true : false;
         }
     }
 });
