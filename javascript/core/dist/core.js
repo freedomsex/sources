@@ -174,14 +174,52 @@ var AccountActivity = Vue.component('account-activity', {
             loading: false
         };
     },
-    mounted: function mounted() {
-        this.load();
-    },
 
     computed: {
         human: function human() {
             return this.$store.state.search.human;
+        }
+    },
+    methods: {
+        close: function close() {
+            this.$emit('close');
         },
+        loaded: function loaded() {
+            this.loading = false;
+            console.log(this.human);
+        },
+        hope: function hope() {
+            var _this = this;
+
+            setTimeout(function () {
+                return _this.loading = false;
+            }, 4 * 1000);
+        },
+        load: function load() {
+            var _this2 = this;
+
+            this.loading = true;
+            this.hope();
+            store.dispatch('search/HUMAN', this.humanId).then(function (response) {
+                _this2.loaded();
+            }).catch(function (error) {
+                console.log(error);
+                _this2.loading = false;
+            });
+        }
+    },
+    template: '#account-activity'
+});
+
+Vue.component('account-component', {
+    props: ['human'],
+    data: function data() {
+        return {
+            loading: false
+        };
+    },
+
+    computed: {
         age: function age() {
             return this.human.age ? moment.duration(this.human.age, "years").humanize() : null;
         },
@@ -255,35 +293,7 @@ var AccountActivity = Vue.component('account-activity', {
             return result;
         }
     },
-    methods: {
-        close: function close() {
-            this.$emit('close');
-        },
-        loaded: function loaded() {
-            this.loading = false;
-            console.log(this.human);
-        },
-        hope: function hope() {
-            var _this = this;
-
-            setTimeout(function () {
-                return _this.loading = false;
-            }, 4 * 1000);
-        },
-        load: function load() {
-            var _this2 = this;
-
-            this.loading = true;
-            this.hope();
-            store.dispatch('search/HUMAN', this.humanId).then(function (response) {
-                _this2.loaded();
-            }).catch(function (error) {
-                console.log(error);
-                _this2.loading = false;
-            });
-        }
-    },
-    template: '#account-activity'
+    template: '#account-component'
 });
 
 var ActivityActions = {
@@ -2052,7 +2062,7 @@ Vue.component('quick-write', {
 
     methods: {
         write: function write() {
-            this.$router.push('write/' + tid);
+            this.$router.push('write/' + this.humanId);
         }
     },
     template: '#quick-write'
@@ -3028,8 +3038,8 @@ var SearchSettings = Vue.component('search-settings', {
         // },
         close: function close() {
             this.save();
-            this.$root.reload();
             this.back();
+            this.$root.reload();
         }
     },
     template: '#search-settings'
@@ -3466,6 +3476,17 @@ Vue.component('upload-dialog', {
             }
             this.close();
         }
+    }
+});
+
+Vue.component('alert-widget', {
+    data: function data() {
+        return {
+            compact: false
+        };
+    },
+    mounted: function mounted() {
+        this.compact = true;
     }
 });
 
@@ -4961,9 +4982,19 @@ var app = new Vue({
     mounted: function mounted() {},
 
     computed: {
-        humanId: function humanId() {
-            return Number(this.$route.path.substr(1));
-        },
+        humanId: function (_humanId) {
+            function humanId() {
+                return _humanId.apply(this, arguments);
+            }
+
+            humanId.toString = function () {
+                return _humanId.toString();
+            };
+
+            return humanId;
+        }(function () {
+            return humanId ? humanId : null;
+        }),
         simple: function simple() {
             return this.$store.state.simple;
         },
@@ -4977,6 +5008,10 @@ var app = new Vue({
         },
         tags: function tags() {
             return this.$store.getters['search/tags'];
+        },
+        human: function human() {
+            var result = humanData ? json.parse(humanData) : null;
+            return result && _.isObject(result) && _.has(result, 'id') ? result : [];
         }
     },
     methods: {
@@ -4991,7 +5026,13 @@ var app = new Vue({
             this.alert = text;
         },
         reload: function reload() {
-            this.$refs.results.reload();
+            var home = this.$refs.results;
+            home ? home.reload() : this.redirectHome();
+            // Hard reload mail page to home
+        },
+        redirectHome: function redirectHome() {
+            console.log('Hard reload mail page to home');
+            window.location = '/';
         }
     },
     el: '#app',

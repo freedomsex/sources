@@ -222,13 +222,45 @@ const AccountActivity = Vue.component('account-activity', {
             loading: false,
         };
     },
-    mounted() {
-        this.load();
-    },
     computed: {
         human() {
             return this.$store.state.search.human;
         },
+    },
+    methods: {
+        close() {
+            this.$emit('close');
+        },
+        loaded() {
+            this.loading = false;
+                console.log(this.human);
+        },
+        hope() {
+            setTimeout(() => this.loading = false, 4 * 1000);
+        },
+        load() {
+            this.loading = true;
+            this.hope();
+            store.dispatch('search/HUMAN', this.humanId).then((response) => {
+                this.loaded();
+            }).catch((error) => {
+                console.log(error);
+                this.loading = false;
+            });
+        }
+    },
+    template: '#account-activity',
+});
+
+
+Vue.component('account-component', {
+    props: ['human'],
+    data() {
+        return {
+            loading: false,
+        };
+    },
+    computed: {
         age() {
             return this.human.age ? moment.duration(this.human.age, "years").humanize() : null;
         },
@@ -288,29 +320,7 @@ const AccountActivity = Vue.component('account-activity', {
             return result;
         }
     },
-    methods: {
-        close() {
-            this.$emit('close');
-        },
-        loaded() {
-            this.loading = false;
-                console.log(this.human);
-        },
-        hope() {
-            setTimeout(() => this.loading = false, 4 * 1000);
-        },
-        load() {
-            this.loading = true;
-            this.hope();
-            store.dispatch('search/HUMAN', this.humanId).then((response) => {
-                this.loaded();
-            }).catch((error) => {
-                console.log(error);
-                this.loading = false;
-            });
-        }
-    },
-    template: '#account-activity',
+    template: '#account-component',
 });
 
 const ActivityActions = {
@@ -2002,7 +2012,7 @@ Vue.component('quick-write', {
     },
     methods: {
         write() {
-            this.$router.push('write/' + tid);
+            this.$router.push('write/' + this.humanId);
         },
     },
     template: '#quick-write',
@@ -2961,8 +2971,8 @@ const SearchSettings = Vue.component('search-settings', {
         // },
         close() {
             this.save();
-            this.$root.reload();
             this.back();
+            this.$root.reload();
         },
     },
     template: '#search-settings',
@@ -3389,6 +3399,16 @@ Vue.component('upload-dialog', {
 
 
 
+Vue.component('alert-widget', {
+    data() {
+        return {
+            compact: false
+        }
+    },
+    mounted() {
+        this.compact = true;
+    }
+});
 
 Vue.component('photo-dialog', {
     methods: {
@@ -4650,7 +4670,7 @@ var app = new Vue({
     },
     computed: {
         humanId() {
-            return Number(this.$route.path.substr(1));
+            return humanId ? humanId : null;
         },
         simple() {
             return this.$store.state.simple;
@@ -4664,7 +4684,11 @@ var app = new Vue({
         },
         tags() {
             return this.$store.getters['search/tags'];
-        }
+        },
+        human() {
+            var result = humanData ? json.parse(humanData) : null;
+            return (result && _.isObject(result) && _.has(result, 'id')) ? result : [];
+        },
     },
     methods: {
         showSnackbar(text, callback, action, play) {
@@ -4678,7 +4702,13 @@ var app = new Vue({
             this.alert = text;
         },
         reload() {
-            this.$refs.results.reload();
+            let home = this.$refs.results;
+            home ? home.reload() : this.redirectHome();
+            // Hard reload mail page to home
+        },
+        redirectHome() {
+            console.log('Hard reload mail page to home');
+            window.location = '/';
         }
     },
     el: '#app',

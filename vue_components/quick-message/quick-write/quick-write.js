@@ -10,7 +10,7 @@ Vue.component('quick-write', {
     },
     methods: {
         write() {
-            this.$router.push('write/' + tid);
+            this.$router.push('write/' + this.humanId);
         },
     },
     template: '#quick-write',

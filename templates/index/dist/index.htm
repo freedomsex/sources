@@ -19,8 +19,7 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-<link rel="stylesheet" type="text/css" href="%%CSS_FILE%%">
-
+<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1502539223866">
 
   <script type="text/javascript">  
     function get_cookie ( cookie_name )
@@ -34,16 +33,62 @@
     }   
   </script>
 
-<!-- Put this script tag to the <head> of your page -->
+<!-- Put this script tag to the head of your page -->
 <script type="text/javascript" src="http://vk.com/js/api/share.js?11" charset="windows-1251"></script>
-<!-- Put this script tag to the <head> of your page -->
+<!-- Put this script tag to the head of your page -->
 <script type="text/javascript" src="http://userapi.com/js/api/openapi.js?49"></script>
-<link rel="stylesheet" type="text/css" href="%%CSS_UNIQUE%%">
 </head>
 <body>
 %%JS_USER_VARS%%
 <div id="app">
-  %%MENU_HEADER%%
+  
+<menu-user inline-template @snackbar="showSnackbar">
+  <nav id="menu-user" class="navbar navbar-inverse">
+    <div class="menu-user">
+      <div class="menu-user__wrapper">
+        <div class="menu-user__logo" style="margin-right: 15px">
+          <a id="home_page" class="" href="/">
+            <img src="/static/img/icon/logo.png" width="27" height="20" alt="" border="0" >
+          </a>
+        </div>
+        <div class="menu-user__navbar" v-show="authorized">
+          <div class="navbar-button" @click="search()">
+            <i class="material-icons">&#xE8B6;</i>
+            <span class="navbar-button__title button-search">Поиск</span>
+          </div>
+          <div class="navbar-button" @click="intimate()">
+            <i class="material-icons">&#xE0BE;</i>
+            <span class="navbar-button__title button-messages">Общение</span>
+            <span class="menu-user__status" :class="{ active: newMessage }"></span>
+          </div>
+          <div class="navbar-button" @click="initial()">
+            <i class="material-icons">&#xE87E;</i>
+            <span class="navbar-button__title button-contacts">Знакомства</span>
+            <span class="menu-user__status" :class="{ active: newContact }"></span>
+          </div>
+        </div>
+        <div class="menu-user__getlogin" v-show="!authorized" style="display: none;">
+          <div class="navbar-button" @click="regmy">
+            <div class="hidden-xs">
+              Получить логин и пароль прямо сейчас
+            </div>
+            <div class="visible-xs-inline">
+              Получить логин сейчас
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-user__account" @click="$router.push('/settings/account')" v-show="authorized">
+          <span class="menu-user__signature" v-text="signature"></span>
+          <i class="material-icons" style="font-size: 28px;">&#xE853;</i>
+        </div>
+        <div class="menu-user__login" @click="$router.push('/login')" v-show="!authorized" style="display: none;">
+          Войти
+        </div>
+      </div>
+    </div>
+  </nav>
+</menu-user>
   <div class="container content split-bottom" v-show="!simple">
     <div class="row" style="position: relative;">
       %%TOP_INFO_BLOCK%%
@@ -105,7 +150,39 @@
   <div v-show="!simple">
   %%SLIDER_FOOTER%%
   </div>
-  
+  <alert-widget inline-template>
+  <div class="container alert-widget" @click="compact = (compact == false)">
+    <div class="alert-widget__wrapper" :class="{compact: compact}">
+      Сайт полностью бесплатен и создан для общения.
+      Если вам кто-то предложит что-либо оплатить,
+      <a href="/блог/как-подать-жалобу-модераторам/" rel="nofollow" target="_blank">сообщите нам</a>
+      любым способом. Предложение интим услуг на сайте запрещено.
+      Пожалуйста, не «ложите» деньги на телефон,
+      на интернет, не делайте денежных переводов, это
+      <a href="/блог/как-не-попасть-на-уловки-мошенников/" rel="nofollow" target="_blank">
+       уловки мошенников</a>. Не нарушайте законов,
+      <a href="/блог/как-не-стать-жертвой-шантажа/" rel="nofollow" target="_blank">шантаж</a>.
+      Отправляйте фото
+      <a href="/блог/сохраняйте-анонимность/" rel="nofollow" target="_blank">сохраняя анонимность</a>.
+
+      <div class="additional">
+        Только реальные анкеты. Проверить действительность анкетных данных или реальность намерений очень просто,
+        предложив обменяться адресами страниц вконтакте или одноклассников,
+        при помощи видеозвонка Skype или позвонив собеседнику предварительно спросив номер телефона.
+        Также легко можно
+        <a href="/блог/проверить-подлинность-фотографии/" rel="nofollow" target="_blank">проверить подлинность фото</a>.
+      </div>
+
+    </div>
+  </div>
+</alert-widget>
+
+<div class="container freedom-alert-1">
+  <a href="//rev.freedomsex.net/" target="_blank" rel="nofollow noopener noreferrer">
+    У вас уже почти нет свободы. Здоровье под угрозой. Жизнь ваших детей в опасности. <span class="link_simple">Подробнее...</span>
+  </a>
+</div>
+
   <div class="addthis_inline_share_toolbox" style="margin: 20px 0 0px; min-height: 35px; text-align: center;"></div>
 
   <div style="text-align: center; margin: 5px auto; max-width: 750px; padding: 0 5px;">
@@ -166,62 +243,69 @@
 <script type="text/x-template" id="account-activity">
   <closed-activity @close="close">
     <span slot="caption">Анкета</span>
-    <div key="humanId">
+    <account-component :human="human" key="humanId" v-if="human"/>
+  </closed-activity>
+</script>
+
+
+
+<script type="text/x-template" id="account-component">
+  <div key="humanId">
+    <div class="account-section">
       <div class="human-info__general">
         <span class="human-info__name">{{human.name}}</span>
         <span class="human-info__age">{{age}}</span>
         <span class="human-info__ago">({{ago}})</span>
       </div>
-
       <div>
         <span class="human-info__city">{{human.city}}</span>
       </div>
+    </div>
 
-      <div class="account-section" v-if="who">
-        <div class="account-section__header">Я ищу</div>
-        <div class="human-info__search">
-          {{who}}
-        </div>
-      </div>
-
-      <div class="account-section" v-if="human.anketa">
-        <div class="account-section__header">Обо мне</div>
-        <div class="human-info__about">
-          Я {{human.sex == 1 ? 'парень' : 'девушка'}}
-          <span v-show="figure">{{figure}} телосложения</span>
-        </div>
-        <div class="human-info__measure">
-          <span v-show="human.anketa.growth">Мой рост: {{human.anketa.growth}} см, </span>
-          <span v-show="human.anketa.weight">Вес:  {{human.anketa.weight}} кг</span>
-        </div>
-      </div>
-
-      <div class="account-section" v-if="social">
-        <div class="account-section__header">У меня есть</div>
-        <div class="human-social">
-          <i class="human-social__email" v-show="social.em">Емайл</i>
-          <i class="human-social__vkontakte" v-show="social.vk">Вконтакте</i>
-          <i class="human-social__google-plus" v-show="social.go">Google-plus</i>
-          <i class="human-social__odnoklassniki" v-show="social.ok">Одноклассники</i>
-          <i class="human-social__facebook" v-show="social.fb">Facebook</i>
-        </div>
-      </div>
-
-      <div class="human-contacts" v-if="interact">
-        <div><i class="human-contacts__phone" v-show="interact.ph">Обязательно позвоню или дам номер телефона</i></div>
-        <div><i class="human-contacts__skype" v-show="interact.sk">Согласен на видеозвонок или видеочат по скайпу</i></div>
-      </div>
-
-      <div class="account-section" v-if="tags.length">
-        <div class="account-section__header">Мои желания и фантазии</div>
-        <div class="desire-tag__list">
-          <desire-tag-item v-for="(item, index) in tags"
-            :key="index"
-            :tag="item"/>
-        </div>
+    <div class="account-section" v-if="who">
+      <div class="account-section__header">Я ищу</div>
+      <div class="human-info__search">
+        {{who}}
       </div>
     </div>
-  </closed-activity>
+
+    <div class="account-section" v-if="human.anketa">
+      <div class="account-section__header">Обо мне</div>
+      <div class="human-info__about">
+        Я {{human.sex == 1 ? 'парень' : 'девушка'}}
+        <span v-show="figure">{{figure}} телосложения</span>
+      </div>
+      <div class="human-info__measure">
+        <span v-show="human.anketa.growth">Мой рост: {{human.anketa.growth}} см, </span>
+        <span v-show="human.anketa.weight">Вес:  {{human.anketa.weight}} кг</span>
+      </div>
+    </div>
+
+    <div class="account-section" v-if="social">
+      <div class="account-section__header">У меня есть</div>
+      <div class="human-social">
+        <i class="human-social__email" v-show="social.em">Емайл</i>
+        <i class="human-social__vkontakte" v-show="social.vk">Вконтакте</i>
+        <i class="human-social__google-plus" v-show="social.go">Google-plus</i>
+        <i class="human-social__odnoklassniki" v-show="social.ok">Одноклассники</i>
+        <i class="human-social__facebook" v-show="social.fb">Facebook</i>
+      </div>
+    </div>
+
+    <div class="human-contacts" v-if="interact">
+      <div><i class="human-contacts__phone" v-show="interact.ph">Обязательно позвоню или дам номер телефона</i></div>
+      <div><i class="human-contacts__skype" v-show="interact.sk">Согласен на видеозвонок или видеочат по скайпу</i></div>
+    </div>
+
+    <div class="account-section" v-if="tags.length">
+      <div class="account-section__header">Мои желания и фантазии</div>
+      <div class="desire-tag__list">
+        <desire-tag-item v-for="(item, index) in tags"
+          :key="index"
+          :tag="item"/>
+      </div>
+    </div>
+  </div>
 </script>
 
 
@@ -1674,47 +1758,9 @@
 
 <!-- build:include dialogs/captcha-dialog.htm --><!-- /build -->
 
-
-
-<div>
-  %%SHAB_JS_CLONE_ELEM%%
-</div>
-
-<!-- Ответить всем, блок -->
-<div style=" position: absolute; left: 10px; top: 45px; z-index: 177;">
-      <div class="new_message reply_mess" style="display: none;">
-       <div class="title">Ответить сразу всем.</div>
-       <div class="close">X</div>
-       <div class="bunn">Все</div>
-       <div class="abuse_list_hint" style="padding-left: 15px; margin: 0px 0px 0px  0px;"><i class="abuse_agree"></i>
-       Отметьте похожие сообщения</div>
-       <div class="notes" style="padding: 0 10px; font-size: 12px; overflow:  hidden;
-        "> </div>
-       <textarea style=" margin: 10px 10px 5px; width: 254px; min-height: 40px;"></textarea>
-
-       <div class="" style="padding: 0px 10px 15px; ">
-         <input class="post" value="Ответить" type="button" style="font-size: 10px;">
-
-       </div>
-      </div>
-</div>
-
-<!-- Я модератор, блок -->
-<div id="moder_block" style="display: none;" >
-  <div id="moder_block_close" class="" style="position: absolute; right: 10px; top: 5px; font-size: 15px; color: #999;">X</div>
-  <div id="moder_block_inner" class="" style=""></div>
-
-  <div id="" class="" style=""></div>
-</div>
-
-<!-- Редактирование контактов, элемент -->
-<div id="edit_cont_elem" style="display: none;">
-  <input id="edit_human_name" type="text" placeholder="Имя" style="width: 150px;">
-  <input id="edit_human_btn"  type="submit" value=" Сохранить ">
-</div>
  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/static/js/core.min.js?rel=1502109071482"></script>
+<script type="text/javascript" src="/static/js/core.min.js?rel=1502539223864"></script>
 <!-- Исходники можно найти в репозитории. Там же собранные не сжатые файлы -->
 
 <script type="text/javascript">

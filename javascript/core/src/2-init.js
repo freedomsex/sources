@@ -13,7 +13,7 @@ var app = new Vue({
     },
     computed: {
         humanId() {
-            return Number(this.$route.path.substr(1));
+            return humanId ? humanId : null;
         },
         simple() {
             return this.$store.state.simple;
@@ -27,7 +27,11 @@ var app = new Vue({
         },
         tags() {
             return this.$store.getters['search/tags'];
-        }
+        },
+        human() {
+            var result = humanData ? json.parse(humanData) : null;
+            return (result && _.isObject(result) && _.has(result, 'id')) ? result : [];
+        },
     },
     methods: {
         showSnackbar(text, callback, action, play) {
@@ -41,7 +45,13 @@ var app = new Vue({
             this.alert = text;
         },
         reload() {
-            this.$refs.results.reload();
+            let home = this.$refs.results;
+            home ? home.reload() : this.redirectHome();
+            // Hard reload mail page to home
+        },
+        redirectHome() {
+            console.log('Hard reload mail page to home');
+            window.location = '/';
         }
     },
     el: '#app',

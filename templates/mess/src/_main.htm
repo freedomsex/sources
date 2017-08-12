@@ -2,39 +2,43 @@
 <html>
 <head>
 <!-- build:include ../../_common/head.htm --><!-- /build -->
-<link rel="stylesheet" type="text/css" href="%%CSS_MESS%%">
 </head>
 <body>
-%%JS_USER_VARS%%
+
+<script>
+  var humanId = '%%HUMAN_ID%%';
+  var humanData = '%%HUMAN_DATA%%';
+</script>
 %%JS_DEFAULTS%%
 <div id="app">
-%%USER_MENUE_BLOCK%%
-
-  <div class="container content">
+  <!-- build:include ../../_common/menu-user.htm --><!-- /build -->
+  <div class="container content split-bottom">
     <div class="row">
       <ad-top></ad-top>
       <!-- build:include ../../_common/search-wizard.htm --><!-- /build -->
     </div>
   </div>
 
-    <div class="container content">
-      <div class="row">
-        <div class="col-md-12">
-          <!-- build:include main.htm --><!-- /build -->
+  <div class="container content paper">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-sm-8">
+            <account-component :human="human" key="2" v-if="human"></account-component>
+          </div>
+          <div class="col-sm-4">
+          <!-- build:include sidebar.htm --><!-- /build -->
+          </div>
         </div>
       </div>
     </div>
+  </div>
+  <!-- build:include ../../_common/info-links.htm --><!-- /build -->
+  <!-- build:include ../../_common/option-static.htm --><!-- /build -->
 </div>
 <!-- build:include ../../_common/footer.htm --><!-- /build -->
 
-
-<!-- build:include key-session.htm -->Мутная штука для простановки сессий на зеркалах<!-- /build -->
 %%BLOCK_COUNTER_ALL%% <!-- счетчики статистики -->
-<!-- build:include dev-info.htm -->Информация для отладки, если включено<!-- /build -->
-
-<!-- build:[src]:dev /static/js/mess.js -->
-<script type="text/javascript" src="/static/js/mess.min.js"></script>
- <!-- /build -->
 
 <script type="text/javascript">
     // var addthis_config = {"data_track_addressbar":false};

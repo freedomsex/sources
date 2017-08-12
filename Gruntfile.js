@@ -41,10 +41,7 @@ module.exports = function (grunt) {
                         'javascript/core/vue-components.js',
                         'javascript/core/src/dialogs/*.js',
                         'javascript/core/src/*.js',
-                    ],
-                    'javascript/mess/dist/mess.es6': [
-                        'javascript/mess/src/**/*.js',
-                    ],
+                    ], 
                 }
             },
             admin: {
@@ -56,10 +53,7 @@ module.exports = function (grunt) {
                     'javascript/core/dist/core.js': [
                         'bower_components/bower-components.js',
                         'javascript/core/dist/core.js'
-                    ],
-                    'javascript/mess/dist/mess.js': [
-                        'javascript/mess/dist/mess.js'
-                    ],
+                    ], 
                 }
             },
             bundle_prod: {
@@ -78,8 +72,7 @@ module.exports = function (grunt) {
             },
             javascript: {
                 files: {
-                    'javascript/core/dist/core.js': 'javascript/core/dist/core.es6',
-                    'javascript/mess/dist/mess.js': 'javascript/mess/dist/mess.es6'
+                    'javascript/core/dist/core.js': 'javascript/core/dist/core.es6' 
                 }
             }
         },
@@ -92,8 +85,7 @@ module.exports = function (grunt) {
                 },
                 files: {
                   "css-styles/admin/dist/admin.css": "css-styles/admin/src/_main.less",
-                  "css-styles/core/dist/core.css":   "css-styles/core/src/_main.less",
-                  "css-styles/mess/dist/mess.css":   "css-styles/mess/src/_main.less",
+                  "css-styles/core/dist/core.css":   "css-styles/core/src/_main.less", 
                   "css-styles/blog/dist/blog.css":   "css-styles/blog/src/_main.less",
                 }
             }
@@ -182,10 +174,7 @@ module.exports = function (grunt) {
         uglify: {
             core: {
                 files: {'javascript/core/dist/core.min.js': 'javascript/core/dist/core.js'}
-            },
-            mess: {
-                files: {'javascript/mess/dist/mess.min.js': 'javascript/mess/dist/mess.js'}
-            }
+            }, 
         },
         // Наблюдение за изменениями в файлах исходниках
         watch: {
@@ -203,8 +192,7 @@ module.exports = function (grunt) {
             jscripts: {
                 files: [
                     'javascript/core/vue-components.js',
-                    'javascript/core/src/**/*.js',
-                    'javascript/mess/src/**/*.js',
+                    'javascript/core/src/**/*.js', 
                     'javascript/admin/src/*.js',
                 ],
                 tasks: ['concat:javascript', 'babel:javascript', 'replace:dev', 'concat:bundle_dev'],
@@ -217,8 +205,7 @@ module.exports = function (grunt) {
                 files: [
                     'css-styles/core/vue-components.less',
                     'css-styles/0_import/**/*',
-                    'css-styles/core/src/*',
-                    'css-styles/mess/src/*',
+                    'css-styles/core/src/*', 
                     'css-styles/admin/src/*',
                     'css-styles/blog/src/*',
                 ],
@@ -259,15 +246,14 @@ module.exports = function (grunt) {
             },
             dist: {
                 files: {
-                    "css-styles/core/dist/core.css": "css-styles/core/dist/core.css",
-                    "css-styles/mess/dist/mess.css": "css-styles/mess/dist/mess.css"
+                    "css-styles/core/dist/core.css": "css-styles/core/dist/core.css" 
                 }
             }
         },
         cachebreaker: {
             dev: {
                 options: {
-                    match: ['core.min.js', 'mess.min.js', 'core.js', 'mess.js'] 
+                    match: ['core.min.js', 'core.js', 'core.css'] 
                 },
                 files: {
                     src: ['templates/mess/dist/mess.htm', 'templates/index/dist/index.htm']
