@@ -1664,37 +1664,50 @@ a.name:hover {
   font-size: 30px;
   cursor: pointer;
 }
-.closed-activity__wrapper {
-  position: absolute;
-  top: 0;
+.closed-activity .activity__wrapper {
   right: 0;
-  height: 100%;
-  max-height: 700px;
-  max-width: 540px;
-  width: 100%;
-  margin-bottom: 1px;
-  overflow: hidden;
-  background: #ffffff;
-  border: 0px solid #cccccc;
-  border-top: 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-.closed-activity__content {
-  padding: 15px 20px 15px;
-}
-.closed-activity__container {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  height: 100%;
 }
 .hint-info {
   background: #f5f5f5;
   color: #333333;
   margin-bottom: 10px;
   padding: 10px 15px;
+}
+.activity__title {
+  font-weight: bolder;
+  line-height: 20px;
+}
+.activity__wrapper {
+  position: absolute;
+  width: 100%;
+  max-width: 540px;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  overflow: hidden;
+}
+.activity__container {
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-flex: 1;
+      -ms-flex: 1 1 620px;
+          flex: 1 1 620px;
+  overflow-y: auto;
+}
+.activity__container.content {
+  padding: 15px 20px 15px;
 }
 .default-activity {
   position: fixed;
@@ -1714,37 +1727,13 @@ a.name:hover {
   margin-left: 0;
   margin-right: auto;
 }
-.default-activity__title {
-  font-weight: bolder;
-  line-height: 20px;
-}
-.default-activity__wrapper {
-  position: relative;
-  height: calc(100% - 50px);
-  max-height: 650px;
-  margin-bottom: 1px;
-  overflow: hidden;
-  max-width: 540px;
-  background: #ffffff;
-  border: 1px solid #cccccc;
-  border-top: 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-.default-activity__container {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  height: 100%;
-}
-.default-activity__content {
-  padding: 15px 20px 15px;
-}
 .message-dialog {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  -webkit-box-flex: 1;
+      -ms-flex: 1 1 auto;
+          flex: 1 1 auto;
   border: 0px solid gray;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
@@ -2225,6 +2214,9 @@ a.name:hover {
   position: relative;
   top: -10px;
   z-index: 1000;
+}
+.navbar-fixed-top {
+  z-index: 1;
 }
 .menu-bar {
   height: 50px;

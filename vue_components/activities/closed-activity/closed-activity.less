@@ -39,28 +39,10 @@
         font-size: 30px;
         cursor: pointer;
     }
-    &__wrapper {
-        position: absolute;
-        top: 0;
-        right: 0;
-        height: 100%;
-        max-height: @activity-height + 50;
-        max-width:  @activity-width;
-        width: 100%;
-        margin-bottom: 1px;
-        overflow: hidden;
-        background: @white;
-        border: 0px solid @gray;
-        border-top: 0;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
-        overflow-x: hidden;
-        overflow-y: auto;
-    }
-    &__content {
-        padding: @indent-md @indent-lg @indent-md;
-    }
-    &__container {
-        display: flex;
-        height: 100%;
+
+    .activity {
+        &__wrapper {
+            right: 0;
+        }
     }
 }
