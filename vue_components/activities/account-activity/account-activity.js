@@ -11,6 +11,9 @@ const AccountActivity = Vue.component('account-activity', {
             return this.$store.state.search.human;
         },
     },
+    mounted() {
+        this.load();
+    },
     methods: {
         close() {
             this.$emit('close');

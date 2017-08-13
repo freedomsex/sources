@@ -180,6 +180,10 @@ var AccountActivity = Vue.component('account-activity', {
             return this.$store.state.search.human;
         }
     },
+    mounted: function mounted() {
+        this.load();
+    },
+
     methods: {
         close: function close() {
             this.$emit('close');
@@ -1720,7 +1724,7 @@ Vue.component('message-list', {
             // TODO: Заменить на компоненты, страрые зависимости
             //quick_mess.ajax_load();
             //notice_post.show();
-            store.commit('intimated', false);
+            //store.commit('intimate/CHECK', false);
         },
         setDate: function setDate(date) {
             //this.date = new Date(this.item.date).getDayMonth();
