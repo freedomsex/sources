@@ -99,15 +99,13 @@ module.exports = function (grunt) {
             dist: {
                 files: {
                     'templates/mess/dist/mess.htm':   ['templates/mess/src/_main.htm'],
-                    'templates/index/dist/index.htm': ['templates/index/src/_main.htm'],
-                    'templates/profile/dist/profile.htm': ['templates/profile/src/_main.htm']
+                    'templates/index/dist/index.htm': ['templates/index/src/_main.htm']
                 }
             },
             dev: {
                 files: {
                     'templates/mess/dist/mess.htm':   ['templates/mess/src/_main.htm'],
-                    'templates/index/dist/index.htm': ['templates/index/src/_main.htm'],
-                    'templates/profile/dist/profile.htm': ['templates/profile/src/_main.htm']
+                    'templates/index/dist/index.htm': ['templates/index/src/_main.htm']
                 }
             }
         },
@@ -220,7 +218,6 @@ module.exports = function (grunt) {
                     'templates/core/vue-components.htm',
                     'templates/index/src/**/*.htm',
                     'templates/mess/src/**/*.htm',
-                    'templates/profile/src/*.htm',
                     'templates/_common/**/*.htm',
                     '../inc/*.htm',
                 ],
