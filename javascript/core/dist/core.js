@@ -718,9 +718,8 @@ Vue.component('attention-wall', {
         close: function close() {
             this.$emit('close');
         },
-        remove: function remove() {
-            this.$emit('remove');
-            this.close();
+        promt: function promt() {
+            this.$emit('promt');
         }
     },
     template: '#attention-wall'

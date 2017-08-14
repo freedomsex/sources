@@ -6,8 +6,14 @@
         <div class="attention-wall__caption">{{caption}}</div>
         <div class="attention-wall__text">{{text}}</div>
         <div class="attention-wall__option">
-          <button class="btn btn-primary btn-sm" @click="remove">Удалить контакт</button>
-          <button class="btn btn-link btn-sm" @click="close">Продолжить просмотр</button>
+          <button class="btn btn-primary" @click="close">
+            <span aria-hidden="true" class="glyphicon glyphicon-remove"></span>
+            Закрыть
+          </button>
+          <button class="btn btn-default" @click="promt">
+            <span aria-hidden="true" class="glyphicon glyphicon-ok"></span>
+            Смотреть
+          </button>
         </div>
       </div>
     </div>
