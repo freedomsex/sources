@@ -1681,7 +1681,7 @@ a.name:hover {
   border-color: #f5f5f5;
   color: #999999;
 }
-.desire-widget__caption {
+.desires-widget__caption {
   padding: 10px 15px;
   text-align: center;
   font-size: 16px;
@@ -1689,10 +1689,10 @@ a.name:hover {
   min-height: 30px;
   border-bottom: 2px solid #e5e5e5;
 }
-.desire-widget__wrapper {
+.desires-widget__wrapper {
   margin: 10px 15px;
 }
-.desire-widget__next {
+.desires-widget__next {
   text-align: center;
 }
 .galery-photo {

@@ -1232,7 +1232,7 @@ Vue.component('desire-list', {
     },
     template: '#desire-list'
 });
-Vue.component('desire-widget', {
+Vue.component('desires-widget', {
     props: ['tags'],
     data: function data() {
         return {
@@ -1241,14 +1241,13 @@ Vue.component('desire-widget', {
             list: []
         };
     },
-
-    watch: {
-        tags: function tags() {
-            if (!this.position || this.offset != this.batch) {
-                this.load();
-            }
-        }
+    mounted: function mounted() {
+        this.reload();
     },
+    updated: function updated() {
+        this.reload();
+    },
+
     computed: {
         avaible: function avaible() {
             var result = this.tags.length - this.position;
@@ -1267,29 +1266,22 @@ Vue.component('desire-widget', {
         next: function next() {
             var result = this.tags.slice(this.position, this.position + this.offset);
             return _.shuffle(result);
-        },
-        desires: function desires() {
-            return this.$store.getters['desires/tags'];
         }
     },
     methods: {
         load: function load() {
             if (this.more) {
-                console.log('load', [this.list, this.next]);
                 this.list = _.union(this.list, this.next);
                 this.position = this.list.length;
             }
         },
-        add: function add(tag) {
-            if (!this.added(tag)) {
-                this.$store.dispatch('desires/ADD', tag).then(function (response) {});
+        reload: function reload() {
+            if (!this.position || this.offset != this.batch) {
+                this.load();
             }
-        },
-        added: function added(tag) {
-            return _.contains(this.desires, tag);
         }
     },
-    template: '#desire-widget'
+    template: '#desires-widget'
 });
 Vue.component('email-sended', {
     template: '#email-sended'

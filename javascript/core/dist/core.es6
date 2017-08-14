@@ -1208,7 +1208,7 @@ Vue.component('desire-list', {
     },
     template: '#desire-list'
 });
-Vue.component('desire-widget', {
+Vue.component('desires-widget', {
     props: ['tags'],
     data() {
         return {
@@ -1217,12 +1217,11 @@ Vue.component('desire-widget', {
             list: []
         }
     },
-    watch: {
-        tags() {
-            if (!this.position || this.offset != this.batch) {
-                this.load();
-            }
-        }
+    mounted() {
+        this.reload();
+    },
+    updated() {
+        this.reload();
     },
     computed: {
         avaible() {
@@ -1243,28 +1242,21 @@ Vue.component('desire-widget', {
             let result = this.tags.slice(this.position, this.position + this.offset);
             return _.shuffle(result);
         },
-        desires() {
-            return this.$store.getters['desires/tags'];
-        },
     },
     methods: {
         load() {
             if (this.more) {
-                console.log('load', [this.list, this.next]);
                 this.list = _.union(this.list, this.next);
                 this.position = this.list.length;
             }
         },
-        add(tag) {
-            if (!this.added(tag)) {
-                this.$store.dispatch('desires/ADD', tag).then((response) => {});
+        reload() {
+            if (!this.position || this.offset != this.batch) {
+                this.load();
             }
-        },
-        added(tag) {
-            return _.contains(this.desires, tag);
-        },
+        }
     },
-    template: '#desire-widget'
+    template: '#desires-widget'
 });
 Vue.component('email-sended', {
     template: '#email-sended'
