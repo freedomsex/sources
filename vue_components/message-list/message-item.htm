@@ -32,7 +32,7 @@
       <span aria-hidden="true" class="glyphicon glyphicon-remove"></span>
     </span>
   </div>
-  <remove-confirm v-show="showDialog"
+  <remove-confirm v-show="showDialog" :show="showDialog"
     :data="item"
     @bun="bun"
     @close="cancel"
