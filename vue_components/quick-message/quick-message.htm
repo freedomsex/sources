@@ -7,7 +7,7 @@
       </div>
       <div class="modal-dialog__wrapper capped">
         <div class="modal-dialog__section">
-          <div class="human-dialog__desire" v-show="tags.length">
+          <div class="human-dialog__desire" v-show="tags.length" @click="account()">
             <span class="link_simple" v-for="(tag, index) in tags" :key="index" v-show="tag">{{tag}} &#8226; </span>
           </div>
 
@@ -29,7 +29,7 @@
           </button>
           <button class="btn btn-default" @click="account()">
             <i class="material-icons">&#xE853;</i>
-            Смотреть анкету
+            Анкета
           </button>
         </div>
       </div>
