@@ -23,8 +23,8 @@ const accepts = {
             state.search = true;
             ls.set('accepts', state);
         },
-        moderator(state) {
-            state.moderator = true;
+        moderator(state, value) {
+            state.moderator = (value == true);
             ls.set('accepts', state);
         },
     }

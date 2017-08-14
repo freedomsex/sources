@@ -52,8 +52,8 @@ const accepts = {
             state.search = true;
             ls.set('accepts', state);
         },
-        moderator(state) {
-            state.moderator = true;
+        moderator(state, value) {
+            state.moderator = (value == true);
             ls.set('accepts', state);
         },
     }
@@ -902,6 +902,9 @@ class ApiModerator extends Api {
         let key = '1234';
         let host = '/';
         super(host, key);
+    }
+    promt() {
+        return this.post(null, null, 'moder/promt');
     }
     load() {
         return this.post(null, null, 'moder/auth');

@@ -306,12 +306,19 @@ const ModeratorActivity = Vue.component('moderator-activity', {
     },
     methods: {
         approve() {
-            this.$store.commit('accepts/moderator');
+            this.process = true;
+            api.moderator.promt().then(() => {
+                this.load();
+            }).catch(() => {
+                this.needPromt();
+                this.process = false;
+            });
+            this.$store.commit('accepts/moderator', 1);
         },
         load() {
             this.process = true;
-            api.moderator.load().then((response) => {
-                this.error = response.data.error;
+            api.moderator.load().then(({data}) => {
+                this.error = data.error;
                 if (this.error == 'promt') {
                     this.needPromt();
                 } else
@@ -321,8 +328,8 @@ const ModeratorActivity = Vue.component('moderator-activity', {
                 if (this.error == 'other') {
 
                 } else
-                if (!this.error) {
-                    this.loaded(response.data);
+                if (!this.error && data.message) {
+                    this.loaded(data);
                 }
                 this.process = false;
             });
@@ -335,6 +342,7 @@ const ModeratorActivity = Vue.component('moderator-activity', {
             this.secure = secure;
         },
         needPromt() {
+            this.$store.commit('accepts/moderator', 0);
             this.promt = false;
         },
         action(mark) {

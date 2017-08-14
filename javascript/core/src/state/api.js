@@ -177,6 +177,9 @@ class ApiModerator extends Api {
         let host = '/';
         super(host, key);
     }
+    promt() {
+        return this.post(null, null, 'moder/promt');
+    }
     load() {
         return this.post(null, null, 'moder/auth');
     }

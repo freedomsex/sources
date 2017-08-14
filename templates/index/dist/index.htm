@@ -19,7 +19,7 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1502701552527">
+<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1502704159462">
 
   <script type="text/javascript">  
     function get_cookie ( cookie_name )
@@ -411,56 +411,53 @@
   <div>
     <default-activity @close="close">
       <span slot="caption">Защитить</span>
-
-    <div class="menu-user__navbar-right" slot="option">
-      <div class="navbar-button">
-        <a href="security/action" target="_blank">
-          <i class="material-icons">&#xE895;</i>
-        </a>
-      </div>
-    </div>
-
-      <div class="default-activity__content" v-if="error == 'count'">
-        <div class="activity-section__title">Спасибо. Сообщения скоро будут.</div>
-        <div id="" class="" style="font-size: 14px; margin-bottom: 10px; color: #777;">
-          Мы благодарны вам за вашу подержку. С вами сайт становится ещё сильнее. Благодаря вам анкеты мошенников, троллей, фейков и обнаглевших жриц любви блокируются практически моментально.
+      <div class="menu-user__navbar-right" slot="option">
+        <div class="navbar-button">
+          <a href="security/action" target="_blank">
+            <i class="material-icons">&#xE895;</i>
+          </a>
         </div>
       </div>
 
-      <div class="default-activity__content" v-if="error == 'other'">
-        <div class="activity-section__title">Что-то пошло не так ;(</div>
-        <div id="" class="" style="font-size: 14px; margin-bottom: 10px; color: #777;">
-          Время ожидания истекло, данные сессии устарели. Возможно вариант сообщения уже был рассмотрен. Обновите данные. Спасибо.
-        </div>
-        <button class="btn btn-primary btn-block" @click="load" :disabled="process">
-          <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
-          Обновить
-        </button>
-      </div>
-
-
-
-      <div class="default-activity__content" v-if="accept && !error">
-        <div class="activity-section">
-          <div class="activity-section__title">Нужно ли наказать за это?</div>
-          <div class="hint-info" style="font-size: 14px; ">
-             {{message.text}}
+      <div class="activity__container content">
+        <div v-if="error == 'count'">
+          <div class="activity-section__title">Спасибо. Сообщения скоро будут.</div>
+          <div id="" class="" style="font-size: 14px; margin-bottom: 10px; color: #777;">
+            Мы благодарны вам за вашу подержку. С вами сайт становится ещё сильнее. Благодаря вам анкеты мошенников, троллей, фейков и обнаглевших жриц любви блокируются практически моментально.
           </div>
         </div>
-        <div class="activity-section">
-          <button class="btn btn-warning" @click="action(1)" :disabled="process"> Да, наказать </button>
-          <button class="btn btn-success" @click="action(-1)" :disabled="process"> Нет, отклонить </button>
-          <button class="btn btn-link" @click="action(0)" :disabled="process"> Пропустить </button>
-          <!--
-          <select>
-            <option>Без отметки</option>
-            <option>Предложение интим услуг</option>
-            <option>Мошенники, просьба перевода денег</option>
-            <option>Ссылка на другой сайт, спам</option>
-            <option>Грубые намеренные оскорбления</option>
-          </select>-->
+
+        <div v-if="error == 'other'">
+          <div class="activity-section__title">Что-то пошло не так ;(</div>
+          <div id="" class="" style="font-size: 14px; margin-bottom: 10px; color: #777;">
+            Время ожидания истекло, данные сессии устарели. Возможно вариант сообщения уже был рассмотрен. Обновите данные. Спасибо.
+          </div>
+          <button class="btn btn-primary btn-block" @click="load" :disabled="process">
+            <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
+            Обновить
+          </button>
         </div>
 
+        <div v-if="accept && !error">
+          <div class="activity-section">
+            <div class="activity-section__title">Нужно ли наказать за это?</div>
+            <div class="hint-info" style="font-size: 14px; ">
+               {{message.text}}
+            </div>
+          </div>
+          <div class="activity-section">
+            <button class="btn btn-warning" @click="process ? null : action(1)" :disabled="process"> Да, наказать </button>
+            <button class="btn btn-success" @click="process ? null : action(-1)" :disabled="process"> Нет, отклонить </button>
+            <button class="btn btn-link" @click="process ? null : action(0)" :disabled="process"> Пропустить </button>
+            <!--
+            <select>
+              <option>Без отметки</option>
+              <option>Предложение интим услуг</option>
+              <option>Мошенники, просьба перевода денег</option>
+              <option>Ссылка на другой сайт, спам</option>
+              <option>Грубые намеренные оскорбления</option>
+            </select>-->
+          </div>
           <div id="" class="" style="font-size: 14px; margin-bottom: 10px; color: #777;">
               Просто ответьте, соответствует ли текст сообщения нарушению или нет.
               Нарушитель получит новую порцию наказания, если вы подтвердите это.
@@ -471,10 +468,9 @@
             или мошеннические схемы. Нажмите "Нет", если не считаете нужным наказывать за содержание текста.
             <a class="link_simple"  href="/блог/интерфейс-модератора/" target="_blank">Подробнее..</a>
           </div>
+        </div>
 
       </div>
-
-
     </default-activity>
 
     <modal-dialog @close="close" v-if="!accept">
@@ -1765,7 +1761,7 @@
 
  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/static/js/core.min.js?rel=1502701552525"></script>
+<script type="text/javascript" src="/static/js/core.min.js?rel=1502704159461"></script>
 <!-- Исходники можно найти в репозитории. Там же собранные не сжатые файлы -->
 
 <script type="text/javascript">
