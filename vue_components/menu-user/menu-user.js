@@ -46,20 +46,23 @@ const MenuUser = Vue.component('menu-user', {
             this.$router.push({ name: 'intimate' });
         },
         check() {
-            axios.get('/mailer/status').then((response) => {
-                this.onIntimate(response.data.message);
-                this.onInitial(response.data.contact);
+            axios.get('/mailer/status').then(({data}) => {
+                this.onIntimate(data.message);
+                this.onInitial(data.contact);
                 this.attempt = 0;
             }).catch(() => {
                 this.attempt++;
             });
         },
         loadStatus() {
-            let {auth} = this.$store.state.auth;
-            let delay = !auth ? 1 : 15;
-            if (auth) {
+            let {uid} = this.$store.state.user;
+            let delay = !uid ? 2 : 15;
+            if (uid) {
                 this.check();
             }
+            if (this.attempt > 10) {
+                delay = 20;
+            } else
             if (this.attempt > 4) {
                 delay = 5;
             } else
@@ -69,6 +72,9 @@ const MenuUser = Vue.component('menu-user', {
             setTimeout(() => {
                 this.loadStatus();
             }, delay * 1000);
+        },
+        onLoad() {
+
         },
         onIntimate(status) {
             let {notified, status: current} = this.$store.state.contacts.intimate;

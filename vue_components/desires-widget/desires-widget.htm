@@ -1,0 +1,15 @@
+<script type="text/x-template" id="desire-widget">
+  <div class="container desires-widget" v-show="tags.length">
+    <div class="row">
+      <div class="desires-widget__caption">Желания и фантазии</div>
+      <div class="desires-widget__wrapper">
+        <desire-list :tags="list"></desire-list>
+        <div class="desires-widget__next" v-show="more">
+          <span class="btn btn-default btn-sm" @click="load">
+            Ещё
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</script>

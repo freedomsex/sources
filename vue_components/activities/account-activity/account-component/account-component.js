@@ -64,6 +64,18 @@ Vue.component('account-component', {
                 result = moment.duration((0 - last), "seconds").humanize(true);
             }
             return result;
+        },
+        search() {
+            city = this.human.city ? this.human.city + '/' : '';
+            if (this.human.who == 1) { who = 'Парни/'; }
+             else if (this.human.who == 2) { who = 'Девушки/'; }
+              else who = '';
+            if (this.human.up && this.human.up == this.human.to) { years = 'возраст/'+this.human.up+'/'; } else
+             if (this.human.up && this.human.to ) { years = 'возраст/'+this.human.up+'/'+this.human.to+'/'; } else
+              if (this.human.up && !this.human.to) { years = 'возраст/от/'+this.human.up+'/'; } else
+               if (!this.human.up && this.human.to) { years = 'возраст/до/'+this.human.to+'/'; }
+                else years = '';
+            return  '/' + city + who + years;;
         }
     },
     template: '#account-component',

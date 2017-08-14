@@ -19,7 +19,7 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1502625256709">
+<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1502699693844">
 
   <script type="text/javascript">  
     function get_cookie ( cookie_name )
@@ -266,7 +266,7 @@
     <div class="account-section" v-if="who">
       <div class="account-section__header">Я ищу</div>
       <div class="human-info__search">
-        {{who}}
+        <a class="gray_link" :href="search" target="_blank" rel="noopener" @click.prevent.stop>{{who}}</a>
       </div>
     </div>
 
@@ -301,9 +301,7 @@
     <div class="account-section" v-if="tags.length">
       <div class="account-section__header">Мои желания и фантазии</div>
       <div class="desire-tag__list">
-        <desire-tag-item v-for="(item, index) in tags"
-          :key="index"
-          :tag="item"/>
+        <desire-list :tags="tags"></desire-list>
       </div>
     </div>
   </div>
@@ -761,18 +759,26 @@
   <div class="desire-tag__item" :class="{active, error, added}" @click="select">{{tag}}</div>
 </script>
 <script type="text/x-template" id="desire-list">
-  <div>
-    <div class="desire-list__caption">Желания и фантазии</div>
-    <div class="desire-list__wrapper">
-      <desire-tag-item v-for="(item, index) in list"
-       :key="index"
-       :tag="item"
-       :added="added(item)"
-       @select="add"/>
-      <div class="desire-list__next" v-show="more">
-        <span class="btn btn-default btn-sm" @click="load">
-          Ещё
-        </span>
+  <div class="desire-list">
+    <desire-tag-item v-for="(item, index) in tags"
+     :key="index"
+     :tag="item"
+     :added="added(item)"
+     @select="add"/>
+  </div>
+</script>
+
+<script type="text/x-template" id="desire-widget">
+  <div class="container desires-widget" v-show="tags.length">
+    <div class="row">
+      <div class="desires-widget__caption">Желания и фантазии</div>
+      <div class="desires-widget__wrapper">
+        <desire-list :tags="list"></desire-list>
+        <div class="desires-widget__next" v-show="more">
+          <span class="btn btn-default btn-sm" @click="load">
+            Ещё
+          </span>
+        </div>
       </div>
     </div>
   </div>
@@ -1762,7 +1768,7 @@
 
  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/static/js/core.min.js?rel=1502625256707"></script>
+<script type="text/javascript" src="/static/js/core.min.js?rel=1502699693842"></script>
 <!-- Исходники можно найти в репозитории. Там же собранные не сжатые файлы -->
 
 %%BLOCK_COUNTER_ALL%% <!-- счетчики статистики -->

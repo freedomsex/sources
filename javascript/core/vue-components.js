@@ -105,6 +105,18 @@ Vue.component('account-component', {
                 result = moment.duration((0 - last), "seconds").humanize(true);
             }
             return result;
+        },
+        search() {
+            city = this.human.city ? this.human.city + '/' : '';
+            if (this.human.who == 1) { who = 'Парни/'; }
+             else if (this.human.who == 2) { who = 'Девушки/'; }
+              else who = '';
+            if (this.human.up && this.human.up == this.human.to) { years = 'возраст/'+this.human.up+'/'; } else
+             if (this.human.up && this.human.to ) { years = 'возраст/'+this.human.up+'/'+this.human.to+'/'; } else
+              if (this.human.up && !this.human.to) { years = 'возраст/от/'+this.human.up+'/'; } else
+               if (!this.human.up && this.human.to) { years = 'возраст/до/'+this.human.to+'/'; }
+                else years = '';
+            return  '/' + city + who + years;;
         }
     },
     template: '#account-component',
@@ -963,6 +975,25 @@ Vue.component('desire-tag-item', {
 });
 Vue.component('desire-list', {
     props: ['tags'],
+    computed: {
+        desires() {
+            return this.$store.getters['desires/tags'];
+        },
+    },
+    methods: {
+        add(tag) {
+            if (!this.added(tag)) {
+                this.$store.dispatch('desires/ADD', tag).then((response) => {});
+            }
+        },
+        added(tag) {
+            return _.contains(this.desires, tag);
+        },
+    },
+    template: '#desire-list'
+});
+Vue.component('desire-widget', {
+    props: ['tags'],
     data() {
         return {
             batch: 50,
@@ -1017,7 +1048,7 @@ Vue.component('desire-list', {
             return _.contains(this.desires, tag);
         },
     },
-    template: '#desire-list'
+    template: '#desire-widget'
 });
 Vue.component('email-sended', {
     template: '#email-sended'
@@ -1136,20 +1167,23 @@ const MenuUser = Vue.component('menu-user', {
             this.$router.push({ name: 'intimate' });
         },
         check() {
-            axios.get('/mailer/status').then((response) => {
-                this.onIntimate(response.data.message);
-                this.onInitial(response.data.contact);
+            axios.get('/mailer/status').then(({data}) => {
+                this.onIntimate(data.message);
+                this.onInitial(data.contact);
                 this.attempt = 0;
             }).catch(() => {
                 this.attempt++;
             });
         },
         loadStatus() {
-            let {auth} = this.$store.state.auth;
-            let delay = !auth ? 1 : 15;
-            if (auth) {
+            let {uid} = this.$store.state.user;
+            let delay = !uid ? 2 : 15;
+            if (uid) {
                 this.check();
             }
+            if (this.attempt > 10) {
+                delay = 20;
+            } else
             if (this.attempt > 4) {
                 delay = 5;
             } else
@@ -1159,6 +1193,9 @@ const MenuUser = Vue.component('menu-user', {
             setTimeout(() => {
                 this.loadStatus();
             }, delay * 1000);
+        },
+        onLoad() {
+
         },
         onIntimate(status) {
             let {notified, status: current} = this.$store.state.contacts.intimate;

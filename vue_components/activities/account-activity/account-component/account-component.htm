@@ -15,7 +15,7 @@
     <div class="account-section" v-if="who">
       <div class="account-section__header">Я ищу</div>
       <div class="human-info__search">
-        {{who}}
+        <a class="gray_link" :href="search" target="_blank" rel="noopener" @click.prevent.stop>{{who}}</a>
       </div>
     </div>
 
@@ -50,9 +50,7 @@
     <div class="account-section" v-if="tags.length">
       <div class="account-section__header">Мои желания и фантазии</div>
       <div class="desire-tag__list">
-        <desire-tag-item v-for="(item, index) in tags"
-          :key="index"
-          :tag="item"/>
+        <desire-list :tags="tags"></desire-list>
       </div>
     </div>
   </div>
