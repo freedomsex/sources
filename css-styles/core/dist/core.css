@@ -1262,16 +1262,6 @@ a.name:hover {
 .human-contacts__skype {
   background-image: url('/static/img/icon/ac_sk.png');
 }
-.activity-section {
-  margin-bottom: 20px;
-}
-.activity-section__title {
-  margin: 10px 0;
-  font-size: 18px;
-}
-.activity-content {
-  padding: 15px 20px 15px;
-}
 .closed-activity {
   z-index: 1;
   position: fixed;
@@ -1340,6 +1330,16 @@ a.name:hover {
   overflow-y: auto;
 }
 .activity__container.content {
+  padding: 15px 20px 15px;
+}
+.activity-section {
+  margin-bottom: 10px;
+}
+.activity-section__title {
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+.activity-content {
   padding: 15px 20px 15px;
 }
 .default-activity {
