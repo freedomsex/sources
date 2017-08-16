@@ -70,14 +70,13 @@ const MessagesActivity = Vue.component('messages-activity', {
                 data['re'] = this.reply;
             }
             this.$store.commit('intimate/notifi', false);
-            api.messages.send(data).then(({resp}) => {
-                this.onMessageSend(resp);
+            api.messages.send(data).then(({data}) => {
+                this.onMessageSend(data);
             }).catch(() => {
                 this.onError();
             });
             this.preview = null;
             this.process = true;
-            console.log(data);
         },
         setCode(code) {
             this.code = code;
@@ -90,11 +89,11 @@ const MessagesActivity = Vue.component('messages-activity', {
                 }
                 this.onError();
             } else {
-                this.sended(data);
+                this.sended();
             }
             this.process = false;
         },
-        sended(data) {
+        sended() {
             //MessList.messages.unshift(data.message);
             this.$refs.messages.reload();
             this.reset();

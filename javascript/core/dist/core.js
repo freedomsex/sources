@@ -422,15 +422,14 @@ var MessagesActivity = Vue.component('messages-activity', {
             }
             this.$store.commit('intimate/notifi', false);
             api.messages.send(data).then(function (_ref) {
-                var resp = _ref.resp;
+                var data = _ref.data;
 
-                _this3.onMessageSend(resp);
+                _this3.onMessageSend(data);
             }).catch(function () {
                 _this3.onError();
             });
             this.preview = null;
             this.process = true;
-            console.log(data);
         },
         setCode: function setCode(code) {
             this.code = code;
@@ -443,11 +442,11 @@ var MessagesActivity = Vue.component('messages-activity', {
                 }
                 this.onError();
             } else {
-                this.sended(data);
+                this.sended();
             }
             this.process = false;
         },
-        sended: function sended(data) {
+        sended: function sended() {
             //MessList.messages.unshift(data.message);
             this.$refs.messages.reload();
             this.reset();
