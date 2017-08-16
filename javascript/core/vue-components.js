@@ -224,8 +224,8 @@ const MessagesActivity = Vue.component('messages-activity', {
                 data['re'] = this.reply;
             }
             this.$store.commit('intimate/notifi', false);
-            api.messages.send(data).then((response) => {
-                this.onMessageSend(response.data);
+            api.messages.send(data).then(({resp}) => {
+                this.onMessageSend(resp);
             }).catch(() => {
                 this.onError();
             });
@@ -237,22 +237,20 @@ const MessagesActivity = Vue.component('messages-activity', {
             this.code = code;
             this.sendMessage();
         },
-        onMessageSend(response) {
-            if (!response.saved && response.error) {
-                if (response.error == 'need_captcha') {
+        onMessageSend(data) {
+            if (!data.saved && data.error) {
+                if (data.error == 'need_captcha') {
                     this.captcha = true;
                 }
                 this.onError();
             } else {
-                this.sended(response);
+                this.sended(data);
             }
             this.process = false;
         },
-        sended(response) {
-            //MessList.messages.unshift(response.message);
+        sended(data) {
+            //MessList.messages.unshift(data.message);
             this.$refs.messages.reload();
-            // TODO: очень старая зависимость
-            giper_chat.timer_cut();
             this.reset();
         },
         onError() {
