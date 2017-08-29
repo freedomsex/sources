@@ -397,9 +397,17 @@ const AdTop = Vue.component('ad-top', {
         this.width = this.$el.offsetWidth;
         console.log('cc', [this.desktop, this.width]);
     },
+    methods: {
+        random(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+    },
     computed: {
         desktop() {
-            return this.width >= 700;
+            return this.width >= 700
+        },
+        source() {
+            return '/static/img/ad/ad-hm-' + this.random(0, 2) + '.gif'
         }
     },
     template: '#ad-top',
