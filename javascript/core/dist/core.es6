@@ -382,6 +382,7 @@ const MessagesActivity = Vue.component('messages-activity', {
         process: false,
         approve: true,
         dirt: false,
+        alert: false,
             captcha: false,
             preview: false,
             photo: false,
@@ -1657,7 +1658,6 @@ Vue.component('message-list', {
             batch: 15,
             received: 0,
             attention: false,
-            uid: null,
             date: null,
             toSlow: false,
             skipScroll: false,
@@ -1705,13 +1705,13 @@ Vue.component('message-list', {
                     this.messages = _.union(messages.reverse(), this.messages);
                 }
                 this.next += this.batch;
+                this.scammer();
             }
             this.response = 200;
             this.toSlow = false;
             this.$nextTick(() => {
                 //this.scroll();
             });
-            //console.log(response);
         },
         scroll() {
             if (this.skipScroll) {
@@ -1728,19 +1728,21 @@ Vue.component('message-list', {
             //notice_post.show();
             //store.commit('intimate/CHECK', false);
         },
+        scammer() {
+            if (this.replyCount < 3) {
+                this.$emit('attention');
+            }
+        },
         setDate(date) {
             //this.date = new Date(this.item.date).getDayMonth();
         },
         remove(index) {
-            console.log('remove('+index+')');
             this.messages.splice(index, 1);
         },
         admit() {
-            console.log('itOk false');
             this.attention = false;
         },
         setNew() {
-            console.log('new');
             this.newCount += 1;
         }
     },
@@ -1752,13 +1754,18 @@ Vue.component('message-list', {
         count() {
             return this.messages.length;
         },
+        replyCount() {
+            return _.where(this.messages, {from: this.userId+''}).length;
+        },
         more() {
             if (this.received && this.received == this.batch) {
                 return true;
             }
             return false;
         },
-        uid: () => this.store.user.uid
+        userId() {
+            return this.$store.state.user.uid;
+        }
     },
     template: '#message-list'
 });

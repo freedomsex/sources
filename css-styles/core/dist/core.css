@@ -2241,6 +2241,10 @@ a.name:hover {
   text-align: center;
   margin-top: 15px;
 }
+.messages__alert {
+  background-color: #fff2e5;
+  padding: 5px 15px;
+}
 .form-message__buttons {
   margin: 10px 0 20px;
   padding: 0;

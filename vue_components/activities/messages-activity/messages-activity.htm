@@ -14,7 +14,11 @@
 
     <div class="message-dialog" key="humanId">
       <div id="dialog-history" class="message-dialog__history">
-        <message-list :humanId="humanId" ref="messages"></message-list>
+        <message-list :humanId="humanId" ref="messages" @attention="alert = true"></message-list>
+      </div>
+      <div class="messages__alert" v-show="alert">
+        Игнорируйте номера телефонов, ссылки и мессенджеры. Наказывайте мошенников. Узнайте о том, как избежать обмана.
+        <a href="/блог/как-не-попасть-на-уловки-мошенников/" target="_blank">Подробнее...</a>
       </div>
       <div class="message-dialog__tools">
         <div class="send-form">

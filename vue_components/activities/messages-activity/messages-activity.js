@@ -12,6 +12,7 @@ const MessagesActivity = Vue.component('messages-activity', {
         process: false,
         approve: true,
         dirt: false,
+        alert: false,
             captcha: false,
             preview: false,
             photo: false,

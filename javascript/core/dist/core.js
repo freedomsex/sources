@@ -360,6 +360,7 @@ var MessagesActivity = Vue.component('messages-activity', {
             process: false,
             approve: true,
             dirt: false,
+            alert: false,
             captcha: false,
             preview: false,
             photo: false
@@ -1702,7 +1703,6 @@ Vue.component('message-list', {
             batch: 15,
             received: 0,
             attention: false,
-            uid: null,
             date: null,
             toSlow: false,
             skipScroll: false
@@ -1755,13 +1755,13 @@ Vue.component('message-list', {
                     this.messages = _.union(messages.reverse(), this.messages);
                 }
                 this.next += this.batch;
+                this.scammer();
             }
             this.response = 200;
             this.toSlow = false;
             this.$nextTick(function () {
                 //this.scroll();
             });
-            //console.log(response);
         },
         scroll: function scroll() {
             if (this.skipScroll) {
@@ -1778,19 +1778,21 @@ Vue.component('message-list', {
             //notice_post.show();
             //store.commit('intimate/CHECK', false);
         },
+        scammer: function scammer() {
+            if (this.replyCount < 3) {
+                this.$emit('attention');
+            }
+        },
         setDate: function setDate(date) {
             //this.date = new Date(this.item.date).getDayMonth();
         },
         remove: function remove(index) {
-            console.log('remove(' + index + ')');
             this.messages.splice(index, 1);
         },
         admit: function admit() {
-            console.log('itOk false');
             this.attention = false;
         },
         setNew: function setNew() {
-            console.log('new');
             this.newCount += 1;
         }
     },
@@ -1802,15 +1804,17 @@ Vue.component('message-list', {
         count: function count() {
             return this.messages.length;
         },
+        replyCount: function replyCount() {
+            return _.where(this.messages, { from: this.userId + '' }).length;
+        },
         more: function more() {
             if (this.received && this.received == this.batch) {
                 return true;
             }
             return false;
         },
-
-        uid: function uid() {
-            return undefined.store.user.uid;
+        userId: function userId() {
+            return this.$store.state.user.uid;
         }
     },
     template: '#message-list'
