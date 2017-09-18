@@ -16,6 +16,7 @@ const MessagesActivity = Vue.component('messages-activity', {
             captcha: false,
             preview: false,
             photo: false,
+        photoIsRemoved: false,
         }
     },
     // beforeRouteUpdate(to, from, next) {
@@ -43,6 +44,13 @@ const MessagesActivity = Vue.component('messages-activity', {
             return this.dirt;
         }, 700),
 
+        attention(count) {
+            if (count < 3) {
+                this.alert = true;
+            } else {
+                this.alert = false;
+            }
+        },
         close() {
             //this.$emit('close');
             this.back();

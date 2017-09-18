@@ -39,6 +39,7 @@
     @remove="remove"/>
 
   <photo-send v-if="photo" :photo="photo" @close="photo = false"/>
+  <toast v-if="photoNotFound" @close="photoNotFound = false">Фото не найдено</toast>
 </div>
 </script>
 

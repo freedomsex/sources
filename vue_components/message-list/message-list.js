@@ -82,9 +82,7 @@ Vue.component('message-list', {
             //store.commit('intimate/CHECK', false);
         },
         scammer() {
-            if (this.replyCount < 3) {
-                this.$emit('attention');
-            }
+            this.$emit('attention', this.replyCount);
         },
         setDate(date) {
             //this.date = new Date(this.item.date).getDayMonth();

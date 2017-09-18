@@ -386,6 +386,7 @@ const MessagesActivity = Vue.component('messages-activity', {
             captcha: false,
             preview: false,
             photo: false,
+        photoIsRemoved: false,
         }
     },
     // beforeRouteUpdate(to, from, next) {
@@ -413,6 +414,13 @@ const MessagesActivity = Vue.component('messages-activity', {
             return this.dirt;
         }, 700),
 
+        attention(count) {
+            if (count < 3) {
+                this.alert = true;
+            } else {
+                this.alert = false;
+            }
+        },
         close() {
             //this.$emit('close');
             this.back();
@@ -1504,6 +1512,7 @@ Vue.component('message-item', {
             alertOption: false,
             showDialog: false,
             photo: false,
+            photoNotFound: false,
         }
     },
     methods: {
@@ -1559,6 +1568,9 @@ Vue.component('message-item', {
                 this.preview(response.data.photo)
             }).catch((error) => {
                 console.log(error);
+                if (error.response && error.response.status == "404") {
+                    this.photoNotFound = true;
+                }
             });
         },
         preview(photo) {
@@ -1729,9 +1741,7 @@ Vue.component('message-list', {
             //store.commit('intimate/CHECK', false);
         },
         scammer() {
-            if (this.replyCount < 3) {
-                this.$emit('attention');
-            }
+            this.$emit('attention', this.replyCount);
         },
         setDate(date) {
             //this.date = new Date(this.item.date).getDayMonth();
@@ -1818,12 +1828,33 @@ const PhotoViewer = Vue.component('photo-send', {
     props: ['photo', 'options'],
     data() {
         return {
-            remove: false
+            remove: false,
+        }
+    },
+    created: function () {
+        this.server = this.$store.state.photoServer;
+    },
+    computed: {
+        uid() {
+            return this.$store.state.user.uid;
         }
     },
     methods: {
         close() {
             this.$emit('close');
+        },
+        removePhoto() {
+            let config = {
+                headers: {'Authorization': 'Bearer ' + this.$store.state.apiToken},
+                //params: { uid: this.uid, hash }
+            };
+            axios.delete(`http://${this.server}/api/v1/users/${this.uid}/photos/${this.photo.alias}.jpg`, config).then((response) => {
+                this.$emit('removed');
+                this.close();
+                //console.log(this.photos);
+            }).catch((error) => {
+                console.log(error);
+            });
         }
     },
     template: '#photo-send',

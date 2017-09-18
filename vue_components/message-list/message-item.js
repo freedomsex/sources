@@ -16,6 +16,7 @@ Vue.component('message-item', {
             alertOption: false,
             showDialog: false,
             photo: false,
+            photoNotFound: false,
         }
     },
     methods: {
@@ -71,6 +72,9 @@ Vue.component('message-item', {
                 this.preview(response.data.photo)
             }).catch((error) => {
                 console.log(error);
+                if (error.response && error.response.status == "404") {
+                    this.photoNotFound = true;
+                }
             });
         },
         preview(photo) {

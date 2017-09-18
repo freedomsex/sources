@@ -363,7 +363,8 @@ var MessagesActivity = Vue.component('messages-activity', {
             alert: false,
             captcha: false,
             preview: false,
-            photo: false
+            photo: false,
+            photoIsRemoved: false
         };
     },
 
@@ -393,6 +394,13 @@ var MessagesActivity = Vue.component('messages-activity', {
             return this.dirt;
         }, 700),
 
+        attention: function attention(count) {
+            if (count < 3) {
+                this.alert = true;
+            } else {
+                this.alert = false;
+            }
+        },
         close: function close() {
             //this.$emit('close');
             this.back();
@@ -1547,7 +1555,8 @@ Vue.component('message-item', {
             fixOption: false,
             alertOption: false,
             showDialog: false,
-            photo: false
+            photo: false,
+            photoNotFound: false
         };
     },
 
@@ -1608,6 +1617,9 @@ Vue.component('message-item', {
                 _this26.preview(response.data.photo);
             }).catch(function (error) {
                 console.log(error);
+                if (error.response && error.response.status == "404") {
+                    _this26.photoNotFound = true;
+                }
             });
         },
         preview: function preview(photo) {
@@ -1779,9 +1791,7 @@ Vue.component('message-list', {
             //store.commit('intimate/CHECK', false);
         },
         scammer: function scammer() {
-            if (this.replyCount < 3) {
-                this.$emit('attention');
-            }
+            this.$emit('attention', this.replyCount);
         },
         setDate: function setDate(date) {
             //this.date = new Date(this.item.date).getDayMonth();
@@ -1873,9 +1883,31 @@ var PhotoViewer = Vue.component('photo-send', {
         };
     },
 
+    created: function created() {
+        this.server = this.$store.state.photoServer;
+    },
+    computed: {
+        uid: function uid() {
+            return this.$store.state.user.uid;
+        }
+    },
     methods: {
         close: function close() {
             this.$emit('close');
+        },
+        removePhoto: function removePhoto() {
+            var _this28 = this;
+
+            var config = {
+                headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken }
+            };
+            axios.delete('http://' + this.server + '/api/v1/users/' + this.uid + '/photos/' + this.photo.alias + '.jpg', config).then(function (response) {
+                _this28.$emit('removed');
+                _this28.close();
+                //console.log(this.photos);
+            }).catch(function (error) {
+                console.log(error);
+            });
         }
     },
     template: '#photo-send'
@@ -1958,16 +1990,16 @@ var QuickDialog = {
     },
     methods: {
         reload: function reload() {
-            var _this28 = this;
+            var _this29 = this;
 
             this.loading = true;
             setTimeout(function () {
-                return _this28.loading = false;
+                return _this29.loading = false;
             }, 4 * 1000);
             store.dispatch('search/HUMAN', this.humanId).then(function (response) {
-                _this28.loaded();
+                _this29.loaded();
             }).catch(function (error) {
-                _this28.loading = false;
+                _this29.loading = false;
             });
         },
         loaded: function loaded() {
@@ -1988,15 +2020,15 @@ var QuickDialog = {
             console.log('cancel');
         },
         inProcess: function inProcess(sec) {
-            var _this29 = this;
+            var _this30 = this;
 
             this.process = true;
             setTimeout(function () {
-                return _this29.process = false;
+                return _this30.process = false;
             }, sec * 1000);
         },
         send: function send() {
-            var _this30 = this;
+            var _this31 = this;
 
             var data = {
                 id: this.humanId,
@@ -2004,9 +2036,9 @@ var QuickDialog = {
                 captcha_code: this.code
             };
             api.messages.send(data).then(function (response) {
-                _this30.onMessageSend(response.data);
+                _this31.onMessageSend(response.data);
             }).catch(function (error) {
-                _this30.onError(error);
+                _this31.onError(error);
             });
             //  this.sended();
             this.inProcess(5);
@@ -2143,16 +2175,16 @@ Vue.component('remind-login', {
             this.$emit('close');
         },
         send: function send() {
-            var _this31 = this;
+            var _this32 = this;
 
             if (!this.email) {
                 return;
             }
             this.hint = 'Отправляю...';
             api.user.post({ email: this.email }, null, 'sync/remind').then(function (response) {
-                _this31.hint = response.data.say;
-                _this31.error = response.data.err;
-                _this31.sended();
+                _this32.hint = response.data.say;
+                _this32.error = response.data.err;
+                _this32.sended();
             });
         },
         sended: function sended() {
@@ -2258,19 +2290,19 @@ Vue.component('search-item', {
         };
     },
     mounted: function mounted() {
-        var _this32 = this;
+        var _this33 = this;
 
         _.find(_.pick(this.human, this.social.first), function (value, key) {
-            return value ? _this32.first = key : false;
+            return value ? _this33.first = key : false;
         });
         _.find(_.pick(this.human, this.social.second), function (value, key) {
-            value = _this32.first == key ? false : value;
-            return value ? _this32.second = key : false;
+            value = _this33.first == key ? false : value;
+            return value ? _this33.second = key : false;
         });
         _.find(_.pick(this.human, this.social.second), function (value, key) {
-            value = _this32.first == key ? false : value;
-            value = _this32.second == key ? false : value;
-            return value ? _this32.third = key : false;
+            value = _this33.first == key ? false : value;
+            value = _this33.second == key ? false : value;
+            return value ? _this33.third = key : false;
         });
         // console.log('item',this.human);
     },
@@ -2320,10 +2352,10 @@ Vue.component('search-item', {
             });
         },
         load: function load() {
-            var _this33 = this;
+            var _this34 = this;
 
             api.search.load(null).then(function (response) {
-                _this33.users = response.data.users;
+                _this34.users = response.data.users;
             });
         }
     },
@@ -2417,14 +2449,14 @@ Vue.component('search-list', {
             this.$store.dispatch('visited/SYNC');
         },
         load: function load() {
-            var _this34 = this;
+            var _this35 = this;
 
             this.response = 0;
             this.$store.dispatch('search/LOAD').then(function (response) {
-                _this34.onLoad();
+                _this35.onLoad();
             }).catch(function (error) {
-                _this34.response = 200;
-                _this34.toSlow = false;
+                _this35.response = 200;
+                _this35.toSlow = false;
             });
         },
         loadNext: function loadNext() {
@@ -2517,13 +2549,13 @@ var AboutSettings = Vue.component('about-settings', {
         }
     }),
     mounted: function mounted() {
-        var _this35 = this;
+        var _this36 = this;
 
         this.$store.dispatch('about/SYNC').then(function () {
-            _this35.init();
-            _this35.process = false;
+            _this36.init();
+            _this36.process = false;
         }).catch(function () {
-            _this35.process = false;
+            _this36.process = false;
         });
         this.process = true;
         this.init();
@@ -2705,11 +2737,11 @@ var DesiresSettings = Vue.component('desires-settings', {
         }
     }),
     mounted: function mounted() {
-        var _this36 = this;
+        var _this37 = this;
 
         this.process = true;
         this.$store.dispatch('desires/SYNC').then(function (response) {
-            _this36.process = false;
+            _this37.process = false;
         });
     },
 
@@ -2718,11 +2750,11 @@ var DesiresSettings = Vue.component('desires-settings', {
             this.$emit('close');
         },
         add: function add(tag) {
-            var _this37 = this;
+            var _this38 = this;
 
             this.process = true;
             this.$store.dispatch('desires/ADD', tag).then(function (response) {
-                _this37.process = false;
+                _this38.process = false;
             });
         },
         remove: function remove() {
@@ -2759,14 +2791,14 @@ var IncomingPhoto = Vue.component('incoming-photo', {
     },
     methods: {
         loadPhoto: function loadPhoto() {
-            var _this38 = this;
+            var _this39 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
                 params: { tid: this.humanId, hash: hash }
             };
             axios.get('http://' + this.server + '/api/v1/users/' + this.uid + '/sends', config).then(function (response) {
-                _this38.photos = response.data.photos;
+                _this39.photos = response.data.photos;
                 //console.log(this.photos);
             }).catch(function (error) {
                 console.log(error);
@@ -2820,7 +2852,7 @@ var LoginAccount = Vue.component('login-account', {
             this.$emit('close');
         },
         send: function send() {
-            var _this39 = this;
+            var _this40 = this;
 
             var data = {
                 login: this.login,
@@ -2828,10 +2860,10 @@ var LoginAccount = Vue.component('login-account', {
                 captcha: this.code
             };
             api.user.post(data, null, 'sync/login').then(function (response) {
-                _this39.hint = response.data.say;
-                _this39.error = response.data.err;
-                _this39.captcha = response.data.captcha;
-                _this39.onLogin();
+                _this40.hint = response.data.say;
+                _this40.error = response.data.err;
+                _this40.captcha = response.data.captcha;
+                _this40.onLogin();
             });
         },
         onLogin: function onLogin() {
@@ -2903,7 +2935,7 @@ var PhotoSettings = Vue.component('photo-settings', {
             this.back();
         },
         loadPhoto: function loadPhoto() {
-            var _this40 = this;
+            var _this41 = this;
 
             var server = this.$store.state.photoServer;
             var uid = this.$store.state.user.uid;
@@ -2914,9 +2946,9 @@ var PhotoSettings = Vue.component('photo-settings', {
             axios.get('http://' + server + '/api/v1/users/' + uid + '/photos', config).then(function (response) {
                 var result = response.data.photos;
                 if (result && result.length) {
-                    _this40.photos = response.data.photos;
+                    _this41.photos = response.data.photos;
                 }
-                console.log(_this40.photos);
+                console.log(_this41.photos);
             }).catch(function (error) {
                 console.log(error);
             });
@@ -3140,14 +3172,14 @@ var SecuritySettings = Vue.component('security-settings', {
         }
     }),
     mounted: function mounted() {
-        var _this41 = this;
+        var _this42 = this;
 
         console.log('auth/SYNC');
         this.$store.dispatch('auth/SYNC').then(function () {
-            _this41.init();
-            _this41.process = false;
+            _this42.init();
+            _this42.process = false;
         }).catch(function () {
-            _this41.process = false;
+            _this42.process = false;
         });
         this.process = true;
         this.init();
@@ -3164,53 +3196,38 @@ var SecuritySettings = Vue.component('security-settings', {
             this.virgin = false;
         },
         saveLogin: function saveLogin() {
-            var _this42 = this;
+            var _this43 = this;
 
             this.processLogin = true;
             this.$store.dispatch('auth/SAVE_LOGIN', this.inputLogin).then(function (response) {
                 var data = response.data;
                 if (data.err) {
-                    _this42.$emit('warning', data.say);
+                    _this43.$emit('warning', data.say);
                 }
-                _this42.processLogin = false;
+                _this43.processLogin = false;
             }).catch(function () {
-                _this42.processLogin = false;
+                _this43.processLogin = false;
             });
         },
         savePasswd: function savePasswd() {
-            var _this43 = this;
+            var _this44 = this;
 
             this.processPasswd = true;
             this.$store.dispatch('auth/SAVE_PASSWD', this.inputPasswd).then(function (response) {
                 var data = response.data;
                 if (data.err) {
-                    _this43.$emit('warning', data.say);
+                    _this44.$emit('warning', data.say);
                 }
-                _this43.processPasswd = false;
+                _this44.processPasswd = false;
             }).catch(function () {
-                _this43.processPasswd = false;
+                _this44.processPasswd = false;
             });
         },
         saveEmail: function saveEmail() {
-            var _this44 = this;
+            var _this45 = this;
 
             this.processEmail = true;
             this.$store.dispatch('auth/SAVE_EMAIL', this.inputEmail).then(function (response) {
-                var data = response.data;
-                if (data.err) {
-                    _this44.$emit('warning', data.say);
-                }
-                _this44.processEmail = false;
-            }).catch(function () {
-                _this44.processEmail = false;
-            });
-        },
-        removeEmail: function removeEmail() {
-            var _this45 = this;
-
-            this.confirmRemove = false;
-            this.processEmail = true;
-            this.$store.dispatch('auth/REMOVE_EMAIL').then(function (response) {
                 var data = response.data;
                 if (data.err) {
                     _this45.$emit('warning', data.say);
@@ -3218,6 +3235,21 @@ var SecuritySettings = Vue.component('security-settings', {
                 _this45.processEmail = false;
             }).catch(function () {
                 _this45.processEmail = false;
+            });
+        },
+        removeEmail: function removeEmail() {
+            var _this46 = this;
+
+            this.confirmRemove = false;
+            this.processEmail = true;
+            this.$store.dispatch('auth/REMOVE_EMAIL').then(function (response) {
+                var data = response.data;
+                if (data.err) {
+                    _this46.$emit('warning', data.say);
+                }
+                _this46.processEmail = false;
+            }).catch(function () {
+                _this46.processEmail = false;
             });
         },
         saveSubscribe: function saveSubscribe() {
@@ -3464,10 +3496,10 @@ Vue.component('suggest-input', {
     },
     methods: {
         load: function load() {
-            var _this46 = this;
+            var _this47 = this;
 
             api.user.get({ q: this.query }, 'tag/suggest').then(function (response) {
-                _this46.loaded(response.data);
+                _this47.loaded(response.data);
             });
         },
         reset: function reset() {
