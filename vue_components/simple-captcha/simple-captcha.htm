@@ -7,7 +7,7 @@
       <span class="captcha-dialog__addon input-group-addon captcha-img__addon">
         <img class="form-message__captcha-img" :src="src" width="48" height="20" @click="update">
       </span>
-      <input class="form-control" type="number" autocomplete="off" v-model="code" @change="input">
+      <input class="form-control" type="text" inputmode="numeric" autocomplete="off" v-model="code" @change="input">
     </div>
   </div>
 </script>
