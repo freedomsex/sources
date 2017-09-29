@@ -579,7 +579,6 @@ Vue.component('auth-board', {
     },
     template: '#auth-board'
 });
-
 Vue.component('captcha-dialog', {
     data() {
         return {
@@ -589,7 +588,8 @@ Vue.component('captcha-dialog', {
     },
     computed: {
         src() {
-            return '/secret_pic.php?inc=' + this.inc;
+          simple_hash();
+          return '/secret_pic.php?inc=' + this.inc + '&hash=' + hash;
         }
     },
     methods: {
