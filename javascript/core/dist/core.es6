@@ -3333,7 +3333,8 @@ Vue.component('simple-captcha', {
     },
     computed: {
         src() {
-            return '/capcha_pic.php?inc=' + this.inc;
+            simple_hash();
+            return '/capcha_pic.php?inc=' + this.inc + '&hash=' + hash;
         }
     },
     mounted() {
