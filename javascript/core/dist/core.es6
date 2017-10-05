@@ -3119,7 +3119,7 @@ const SecuritySettings = Vue.component('security-settings', {
             this.processLogin = true;
             this.$store.dispatch('auth/SAVE_LOGIN', this.inputLogin).then((response) => {
                 var data = response.data;
-                if (data.err) {
+                if (data.say) {
                     this.$emit('warning', data.say);
                 }
                 this.processLogin = false;
@@ -3131,7 +3131,7 @@ const SecuritySettings = Vue.component('security-settings', {
             this.processPasswd = true;
             this.$store.dispatch('auth/SAVE_PASSWD', this.inputPasswd).then((response) => {
                 var data = response.data;
-                if (data.err) {
+                if (data.say) {
                     this.$emit('warning', data.say);
                 }
                 this.processPasswd = false;
