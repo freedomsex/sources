@@ -429,10 +429,12 @@ const notes = {
         db: null,
     },
     actions: {
-        INIT({dispatch, rootState}) {
+        INIT({state, commit, rootState}) {
             api.raw.load(null, `static/json/notes/${rootState.locale}.json`).then(({ data }) => {
-                _.each(data.reverse(), (element, index, list) => {
-                    dispatch('ADD', element);
+                state.db.transaction('rw', state.db.writes, function () {
+                    _.each(data.reverse(), (element, index, list) => {
+                        commit('add', element);
+                    });
                 });
             });
         },
@@ -441,7 +443,13 @@ const notes = {
             state.db.version(1).stores({
                 writes: "++id, &text, count, updated",
             });
-            state.db.on("populate", () => { dispatch('INIT') });
+            state.db.on('ready', function () {
+                state.db.writes.count((count) => {
+                    if (!count) {
+                        dispatch('INIT');
+                    }
+                });
+            });
             state.db.open();
         },
         WRITES({state}) {
@@ -450,23 +458,25 @@ const notes = {
         ITEM({state, commit}, id) {
             return state.db.writes.get(id);
         },
-        UPDATE({state, dispatch}, text) {
+        UPDATE({state, commit}, text) {
             let updated = getTimestamp();
             state.db.writes.get({text}).then((item) => {
                 if (item) {
                     count = item.count ? item.count : 0;
-                    count += 1; console.log('UPDATE', [count, updated]);
+                    count += 1;// console.log('UPDATE', [count, updated]);
                     state.db.writes.update(item.id, {count, updated});
                 } else {
-                    dispatch('ADD', text);
+                    commit('add', text);
                 }
             });
         },
-        ADD({state}, text) {
+    },
+    mutations: {
+        add(state, text) {
             let updated = getTimestamp();
             state.db.writes.add({ text, count: 0, updated });
         },
-    },
+    }
 };
 
 

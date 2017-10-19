@@ -4358,14 +4358,17 @@ var notes = {
     },
     actions: {
         INIT: function INIT(_ref35) {
-            var dispatch = _ref35.dispatch,
+            var state = _ref35.state,
+                commit = _ref35.commit,
                 rootState = _ref35.rootState;
 
             api.raw.load(null, 'static/json/notes/' + rootState.locale + '.json').then(function (_ref36) {
                 var data = _ref36.data;
 
-                _.each(data.reverse(), function (element, index, list) {
-                    dispatch('ADD', element);
+                state.db.transaction('rw', state.db.writes, function () {
+                    _.each(data.reverse(), function (element, index, list) {
+                        commit('add', element);
+                    });
                 });
             });
         },
@@ -4377,8 +4380,12 @@ var notes = {
             state.db.version(1).stores({
                 writes: "++id, &text, count, updated"
             });
-            state.db.on("populate", function () {
-                dispatch('INIT');
+            state.db.on('ready', function () {
+                state.db.writes.count(function (count) {
+                    if (!count) {
+                        dispatch('INIT');
+                    }
+                });
             });
             state.db.open();
         },
@@ -4395,22 +4402,22 @@ var notes = {
         },
         UPDATE: function UPDATE(_ref40, text) {
             var state = _ref40.state,
-                dispatch = _ref40.dispatch;
+                commit = _ref40.commit;
 
             var updated = getTimestamp();
             state.db.writes.get({ text: text }).then(function (item) {
                 if (item) {
                     count = item.count ? item.count : 0;
-                    count += 1;console.log('UPDATE', [count, updated]);
+                    count += 1; // console.log('UPDATE', [count, updated]);
                     state.db.writes.update(item.id, { count: count, updated: updated });
                 } else {
-                    dispatch('ADD', text);
+                    commit('add', text);
                 }
             });
-        },
-        ADD: function ADD(_ref41, text) {
-            var state = _ref41.state;
-
+        }
+    },
+    mutations: {
+        add: function add(state, text) {
             var updated = getTimestamp();
             state.db.writes.add({ text: text, count: 0, updated: updated });
         }
@@ -4442,8 +4449,8 @@ var search = {
         }
     },
     actions: {
-        HUMAN: function HUMAN(_ref42, tid) {
-            var commit = _ref42.commit;
+        HUMAN: function HUMAN(_ref41, tid) {
+            var commit = _ref41.commit;
 
             var index = 'human.data.' + tid;
             commit('resetHuman', tid);
@@ -4454,10 +4461,10 @@ var search = {
                 ls.set(index, response.data, 1500);
             });
         },
-        LOAD: function LOAD(_ref43) {
-            var state = _ref43.state,
-                rootState = _ref43.rootState,
-                commit = _ref43.commit;
+        LOAD: function LOAD(_ref42) {
+            var state = _ref42.state,
+                rootState = _ref42.rootState,
+                commit = _ref42.commit;
             var _state$settings = state.settings,
                 who = _state$settings.who,
                 city = _state$settings.city,
@@ -4471,8 +4478,8 @@ var search = {
             if (!city || any) {
                 city = null;
             }
-            return api.search.load({ sex: sex, who: who, city: city, up: up, to: to, next: state.next }).then(function (_ref44) {
-                var data = _ref44.data;
+            return api.search.load({ sex: sex, who: who, city: city, up: up, to: to, next: state.next }).then(function (_ref43) {
+                var data = _ref43.data;
 
                 commit('results', data);
                 commit('last', data);
@@ -4480,16 +4487,16 @@ var search = {
             });
         },
         RESET_SEARCH: function RESET_SEARCH() {},
-        SETTINGS: function SETTINGS(_ref45) {
-            var commit = _ref45.commit;
+        SETTINGS: function SETTINGS(_ref44) {
+            var commit = _ref44.commit;
 
             commit('settingsCookies');
             commit('settings', ls.get('search.settings'));
             //let index = 'search.settings';
         },
-        SAVE_SEARCH: function SAVE_SEARCH(_ref46, data) {
-            var state = _ref46.state,
-                commit = _ref46.commit;
+        SAVE_SEARCH: function SAVE_SEARCH(_ref45, data) {
+            var state = _ref45.state,
+                commit = _ref45.commit;
 
             commit('settings', data);
             ls.set('search.settings', data);
@@ -4514,8 +4521,8 @@ var search = {
                 state.human = data;
             }
         },
-        results: function results(state, _ref47) {
-            var users = _ref47.users;
+        results: function results(state, _ref46) {
+            var users = _ref46.users;
 
             state.received = users ? users.length : 0;
             if (users && state.received) {
@@ -4523,8 +4530,8 @@ var search = {
             }
             state.next += state.batch;
         },
-        last: function last(state, _ref48) {
-            var users = _ref48.users;
+        last: function last(state, _ref47) {
+            var users = _ref47.users;
 
             if (users && !state.last) {
                 state.last = users;
@@ -4602,17 +4609,17 @@ var user = {
         last: ''
     },
     actions: {
-        LOAD_USER: function LOAD_USER(_ref49) {
-            var commit = _ref49.commit;
+        LOAD_USER: function LOAD_USER(_ref48) {
+            var commit = _ref48.commit;
 
             // if (uid) {
             //     commit('loadUser', {uid});
             // }
             commit('loadUser', ls.get('user.data'));
         },
-        SAVE_SEX: function SAVE_SEX(_ref50, sex) {
-            var state = _ref50.state,
-                commit = _ref50.commit;
+        SAVE_SEX: function SAVE_SEX(_ref49, sex) {
+            var state = _ref49.state,
+                commit = _ref49.commit;
 
             commit('loadUser', { sex: sex, name: '' });
             if (sex) {
@@ -4620,36 +4627,36 @@ var user = {
                 commit('loadUser', { sex: sex });
             }
         },
-        SAVE_AGE: function SAVE_AGE(_ref51, age) {
-            var state = _ref51.state,
-                commit = _ref51.commit;
+        SAVE_AGE: function SAVE_AGE(_ref50, age) {
+            var state = _ref50.state,
+                commit = _ref50.commit;
 
             if (age && state.age != age) {
                 api.user.saveAge(age).then(function (response) {});
                 commit('loadUser', { age: age });
             }
         },
-        SAVE_NAME: function SAVE_NAME(_ref52, name) {
-            var state = _ref52.state,
-                commit = _ref52.commit;
+        SAVE_NAME: function SAVE_NAME(_ref51, name) {
+            var state = _ref51.state,
+                commit = _ref51.commit;
 
             if (name && state.name != name) {
                 api.user.saveName(name).then(function (response) {});
                 commit('loadUser', { name: name });
             }
         },
-        SAVE_CITY: function SAVE_CITY(_ref53, city) {
-            var state = _ref53.state,
-                commit = _ref53.commit;
+        SAVE_CITY: function SAVE_CITY(_ref52, city) {
+            var state = _ref52.state,
+                commit = _ref52.commit;
 
             if (city && state.city != city) {
                 api.user.saveCity(city).then(function (response) {});
                 commit('loadUser', { city: city });
             }
         },
-        SAVE_CONTACTS: function SAVE_CONTACTS(_ref54, contacts) {
-            var state = _ref54.state,
-                commit = _ref54.commit;
+        SAVE_CONTACTS: function SAVE_CONTACTS(_ref53, contacts) {
+            var state = _ref53.state,
+                commit = _ref53.commit;
 
             api.user.saveContacts(contacts).then(function (response) {});
             commit('loadUser', { contacts: contacts });
@@ -4673,10 +4680,10 @@ var visited = {
         list: []
     },
     actions: {
-        SYNC: function SYNC(_ref55) {
-            var rootState = _ref55.rootState,
-                state = _ref55.state,
-                commit = _ref55.commit;
+        SYNC: function SYNC(_ref54) {
+            var rootState = _ref54.rootState,
+                state = _ref54.state,
+                commit = _ref54.commit;
 
             var index = 'visited-' + rootState.user.uid;
             commit('update', ls.get(index));
@@ -4687,10 +4694,10 @@ var visited = {
                 ls.set(index, state.list, 31 * 24 * 60 * 60);
             });
         },
-        ADD: function ADD(_ref56, tid) {
-            var rootState = _ref56.rootState,
-                state = _ref56.state,
-                commit = _ref56.commit;
+        ADD: function ADD(_ref55, tid) {
+            var rootState = _ref55.rootState,
+                state = _ref55.state,
+                commit = _ref55.commit;
 
             var uid = rootState.user.uid;
             var index = 'visited-' + uid;
@@ -4736,8 +4743,8 @@ var store = new Vuex.Store({
         simple: false
     },
     actions: {
-        LOAD_API_TOKEN: function LOAD_API_TOKEN(_ref57) {
-            var commit = _ref57.commit;
+        LOAD_API_TOKEN: function LOAD_API_TOKEN(_ref56) {
+            var commit = _ref56.commit;
 
             commit('setApiToken', { apiToken: get_cookie('jwt') });
         }
@@ -5357,7 +5364,7 @@ var app = new Vue({
         }
     },
     mounted: function mounted() {
-        store.dispatch('notes/LOAD');
+        this.$store.dispatch('notes/LOAD');
     },
 
     computed: {

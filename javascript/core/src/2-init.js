@@ -9,7 +9,7 @@ var app = new Vue({
         },
     },
     mounted() {
-        store.dispatch('notes/LOAD');
+        this.$store.dispatch('notes/LOAD');
     },
     computed: {
         humanId() {
