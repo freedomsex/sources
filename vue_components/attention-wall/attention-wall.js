@@ -1,6 +1,6 @@
 
 Vue.component('attention-wall', {
-    props: ['show', 'text'],
+    props: ['show'],
     data() {
         return {
             content: {

@@ -741,7 +741,7 @@ Vue.component('api-key-update', {
 });
 
 Vue.component('attention-wall', {
-    props: ['show', 'text'],
+    props: ['show'],
     data: function data() {
         return {
             content: {
@@ -2044,7 +2044,8 @@ Vue.directive('resized', {
     bind: function bind(el) {
         $(el).on('change', function () {
             el.style.height = '1px';
-            el.style.height = el.scrollHeight + 'px';
+            var fix = el.scrollHeight > 40 ? 3 : 0;
+            el.style.height = el.scrollHeight + fix + 'px';
         });
     },
     componentUpdated: function componentUpdated(el) {
@@ -3002,16 +3003,19 @@ var MessagesCliche = Vue.component('messages-cliche', {
     data: function data() {
         return {
             texts: [],
-            active: 'public',
+            version: 3,
+            active: null,
             process: true,
             default: {
                 size: 12,
-                color: '4E8714'
+                color: '4E8714',
+                tab: 'public'
             }
         };
     },
     mounted: function mounted() {
-        this.load();
+        var active = ls.get('cliche-active');
+        this.load(active);
     },
 
     computed: {
@@ -3021,17 +3025,17 @@ var MessagesCliche = Vue.component('messages-cliche', {
         load: function load(value) {
             var _this44 = this;
 
-            var result = value ? value : this.active;
-            this.loadStart();
-            api.raw.load(null, 'static/json/cliche/' + result + '.json').then(function (_ref7) {
+            var result = value ? value : this.default.tab;
+            api.raw.load(null, 'static/json/cliche/' + result + '.json?v=' + this.version).then(function (_ref7) {
                 var data = _ref7.data;
 
                 _this44.texts = data;
                 _this44.active = result;
+                ls.set('cliche-active', _this44.active, 3 * 24 * 60 * 60);
             });
         },
         size: function size(value) {
-            var result = value ? value : this.default.size;
+            var result = value ? this.default.size + value : this.default.size;
             return result + 'px';
         },
         color: function color(value) {
@@ -4374,9 +4378,11 @@ var notes = {
         },
         LOAD: function LOAD(_ref37) {
             var state = _ref37.state,
-                dispatch = _ref37.dispatch;
+                dispatch = _ref37.dispatch,
+                rootState = _ref37.rootState;
 
-            state.db = new Dexie("Notepad");
+            var uid = rootState.user.uid;
+            state.db = new Dexie("DataBaseFS__" + uid);
             state.db.version(1).stores({
                 writes: "++id, &text, count, updated"
             });
@@ -4392,7 +4398,7 @@ var notes = {
         WRITES: function WRITES(_ref38) {
             var state = _ref38.state;
 
-            return state.db.writes.orderBy('updated').reverse().sortBy('count');
+            return state.db.writes.orderBy('count').reverse().limit(100).sortBy('updated');
         },
         ITEM: function ITEM(_ref39, id) {
             var state = _ref39.state,

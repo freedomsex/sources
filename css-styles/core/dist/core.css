@@ -2669,10 +2669,11 @@ a.name:hover {
   height: 0;
   overflow: auto;
   min-height: 36px;
+  max-height: 100px;
   padding: 10px 5px;
   font-size: 14px;
   margin: auto;
-  overflow-y: hidden;
+  overflow-y: auto;
   resize: vertical;
 }
 .dialog-form__button-paste {
@@ -2969,25 +2970,14 @@ a.name:hover {
   margin: 0 5px 5px 0;
 }
 .cliche-item {
-  display: inline-block;
+  line-height: 2;
   margin-right: 10px;
   margin-bottom: 5px;
   text-decoration: underline;
   -webkit-text-decoration-style: dotted;
           text-decoration-style: dotted;
-  -webkit-text-decoration-color: #e5e5e5;
-          text-decoration-color: #e5e5e5;
-  cursor: pointer;
-}
-.cliche-item {
-  display: inline-block;
-  margin-right: 10px;
-  margin-bottom: 5px;
-  text-decoration: underline;
-  -webkit-text-decoration-style: dotted;
-          text-decoration-style: dotted;
-  -webkit-text-decoration-color: #e5e5e5;
-          text-decoration-color: #e5e5e5;
+  -webkit-text-decoration-color: #cccccc;
+          text-decoration-color: #cccccc;
   cursor: pointer;
 }
 .notepad-item {

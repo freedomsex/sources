@@ -521,7 +521,7 @@ Vue.component('api-key-update', {
 
 
 Vue.component('attention-wall', {
-    props: ['show', 'text'],
+    props: ['show'],
     data() {
         return {
             content: {
@@ -1765,7 +1765,8 @@ Vue.directive('resized', {
   bind(el) {
     $(el).on('change', () => {
         el.style.height = '1px';
-        el.style.height = (el.scrollHeight) + 'px';
+        let fix = el.scrollHeight > 40 ? 3 : 0;
+        el.style.height = (el.scrollHeight + fix) + 'px';
     });
   },
   componentUpdated(el) {
@@ -2702,31 +2703,34 @@ const MessagesCliche = Vue.component('messages-cliche', {
     data() {
         return {
             texts: [],
-            active: 'public',
+            version: 3,
+            active: null,
             process: true,
             default: {
                 size: 12,
                 color: '4E8714',
+                tab: 'public',
             }
         }
     },
     mounted() {
-        this.load();
+        let active = ls.get('cliche-active');
+        this.load(active);
     },
     computed: {
         // ...
     },
     methods: {
         load(value) {
-            let result = value ? value : this.active;
-            this.loadStart();
-            api.raw.load(null, `static/json/cliche/${result}.json`).then(({ data }) => {
+            let result = value ? value : this.default.tab;
+            api.raw.load(null, `static/json/cliche/${result}.json?v=${this.version}`).then(({ data }) => {
                 this.texts = data;
                 this.active = result;
+                ls.set('cliche-active', this.active, 3*24*60*60);
             });
         },
         size(value) {
-            let result = value ? value : this.default.size;
+            let result = value ? (this.default.size + value) : this.default.size;
             return `${result}px`;
         },
         color(value) {

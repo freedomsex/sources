@@ -1526,10 +1526,11 @@
         height: 0;
         overflow: auto;
         min-height: 36px;
+        max-height: 100px;
         padding: 10px 5px;
         font-size: 14px;
         margin: auto;
-        overflow-y: hidden;
+        overflow-y: auto;
         resize: vertical;
     }
 
@@ -1815,21 +1816,12 @@
 }
 
 .cliche-item {
-  display: inline-block;
+  line-height: 2;
   margin-right: @indent-sm;
   margin-bottom: @indent-xs;
   text-decoration: underline;
   text-decoration-style: dotted;
-  text-decoration-color: @gray-light;
-  cursor: pointer;
-}
-.cliche-item {
-  display: inline-block;
-  margin-right: @indent-sm;
-  margin-bottom: @indent-xs;
-  text-decoration: underline;
-  text-decoration-style: dotted;
-  text-decoration-color: @gray-light;
+  text-decoration-color: @gray;
   cursor: pointer;
 }
 .notepad-item {

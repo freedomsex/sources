@@ -2,7 +2,8 @@ Vue.directive('resized', {
   bind(el) {
     $(el).on('change', () => {
         el.style.height = '1px';
-        el.style.height = (el.scrollHeight) + 'px';
+        let fix = el.scrollHeight > 40 ? 3 : 0;
+        el.style.height = (el.scrollHeight + fix) + 'px';
     });
   },
   componentUpdated(el) {
