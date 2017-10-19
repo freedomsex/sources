@@ -4195,7 +4195,7 @@ const notes = {
             state.db.version(1).stores({
                 writes: "++id, &text, count, updated",
             });
-            state.db.on("populate", dispatch('INIT'));
+            state.db.on("populate", () => { dispatch('INIT') });
             state.db.open();
         },
         WRITES({state}) {

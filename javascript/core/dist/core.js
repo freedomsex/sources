@@ -4377,7 +4377,9 @@ var notes = {
             state.db.version(1).stores({
                 writes: "++id, &text, count, updated"
             });
-            state.db.on("populate", dispatch('INIT'));
+            state.db.on("populate", function () {
+                dispatch('INIT');
+            });
             state.db.open();
         },
         WRITES: function WRITES(_ref38) {
