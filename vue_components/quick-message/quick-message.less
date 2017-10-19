@@ -1,19 +1,78 @@
 
-.human-dialog {
-    &__caption {
-        background: @menu-color;
-        color: @white;
+.dialog-caption {
+    background: @menu-color;
+    color: @white;
+    font-size: 16px;
+    padding: (@indent-sm + @indent-sm * 0.2) @indent-md @indent-sm;
+    display: flex;
+    &__title {
+        flex: 3 1 auto;
+        margin-right: 10px;
         font-weight: bold;
-        font-size: 16px;
-        padding: (@indent-sm + @indent-sm * 0.2) @indent-md @indent-sm;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
     }
-
     &__option {
-        float: right;
-        &-remove {
-          margin-left: @indent-sm;
+        flex: 0 0 auto;
+        color: @white;
+        cursor: pointer;
+        .material-icons {
+            vertical-align: middle;
+            position: relative;
+            top: -1px;
+        }
+        .account {
+            border-bottom: 1px dashed #BBCCCC;
+            font-size: 15px;
+            padding-bottom: 1px;
         }
     }
+}
+
+.dialog-form {
+    position: relative;
+    display: flex;
+    width: 100%;
+    // min-height: 64px;
+    border: 0px solid red;
+    align-items: flex-end;
+    &__textarea {
+        flex: 1 1 auto;
+        border: 0px solid gray;
+        // padding: 7px 0;
+        margin-bottom: @indent-xs;
+        line-height: 1;
+        align-self: center;
+    }
+    &__message-text {
+        height: 0;
+        overflow: auto;
+        min-height: 36px;
+        padding: 10px 5px;
+        font-size: 14px;
+        margin: auto;
+        overflow-y: hidden;
+        resize: vertical;
+    }
+
+    &__button {
+        &-paste {
+            cursor: pointer;
+            flex: 0 0 auto;
+            color: @dark-light;
+            padding: 0 0 12px 5px;
+        }
+    }
+
+    i {
+        vertical-align: bottom;
+    }
+}
+
+
+
+.human-dialog {
     &__input {
         border-width: 0px;
     }

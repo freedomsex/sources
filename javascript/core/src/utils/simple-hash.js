@@ -1,15 +1,19 @@
 
 // -- Получить новый хэш ---
-var hash; 
-function simple_hash() { 
-  var now = new Date(); 
-   hash = now.getTime();  
+function getTimestamp() {
+  var now = new Date();
+  return now.getTime();
 }
-     
-function disabled_with_timeout(elem,time) {  
+
+var hash;
+function simple_hash() {
+  hash = getTimestamp();
+}
+
+function disabled_with_timeout(elem,time) {
  elem.prop("disabled",true);
  setTimeout( function (){
   elem.prop("disabled",false);
- },time * 1000); 
+ },time * 1000);
 }
-     
+

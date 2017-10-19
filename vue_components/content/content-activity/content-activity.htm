@@ -1,0 +1,29 @@
+
+<script type="text/x-template" id="content-activity">
+  <div class="content-activity" @click.self="close">
+    <nav id="menu-user" class="navbar navbar-inverse">
+      <div class="menu-user">
+        <div class="menu-user__wrapper">
+          <div class="menu-user__logo">
+            <span id="home_page" class="" style="padding: 10px 0px;" @click="close">
+              <img src="/static/img/icon/arrow_back.png" width="30" height="30" alt="" border="0" >
+            </span>
+          </div>
+          <div class="menu-user__navbar" >
+            <div class="navbar-title" @click="$emit('close')">
+              <slot name="caption">{{title}}</slot>
+            </div>
+          </div>
+          <slot name="option"></slot>
+        </div>
+      </div>
+    </nav>
+    <div class="activity__container">
+      <div class="activity__content">
+        <div class="activity__loader" v-show="loader && !error">Загружаю...</div>
+        <div v-html="text"></div>
+      </div>
+    </div>
+  </div>
+</script>
+

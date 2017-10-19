@@ -1,0 +1,23 @@
+.content-activity {
+    position: fixed;
+    background: @white;
+
+    right: 0;
+    left: 0;
+    margin-right: auto;
+    margin-left: auto;
+
+    top: 0px;
+    bottom: 0;
+    max-width: 750px;
+    max-height: 100%;
+    overflow: hidden;
+    z-index: 1;
+
+    .activity__container {
+        height: calc(~"100% - 50px");
+    }
+    .activity__content {
+        padding-bottom: @indent-xl;
+    }
+}

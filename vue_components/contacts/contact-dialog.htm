@@ -12,7 +12,7 @@
         @close="close"
         @remove="remove"/>
     </div>
-    <div class="activity-content" v-else>
+    <div class="activity__content" v-else>
       <div class="hint-info">
         Здесь будет список поступивших вам предложений знакомства.
         Список отправленных посмотреть нельзя.
@@ -34,7 +34,7 @@
 
     <div class="menu-user__navbar-right" slot="option">
       <div class="navbar-button" @click="$router.push('/protect')">
-        <i class="material-icons">&#xE53F;</i> &nbsp;
+        <i class="material-icons">&#xE53F;</i>
         Защитить
       </div>
     </div>
@@ -49,7 +49,7 @@
         @close="close"
         @remove="remove"/>
     </div>
-    <div class="activity-content" v-else>
+    <div class="activity__content" v-else>
       <div class="hint-info">
         Здесь будет список ваших контактов, сообщений, диалогов. Чтобы начать общение, нужно Познакомиться.
       </div>

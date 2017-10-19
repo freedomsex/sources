@@ -2,8 +2,12 @@
 <script type="text/x-template" id="quick-message">
   <div>
     <modal-dialog @close="close">
-      <div class="human-dialog__caption">
-        {{caption}}
+      <div class="dialog-caption">
+        <div class="dialog-caption__title">{{caption}}</div>
+        <div class="dialog-caption__option" @click="account()">
+          <span class="account">Анкета</span>
+          <i class="material-icons">&#xE853;</i>
+        </div>
       </div>
       <div class="modal-dialog__wrapper capped">
         <div class="modal-dialog__section">
@@ -19,17 +23,25 @@
 
         </div>
         <div class="modal-dialog__section">
-          <textarea class="message-input__texarea" rows="1" placeholder="Введите текст" v-model="text" v-resized
-            @keyup.ctrl.enter.prevent="send()"></textarea>
+          <div class="dialog-form">
+            <div class="dialog-form__textarea">
+              <textarea class="dialog-form__message-text" rows="1" placeholder="Введите текст" v-model="text" v-resized
+                @keyup.ctrl.enter.prevent="send()"></textarea>
+            </div>
+            <div class="dialog-form__button-paste" @click="modals.cliche = true" v-if="!reply">
+              <i class="material-icons">&#xE02F;</i>
+            </div>
+          </div>
         </div>
         <div class="modal-dialog__options">
           <button class="btn btn-primary" @click="added ? (addition = true) : send()">
             <i class="material-icons">&#xE163;</i>
             Отправить
           </button>
-          <button class="btn btn-default" @click="account()">
-            <i class="material-icons">&#xE853;</i>
-            Анкета
+
+          <button class="btn btn-default" @click="modals.notepad = true">
+            <i class="material-icons">&#xE14F;</i>
+            Блокнот
           </button>
         </div>
       </div>
@@ -39,6 +51,14 @@
 
     <attention-wall :show="hold" v-if="hold" @promt="cancel" @close="close"/>
     <captcha-dialog v-if="captcha" @close="close" @cancel="cancel" @send="setCode"/>
+
+    <notepad v-if="modals.notepad"
+     @select="setText"
+     @cliche="modals.cliche = true"
+     @close="modals.notepad = false"/>
+    <messages-cliche v-if="modals.cliche"
+     @select="setText"
+     @close="modals.cliche = false"/>
 
     <contact-wizard v-if="addition"
       :humanCity = "human.city"

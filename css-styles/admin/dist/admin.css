@@ -160,6 +160,21 @@
   border-radius: 50px;
   line-height: 1;
 }
+.list-view {
+  padding: 0 10px;
+}
+.list-view:last-child {
+  border-bottom-width: 0px;
+}
+.list-view__item {
+  padding: 10px 10px;
+  border-bottom: 1px solid #f5f5f5;
+  position: relative;
+  background: #ffffff;
+  overflow: hidden;
+  font-size: 14px;
+  cursor: pointer;
+}
 .btn-virt {
   color: #ffffff;
   background-color: #9999ff;

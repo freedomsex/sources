@@ -22,7 +22,11 @@ const QuickDialog = {
             confirm: false,
             ignore: false,
             addition: false,
-            code: null
+            code: null,
+            modals: {
+                cliche: false,
+                notepad: false,
+            }
         }
     },
     // beforeRouteLeave(to, from, next) {
@@ -114,6 +118,7 @@ const QuickDialog = {
         },
         sended() {
             this.$emit('sended');
+            this.$store.dispatch('notes/UPDATE', this.text);
             this.close();
         },
         account() {
@@ -129,6 +134,9 @@ const QuickDialog = {
             this.back();
             //this.$emit('close');
         },
+        setText(text) {
+            this.text = text;
+        }
     },
     template: '#quick-message',
 };

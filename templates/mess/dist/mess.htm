@@ -17,7 +17,7 @@
     
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1507230072003">
+<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1508432773526">
 
   <script type="text/javascript">  
     function get_cookie ( cookie_name )
@@ -182,19 +182,24 @@
 
   <div class="addthis_inline_share_toolbox" style="margin: 20px 0 0px; min-height: 35px; text-align: center;"></div>
 
-  <div style="text-align: center; margin: 5px auto; max-width: 750px; padding: 0 5px;">
+  <div class="more-information">
+   <span class="more-information__link" @click="$router.push('/content/rules/ru')">Правила сайта</span><i>·</i>
+   <a class="more-information__link" rel="nofollow" href="/блог/регистрация-автоматическая/" target="_blank">Регистрация автоматическая</a><i>·</i>
+   <a class="more-information__link" rel="nofollow" href="/блог/как-найти-девушку-или-парня-для-секса/" target="_blank">Способ знакомства</a><i>·</i>
+   <a class="more-information__link" rel="nofollow" href="/блог/как-пользоваться-сайтом/" target="_blank">Как пользоваться сайтом</a><i>·</i>
 
-   <a class="info-table__link" rel="nofollow" href="/rules.php" target="_blank">Правила сайта</a>
-   <a class="info-table__link" rel="nofollow" href="/блог/регистрация-автоматическая/" target="_blank">Регистрация автоматическая</a>
-   <a class="info-table__link" rel="nofollow" href="/блог/как-найти-девушку-или-парня-для-секса/" target="_blank">Способ знакомства</a>
-   <a class="info-table__link" rel="nofollow" href="/блог/как-пользоваться-сайтом/" target="_blank">Как пользоваться сайтом</a>
+   <a class="more-information__link" rel="nofollow" href="/блог/соглашение-о-предоставлении-услуг/" target="_blank">Пользовательское соглашение</a><i>·</i>
+   <span class="more-information__link" @click="$router.push('/content/deal/confidencial/ru')">Конфиденциальность</span><i>·</i>
+   <span class="more-information__link" @click="$router.push('/content/deal/slander/ru')">Номер телефона и клевета</span><i>·</i>
+   <a class="more-information__link" rel="nofollow" href="/10336" target="_blank">Помощник по сайту</a><i>·</i>
 
-   <a class="info-table__link" rel="nofollow" href="/блог/соглашение-о-предоставлении-услуг/" target="_blank">Пользовательское соглашение</a>
-   <a class="info-table__link" rel="nofollow" href="/confidencial.php" target="_blank">Конфиденциальность</a>
-   <a class="info-table__link" rel="nofollow" href="/10336" target="_blank">Помощник по сайту</a>
+   <a class="more-information__link" rel="nofollow" href="/блог/реклама-на-сайте/" target="_blank">Реклама на сайте</a><i>·</i>
+   <span class="more-information__link" @click="$router.push('/promo/envelop')">Написать разработчикам</span>
+  </div>
 
-   <a class="info-table__link" rel="nofollow" href="/блог/реклама-на-сайте/" target="_blank">Реклама на сайте</a>
-   <a class="info-table__link" rel="nofollow" href="/envelope.htm" target="_blank">Написать разработчикам</a>
+  <div class="extra-information">
+    <span class="extra-information__link">Проекту нужна помощь</span>
+    <span class="extra-information__link">Работа и вакансии</span>
   </div>
 
   <div style="text-align: center; margin: 10px 0 40px;">
@@ -321,8 +326,10 @@
           </div>
         </div>
       </nav>
-      <div class="activity__container content">
-        <slot></slot>
+      <div class="activity__container">
+        <div class="activity__content">
+          <slot></slot>
+        </div>
       </div>
     </div>
   </div>
@@ -522,20 +529,7 @@
 
 
 <script type="text/x-template" id="ad-top">
-  <div>
-  <div class="container hidden-xs" v-if="desktop">
-    <div class="row" style="border-bottom: 2px solid #e5e5e5;">
-<iframe id="frame-id-01" style="position: relative; background-color: transparent; border: none; overflow: hidden;  height: 89px; width: 728px; " src="//data.freedomsex.me/din_new8.php?code=c1b2082d1105d784218299f23aa44f93&bid=35225&w=728&h=89&linkdest=&modelnick=&clickurl=&refresh=1&meffect=random&einterval=none&logo=black&bbgcolor=none&bg_none=none&btextcolor=222222&mbordercolor=000000&mhovercolor=F7941D&mbordertype=solid&shad=0&bfontfamily=Arial&mtextalign=right&id=28644&server=runetki.com&langs=ru&campaign=655683&size=728x89&header=1&modelname=1&modelicon=1&modelinfo=1&geoflag=1&geoheader=1&selgeoheader=0&mediagroup=0&mediatype=2&skins=def&no_ab=1&no_ab_sub_data=1&no_ab_sub_media=2&category=all&srv=0&no_ab=1&no_ab_sub_data=1&no_ab_sub_media=2&no_ab_domain=freedomsex.me"></iframe>
-    </div>
-  </div>
-  <div class="container visible-xs-block" v-else-if="width">
-    <div class="row">
-      <a href="//runetki.com/984787/" rel="nofollow" target="_blank" >
-        <img :src="source" style="width: 100%;">
-      </a>
-    </div>
-  </div>
-  </div>
+  <div>  </div>
 </script>
 
 
@@ -670,7 +664,7 @@
         @close="close"
         @remove="remove"/>
     </div>
-    <div class="activity-content" v-else>
+    <div class="activity__content" v-else>
       <div class="hint-info">
         Здесь будет список поступивших вам предложений знакомства.
         Список отправленных посмотреть нельзя.
@@ -692,7 +686,7 @@
 
     <div class="menu-user__navbar-right" slot="option">
       <div class="navbar-button" @click="$router.push('/protect')">
-        <i class="material-icons">&#xE53F;</i> &nbsp;
+        <i class="material-icons">&#xE53F;</i>
         Защитить
       </div>
     </div>
@@ -707,7 +701,7 @@
         @close="close"
         @remove="remove"/>
     </div>
-    <div class="activity-content" v-else>
+    <div class="activity__content" v-else>
       <div class="hint-info">
         Здесь будет список ваших контактов, сообщений, диалогов. Чтобы начать общение, нужно Познакомиться.
       </div>
@@ -754,6 +748,44 @@
       @bun="bun"
       @close="cancel"
       @remove="remove"/>
+  </div>
+</script>
+
+
+<script type="text/x-template" id="content-activity">
+  <div class="content-activity" @click.self="close">
+    <nav id="menu-user" class="navbar navbar-inverse">
+      <div class="menu-user">
+        <div class="menu-user__wrapper">
+          <div class="menu-user__logo">
+            <span id="home_page" class="" style="padding: 10px 0px;" @click="close">
+              <img src="/static/img/icon/arrow_back.png" width="30" height="30" alt="" border="0" >
+            </span>
+          </div>
+          <div class="menu-user__navbar" >
+            <div class="navbar-title" @click="$emit('close')">
+              <slot name="caption">{{title}}</slot>
+            </div>
+          </div>
+          <slot name="option"></slot>
+        </div>
+      </div>
+    </nav>
+    <div class="activity__container">
+      <div class="activity__content">
+        <div class="activity__loader" v-show="loader && !error">Загружаю...</div>
+        <div v-html="text"></div>
+      </div>
+    </div>
+  </div>
+</script>
+
+
+<script type="text/x-template" id="content-modal">
+  <div class="content-modal__mask" transition="modal" @click="close">
+    <div class="content-modal__container" @click.stop>
+      <div class="content-modal__wrapper" v-html="text"></div>
+    </div>
   </div>
 </script>
 
@@ -830,6 +862,7 @@
     </div>
   </option-dialog>
 </script>
+
 
 
 <script type="text/x-template" id="loading-cover">
@@ -945,14 +978,6 @@
   </div>
 </script>
 
-<script type="text/x-template" id="modal-super">
-  <div class="modal-super__mask" transition="modal" @click="$emit('close')">
-    <div class="modal-super__container" @click.stop>
-      <slot></slot>
-    </div>
-  </div>
-</script>
-
 
 <script type="text/x-template" id="option-static__dialog-window">
   <div class="option-dialog">
@@ -1052,8 +1077,12 @@
 <script type="text/x-template" id="quick-message">
   <div>
     <modal-dialog @close="close">
-      <div class="human-dialog__caption">
-        {{caption}}
+      <div class="dialog-caption">
+        <div class="dialog-caption__title">{{caption}}</div>
+        <div class="dialog-caption__option" @click="account()">
+          <span class="account">Анкета</span>
+          <i class="material-icons">&#xE853;</i>
+        </div>
       </div>
       <div class="modal-dialog__wrapper capped">
         <div class="modal-dialog__section">
@@ -1069,17 +1098,25 @@
 
         </div>
         <div class="modal-dialog__section">
-          <textarea class="message-input__texarea" rows="1" placeholder="Введите текст" v-model="text" v-resized
-            @keyup.ctrl.enter.prevent="send()"></textarea>
+          <div class="dialog-form">
+            <div class="dialog-form__textarea">
+              <textarea class="dialog-form__message-text" rows="1" placeholder="Введите текст" v-model="text" v-resized
+                @keyup.ctrl.enter.prevent="send()"></textarea>
+            </div>
+            <div class="dialog-form__button-paste" @click="modals.cliche = true" v-if="!reply">
+              <i class="material-icons">&#xE02F;</i>
+            </div>
+          </div>
         </div>
         <div class="modal-dialog__options">
           <button class="btn btn-primary" @click="added ? (addition = true) : send()">
             <i class="material-icons">&#xE163;</i>
             Отправить
           </button>
-          <button class="btn btn-default" @click="account()">
-            <i class="material-icons">&#xE853;</i>
-            Анкета
+
+          <button class="btn btn-default" @click="modals.notepad = true">
+            <i class="material-icons">&#xE14F;</i>
+            Блокнот
           </button>
         </div>
       </div>
@@ -1089,6 +1126,14 @@
 
     <attention-wall :show="hold" v-if="hold" @promt="cancel" @close="close"/>
     <captcha-dialog v-if="captcha" @close="close" @cancel="cancel" @send="setCode"/>
+
+    <notepad v-if="modals.notepad"
+     @select="setText"
+     @cliche="modals.cliche = true"
+     @close="modals.notepad = false"/>
+    <messages-cliche v-if="modals.cliche"
+     @select="setText"
+     @close="modals.cliche = false"/>
 
     <contact-wizard v-if="addition"
       :humanCity = "human.city"
@@ -1458,6 +1503,46 @@
 </script>
 
 
+<script type="text/x-template" id="messages-cliche">
+  <default-activity @close="close">
+    <span slot="caption">Готовые сообщения</span>
+    <div class="activity__content">
+      <div class="activity-section">
+        <button class="btn btn-sm" :class="buttonStyle('public')" @click="load('public')">Познакомиться</button>
+        <button class="btn btn-sm" :class="buttonStyle('virt')" @click="load('virt')">Вирт</button>
+        <button class="btn btn-sm" :class="buttonStyle('sex')" @click="load('sex')">Секс</button>
+      </div>
+      <div class="activity-section" v-if="texts && texts.length">
+        <span class="cliche-item" :style="style(item)" @click="select(item.text)"
+         v-for="item in texts" >{{item.text}}</span> &nbsp;
+      </div>
+      <div class="activity__loader" v-else>Загружаю...</div>
+    </div>
+  </default-activity>
+</script>
+
+<script type="text/x-template" id="notepad">
+  <default-activity @close="close">
+    <span slot="caption">Блокнот</span>
+
+
+    <div class="menu-user__navbar-right" slot="option">
+      <div class="navbar-button" @click="cliche()">
+        <div class="navbar-button__title accent">Шаблоны</div>
+        <i class="material-icons">&#xE02F;</i>
+      </div>
+    </div>
+
+    <div class="activity-section" v-if="writes && writes.length">
+      <div class="list-view">
+        <div class="list-view__item notepad-item" v-for="item in writes"
+         @click="select(item.text)">{{item.text}}</div>
+      </div>
+    </div>
+
+  </default-activity>
+</script>
+
 <script type="text/x-template" id="other-settings">
   <closed-activity @close="close">
 <!--
@@ -1790,9 +1875,9 @@
 
 <!-- build:include dialogs/captcha-dialog.htm --><!-- /build -->
 
- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
- <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/static/js/core.min.js?rel=1507230072000"></script>
+ <script src="/static/js/jquery/jquery.min.js"></script>
+ <script src="/static/js/jquery-ui/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/static/js/core.js?rel=1508432773525"></script>
 <!-- Исходники можно найти в репозитории. Там же собранные не сжатые файлы -->
 
 %%BLOCK_COUNTER_ALL%% <!-- счетчики статистики -->

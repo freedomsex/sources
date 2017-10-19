@@ -56,6 +56,10 @@ var routes = [
     { path: '/confirm-sex/:show?', component: SexConfirm, props: true },
     { path: '/protect', component: ModeratorActivity },
 
+    { path: '/content/deal/:link/:locale?', component: DealContentPage, props: true },
+    { path: '/content/rules/:locale?', component: RulesContentPage, props: true },
+    { path: '/promo/:link', component: ContentModal, props: true },
+
     { path: '(.*)?/settings/search', meta: {back: '/'}, component: SearchSettings,
         beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/search')
     },
@@ -95,6 +99,7 @@ var settingsRouter = new VueRouter({
         { path: '/search/settings/account', meta: {back: 'search'}, component: AccountSettings },
 
         { path: '(.*)?/:humanId(\\d+)/detail', component: AccountActivity, props: true },
+        { path: '(.*)?/notepad', component: Notepad, props: true },
         // { path: '(.*)?/uploads', component: PhotoSettings },
         // { path: '(.*)?/preview', name: 'preview', component: PhotoViewer, props: true },
 

@@ -1,0 +1,22 @@
+
+<script type="text/x-template" id="notepad">
+  <default-activity @close="close">
+    <span slot="caption">Блокнот</span>
+
+
+    <div class="menu-user__navbar-right" slot="option">
+      <div class="navbar-button" @click="cliche()">
+        <div class="navbar-button__title accent">Шаблоны</div>
+        <i class="material-icons">&#xE02F;</i>
+      </div>
+    </div>
+
+    <div class="activity-section" v-if="writes && writes.length">
+      <div class="list-view">
+        <div class="list-view__item notepad-item" v-for="item in writes"
+         @click="select(item.text)">{{item.text}}</div>
+      </div>
+    </div>
+
+  </default-activity>
+</script>

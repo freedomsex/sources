@@ -1,0 +1,7 @@
+<script type="text/x-template" id="content-modal">
+  <div class="content-modal__mask" transition="modal" @click="close">
+    <div class="content-modal__container" @click.stop>
+      <div class="content-modal__wrapper" v-html="text"></div>
+    </div>
+  </div>
+</script>

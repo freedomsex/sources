@@ -13,10 +13,12 @@ const store = new Vuex.Store({
         desires,
         visited,
         accepts,
-        modals
+        modals,
+        notes,
     },
     state: {
         ready: false,
+        locale: 'ru',
         apiToken: '',
         photoServer: '@@API-PHOTO',
         simple: false
@@ -51,3 +53,4 @@ store.dispatch('LOAD_API_TOKEN');
 store.dispatch('accepts/LOAD');
 store.dispatch('LOAD_USER');
 store.dispatch('search/SETTINGS');
+

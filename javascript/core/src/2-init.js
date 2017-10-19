@@ -9,7 +9,7 @@ var app = new Vue({
         },
     },
     mounted() {
-
+        store.dispatch('notes/LOAD');
     },
     computed: {
         humanId() {
@@ -79,8 +79,8 @@ new Vue({
     router: settingsRouter
 });
 
- 
-$(document).ready(function() { 
+
+$(document).ready(function() {
     navigate.init();
 });
 

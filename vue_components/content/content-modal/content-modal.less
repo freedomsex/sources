@@ -1,7 +1,7 @@
-.modal-super {
+ .content-modal {
     &__mask {
         position: fixed;
-        z-index: 9998;
+        z-index: 1;
         top: 0;
         left: 0;
         width: 100%;
@@ -13,18 +13,16 @@
         justify-content: center;
     }
 
-
-
-
-
-
-
     &__wrapper {
-        padding: @indent-lg;
+        padding: @indent-md;
+        text-align: left;
+        &.capped {
+            padding-top: @indent-sm;
+        }
     }
     &__container {
         min-width: 200px;
-        max-width: 400px;
+        max-width: 800px;
         background: @white;
         box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
         transition: all .3s ease;
@@ -32,23 +30,11 @@
         border-radius: 4px;
         position: relative;
         margin: 10px;
-        z-index: 1000;
+        z-index: 1;
     }
-    &__caption {
-        font-size: @font-lg;
-        font-weight: bold;
-    }
+
     &__body {
         font-size: 14px;
-        padding: @indent-md 0 @indent-md;
-    }
-    &__section {
-        padding: 0 0 @indent-sm;
-    }
-    &__footer {
-        text-align: right;
-    }
-    &__centred {
-        text-align: center;
+        margin: @indent-xs 0 @indent-md;
     }
 }

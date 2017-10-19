@@ -423,6 +423,53 @@ const moderator = {
 };
 
 
+const notes = {
+    namespaced: true,
+    state: {
+        db: null,
+    },
+    actions: {
+        INIT({dispatch, rootState}) {
+            api.raw.load(null, `static/json/notes/${rootState.locale}.json`).then(({ data }) => {
+                _.each(data.reverse(), (element, index, list) => {
+                    dispatch('ADD', element);
+                });
+            });
+        },
+        LOAD({state, dispatch}) {
+            state.db = new Dexie("Notepad");
+            state.db.version(1).stores({
+                writes: "++id, &text, count, updated",
+            });
+            state.db.on("populate", dispatch('INIT'));
+            state.db.open();
+        },
+        WRITES({state}) {
+            return state.db.writes.orderBy('updated').reverse().sortBy('count');
+        },
+        ITEM({state, commit}, id) {
+            return state.db.writes.get(id);
+        },
+        UPDATE({state, dispatch}, text) {
+            let updated = getTimestamp();
+            state.db.writes.get({text}).then((item) => {
+                if (item) {
+                    count = item.count ? item.count : 0;
+                    count += 1; console.log('UPDATE', [count, updated]);
+                    state.db.writes.update(item.id, {count, updated});
+                } else {
+                    dispatch('ADD', text);
+                }
+            });
+        },
+        ADD({state}, text) {
+            let updated = getTimestamp();
+            state.db.writes.add({ text, count: 0, updated });
+        },
+    },
+};
+
+
 var search = {
     namespaced: true,
     state: {
@@ -685,10 +732,12 @@ const store = new Vuex.Store({
         desires,
         visited,
         accepts,
-        modals
+        modals,
+        notes,
     },
     state: {
         ready: false,
+        locale: 'ru',
         apiToken: '',
         photoServer: '@@API-PHOTO',
         simple: false
@@ -725,8 +774,10 @@ store.dispatch('LOAD_USER');
 store.dispatch('search/SETTINGS');
 
 
+
 class Api {
     constructor(host, key, version, routing) {
+        host = host ? host : '/';
         // Delay requests sec
         this.setDelay('@@NET-DELAY');
         // [!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]
@@ -1061,6 +1112,7 @@ var api = {
     },
     messages: new ApiMessages(),
     moderator: new ApiModerator(),
+    raw: new Api(),
 };
 
 
@@ -1125,6 +1177,10 @@ var routes = [
     { path: '/confirm-sex/:show?', component: SexConfirm, props: true },
     { path: '/protect', component: ModeratorActivity },
 
+    { path: '/content/deal/:link/:locale?', component: DealContentPage, props: true },
+    { path: '/content/rules/:locale?', component: RulesContentPage, props: true },
+    { path: '/promo/:link', component: ContentModal, props: true },
+
     { path: '(.*)?/settings/search', meta: {back: '/'}, component: SearchSettings,
         beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/search')
     },
@@ -1164,6 +1220,7 @@ var settingsRouter = new VueRouter({
         { path: '/search/settings/account', meta: {back: 'search'}, component: AccountSettings },
 
         { path: '(.*)?/:humanId(\\d+)/detail', component: AccountActivity, props: true },
+        { path: '(.*)?/notepad', component: Notepad, props: true },
         // { path: '(.*)?/uploads', component: PhotoSettings },
         // { path: '(.*)?/preview', name: 'preview', component: PhotoViewer, props: true },
 

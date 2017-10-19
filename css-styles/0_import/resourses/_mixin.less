@@ -168,3 +168,19 @@
   line-height: 1;
 }
 
+.list-view {
+    padding: 0 @indent-sm;
+    &:last-child {
+        border-bottom-width: 0px;
+    }
+    &__item {
+        padding: @indent-sm @indent-sm;
+        border-bottom: 1px solid @light;
+        position: relative;
+        background: @white;
+        overflow: hidden;
+        font-size: 14px;
+        cursor: pointer;
+    }
+}
+

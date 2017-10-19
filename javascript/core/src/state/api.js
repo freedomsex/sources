@@ -1,6 +1,7 @@
 
 class Api {
     constructor(host, key, version, routing) {
+        host = host ? host : '/';
         // Delay requests sec
         this.setDelay('@@NET-DELAY');
         // [!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]
@@ -335,6 +336,7 @@ var api = {
     },
     messages: new ApiMessages(),
     moderator: new ApiModerator(),
+    raw: new Api(),
 };
 
 

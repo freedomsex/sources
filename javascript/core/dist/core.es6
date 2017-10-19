@@ -124,19 +124,23 @@ function disabled_with_timeout(elem,time) {
 
 
 // -- Получить новый хэш ---
-var hash; 
-function simple_hash() { 
-  var now = new Date(); 
-   hash = now.getTime();  
+function getTimestamp() {
+  var now = new Date();
+  return now.getTime();
 }
-     
-function disabled_with_timeout(elem,time) {  
+
+var hash;
+function simple_hash() {
+  hash = getTimestamp();
+}
+
+function disabled_with_timeout(elem,time) {
  elem.prop("disabled",true);
  setTimeout( function (){
   elem.prop("disabled",false);
- },time * 1000); 
+ },time * 1000);
 }
-     
+
 
 
 // -- Хранилище ---
@@ -343,6 +347,17 @@ const ActivityActions = {
         console.log('Leave:', [to, from]);
         next();
     },
+    data() {
+        return {
+            toSlow: false,
+            slowTime: 3,
+            labels: {
+                load: false,
+                error: false,
+            },
+            timerLoader: null,
+        }
+    },
     methods: {
         close() {
             this.$emit('close');
@@ -353,6 +368,24 @@ const ActivityActions = {
             console.log('back:', back);
             (back === undefined) ? this.$router.push('/') : this.$router.push(back);
         },
+        loadStart(second) {
+            this.labels.load = true;
+            second = second ? second : this.slowTime;
+            this.timerLoader = setTimeout(() => {
+                this.toSlow = true
+            }, second * 1000);
+        },
+        loadStop() {
+            this.labels.load = false;
+            clearTimeout(this.timerLoader);
+            this.toSlow = false;
+        },
+        errorStart() {
+            this.labels.error = true;
+        },
+        errorStop() {
+            this.labels.error = false;
+        }
     },
 }
 
@@ -1190,6 +1223,72 @@ Vue.component('contact-item', {
 });
 
 
+
+var ContentActivity = Vue.component('content-activity', {
+    extends: ActivityActions,
+    props: ['link', 'locale'],
+    data() {
+        return {
+            title: '',
+            text: '',
+            loader: true,
+            error: false,
+        }
+    },
+    methods: {
+        load(url) {
+            axios.get(url).then(({ data }) => {
+                this.loaded(data);
+            }).catch((e) => {
+                this.failed(e);
+            });
+        },
+        loaded(data) {
+            this.text = data;
+            this.loader = false;
+            if (!data || data.length() < 50) {
+                this.failed();
+            }
+        },
+        failed() {
+            this.error = true;
+        }
+    },
+    template: '#content-activity',
+});
+
+const ContentModal = Vue.component('content-modal', {
+    extends: ActivityActions,
+    props: ['link'],
+    data() {
+        return {
+            text: 'Загружаю...',
+        }
+    },
+    mounted() {
+        axios.get(`/static/htm/promo/${this.link}.htm`).then(({ data }) => {
+            this.text = data;
+        });
+    },
+    template: '#content-modal',
+});
+
+
+var DealContentPage = Vue.component('deal-page', {
+    extends: ContentActivity,
+    mounted() {
+        this.title = 'Информация';
+        this.load(`/content/deal/${this.link}`);
+    }
+});
+
+var RulesContentPage = Vue.component('rules-page', {
+    extends: ContentActivity,
+    mounted() {
+        this.title = 'Правила сообщества';
+        this.load(`/content/rules/ru`);
+    }
+});
 Vue.component('desire-tag-item', {
     props: ['id', 'tag', 'added'],
     data() {
@@ -1313,6 +1412,7 @@ Vue.component('intro-info', {
         }
     }
 });
+
 
 Vue.component('loading-cover', {
     props: ['show', 'text'],
@@ -1794,10 +1894,6 @@ const ModalDialog = Vue.component('modal-dialog', {
     template: '#modal-dialog',
 });
 
-Vue.component('modal-super', {
-    template: '#modal-super',
-});
-
 ///
 // Модальное окно настроек OptionDialog - контейнер
 ///
@@ -1909,7 +2005,11 @@ const QuickDialog = {
             confirm: false,
             ignore: false,
             addition: false,
-            code: null
+            code: null,
+            modals: {
+                cliche: false,
+                notepad: false,
+            }
         }
     },
     // beforeRouteLeave(to, from, next) {
@@ -2001,6 +2101,7 @@ const QuickDialog = {
         },
         sended() {
             this.$emit('sended');
+            this.$store.dispatch('notes/UPDATE', this.text);
             this.close();
         },
         account() {
@@ -2016,6 +2117,9 @@ const QuickDialog = {
             this.back();
             //this.$emit('close');
         },
+        setText(text) {
+            this.text = text;
+        }
     },
     template: '#quick-message',
 };
@@ -2809,6 +2913,93 @@ const LoginAccount = Vue.component('login-account', {
         }
     },
     template: '#login-account',
+});
+
+
+const MessagesCliche = Vue.component('messages-cliche', {
+    props: [],
+    extends: ActivityActions,
+    data() {
+        return {
+            texts: [],
+            active: 'public',
+            process: true,
+            default: {
+                size: 12,
+                color: '4E8714',
+            }
+        }
+    },
+    mounted() {
+        this.load();
+    },
+    computed: {
+        // ...
+    },
+    methods: {
+        load(value) {
+            let result = value ? value : this.active;
+            this.loadStart();
+            api.raw.load(null, `static/json/cliche/${result}.json`).then(({ data }) => {
+                this.texts = data;
+                this.active = result;
+            });
+        },
+        size(value) {
+            let result = value ? value : this.default.size;
+            return `${result}px`;
+        },
+        color(value) {
+            let result = value ? value : this.default.color;
+            return `#${result}`;
+        },
+        style(item) {
+            return {
+                fontSize: this.size(item.size),
+                color: this.color(item.color),
+            }
+        },
+        buttonStyle(value) {
+            return (this.active == value ) ? 'btn-primary' : 'btn-default';
+        },
+        select(text) {
+            this.$emit('select', text);
+            this.close();
+        },
+    },
+    template: '#messages-cliche',
+});
+
+const Notepad = Vue.component('notepad', {
+    props: [],
+    extends: ActivityActions,
+    data() {
+        return {
+            writes: []
+        }
+    },
+    mounted() {
+        this.$store.dispatch('notes/WRITES').then((data) => {
+            this.writes = data;
+        })
+    },
+    computed: {
+        // ...
+    },
+    methods: {
+        cliche() {
+            this.$emit('cliche');
+            this.close();
+        },
+        select(text) {
+            // this.$store.dispatch('notes/ITEM', id).then((item) => {
+            // })
+                // this.$store.dispatch('notes/UPDATE', {id, count: item.count});
+            this.$emit('select', text);
+            this.close();
+        }
+    },
+    template: '#notepad',
 });
 
 
@@ -3986,6 +4177,53 @@ const moderator = {
 };
 
 
+const notes = {
+    namespaced: true,
+    state: {
+        db: null,
+    },
+    actions: {
+        INIT({dispatch, rootState}) {
+            api.raw.load(null, `static/json/notes/${rootState.locale}.json`).then(({ data }) => {
+                _.each(data.reverse(), (element, index, list) => {
+                    dispatch('ADD', element);
+                });
+            });
+        },
+        LOAD({state, dispatch}) {
+            state.db = new Dexie("Notepad");
+            state.db.version(1).stores({
+                writes: "++id, &text, count, updated",
+            });
+            state.db.on("populate", dispatch('INIT'));
+            state.db.open();
+        },
+        WRITES({state}) {
+            return state.db.writes.orderBy('updated').reverse().sortBy('count');
+        },
+        ITEM({state, commit}, id) {
+            return state.db.writes.get(id);
+        },
+        UPDATE({state, dispatch}, text) {
+            let updated = getTimestamp();
+            state.db.writes.get({text}).then((item) => {
+                if (item) {
+                    count = item.count ? item.count : 0;
+                    count += 1; console.log('UPDATE', [count, updated]);
+                    state.db.writes.update(item.id, {count, updated});
+                } else {
+                    dispatch('ADD', text);
+                }
+            });
+        },
+        ADD({state}, text) {
+            let updated = getTimestamp();
+            state.db.writes.add({ text, count: 0, updated });
+        },
+    },
+};
+
+
 var search = {
     namespaced: true,
     state: {
@@ -4248,10 +4486,12 @@ const store = new Vuex.Store({
         desires,
         visited,
         accepts,
-        modals
+        modals,
+        notes,
     },
     state: {
         ready: false,
+        locale: 'ru',
         apiToken: '',
         photoServer: '@@API-PHOTO',
         simple: false
@@ -4288,8 +4528,10 @@ store.dispatch('LOAD_USER');
 store.dispatch('search/SETTINGS');
 
 
+
 class Api {
     constructor(host, key, version, routing) {
+        host = host ? host : '/';
         // Delay requests sec
         this.setDelay('@@NET-DELAY');
         // [!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]
@@ -4624,6 +4866,7 @@ var api = {
     },
     messages: new ApiMessages(),
     moderator: new ApiModerator(),
+    raw: new Api(),
 };
 
 
@@ -4688,6 +4931,10 @@ var routes = [
     { path: '/confirm-sex/:show?', component: SexConfirm, props: true },
     { path: '/protect', component: ModeratorActivity },
 
+    { path: '/content/deal/:link/:locale?', component: DealContentPage, props: true },
+    { path: '/content/rules/:locale?', component: RulesContentPage, props: true },
+    { path: '/promo/:link', component: ContentModal, props: true },
+
     { path: '(.*)?/settings/search', meta: {back: '/'}, component: SearchSettings,
         beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/search')
     },
@@ -4727,6 +4974,7 @@ var settingsRouter = new VueRouter({
         { path: '/search/settings/account', meta: {back: 'search'}, component: AccountSettings },
 
         { path: '(.*)?/:humanId(\\d+)/detail', component: AccountActivity, props: true },
+        { path: '(.*)?/notepad', component: Notepad, props: true },
         // { path: '(.*)?/uploads', component: PhotoSettings },
         // { path: '(.*)?/preview', name: 'preview', component: PhotoViewer, props: true },
 
@@ -4752,7 +5000,7 @@ var app = new Vue({
         },
     },
     mounted() {
-
+        store.dispatch('notes/LOAD');
     },
     computed: {
         humanId() {
@@ -4822,8 +5070,8 @@ new Vue({
     router: settingsRouter
 });
 
- 
-$(document).ready(function() { 
+
+$(document).ready(function() {
     navigate.init();
 });
 

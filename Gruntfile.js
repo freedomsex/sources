@@ -11,7 +11,8 @@ module.exports = function (grunt) {
             },
             bower: {
                 src: [
-                    'bower_components/lscache/lscache.min.js',
+                    'bower_components/lscache/lscache.min.js', 
+                    'bower_components/dexie/dist/dexie.min.js',
                     'bower_components/json3/lib/json3.min.js',
                     'bower_components/es6-promise/es6-promise.min.js',
                     'bower_components/underscore/underscore-min.js',
@@ -41,7 +42,7 @@ module.exports = function (grunt) {
                         'javascript/core/vue-components.js',
                         'javascript/core/src/dialogs/*.js',
                         'javascript/core/src/*.js',
-                    ], 
+                    ],
                 }
             },
             admin: {
@@ -53,7 +54,7 @@ module.exports = function (grunt) {
                     'javascript/core/dist/core.js': [
                         'bower_components/bower-components.js',
                         'javascript/core/dist/core.js'
-                    ], 
+                    ],
                 }
             },
             bundle_prod: {
@@ -68,11 +69,11 @@ module.exports = function (grunt) {
         babel: {
             options: {
                 sourceMap: false,
-                presets: ['es2015']
+                presets: ['env'],
             },
             javascript: {
                 files: {
-                    'javascript/core/dist/core.js': 'javascript/core/dist/core.es6' 
+                    'javascript/core/dist/core.js': 'javascript/core/dist/core.es6'
                 }
             }
         },
@@ -85,7 +86,7 @@ module.exports = function (grunt) {
                 },
                 files: {
                   "css-styles/admin/dist/admin.css": "css-styles/admin/src/_main.less",
-                  "css-styles/core/dist/core.css":   "css-styles/core/src/_main.less", 
+                  "css-styles/core/dist/core.css":   "css-styles/core/src/_main.less",
                   "css-styles/blog/dist/blog.css":   "css-styles/blog/src/_main.less",
                 }
             }
@@ -146,33 +147,33 @@ module.exports = function (grunt) {
                 }
             }
         },
-        image_resize: {
-            resize: {
-                options: {
-                    width:  32,
-                    height: 32,
-                    overwrite: true
-                },
-                files: {
-                    'images/dist/human-icon.png': 'images/src/human-icon.png',
-                    'images/dist/women-icon.png': 'images/src/women-icon.png',
-                },
-            },
-            play_btn: {
-                options: {
-                    width:  64,
-                    height: 64,
-                    overwrite: true
-                },
-                files: {
-                    'images/dist/play.png': 'images/src/play.png',
-                },
-            },
-        },
+        // image_resize: {
+        //     resize: {
+        //         options: {
+        //             width:  32,
+        //             height: 32,
+        //             overwrite: true
+        //         },
+        //         files: {
+        //             'images/dist/human-icon.png': 'images/src/human-icon.png',
+        //             'images/dist/women-icon.png': 'images/src/women-icon.png',
+        //         },
+        //     },
+        //     play_btn: {
+        //         options: {
+        //             width:  64,
+        //             height: 64,
+        //             overwrite: true
+        //         },
+        //         files: {
+        //             'images/dist/play.png': 'images/src/play.png',
+        //         },
+        //     },
+        // },
         uglify: {
             core: {
                 files: {'javascript/core/dist/core.min.js': 'javascript/core/dist/core.js'}
-            }, 
+            },
         },
         // Наблюдение за изменениями в файлах исходниках
         watch: {
@@ -190,7 +191,7 @@ module.exports = function (grunt) {
             jscripts: {
                 files: [
                     'javascript/core/vue-components.js',
-                    'javascript/core/src/**/*.js', 
+                    'javascript/core/src/**/*.js',
                     'javascript/admin/src/*.js',
                 ],
                 tasks: ['concat:javascript', 'babel:javascript', 'replace:dev', 'concat:bundle_dev'],
@@ -203,7 +204,7 @@ module.exports = function (grunt) {
                 files: [
                     'css-styles/core/vue-components.less',
                     'css-styles/0_import/**/*',
-                    'css-styles/core/src/*', 
+                    'css-styles/core/src/*',
                     'css-styles/admin/src/*',
                     'css-styles/blog/src/*',
                 ],
@@ -243,14 +244,14 @@ module.exports = function (grunt) {
             },
             dist: {
                 files: {
-                    "css-styles/core/dist/core.css": "css-styles/core/dist/core.css" 
+                    "css-styles/core/dist/core.css": "css-styles/core/dist/core.css"
                 }
             }
         },
         cachebreaker: {
             dev: {
                 options: {
-                    match: ['core.min.js', 'core.js', 'core.css'] 
+                    match: ['core.min.js', 'core.js', 'core.css']
                 },
                 files: {
                     src: ['templates/mess/dist/mess.htm', 'templates/index/dist/index.htm']
@@ -263,7 +264,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-image-resize');
     grunt.loadNpmTasks('grunt-processhtml');
     grunt.loadNpmTasks('grunt-replace');
     grunt.loadNpmTasks('grunt-babel');
@@ -282,6 +282,6 @@ module.exports = function (grunt) {
     grunt.registerTask('prod', ['core', 'replace:dist', 'uglify', 'concat:bundle_prod', 'processhtml:dist', 'autoprefixer', 'cachebreaker']);
     grunt.registerTask('p',    ['prod', 'watch']);
     grunt.registerTask('d',    ['dev', 'watch']);
-    grunt.registerTask('img',  ['image_resize']);
+    // grunt.registerTask('img',  ['image_resize']);
 };
 
