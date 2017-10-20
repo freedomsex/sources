@@ -2096,13 +2096,13 @@ const QuickDialog = {
                 }
                 this.onError();
             } else {
+                this.$store.dispatch('notes/UPDATE', this.text);
                 this.sended();
             }
             this.process = false;
         },
         sended() {
             this.$emit('sended');
-            this.$store.dispatch('notes/UPDATE', this.text);
             this.close();
         },
         account() {
@@ -4213,9 +4213,9 @@ const notes = {
         },
         WRITES({state}) {
             return state.db.writes
-            .orderBy('count')
+            .orderBy('updated')
             .reverse().limit(100)
-            .sortBy('updated');
+            .sortBy('count');
         },
         ITEM({state, commit}, id) {
             return state.db.writes.get(id);

@@ -1876,13 +1876,13 @@ const QuickDialog = {
                 }
                 this.onError();
             } else {
+                this.$store.dispatch('notes/UPDATE', this.text);
                 this.sended();
             }
             this.process = false;
         },
         sended() {
             this.$emit('sended');
-            this.$store.dispatch('notes/UPDATE', this.text);
             this.close();
         },
         account() {

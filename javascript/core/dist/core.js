@@ -2167,13 +2167,13 @@ var QuickDialog = {
                 }
                 this.onError();
             } else {
+                this.$store.dispatch('notes/UPDATE', this.text);
                 this.sended();
             }
             this.process = false;
         },
         sended: function sended() {
             this.$emit('sended');
-            this.$store.dispatch('notes/UPDATE', this.text);
             this.close();
         },
         account: function account() {
@@ -4398,7 +4398,7 @@ var notes = {
         WRITES: function WRITES(_ref38) {
             var state = _ref38.state;
 
-            return state.db.writes.orderBy('count').reverse().limit(100).sortBy('updated');
+            return state.db.writes.orderBy('updated').reverse().limit(100).sortBy('count');
         },
         ITEM: function ITEM(_ref39, id) {
             var state = _ref39.state,
