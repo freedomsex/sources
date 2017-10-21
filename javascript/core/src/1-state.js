@@ -1193,6 +1193,7 @@ var routes = [
 
     { path: '/content/deal/:link/:locale?', component: DealContentPage, props: true },
     { path: '/content/rules/:locale?', component: RulesContentPage, props: true },
+    { path: '/content/careers/:locale?', component: СareersContentPage, props: true },
     { path: '/promo/:link', component: ContentModal, props: true },
 
     { path: '(.*)?/settings/search', meta: {back: '/'}, component: SearchSettings,

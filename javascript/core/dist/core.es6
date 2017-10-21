@@ -1274,6 +1274,14 @@ const ContentModal = Vue.component('content-modal', {
 });
 
 
+var СareersContentPage = Vue.component('careers-page', {
+    extends: ContentActivity,
+    mounted() {
+        this.title = 'Работа и вакансии';
+        this.load(`/content/careers/ru`);
+    }
+});
+
 var DealContentPage = Vue.component('deal-page', {
     extends: ContentActivity,
     mounted() {
@@ -4951,6 +4959,7 @@ var routes = [
 
     { path: '/content/deal/:link/:locale?', component: DealContentPage, props: true },
     { path: '/content/rules/:locale?', component: RulesContentPage, props: true },
+    { path: '/content/careers/:locale?', component: СareersContentPage, props: true },
     { path: '/promo/:link', component: ContentModal, props: true },
 
     { path: '(.*)?/settings/search', meta: {back: '/'}, component: SearchSettings,

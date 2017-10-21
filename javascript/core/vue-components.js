@@ -1054,6 +1054,14 @@ const ContentModal = Vue.component('content-modal', {
 });
 
 
+var СareersContentPage = Vue.component('careers-page', {
+    extends: ContentActivity,
+    mounted() {
+        this.title = 'Работа и вакансии';
+        this.load(`/content/careers/ru`);
+    }
+});
+
 var DealContentPage = Vue.component('deal-page', {
     extends: ContentActivity,
     mounted() {

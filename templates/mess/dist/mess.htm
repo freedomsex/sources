@@ -17,7 +17,7 @@
     
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1508484709556">
+<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1508522435063">
 
   <script type="text/javascript">  
     function get_cookie ( cookie_name )
@@ -198,8 +198,8 @@
   </div>
 
   <div class="extra-information">
-    <span class="extra-information__link">Проекту нужна помощь</span>
-    <span class="extra-information__link">Работа и вакансии</span>
+    <span class="extra-information__link" @click="$router.push('/content/careers/ru')">Проекту нужна помощь</span>
+    <span class="extra-information__link" @click="$router.push('/content/careers/ru')">Работа и вакансии</span>
   </div>
 
   <div style="text-align: center; margin: 10px 0 40px;">
@@ -529,20 +529,7 @@
 
 
 <script type="text/x-template" id="ad-top">
-  <div>
-  <div class="container hidden-xs" v-if="desktop">
-    <div class="row" style="border-bottom: 2px solid #e5e5e5;">
-<iframe id="frame-id-01" style="position: relative; background-color: transparent; border: none; overflow: hidden;  height: 89px; width: 728px; " src="//data.freedomsex.me/din_new8.php?code=c1b2082d1105d784218299f23aa44f93&bid=35225&w=728&h=89&linkdest=&modelnick=&clickurl=&refresh=1&meffect=random&einterval=none&logo=black&bbgcolor=none&bg_none=none&btextcolor=222222&mbordercolor=000000&mhovercolor=F7941D&mbordertype=solid&shad=0&bfontfamily=Arial&mtextalign=right&id=28644&server=runetki.com&langs=ru&campaign=655683&size=728x89&header=1&modelname=1&modelicon=1&modelinfo=1&geoflag=1&geoheader=1&selgeoheader=0&mediagroup=0&mediatype=2&skins=def&no_ab=1&no_ab_sub_data=1&no_ab_sub_media=2&category=all&srv=0&no_ab=1&no_ab_sub_data=1&no_ab_sub_media=2&no_ab_domain=freedomsex.me"></iframe>
-    </div>
-  </div>
-  <div class="container visible-xs-block" v-else-if="width">
-    <div class="row">
-      <a href="//runetki.com/984787/" rel="nofollow" target="_blank" >
-        <img :src="source" style="width: 100%;">
-      </a>
-    </div>
-  </div>
-  </div>
+  <div>  </div>
 </script>
 
 
@@ -1888,9 +1875,9 @@
 
 <!-- build:include dialogs/captcha-dialog.htm --><!-- /build -->
 
- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
- <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/static/js/core.min.js?rel=1508484709554"></script>
+ <script src="/static/js/jquery/jquery.min.js"></script>
+ <script src="/static/js/jquery-ui/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/static/js/core.js?rel=1508522435062"></script>
 <!-- Исходники можно найти в репозитории. Там же собранные не сжатые файлы -->
 
 %%BLOCK_COUNTER_ALL%% <!-- счетчики статистики -->
