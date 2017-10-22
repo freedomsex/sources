@@ -2354,9 +2354,8 @@ a.name:hover {
   -webkit-box-flex: 1;
       -ms-flex: 1 0 auto;
           flex: 1 0 auto;
-  padding: 0 15px;
+  padding: 10px 15px 0;
   height: 100%;
-  margin-top: 10px;
 }
 .messages {
   overflow: hidden;
