@@ -17,7 +17,7 @@
     
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1508571364387">
+<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1508687958393">
 
   <script type="text/javascript">  
     function get_cookie ( cookie_name )
@@ -238,6 +238,72 @@
 
 
 
+<script type="text/x-template" id="abuse-dialog">
+  <div>
+    <modal-dialog @close="$emit('close')">
+      <div class="dialog-caption warning">
+        <div class="dialog-caption__title">Опубликовать замечание</div>
+        <div class="dialog-caption__option">
+          <a href="/блог/анонимное-замечание-к-анкете/" target="_blank">
+            <i class="material-icons" @click="">&#xE88F;</i>
+          </a>
+        </div>
+      </div>
+      <div class="list-view abuse-list" v-if="!selected">
+        <div class="list-view__item abuse-list__item" v-for="item in items" @click="select(item)">
+          <b>{{item.title}}</b>, {{item.text}}
+        </div>
+      </div>
+      <div class="modal-dialog__wrapper capped" v-else>
+        <div class="modal-dialog__section">
+          <b>{{selected.title}}</b>, {{selected.text}}
+        </div>
+        <div class="modal-dialog__section">
+          <div class="dialog-form">
+            <div class="dialog-form__textarea">
+              <textarea class="dialog-form__message-text" rows="1" placeholder="Ваш комментарий, по желанию" v-model="comment" v-resized
+                @keyup.ctrl.enter.prevent="send()"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-dialog__option">
+          <button class="btn btn-warning" @click="send()">
+            Отправить
+          </button>
+          <a href="/блог/анонимное-замечание-к-анкете/" target="_blank"  class="btn btn-link">
+            Это анонимно...
+          </a>
+        </div>
+      </div>
+
+      <loading-cover :show="process"/>
+    </modal-dialog>
+  </div>
+</script>
+
+
+
+<script type="text/x-template" id="claim-needed">
+  <div>
+    <modal-dialog @close="$emit('close')">
+      <div class="dialog-caption">
+        <div class="dialog-caption__title">Наказывайте всегда</div>
+        <div class="dialog-caption__option">
+          <i class="material-icons" @click="$emit('close')">&#xE14C;</i>
+        </div>
+      </div>
+      <div class="modal-dialog__wrapper capped">
+        <div class="modal-dialog__section">
+          Нажмите «Наказать и удалить» у сообщения, которое является причиной замечанияю Можно несколько.
+          Это необходимо, и поможет быстрее определить истину, а также степень вины.
+        </div>
+      </div>
+    </modal-dialog>
+  </div>
+</script>
+
+
+
 <script type="text/x-template" id="account-activity">
   <closed-activity @close="close">
     <span slot="caption">Анкета</span>
@@ -380,7 +446,7 @@
       <div id="dialog-history" class="message-dialog__history">
         <message-list :humanId="humanId" ref="messages" @attention="attention"></message-list>
       </div>
-      <div class="messages__alert" v-show="alert">
+      <div class="messages__alert" v-show="alert" @click.self="alert = false">
         Игнорируйте номера телефонов, ссылки и мессенджеры. Наказывайте мошенников. Узнайте о том, как избежать обмана.
         <a href="/блог/как-не-попасть-на-уловки-мошенников/" target="_blank">Подробнее...</a>
       </div>
@@ -949,8 +1015,23 @@
 
 <script type="text/x-template" id="message-list">
   <div class="message-list" v-show="!error">
-    <div class="messages__new" @click="load">
-      <span class="messages__new-lamp" v-show="newCount">Новые
+    <div class="abuse-widget">
+      <button class="btn" @click="dialog.abuse = true">
+        Замечаний нет
+      </button>
+      <div class="abuse-widget__hint" v-if="abuseSuccessHint" @click="abuseSuccessHint = false">
+        Спасибо, замечание скоро появится в списке
+      </div>
+    </div>
+
+    <abuse-dialog :humanId="humanId" v-if="dialog.abuse"
+      @needed="dialog.claim = true"
+      @success="abuseSuccessHint = true"
+      @close="dialog.abuse = false"/>
+    <claim-needed  v-if="dialog.claim" @close="dialog.claim = false"/>
+
+    <div class="messages__new" v-show="newCount" @click="load">
+      <span class="messages__new-lamp">Новые
       +<b>{{newCount}}</b>
       </span>
     </div>
@@ -958,7 +1039,7 @@
       <span class="btn btn-default btn-xs">Следующие</span>
     </div>
     <div class="messages" v-if="count">
-      <template  v-for="(item, index) in messages">
+      <template v-for="(item, index) in messages">
         <list-date :list="messages" :index="index"/>
         <message-item
           :item="item"
@@ -1097,7 +1178,7 @@
       <div class="modal-dialog__wrapper capped">
         <div class="modal-dialog__section">
           <div class="human-dialog__desire" v-show="tags.length" @click="account()">
-            <span class="link_simple" v-for="(tag, index) in tags" :key="index" v-show="tag">{{tag}} &#8226; </span>
+            <span class="desire-tag__item-simple" v-for="(tag, index) in tags" :key="index" v-show="tag">{{tag}}</span>
           </div>
 
 
@@ -1887,7 +1968,7 @@
 
  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/static/js/core.min.js?rel=1508571364385"></script>
+<script type="text/javascript" src="/static/js/core.min.js?rel=1508687958392"></script>
 <!-- Исходники можно найти в репозитории. Там же собранные не сжатые файлы -->
 <script type="text/javascript">
     // var addthis_config = {"data_track_addressbar":false};

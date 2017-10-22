@@ -1167,6 +1167,26 @@ a.name:hover {
   background: #f7009c;
   color: #ffffff;
 }
+.abuse-list {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+.abuse-list__item {
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 auto;
+          flex: 0 0 auto;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.abuse-widget__hint {
+  color: #999999;
+  padding: 5px;
+}
 .account-component__wrapper {
   padding-top: 20px;
   padding-bottom: 20px;
@@ -2336,6 +2356,7 @@ a.name:hover {
           flex: 1 0 auto;
   padding: 0 15px;
   height: 100%;
+  margin-top: 10px;
 }
 .messages {
   overflow: hidden;
@@ -2374,6 +2395,9 @@ a.name:hover {
 .messages__alert {
   background-color: #fff2e5;
   padding: 5px 15px;
+}
+.abuse-widget {
+  text-align: center;
 }
 .form-message__buttons {
   margin: 10px 0 20px;
@@ -2634,6 +2658,10 @@ a.name:hover {
   color: #ffffff;
   cursor: pointer;
 }
+.dialog-caption__option a {
+  color: #ffffff;
+  display: inline-block;
+}
 .dialog-caption__option .material-icons {
   vertical-align: middle;
   position: relative;
@@ -2643,6 +2671,9 @@ a.name:hover {
   border-bottom: 1px dashed #BBCCCC;
   font-size: 15px;
   padding-bottom: 1px;
+}
+.dialog-caption.warning {
+  background: #ff9900;
 }
 .dialog-form {
   position: relative;
@@ -2695,6 +2726,7 @@ a.name:hover {
 }
 .human-dialog__desire {
   margin-bottom: 10px;
+  position: relative;
   font-size: 14px;
 }
 .human-dialog__text {
@@ -2708,6 +2740,21 @@ a.name:hover {
 }
 .human-dialog__text.warning {
   background: #fff2e5;
+}
+.desire-tag__item-simple {
+  color: #0066cc;
+  cursor: pointer;
+  text-decoration: none;
+}
+.desire-tag__item-simple:after {
+  content: "•";
+  color: #cccccc;
+  padding: 0 5px;
+  position: relative;
+  top: 1px;
+}
+.desire-tag__item-simple:last-child:after {
+  display: none;
 }
 .human-dialog__form {
   position: relative;

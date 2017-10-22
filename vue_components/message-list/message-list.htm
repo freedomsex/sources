@@ -2,8 +2,23 @@
 
 <script type="text/x-template" id="message-list">
   <div class="message-list" v-show="!error">
-    <div class="messages__new" @click="load">
-      <span class="messages__new-lamp" v-show="newCount">Новые
+    <div class="abuse-widget">
+      <button class="btn" @click="dialog.abuse = true">
+        Замечаний нет
+      </button>
+      <div class="abuse-widget__hint" v-if="abuseSuccessHint" @click="abuseSuccessHint = false">
+        Спасибо, замечание скоро появится в списке
+      </div>
+    </div>
+
+    <abuse-dialog :humanId="humanId" v-if="dialog.abuse"
+      @needed="dialog.claim = true"
+      @success="abuseSuccessHint = true"
+      @close="dialog.abuse = false"/>
+    <claim-needed  v-if="dialog.claim" @close="dialog.claim = false"/>
+
+    <div class="messages__new" v-show="newCount" @click="load">
+      <span class="messages__new-lamp">Новые
       +<b>{{newCount}}</b>
       </span>
     </div>
@@ -11,7 +26,7 @@
       <span class="btn btn-default btn-xs">Следующие</span>
     </div>
     <div class="messages" v-if="count">
-      <template  v-for="(item, index) in messages">
+      <template v-for="(item, index) in messages">
         <list-date :list="messages" :index="index"/>
         <message-item
           :item="item"

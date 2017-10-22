@@ -171,6 +171,52 @@ var storage = {
 
 storage.init();
 
+Vue.component('abuse-dialog', {
+    template: '#abuse-dialog',
+    props: ['humanId'],
+    data: function data() {
+        return {
+            items: [{ title: 'Предложение оплаты услуг', text: 'вирт за деньги, проституция' }, { title: 'Развод на деньги', text: 'мошенничество, шантаж, вымогательство' }, { title: 'Фото из интернета', text: 'вымышленные данные, обман, фейк' }, { title: 'Оскорбления, хамство', text: 'троллинг, грубые сообщения' }, { title: 'Рассылает интим фото', text: 'спамит или провоцирует' }],
+            selected: null,
+            comment: '',
+            process: false
+        };
+    },
+
+    methods: {
+        select: function select(item) {
+            this.selected = item;
+        },
+        send: function send() {
+            var _this = this;
+
+            var hash = getTimestamp();
+            var text = this.selected.title + ', ' + this.selected.text + ' [' + this.comment + ']';
+            var data = {
+                id: this.humanId,
+                captcha: '',
+                text: text, hash: hash
+            };
+            this.process = true;
+            api.raw.save(data, null, 'abuse/send').then(function (_ref) {
+                var data = _ref.data;
+
+                if (data.error) {
+                    _this.$emit('needed');
+                } else {
+                    _this.$emit('success');
+                }
+                _this.process = false;
+                _this.$emit('close');
+            });
+        }
+    }
+});
+
+Vue.component('claim-needed', {
+    template: '#claim-needed'
+});
+
 var AccountActivity = Vue.component('account-activity', {
     props: ['humanId'],
     data: function data() {
@@ -197,22 +243,22 @@ var AccountActivity = Vue.component('account-activity', {
             console.log(this.human);
         },
         hope: function hope() {
-            var _this = this;
+            var _this2 = this;
 
             setTimeout(function () {
-                return _this.loading = false;
+                return _this2.loading = false;
             }, 4 * 1000);
         },
         load: function load() {
-            var _this2 = this;
+            var _this3 = this;
 
             this.loading = true;
             this.hope();
             store.dispatch('search/HUMAN', this.humanId).then(function (response) {
-                _this2.loaded();
+                _this3.loaded();
             }).catch(function (error) {
                 console.log(error);
-                _this2.loading = false;
+                _this3.loading = false;
             });
         }
     },
@@ -350,12 +396,12 @@ var ActivityActions = {
             _back === undefined ? this.$router.push('/') : this.$router.push(_back);
         },
         loadStart: function loadStart(second) {
-            var _this3 = this;
+            var _this4 = this;
 
             this.labels.load = true;
             second = second ? second : this.slowTime;
             this.timerLoader = setTimeout(function () {
-                _this3.toSlow = true;
+                _this4.toSlow = true;
             }, second * 1000);
         },
         loadStop: function loadStop() {
@@ -451,7 +497,7 @@ var MessagesActivity = Vue.component('messages-activity', {
             this.preview = data;
         },
         sendMessage: function sendMessage() {
-            var _this4 = this;
+            var _this5 = this;
 
             console.log(data);
             var data = {
@@ -465,12 +511,12 @@ var MessagesActivity = Vue.component('messages-activity', {
                 data['re'] = this.reply;
             }
             this.$store.commit('intimate/notifi', false);
-            api.messages.send(data).then(function (_ref) {
-                var data = _ref.data;
+            api.messages.send(data).then(function (_ref2) {
+                var data = _ref2.data;
 
-                _this4.onMessageSend(data);
+                _this5.onMessageSend(data);
             }).catch(function () {
-                _this4.onError();
+                _this5.onError();
             });
             this.preview = null;
             this.process = true;
@@ -547,31 +593,31 @@ var ModeratorActivity = Vue.component('moderator-activity', {
     },
     methods: {
         approve: function approve() {
-            var _this5 = this;
+            var _this6 = this;
 
             this.process = true;
             api.moderator.promt().then(function () {
-                _this5.load();
+                _this6.load();
             }).catch(function () {
-                _this5.needPromt();
-                _this5.process = false;
+                _this6.needPromt();
+                _this6.process = false;
             });
             this.$store.commit('accepts/moderator', 1);
         },
         load: function load() {
-            var _this6 = this;
+            var _this7 = this;
 
             this.process = true;
-            api.moderator.load().then(function (_ref2) {
-                var data = _ref2.data;
+            api.moderator.load().then(function (_ref3) {
+                var data = _ref3.data;
 
-                _this6.error = data.error;
-                if (_this6.error == 'promt') {
-                    _this6.needPromt();
-                } else if (_this6.error == 'count') {} else if (_this6.error == 'other') {} else if (!_this6.error && data.message) {
-                    _this6.loaded(data);
+                _this7.error = data.error;
+                if (_this7.error == 'promt') {
+                    _this7.needPromt();
+                } else if (_this7.error == 'count') {} else if (_this7.error == 'other') {} else if (!_this7.error && data.message) {
+                    _this7.loaded(data);
                 }
-                _this6.process = false;
+                _this7.process = false;
             });
         },
         loaded: function loaded(data) {
@@ -590,7 +636,7 @@ var ModeratorActivity = Vue.component('moderator-activity', {
             this.promt = false;
         },
         action: function action(mark) {
-            var _this7 = this;
+            var _this8 = this;
 
             var data = {
                 id: this.message.id,
@@ -600,7 +646,7 @@ var ModeratorActivity = Vue.component('moderator-activity', {
             };
             this.process = true;
             api.moderator.press(data).then(function () {
-                _this7.load();
+                _this8.load();
             });
         },
         close: function close() {
@@ -670,10 +716,10 @@ Vue.component('api-key-update', {
 
     methods: {
         tick: function tick(delay) {
-            var _this8 = this;
+            var _this9 = this;
 
             setTimeout(function () {
-                _this8.load();
+                _this9.load();
             }, 1000 * delay);
         },
         reload: function reload() {
@@ -689,17 +735,17 @@ Vue.component('api-key-update', {
             this.tick(delay);
         },
         load: function load() {
-            var _this9 = this;
+            var _this10 = this;
 
-            this.$store.dispatch('auth/UPDATE_KEY').then(function (_ref3) {
-                var data = _ref3.data;
+            this.$store.dispatch('auth/UPDATE_KEY').then(function (_ref4) {
+                var data = _ref4.data;
 
                 if (data.uid) {
-                    _this9.upKey(data);
+                    _this10.upKey(data);
                 } else if (data.reg) {
-                    _this9.noReg(data);
+                    _this10.noReg(data);
                 } else {
-                    _this9.reload();
+                    _this10.reload();
                 }
             });
         },
@@ -786,11 +832,11 @@ Vue.component('auth-board', {
         };
     },
     mounted: function mounted() {
-        var _this10 = this;
+        var _this11 = this;
 
         _.delay(function () {
-            _this10.$store.dispatch('auth/SYNC').then(function () {
-                _this10.email = _this10.$store.state.auth.email;
+            _this11.$store.dispatch('auth/SYNC').then(function () {
+                _this11.email = _this11.$store.state.auth.email;
             });
         }, 2500);
     },
@@ -808,7 +854,7 @@ Vue.component('auth-board', {
     },
     methods: {
         send: function send() {
-            var _this11 = this;
+            var _this12 = this;
 
             if (!this.email) {
                 return;
@@ -816,9 +862,9 @@ Vue.component('auth-board', {
             this.process = true;
             this.hint = 'Отправляю...';
             this.$store.dispatch('auth/SAVE_EMAIL', this.email).then(function (response) {
-                _this11.hint = response.data.say;
-                _this11.error = response.data.err;
-                _this11.sended();
+                _this12.hint = response.data.say;
+                _this12.error = response.data.err;
+                _this12.sended();
             });
         },
         sended: function sended() {
@@ -882,13 +928,13 @@ Vue.component('city-suggest', {
     },
     methods: {
         load: function load() {
-            var _this12 = this;
+            var _this13 = this;
 
             if (!this.query.length) {
                 return this.reset();
             }
             api.user.get({ q: this.query, hash: hash }, 'town/suggest').then(function (response) {
-                _this12.loaded(response.data.cities);
+                _this13.loaded(response.data.cities);
             });
         },
         reset: function reset() {
@@ -957,11 +1003,11 @@ var ContactDialog = {
             this.slow = false;
         },
         hope: function hope() {
-            var _this13 = this;
+            var _this14 = this;
 
             var sec = 2;
             setTimeout(function () {
-                return _this13.slow = true;
+                return _this14.slow = true;
             }, sec * 1000);
             this.reset();
         },
@@ -1024,19 +1070,19 @@ var InitialDialog = Vue.component('initial-dialog', {
     },
     methods: {
         load: function load() {
-            var _this14 = this;
+            var _this15 = this;
 
             this.$store.dispatch('initial/LOAD').then(function (response) {
-                _this14.loaded();
+                _this15.loaded();
             });
             this.amount = this.count;
             this.hope();
         },
         next: function next() {
-            var _this15 = this;
+            var _this16 = this;
 
             this.$store.dispatch('initial/NEXT', this.offset).then(function (response) {
-                _this15.loaded();
+                _this16.loaded();
             });
             this.reset();
         },
@@ -1079,21 +1125,21 @@ var IntimateDialog = Vue.component('intimate-dialog', {
     },
     methods: {
         load: function load() {
-            var _this16 = this;
+            var _this17 = this;
 
             this.$store.dispatch('intimate/LOAD', this.next).then(function (response) {
-                _this16.loaded();
+                _this17.loaded();
             }).catch(function (error) {
-                return _this16.error = error;
+                return _this17.error = error;
             });
             this.amount = this.count;
             this.hope();
         },
         next: function next() {
-            var _this17 = this;
+            var _this18 = this;
 
             this.$store.dispatch('intimate/NEXT', this.offset).then(function (response) {
-                _this17.loaded();
+                _this18.loaded();
             });
             this.hope();
         },
@@ -1127,19 +1173,19 @@ var SendsDialog = Vue.component('sends-dialog', {
     },
     methods: {
         load: function load() {
-            var _this18 = this;
+            var _this19 = this;
 
             this.$store.dispatch('sends/LOAD', this.next).then(function (response) {
-                _this18.loaded();
+                _this19.loaded();
             });
             this.amount = this.count;
             this.hope();
         },
         next: function next() {
-            var _this19 = this;
+            var _this20 = this;
 
             this.$store.dispatch('sends/NEXT', this.offset).then(function (response) {
-                _this19.loaded();
+                _this20.loaded();
             });
             this.reset();
         },
@@ -1266,14 +1312,14 @@ var ContentActivity = Vue.component('content-activity', {
 
     methods: {
         load: function load(url) {
-            var _this20 = this;
+            var _this21 = this;
 
-            axios.get(url).then(function (_ref4) {
-                var data = _ref4.data;
+            axios.get(url).then(function (_ref5) {
+                var data = _ref5.data;
 
-                _this20.loaded(data);
+                _this21.loaded(data);
             }).catch(function (e) {
-                _this20.failed(e);
+                _this21.failed(e);
             });
         },
         loaded: function loaded(data) {
@@ -1299,12 +1345,12 @@ var ContentModal = Vue.component('content-modal', {
         };
     },
     mounted: function mounted() {
-        var _this21 = this;
+        var _this22 = this;
 
-        axios.get('/static/htm/promo/' + this.link + '.htm').then(function (_ref5) {
-            var data = _ref5.data;
+        axios.get('/static/htm/promo/' + this.link + '.htm').then(function (_ref6) {
+            var data = _ref6.data;
 
-            _this21.text = data;
+            _this22.text = data;
         });
     },
 
@@ -1345,11 +1391,11 @@ Vue.component('desire-tag-item', {
 
     methods: {
         activate: function activate() {
-            var _this22 = this;
+            var _this23 = this;
 
             this.active = true;
             _.delay(function () {
-                return _this22.active = false;
+                return _this23.active = false;
             }, 3000);
         },
         select: function select() {
@@ -1483,11 +1529,11 @@ Vue.component('loading-wall', {
         }
     },
     mounted: function mounted() {
-        var _this23 = this;
+        var _this24 = this;
 
         this.hope = false;
         setTimeout(function () {
-            return _this23.hope = true;
+            return _this24.hope = true;
         }, 3000);
     },
 
@@ -1549,20 +1595,20 @@ var MenuUser = Vue.component('menu-user', {
             this.$router.push({ name: 'intimate' });
         },
         check: function check() {
-            var _this24 = this;
+            var _this25 = this;
 
-            axios.get('/mailer/status').then(function (_ref6) {
-                var data = _ref6.data;
+            axios.get('/mailer/status').then(function (_ref7) {
+                var data = _ref7.data;
 
-                _this24.onIntimate(data.message);
-                _this24.onInitial(data.contact);
-                _this24.attempt = 0;
+                _this25.onIntimate(data.message);
+                _this25.onInitial(data.contact);
+                _this25.attempt = 0;
             }).catch(function () {
-                _this24.attempt++;
+                _this25.attempt++;
             });
         },
         loadStatus: function loadStatus() {
-            var _this25 = this;
+            var _this26 = this;
 
             var uid = this.$store.state.user.uid;
 
@@ -1578,12 +1624,12 @@ var MenuUser = Vue.component('menu-user', {
                 delay = 3;
             }
             setTimeout(function () {
-                _this25.loadStatus();
+                _this26.loadStatus();
             }, delay * 1000);
         },
         onLoad: function onLoad() {},
         onIntimate: function onIntimate(status) {
-            var _this26 = this;
+            var _this27 = this;
 
             var _$store$state$contact = this.$store.state.contacts.intimate,
                 notified = _$store$state$contact.notified,
@@ -1594,14 +1640,14 @@ var MenuUser = Vue.component('menu-user', {
             notified = !notified || status != current ? false : true;
             if (status == 1 && !notified && this.newMessage) {
                 var callback = function callback() {
-                    return _this26.$router.push({ name: 'intimate' });
+                    return _this27.$router.push({ name: 'intimate' });
                 };
                 this.$store.commit('intimate/notifi', true);
                 this.$emit('snackbar', 'Новое сообщение', callback, 'Смотреть', true);
             }
         },
         onInitial: function onInitial(status) {
-            var _this27 = this;
+            var _this28 = this;
 
             var _$store$state$contact2 = this.$store.state.contacts.initial,
                 notified = _$store$state$contact2.notified,
@@ -1612,7 +1658,7 @@ var MenuUser = Vue.component('menu-user', {
             notified = !notified || status != current ? false : true;
             if (status == 1 && !notified && this.newContact && !this.newMessage) {
                 var callback = function callback() {
-                    return _this27.$router.push({ name: 'initial' });
+                    return _this28.$router.push({ name: 'initial' });
                 };
                 this.$store.commit('initial/notifi', true);
                 this.$emit('snackbar', 'Новое знакомство', callback, 'Смотреть', true);
@@ -1690,7 +1736,7 @@ Vue.component('message-item', {
             }
         },
         bun: function bun() {
-            var _this28 = this;
+            var _this29 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken }
@@ -1700,7 +1746,7 @@ Vue.component('message-item', {
                 tid: this.item.from
             };
             axios.post('/mess/bun/', data, config).then(function (response) {
-                _this28.$emit('remove', _this28.index);
+                _this29.$emit('remove', _this29.index);
             }).catch(function (error) {
                 console.log('error');
             });
@@ -1724,7 +1770,7 @@ Vue.component('message-item', {
             this.$emit('remove', this.index);
         },
         play: function play() {
-            var _this29 = this;
+            var _this30 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
@@ -1733,11 +1779,11 @@ Vue.component('message-item', {
             var server = this.$store.state.photoServer;
             var url = 'http://' + server + '/api/v1/users/' + this.uid + '/sends/' + this.alias + '.jpg';
             axios.get(url, config).then(function (response) {
-                _this29.preview(response.data.photo);
+                _this30.preview(response.data.photo);
             }).catch(function (error) {
                 console.log(error);
                 if (error.response && error.response.status == "404") {
-                    _this29.photoNotFound = true;
+                    _this30.photoNotFound = true;
                 }
             });
         },
@@ -1836,7 +1882,12 @@ Vue.component('message-list', {
             attention: false,
             date: null,
             toSlow: false,
-            skipScroll: false
+            skipScroll: false,
+            dialog: {
+                abuse: false,
+                claim: false
+            },
+            abuseSuccessHint: false
         };
     },
 
@@ -1854,7 +1905,7 @@ Vue.component('message-list', {
             //TODO: переписать глобальную зависимость
         },
         load: function load() {
-            var _this30 = this;
+            var _this31 = this;
 
             //console.log('load MessList data');
             this.response = 0;
@@ -1863,13 +1914,13 @@ Vue.component('message-list', {
                 params: { id: this.humanId, next: this.next, hash: hash }
             };
             axios.get('/ajax/messages_load.php', config).then(function (response) {
-                _this30.onLoad(response);
+                _this31.onLoad(response);
             }).catch(function (error) {
-                _this30.error = 10;
+                _this31.error = 10;
                 console.log(error);
             });
             setTimeout(function () {
-                return _this30.toSlow = true;
+                return _this31.toSlow = true;
             }, 7000);
         },
         loadNext: function loadNext() {
@@ -2011,15 +2062,15 @@ var PhotoViewer = Vue.component('photo-send', {
             this.$emit('close');
         },
         removePhoto: function removePhoto() {
-            var _this31 = this;
+            var _this32 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken }
                 //params: { uid: this.uid, hash }
             };
             axios.delete('http://' + this.server + '/api/v1/users/' + this.uid + '/photos/' + this.photo.alias + '.jpg', config).then(function (response) {
-                _this31.$emit('removed');
-                _this31.close();
+                _this32.$emit('removed');
+                _this32.close();
                 //console.log(this.photos);
             }).catch(function (error) {
                 console.log(error);
@@ -2111,16 +2162,16 @@ var QuickDialog = {
     },
     methods: {
         reload: function reload() {
-            var _this32 = this;
+            var _this33 = this;
 
             this.loading = true;
             setTimeout(function () {
-                return _this32.loading = false;
+                return _this33.loading = false;
             }, 4 * 1000);
             store.dispatch('search/HUMAN', this.humanId).then(function (response) {
-                _this32.loaded();
+                _this33.loaded();
             }).catch(function (error) {
-                _this32.loading = false;
+                _this33.loading = false;
             });
         },
         loaded: function loaded() {
@@ -2141,15 +2192,15 @@ var QuickDialog = {
             console.log('cancel');
         },
         inProcess: function inProcess(sec) {
-            var _this33 = this;
+            var _this34 = this;
 
             this.process = true;
             setTimeout(function () {
-                return _this33.process = false;
+                return _this34.process = false;
             }, sec * 1000);
         },
         send: function send() {
-            var _this34 = this;
+            var _this35 = this;
 
             var data = {
                 id: this.humanId,
@@ -2157,9 +2208,9 @@ var QuickDialog = {
                 captcha_code: this.code
             };
             api.messages.send(data).then(function (response) {
-                _this34.onMessageSend(response.data);
+                _this35.onMessageSend(response.data);
             }).catch(function (error) {
-                _this34.onError(error);
+                _this35.onError(error);
             });
             //  this.sended();
             this.inProcess(5);
@@ -2300,16 +2351,16 @@ Vue.component('remind-login', {
             this.$emit('close');
         },
         send: function send() {
-            var _this35 = this;
+            var _this36 = this;
 
             if (!this.email) {
                 return;
             }
             this.hint = 'Отправляю...';
             api.user.post({ email: this.email }, null, 'sync/remind').then(function (response) {
-                _this35.hint = response.data.say;
-                _this35.error = response.data.err;
-                _this35.sended();
+                _this36.hint = response.data.say;
+                _this36.error = response.data.err;
+                _this36.sended();
             });
         },
         sended: function sended() {
@@ -2415,19 +2466,19 @@ Vue.component('search-item', {
         };
     },
     mounted: function mounted() {
-        var _this36 = this;
+        var _this37 = this;
 
         _.find(_.pick(this.human, this.social.first), function (value, key) {
-            return value ? _this36.first = key : false;
+            return value ? _this37.first = key : false;
         });
         _.find(_.pick(this.human, this.social.second), function (value, key) {
-            value = _this36.first == key ? false : value;
-            return value ? _this36.second = key : false;
+            value = _this37.first == key ? false : value;
+            return value ? _this37.second = key : false;
         });
         _.find(_.pick(this.human, this.social.second), function (value, key) {
-            value = _this36.first == key ? false : value;
-            value = _this36.second == key ? false : value;
-            return value ? _this36.third = key : false;
+            value = _this37.first == key ? false : value;
+            value = _this37.second == key ? false : value;
+            return value ? _this37.third = key : false;
         });
         // console.log('item',this.human);
     },
@@ -2477,10 +2528,10 @@ Vue.component('search-item', {
             });
         },
         load: function load() {
-            var _this37 = this;
+            var _this38 = this;
 
             api.search.load(null).then(function (response) {
-                _this37.users = response.data.users;
+                _this38.users = response.data.users;
             });
         }
     },
@@ -2574,14 +2625,14 @@ Vue.component('search-list', {
             this.$store.dispatch('visited/SYNC');
         },
         load: function load() {
-            var _this38 = this;
+            var _this39 = this;
 
             this.response = 0;
             this.$store.dispatch('search/LOAD').then(function (response) {
-                _this38.onLoad();
+                _this39.onLoad();
             }).catch(function (error) {
-                _this38.response = 200;
-                _this38.toSlow = false;
+                _this39.response = 200;
+                _this39.toSlow = false;
             });
         },
         loadNext: function loadNext() {
@@ -2674,13 +2725,13 @@ var AboutSettings = Vue.component('about-settings', {
         }
     }),
     mounted: function mounted() {
-        var _this39 = this;
+        var _this40 = this;
 
         this.$store.dispatch('about/SYNC').then(function () {
-            _this39.init();
-            _this39.process = false;
+            _this40.init();
+            _this40.process = false;
         }).catch(function () {
-            _this39.process = false;
+            _this40.process = false;
         });
         this.process = true;
         this.init();
@@ -2862,11 +2913,11 @@ var DesiresSettings = Vue.component('desires-settings', {
         }
     }),
     mounted: function mounted() {
-        var _this40 = this;
+        var _this41 = this;
 
         this.process = true;
         this.$store.dispatch('desires/SYNC').then(function (response) {
-            _this40.process = false;
+            _this41.process = false;
         });
     },
 
@@ -2875,11 +2926,11 @@ var DesiresSettings = Vue.component('desires-settings', {
             this.$emit('close');
         },
         add: function add(tag) {
-            var _this41 = this;
+            var _this42 = this;
 
             this.process = true;
             this.$store.dispatch('desires/ADD', tag).then(function (response) {
-                _this41.process = false;
+                _this42.process = false;
             });
         },
         remove: function remove() {
@@ -2916,14 +2967,14 @@ var IncomingPhoto = Vue.component('incoming-photo', {
     },
     methods: {
         loadPhoto: function loadPhoto() {
-            var _this42 = this;
+            var _this43 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
                 params: { tid: this.humanId, hash: hash }
             };
             axios.get('http://' + this.server + '/api/v1/users/' + this.uid + '/sends', config).then(function (response) {
-                _this42.photos = response.data.photos;
+                _this43.photos = response.data.photos;
                 //console.log(this.photos);
             }).catch(function (error) {
                 console.log(error);
@@ -2977,7 +3028,7 @@ var LoginAccount = Vue.component('login-account', {
             this.$emit('close');
         },
         send: function send() {
-            var _this43 = this;
+            var _this44 = this;
 
             var data = {
                 login: this.login,
@@ -2985,10 +3036,10 @@ var LoginAccount = Vue.component('login-account', {
                 captcha: this.code
             };
             api.user.post(data, null, 'sync/login').then(function (response) {
-                _this43.hint = response.data.say;
-                _this43.error = response.data.err;
-                _this43.captcha = response.data.captcha;
-                _this43.onLogin();
+                _this44.hint = response.data.say;
+                _this44.error = response.data.err;
+                _this44.captcha = response.data.captcha;
+                _this44.onLogin();
             });
         },
         onLogin: function onLogin() {
@@ -3031,15 +3082,15 @@ var MessagesCliche = Vue.component('messages-cliche', {
     },
     methods: {
         load: function load(value) {
-            var _this44 = this;
+            var _this45 = this;
 
             var result = value ? value : this.default.tab;
-            api.raw.load(null, 'static/json/cliche/' + result + '.json?v=' + this.version).then(function (_ref7) {
-                var data = _ref7.data;
+            api.raw.load(null, 'static/json/cliche/' + result + '.json?v=' + this.version).then(function (_ref8) {
+                var data = _ref8.data;
 
-                _this44.texts = data;
-                _this44.active = result;
-                ls.set('cliche-active', _this44.active, 3 * 24 * 60 * 60);
+                _this45.texts = data;
+                _this45.active = result;
+                ls.set('cliche-active', _this45.active, 3 * 24 * 60 * 60);
             });
         },
         size: function size(value) {
@@ -3076,10 +3127,10 @@ var Notepad = Vue.component('notepad', {
         };
     },
     mounted: function mounted() {
-        var _this45 = this;
+        var _this46 = this;
 
         this.$store.dispatch('notes/WRITES').then(function (data) {
-            _this45.writes = data;
+            _this46.writes = data;
         });
     },
 
@@ -3157,7 +3208,7 @@ var PhotoSettings = Vue.component('photo-settings', {
             this.back();
         },
         loadPhoto: function loadPhoto() {
-            var _this46 = this;
+            var _this47 = this;
 
             var server = this.$store.state.photoServer;
             var uid = this.$store.state.user.uid;
@@ -3168,9 +3219,9 @@ var PhotoSettings = Vue.component('photo-settings', {
             axios.get('http://' + server + '/api/v1/users/' + uid + '/photos', config).then(function (response) {
                 var result = response.data.photos;
                 if (result && result.length) {
-                    _this46.photos = response.data.photos;
+                    _this47.photos = response.data.photos;
                 }
-                console.log(_this46.photos);
+                console.log(_this47.photos);
             }).catch(function (error) {
                 console.log(error);
             });
@@ -3393,14 +3444,14 @@ var SecuritySettings = Vue.component('security-settings', {
         }
     }),
     mounted: function mounted() {
-        var _this47 = this;
+        var _this48 = this;
 
         console.log('auth/SYNC');
         this.$store.dispatch('auth/SYNC').then(function () {
-            _this47.init();
-            _this47.process = false;
+            _this48.init();
+            _this48.process = false;
         }).catch(function () {
-            _this47.process = false;
+            _this48.process = false;
         });
         this.process = true;
         this.init();
@@ -3417,53 +3468,38 @@ var SecuritySettings = Vue.component('security-settings', {
             this.virgin = false;
         },
         saveLogin: function saveLogin() {
-            var _this48 = this;
+            var _this49 = this;
 
             this.processLogin = true;
             this.$store.dispatch('auth/SAVE_LOGIN', this.inputLogin).then(function (response) {
                 var data = response.data;
                 if (data.say) {
-                    _this48.$emit('warning', data.say);
+                    _this49.$emit('warning', data.say);
                 }
-                _this48.processLogin = false;
+                _this49.processLogin = false;
             }).catch(function () {
-                _this48.processLogin = false;
+                _this49.processLogin = false;
             });
         },
         savePasswd: function savePasswd() {
-            var _this49 = this;
+            var _this50 = this;
 
             this.processPasswd = true;
             this.$store.dispatch('auth/SAVE_PASSWD', this.inputPasswd).then(function (response) {
                 var data = response.data;
                 if (data.say) {
-                    _this49.$emit('warning', data.say);
+                    _this50.$emit('warning', data.say);
                 }
-                _this49.processPasswd = false;
+                _this50.processPasswd = false;
             }).catch(function () {
-                _this49.processPasswd = false;
+                _this50.processPasswd = false;
             });
         },
         saveEmail: function saveEmail() {
-            var _this50 = this;
+            var _this51 = this;
 
             this.processEmail = true;
             this.$store.dispatch('auth/SAVE_EMAIL', this.inputEmail).then(function (response) {
-                var data = response.data;
-                if (data.err) {
-                    _this50.$emit('warning', data.say);
-                }
-                _this50.processEmail = false;
-            }).catch(function () {
-                _this50.processEmail = false;
-            });
-        },
-        removeEmail: function removeEmail() {
-            var _this51 = this;
-
-            this.confirmRemove = false;
-            this.processEmail = true;
-            this.$store.dispatch('auth/REMOVE_EMAIL').then(function (response) {
                 var data = response.data;
                 if (data.err) {
                     _this51.$emit('warning', data.say);
@@ -3471,6 +3507,21 @@ var SecuritySettings = Vue.component('security-settings', {
                 _this51.processEmail = false;
             }).catch(function () {
                 _this51.processEmail = false;
+            });
+        },
+        removeEmail: function removeEmail() {
+            var _this52 = this;
+
+            this.confirmRemove = false;
+            this.processEmail = true;
+            this.$store.dispatch('auth/REMOVE_EMAIL').then(function (response) {
+                var data = response.data;
+                if (data.err) {
+                    _this52.$emit('warning', data.say);
+                }
+                _this52.processEmail = false;
+            }).catch(function () {
+                _this52.processEmail = false;
             });
         },
         saveSubscribe: function saveSubscribe() {
@@ -3718,10 +3769,10 @@ Vue.component('suggest-input', {
     },
     methods: {
         load: function load() {
-            var _this52 = this;
+            var _this53 = this;
 
             api.user.get({ q: this.query }, 'tag/suggest').then(function (response) {
-                _this52.loaded(response.data);
+                _this53.loaded(response.data);
             });
         },
         reset: function reset() {
@@ -3878,18 +3929,18 @@ var about = {
         figure: 0
     },
     actions: {
-        SYNC: function SYNC(_ref8) {
-            var rootState = _ref8.rootState,
-                commit = _ref8.commit,
-                getters = _ref8.getters;
+        SYNC: function SYNC(_ref9) {
+            var rootState = _ref9.rootState,
+                commit = _ref9.commit,
+                getters = _ref9.getters;
 
             return api.user.syncAbout().then(function (response) {
                 commit('update', response.data);
             });
         },
-        SAVE: function SAVE(_ref9, data) {
-            var state = _ref9.state,
-                commit = _ref9.commit;
+        SAVE: function SAVE(_ref10, data) {
+            var state = _ref10.state,
+                commit = _ref10.commit;
 
             api.user.saveAbout({ anketa: data }).then(function (response) {
                 commit('update', data);
@@ -3913,8 +3964,8 @@ var accepts = {
         moderator: false
     },
     actions: {
-        LOAD: function LOAD(_ref10) {
-            var state = _ref10.state;
+        LOAD: function LOAD(_ref11) {
+            var state = _ref11.state;
 
             var data = ls.get('accepts');
             if (data) {
@@ -3957,43 +4008,43 @@ var auth = {
         error: ''
     },
     actions: {
-        SYNC: function SYNC(_ref11) {
-            var commit = _ref11.commit;
+        SYNC: function SYNC(_ref12) {
+            var commit = _ref12.commit;
 
             return api.user.syncAuth().then(function (response) {
                 commit('update', response.data);
             });
         },
-        SAVE_LOGIN: function SAVE_LOGIN(_ref12, data) {
-            var commit = _ref12.commit;
+        SAVE_LOGIN: function SAVE_LOGIN(_ref13, data) {
+            var commit = _ref13.commit;
 
             return api.user.saveLogin(data);
         },
-        SAVE_PASSWD: function SAVE_PASSWD(_ref13, data) {
-            var commit = _ref13.commit;
+        SAVE_PASSWD: function SAVE_PASSWD(_ref14, data) {
+            var commit = _ref14.commit;
 
             return api.user.savePasswd(data);
         },
-        SAVE_EMAIL: function SAVE_EMAIL(_ref14, data) {
-            var commit = _ref14.commit;
+        SAVE_EMAIL: function SAVE_EMAIL(_ref15, data) {
+            var commit = _ref15.commit;
 
             return api.user.saveEmail(data);
         },
-        REMOVE_EMAIL: function REMOVE_EMAIL(_ref15) {
-            var commit = _ref15.commit;
+        REMOVE_EMAIL: function REMOVE_EMAIL(_ref16) {
+            var commit = _ref16.commit;
 
             return api.user.removeEmail();
         },
-        SAVE_SUSCRIBE: function SAVE_SUSCRIBE(_ref16, data) {
-            var store = _ref16.store,
-                commit = _ref16.commit;
+        SAVE_SUSCRIBE: function SAVE_SUSCRIBE(_ref17, data) {
+            var store = _ref17.store,
+                commit = _ref17.commit;
 
             commit('subscr');
             return api.user.saveSubscribe();
         },
-        UPDATE_KEY: function UPDATE_KEY(_ref17) {
-            var store = _ref17.store,
-                commit = _ref17.commit;
+        UPDATE_KEY: function UPDATE_KEY(_ref18) {
+            var store = _ref18.store,
+                commit = _ref18.commit;
 
             return axios.get('/sync/sess/');
         }
@@ -4038,10 +4089,10 @@ var initial = _.extend({
         list: []
     },
     actions: {
-        LOAD: function LOAD(_ref18) {
-            var state = _ref18.state,
-                commit = _ref18.commit,
-                rootState = _ref18.rootState;
+        LOAD: function LOAD(_ref19) {
+            var state = _ref19.state,
+                commit = _ref19.commit,
+                rootState = _ref19.rootState;
 
             commit('load', ls.get('initial-contacts'));
             return api.contacts.initial.cget({
@@ -4052,10 +4103,10 @@ var initial = _.extend({
                 ls.set('initial-contacts', state.list);
             });
         },
-        NEXT: function NEXT(_ref19, offset) {
-            var state = _ref19.state,
-                commit = _ref19.commit,
-                rootState = _ref19.rootState;
+        NEXT: function NEXT(_ref20, offset) {
+            var state = _ref20.state,
+                commit = _ref20.commit,
+                rootState = _ref20.rootState;
 
             return api.contacts.initial.cget({
                 uid: rootState.user.uid,
@@ -4064,10 +4115,10 @@ var initial = _.extend({
                 commit('add', response.data);
             });
         },
-        DELETE: function DELETE(_ref20, index) {
-            var state = _ref20.state,
-                commit = _ref20.commit,
-                rootState = _ref20.rootState;
+        DELETE: function DELETE(_ref21, index) {
+            var state = _ref21.state,
+                commit = _ref21.commit,
+                rootState = _ref21.rootState;
 
             var result = api.contacts.initial.delete({
                 uid: rootState.user.uid,
@@ -4076,10 +4127,10 @@ var initial = _.extend({
             commit('delete', index);
             return result;
         },
-        READ: function READ(_ref21, index) {
-            var state = _ref21.state,
-                commit = _ref21.commit,
-                rootState = _ref21.rootState;
+        READ: function READ(_ref22, index) {
+            var state = _ref22.state,
+                commit = _ref22.commit,
+                rootState = _ref22.rootState;
 
             var result = api.contacts.initial.put(null, {
                 uid: rootState.user.uid,
@@ -4088,8 +4139,8 @@ var initial = _.extend({
             commit('read', index);
             return result;
         },
-        CHECK: function CHECK(_ref22) {
-            var commit = _ref22.commit;
+        CHECK: function CHECK(_ref23) {
+            var commit = _ref23.commit;
 
             axios.get('/mailer/check_contact').then(function () {
                 commit('status', 8);
@@ -4117,10 +4168,10 @@ var intimate = _.extend({
         list: []
     },
     actions: {
-        LOAD: function LOAD(_ref23) {
-            var state = _ref23.state,
-                commit = _ref23.commit,
-                rootState = _ref23.rootState;
+        LOAD: function LOAD(_ref24) {
+            var state = _ref24.state,
+                commit = _ref24.commit,
+                rootState = _ref24.rootState;
 
             commit('load', ls.get('intimate-contacts'));
             return api.contacts.intimate.cget({
@@ -4131,10 +4182,10 @@ var intimate = _.extend({
                 ls.set('intimate-contacts', state.list);
             });
         },
-        NEXT: function NEXT(_ref24, offset) {
-            var state = _ref24.state,
-                commit = _ref24.commit,
-                rootState = _ref24.rootState;
+        NEXT: function NEXT(_ref25, offset) {
+            var state = _ref25.state,
+                commit = _ref25.commit,
+                rootState = _ref25.rootState;
 
             return api.contacts.intimate.cget({
                 uid: rootState.user.uid,
@@ -4143,10 +4194,10 @@ var intimate = _.extend({
                 commit('add', response.data);
             });
         },
-        DELETE: function DELETE(_ref25, index) {
-            var state = _ref25.state,
-                commit = _ref25.commit,
-                rootState = _ref25.rootState;
+        DELETE: function DELETE(_ref26, index) {
+            var state = _ref26.state,
+                commit = _ref26.commit,
+                rootState = _ref26.rootState;
 
             var result = api.contacts.intimate.delete({
                 uid: rootState.user.uid,
@@ -4155,10 +4206,10 @@ var intimate = _.extend({
             commit('delete', index);
             return result;
         },
-        READ: function READ(_ref26, index) {
-            var state = _ref26.state,
-                commit = _ref26.commit,
-                rootState = _ref26.rootState;
+        READ: function READ(_ref27, index) {
+            var state = _ref27.state,
+                commit = _ref27.commit,
+                rootState = _ref27.rootState;
 
             var result = api.contacts.intimate.put(null, {
                 uid: rootState.user.uid,
@@ -4167,8 +4218,8 @@ var intimate = _.extend({
             commit('read', index);
             return result;
         },
-        CHECK: function CHECK(_ref27) {
-            var commit = _ref27.commit;
+        CHECK: function CHECK(_ref28) {
+            var commit = _ref28.commit;
 
             axios.get('/mailer/check_message').then(function () {
                 commit('status', 8);
@@ -4194,10 +4245,10 @@ var sends = _.extend({
         list: []
     },
     actions: {
-        LOAD: function LOAD(_ref28) {
-            var state = _ref28.state,
-                commit = _ref28.commit,
-                rootState = _ref28.rootState;
+        LOAD: function LOAD(_ref29) {
+            var state = _ref29.state,
+                commit = _ref29.commit,
+                rootState = _ref29.rootState;
 
             commit('load', ls.get('sends-contacts'));
             return api.contacts.sends.cget({
@@ -4208,10 +4259,10 @@ var sends = _.extend({
                 ls.set('sends-contacts', state.list);
             });
         },
-        NEXT: function NEXT(_ref29, offset) {
-            var state = _ref29.state,
-                commit = _ref29.commit,
-                rootState = _ref29.rootState;
+        NEXT: function NEXT(_ref30, offset) {
+            var state = _ref30.state,
+                commit = _ref30.commit,
+                rootState = _ref30.rootState;
 
             return api.contacts.sends.cget({
                 uid: rootState.user.uid,
@@ -4220,10 +4271,10 @@ var sends = _.extend({
                 commit('add', response.data);
             });
         },
-        DELETE: function DELETE(_ref30, index) {
-            var state = _ref30.state,
-                commit = _ref30.commit,
-                rootState = _ref30.rootState;
+        DELETE: function DELETE(_ref31, index) {
+            var state = _ref31.state,
+                commit = _ref31.commit,
+                rootState = _ref31.rootState;
 
             var result = api.contacts.sends.delete({
                 uid: rootState.user.uid,
@@ -4265,14 +4316,14 @@ var desires = {
         limit: 20
     },
     actions: {
-        PICK: function PICK(_ref31) {
-            var commit = _ref31.commit;
+        PICK: function PICK(_ref32) {
+            var commit = _ref32.commit;
 
             commit('update', ls.get('desires'));
         },
-        SYNC: function SYNC(_ref32) {
-            var state = _ref32.state,
-                commit = _ref32.commit;
+        SYNC: function SYNC(_ref33) {
+            var state = _ref33.state,
+                commit = _ref33.commit;
 
             commit('update', ls.get('desires'));
             return api.user.desireList().then(function (response) {
@@ -4280,9 +4331,9 @@ var desires = {
                 ls.set('desires', state.list);
             });
         },
-        ADD: function ADD(_ref33, tag) {
-            var state = _ref33.state,
-                commit = _ref33.commit;
+        ADD: function ADD(_ref34, tag) {
+            var state = _ref34.state,
+                commit = _ref34.commit;
 
             //commit('add', tag);
             return api.user.desireAdd(tag).then(function (response) {
@@ -4290,9 +4341,9 @@ var desires = {
                 commit('add', { id: id, tag: tag });
             });
         },
-        DELETE: function DELETE(_ref34, index) {
-            var state = _ref34.state,
-                commit = _ref34.commit;
+        DELETE: function DELETE(_ref35, index) {
+            var state = _ref35.state,
+                commit = _ref35.commit;
 
             var result = api.user.desireDelete(state.list[index].id);
             commit('delete', index);
@@ -4369,13 +4420,13 @@ var notes = {
         db: null
     },
     actions: {
-        INIT: function INIT(_ref35) {
-            var state = _ref35.state,
-                commit = _ref35.commit,
-                rootState = _ref35.rootState;
+        INIT: function INIT(_ref36) {
+            var state = _ref36.state,
+                commit = _ref36.commit,
+                rootState = _ref36.rootState;
 
-            api.raw.load(null, 'static/json/notes/' + rootState.locale + '.json').then(function (_ref36) {
-                var data = _ref36.data;
+            api.raw.load(null, 'static/json/notes/' + rootState.locale + '.json').then(function (_ref37) {
+                var data = _ref37.data;
 
                 state.db.transaction('rw', state.db.writes, function () {
                     _.each(data.reverse(), function (element, index, list) {
@@ -4384,10 +4435,10 @@ var notes = {
                 });
             });
         },
-        LOAD: function LOAD(_ref37) {
-            var state = _ref37.state,
-                dispatch = _ref37.dispatch,
-                rootState = _ref37.rootState;
+        LOAD: function LOAD(_ref38) {
+            var state = _ref38.state,
+                dispatch = _ref38.dispatch,
+                rootState = _ref38.rootState;
 
             var uid = rootState.user.uid;
             state.db = new Dexie("DataBaseFS__" + uid);
@@ -4403,20 +4454,20 @@ var notes = {
             });
             state.db.open();
         },
-        WRITES: function WRITES(_ref38) {
-            var state = _ref38.state;
+        WRITES: function WRITES(_ref39) {
+            var state = _ref39.state;
 
             return state.db.writes.orderBy('updated').reverse().limit(100).sortBy('count');
         },
-        ITEM: function ITEM(_ref39, id) {
-            var state = _ref39.state,
-                commit = _ref39.commit;
+        ITEM: function ITEM(_ref40, id) {
+            var state = _ref40.state,
+                commit = _ref40.commit;
 
             return state.db.writes.get(id);
         },
-        UPDATE: function UPDATE(_ref40, text) {
-            var state = _ref40.state,
-                commit = _ref40.commit;
+        UPDATE: function UPDATE(_ref41, text) {
+            var state = _ref41.state,
+                commit = _ref41.commit;
 
             var updated = getTimestamp();
             state.db.writes.get({ text: text }).then(function (item) {
@@ -4463,8 +4514,8 @@ var search = {
         }
     },
     actions: {
-        HUMAN: function HUMAN(_ref41, tid) {
-            var commit = _ref41.commit;
+        HUMAN: function HUMAN(_ref42, tid) {
+            var commit = _ref42.commit;
 
             var index = 'human.data.' + tid;
             commit('resetHuman', tid);
@@ -4475,10 +4526,10 @@ var search = {
                 ls.set(index, response.data, 1500);
             });
         },
-        LOAD: function LOAD(_ref42) {
-            var state = _ref42.state,
-                rootState = _ref42.rootState,
-                commit = _ref42.commit;
+        LOAD: function LOAD(_ref43) {
+            var state = _ref43.state,
+                rootState = _ref43.rootState,
+                commit = _ref43.commit;
             var _state$settings = state.settings,
                 who = _state$settings.who,
                 city = _state$settings.city,
@@ -4492,8 +4543,8 @@ var search = {
             if (!city || any) {
                 city = null;
             }
-            return api.search.load({ sex: sex, who: who, city: city, up: up, to: to, next: state.next }).then(function (_ref43) {
-                var data = _ref43.data;
+            return api.search.load({ sex: sex, who: who, city: city, up: up, to: to, next: state.next }).then(function (_ref44) {
+                var data = _ref44.data;
 
                 commit('results', data);
                 commit('last', data);
@@ -4501,16 +4552,16 @@ var search = {
             });
         },
         RESET_SEARCH: function RESET_SEARCH() {},
-        SETTINGS: function SETTINGS(_ref44) {
-            var commit = _ref44.commit;
+        SETTINGS: function SETTINGS(_ref45) {
+            var commit = _ref45.commit;
 
             commit('settingsCookies');
             commit('settings', ls.get('search.settings'));
             //let index = 'search.settings';
         },
-        SAVE_SEARCH: function SAVE_SEARCH(_ref45, data) {
-            var state = _ref45.state,
-                commit = _ref45.commit;
+        SAVE_SEARCH: function SAVE_SEARCH(_ref46, data) {
+            var state = _ref46.state,
+                commit = _ref46.commit;
 
             commit('settings', data);
             ls.set('search.settings', data);
@@ -4535,8 +4586,8 @@ var search = {
                 state.human = data;
             }
         },
-        results: function results(state, _ref46) {
-            var users = _ref46.users;
+        results: function results(state, _ref47) {
+            var users = _ref47.users;
 
             state.received = users ? users.length : 0;
             if (users && state.received) {
@@ -4544,8 +4595,8 @@ var search = {
             }
             state.next += state.batch;
         },
-        last: function last(state, _ref47) {
-            var users = _ref47.users;
+        last: function last(state, _ref48) {
+            var users = _ref48.users;
 
             if (users && !state.last) {
                 state.last = users;
@@ -4623,17 +4674,17 @@ var user = {
         last: ''
     },
     actions: {
-        LOAD_USER: function LOAD_USER(_ref48) {
-            var commit = _ref48.commit;
+        LOAD_USER: function LOAD_USER(_ref49) {
+            var commit = _ref49.commit;
 
             // if (uid) {
             //     commit('loadUser', {uid});
             // }
             commit('loadUser', ls.get('user.data'));
         },
-        SAVE_SEX: function SAVE_SEX(_ref49, sex) {
-            var state = _ref49.state,
-                commit = _ref49.commit;
+        SAVE_SEX: function SAVE_SEX(_ref50, sex) {
+            var state = _ref50.state,
+                commit = _ref50.commit;
 
             commit('loadUser', { sex: sex, name: '' });
             if (sex) {
@@ -4641,36 +4692,36 @@ var user = {
                 commit('loadUser', { sex: sex });
             }
         },
-        SAVE_AGE: function SAVE_AGE(_ref50, age) {
-            var state = _ref50.state,
-                commit = _ref50.commit;
+        SAVE_AGE: function SAVE_AGE(_ref51, age) {
+            var state = _ref51.state,
+                commit = _ref51.commit;
 
             if (age && state.age != age) {
                 api.user.saveAge(age).then(function (response) {});
                 commit('loadUser', { age: age });
             }
         },
-        SAVE_NAME: function SAVE_NAME(_ref51, name) {
-            var state = _ref51.state,
-                commit = _ref51.commit;
+        SAVE_NAME: function SAVE_NAME(_ref52, name) {
+            var state = _ref52.state,
+                commit = _ref52.commit;
 
             if (name && state.name != name) {
                 api.user.saveName(name).then(function (response) {});
                 commit('loadUser', { name: name });
             }
         },
-        SAVE_CITY: function SAVE_CITY(_ref52, city) {
-            var state = _ref52.state,
-                commit = _ref52.commit;
+        SAVE_CITY: function SAVE_CITY(_ref53, city) {
+            var state = _ref53.state,
+                commit = _ref53.commit;
 
             if (city && state.city != city) {
                 api.user.saveCity(city).then(function (response) {});
                 commit('loadUser', { city: city });
             }
         },
-        SAVE_CONTACTS: function SAVE_CONTACTS(_ref53, contacts) {
-            var state = _ref53.state,
-                commit = _ref53.commit;
+        SAVE_CONTACTS: function SAVE_CONTACTS(_ref54, contacts) {
+            var state = _ref54.state,
+                commit = _ref54.commit;
 
             api.user.saveContacts(contacts).then(function (response) {});
             commit('loadUser', { contacts: contacts });
@@ -4694,10 +4745,10 @@ var visited = {
         list: []
     },
     actions: {
-        SYNC: function SYNC(_ref54) {
-            var rootState = _ref54.rootState,
-                state = _ref54.state,
-                commit = _ref54.commit;
+        SYNC: function SYNC(_ref55) {
+            var rootState = _ref55.rootState,
+                state = _ref55.state,
+                commit = _ref55.commit;
 
             var index = 'visited-' + rootState.user.uid;
             commit('update', ls.get(index));
@@ -4708,10 +4759,10 @@ var visited = {
                 ls.set(index, state.list, 31 * 24 * 60 * 60);
             });
         },
-        ADD: function ADD(_ref55, tid) {
-            var rootState = _ref55.rootState,
-                state = _ref55.state,
-                commit = _ref55.commit;
+        ADD: function ADD(_ref56, tid) {
+            var rootState = _ref56.rootState,
+                state = _ref56.state,
+                commit = _ref56.commit;
 
             var uid = rootState.user.uid;
             var index = 'visited-' + uid;
@@ -4757,8 +4808,8 @@ var store = new Vuex.Store({
         simple: false
     },
     actions: {
-        LOAD_API_TOKEN: function LOAD_API_TOKEN(_ref56) {
-            var commit = _ref56.commit;
+        LOAD_API_TOKEN: function LOAD_API_TOKEN(_ref57) {
+            var commit = _ref57.commit;
 
             commit('setApiToken', { apiToken: get_cookie('jwt') });
         }

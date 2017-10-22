@@ -12,7 +12,7 @@
       <div class="modal-dialog__wrapper capped">
         <div class="modal-dialog__section">
           <div class="human-dialog__desire" v-show="tags.length" @click="account()">
-            <span class="link_simple" v-for="(tag, index) in tags" :key="index" v-show="tag">{{tag}} &#8226; </span>
+            <span class="desire-tag__item-simple" v-for="(tag, index) in tags" :key="index" v-show="tag">{{tag}}</span>
           </div>
 
 

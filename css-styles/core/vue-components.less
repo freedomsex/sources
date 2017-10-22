@@ -1,3 +1,19 @@
+.abuse-list {
+    display: flex;
+    flex-direction: column;
+    &__item {
+        flex: 0 0 auto;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+.abuse-widget {
+    &__hint {
+        color: @gray-dark;
+        padding: @indent-xs;
+    }
+}
 
 .account-component {
     &__wrapper {
@@ -1183,6 +1199,7 @@
   flex: 1 0 auto;
   padding: 0 @indent-md;
   height: 100%;
+  margin-top: @indent-sm;
 }
 
 .messages {
@@ -1228,7 +1245,9 @@
     }
 }
 
-
+.abuse-widget {
+    text-align: center;
+}
 
 
 .form-message__buttons {
@@ -1494,6 +1513,10 @@
         flex: 0 0 auto;
         color: @white;
         cursor: pointer;
+        a {
+            color: @white;
+            display: inline-block;
+        }
         .material-icons {
             vertical-align: middle;
             position: relative;
@@ -1504,6 +1527,10 @@
             font-size: 15px;
             padding-bottom: 1px;
         }
+    }
+
+    &.warning {
+        background: @orange;
     }
 }
 
@@ -1559,6 +1586,7 @@
     }
     &__desire {
         margin-bottom: @indent-sm;
+        position: relative;
         font-size: 14px;
     }
     &__text {
@@ -1572,6 +1600,20 @@
         &.warning {
             background: @alert-sand;
         }
+    }
+}
+
+.desire-tag__item-simple {
+    .link_simple();
+    &:after {
+        content: "•";
+        color: @gray;
+        padding: 0 @indent-xs;
+        position: relative;
+        top: 1px;
+    }
+    &:last-child:after {
+        display: none;
     }
 }
 

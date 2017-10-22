@@ -14,6 +14,11 @@ Vue.component('message-list', {
             date: null,
             toSlow: false,
             skipScroll: false,
+            dialog: {
+                abuse: false,
+                claim: false,
+            },
+            abuseSuccessHint: false,
         }
     },
     mounted: function () {
