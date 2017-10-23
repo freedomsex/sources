@@ -17,7 +17,7 @@
     
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1508701948902">
+<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1508766964917">
 
   <script type="text/javascript">  
     function get_cookie ( cookie_name )
@@ -303,6 +303,25 @@
         <div class="modal-dialog__section">
           Нажмите «Наказать и удалить» у сообщения, которое является причиной замечания. Можно несколько.
           Это необходимо, и поможет быстрее определить истину, а также степень вины.
+        </div>
+      </div>
+    </modal-dialog>
+  </div>
+</script>
+
+
+
+<script type="text/x-template" id="cliche-dialog">
+  <div>
+    <modal-dialog @close="$emit('close')">
+      <div class="modal-dialog__wrapper">
+        <div class="modal-dialog__caption">
+          Комфортное начало
+        </div>
+        <div class="modal-dialog__body">
+          Используйте шаблоны из блокнота или простые фразы.
+          Избегайте рассылок, используйте как можно меньше цифр в первых сообщениях.
+          Любые ссылки, номера телефонов и логины соцсетей расцениваются как спам.
         </div>
       </div>
     </modal-dialog>
@@ -858,6 +877,16 @@
       <div class="activity__content">
         <div class="activity__loader" v-show="loader && !error">Загружаю...</div>
         <div v-html="text"></div>
+        <div>
+          <a class="btn btn-primary" :href="more" target="_blank" v-show="more">
+            <span aria-hidden="true" class="glyphicon glyphicon-file"></span>
+            Основной текст
+          </a>
+          <a class="btn btn-default" :href="edit" target="_blank" v-show="edit">
+            <span aria-hidden="true" class="glyphicon glyphicon-pencil"></span>
+            Редактировать
+          </a>
+        </div>
       </div>
     </div>
   </div>
@@ -1205,7 +1234,13 @@
               <i class="material-icons">&#xE02F;</i>
             </div>
           </div>
+          <div class="dialog-form__hint" @click="$router.push('/help/simplest/ru')">
+            <span aria-hidden="true" class="glyphicon glyphicon-info-sign"></span>
+            Используйте простые фразы или шаблоны из блокнота.
+          </div>
         </div>
+
+
         <div class="modal-dialog__options">
           <button class="btn btn-primary" @click="added ? (addition = true) : send()">
             <i class="material-icons">&#xE163;</i>
@@ -1977,7 +2012,7 @@
 
  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/static/js/core.min.js?rel=1508701948900"></script>
+<script type="text/javascript" src="/static/js/core.min.js?rel=1508766964915"></script>
 <!-- Исходники можно найти в репозитории. Там же собранные не сжатые файлы -->
 
 %%BLOCK_COUNTER_ALL%% <!-- счетчики статистики -->

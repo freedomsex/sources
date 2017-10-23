@@ -22,7 +22,8 @@ Vue.component('abuse-dialog', {
         },
         send() {
             let hash = getTimestamp();
-            let text = `${this.selected.title}, ${this.selected.text} [${this.comment}]`;
+            let text = `${this.selected.title}, ${this.selected.text}`;
+                text = this.comment ? text + ` [${this.comment}]` : text;
             let data = {
                 id: this.humanId,
                 captcha: '',
@@ -44,6 +45,9 @@ Vue.component('abuse-dialog', {
 
 Vue.component('claim-needed', {
     template: '#claim-needed',
+});
+Vue.component('cliche-dialog', {
+    template: '#cliche-dialog',
 });
 
 const AccountActivity = Vue.component('account-activity', {
@@ -1058,6 +1062,9 @@ var ContentActivity = Vue.component('content-activity', {
         return {
             title: '',
             text: '',
+            file: '',
+            more: null,
+            edit: null,
             loader: true,
             error: false,
         }
@@ -1071,10 +1078,14 @@ var ContentActivity = Vue.component('content-activity', {
             });
         },
         loaded(data) {
-            this.text = data;
             this.loader = false;
-            if (!data || data.length() < 50) {
+            if (!data.content) {
                 this.failed();
+            } else {
+                this.text = data.content;
+                this.file = data.file;
+                this.more = data.more ? data.more : null;
+                this.edit = data.edit ? data.edit : null;
             }
         },
         failed() {
@@ -1114,6 +1125,14 @@ var DealContentPage = Vue.component('deal-page', {
     mounted() {
         this.title = 'Информация';
         this.load(`/content/deal/${this.link}`);
+    }
+});
+
+var HelpContentPage = Vue.component('help-page', {
+    extends: ContentActivity,
+    mounted() {
+        this.title = 'Справка';
+        this.load(`/content/help/${this.link}`);
     }
 });
 

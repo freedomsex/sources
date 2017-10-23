@@ -32,7 +32,13 @@
               <i class="material-icons">&#xE02F;</i>
             </div>
           </div>
+          <div class="dialog-form__hint" @click="$router.push('/help/simplest/ru')">
+            <span aria-hidden="true" class="glyphicon glyphicon-info-sign"></span>
+            Используйте простые фразы или шаблоны из блокнота.
+          </div>
         </div>
+
+
         <div class="modal-dialog__options">
           <button class="btn btn-primary" @click="added ? (addition = true) : send()">
             <i class="material-icons">&#xE163;</i>

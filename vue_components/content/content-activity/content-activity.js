@@ -6,6 +6,9 @@ var ContentActivity = Vue.component('content-activity', {
         return {
             title: '',
             text: '',
+            file: '',
+            more: null,
+            edit: null,
             loader: true,
             error: false,
         }
@@ -19,10 +22,14 @@ var ContentActivity = Vue.component('content-activity', {
             });
         },
         loaded(data) {
-            this.text = data;
             this.loader = false;
-            if (!data || data.length() < 50) {
+            if (!data.content) {
                 this.failed();
+            } else {
+                this.text = data.content;
+                this.file = data.file;
+                this.more = data.more ? data.more : null;
+                this.edit = data.edit ? data.edit : null;
             }
         },
         failed() {

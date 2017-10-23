@@ -2720,6 +2720,14 @@ a.name:hover {
 .dialog-form i {
   vertical-align: bottom;
 }
+.dialog-form__hint {
+  font-size: 12px;
+  color: #999999;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
 .human-dialog__input {
   border-width: 0px;
 }

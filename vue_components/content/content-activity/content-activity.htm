@@ -22,6 +22,16 @@
       <div class="activity__content">
         <div class="activity__loader" v-show="loader && !error">Загружаю...</div>
         <div v-html="text"></div>
+        <div>
+          <a class="btn btn-primary" :href="more" target="_blank" v-show="more">
+            <span aria-hidden="true" class="glyphicon glyphicon-file"></span>
+            Основной текст
+          </a>
+          <a class="btn btn-default" :href="edit" target="_blank" v-show="edit">
+            <span aria-hidden="true" class="glyphicon glyphicon-pencil"></span>
+            Редактировать
+          </a>
+        </div>
       </div>
     </div>
   </div>

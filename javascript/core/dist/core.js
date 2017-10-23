@@ -191,7 +191,8 @@ Vue.component('abuse-dialog', {
             var _this = this;
 
             var hash = getTimestamp();
-            var text = this.selected.title + ', ' + this.selected.text + ' [' + this.comment + ']';
+            var text = this.selected.title + ', ' + this.selected.text;
+            text = this.comment ? text + (' [' + this.comment + ']') : text;
             var data = {
                 id: this.humanId,
                 captcha: '',
@@ -215,6 +216,9 @@ Vue.component('abuse-dialog', {
 
 Vue.component('claim-needed', {
     template: '#claim-needed'
+});
+Vue.component('cliche-dialog', {
+    template: '#cliche-dialog'
 });
 
 var AccountActivity = Vue.component('account-activity', {
@@ -1305,6 +1309,9 @@ var ContentActivity = Vue.component('content-activity', {
         return {
             title: '',
             text: '',
+            file: '',
+            more: null,
+            edit: null,
             loader: true,
             error: false
         };
@@ -1323,10 +1330,14 @@ var ContentActivity = Vue.component('content-activity', {
             });
         },
         loaded: function loaded(data) {
-            this.text = data;
             this.loader = false;
-            if (!data || data.length() < 50) {
+            if (!data.content) {
                 this.failed();
+            } else {
+                this.text = data.content;
+                this.file = data.file;
+                this.more = data.more ? data.more : null;
+                this.edit = data.edit ? data.edit : null;
             }
         },
         failed: function failed() {
@@ -1370,6 +1381,14 @@ var DealContentPage = Vue.component('deal-page', {
     mounted: function mounted() {
         this.title = 'Информация';
         this.load('/content/deal/' + this.link);
+    }
+});
+
+var HelpContentPage = Vue.component('help-page', {
+    extends: ContentActivity,
+    mounted: function mounted() {
+        this.title = 'Справка';
+        this.load('/content/help/' + this.link);
     }
 });
 
@@ -5370,7 +5389,7 @@ var routes = [{ path: '/write/:humanId(\\d+)/(.*)?', name: 'quickWrite', compone
     children: [{ path: ':humanId(\\d+)/(.*)?', name: 'dialog', meta: { back: '/intimate' }, component: MessagesActivity, props: true,
         children: [{ path: 'uploads', name: 'uploads', meta: { back: '.' }, component: PhotoSettings, props: true }, { path: 'incoming', name: 'incoming', meta: { back: '.' }, component: IncomingPhoto, props: true }]
     }]
-}, { path: '/confirm-sex/:show?', component: SexConfirm, props: true }, { path: '/protect', component: ModeratorActivity }, { path: '/content/deal/:link/:locale?', component: DealContentPage, props: true }, { path: '/content/rules/:locale?', component: RulesContentPage, props: true }, { path: '/content/careers/:locale?', component: СareersContentPage, props: true }, { path: '/promo/:link', component: ContentModal, props: true }, { path: '(.*)?/settings/search', meta: { back: '/' }, component: SearchSettings,
+}, { path: '/confirm-sex/:show?', component: SexConfirm, props: true }, { path: '/protect', component: ModeratorActivity }, { path: '/content/deal/:link/:locale?', component: DealContentPage, props: true }, { path: '/content/rules/:locale?', component: RulesContentPage, props: true }, { path: '/content/careers/:locale?', component: СareersContentPage, props: true }, { path: '/help/:link/:locale?', component: HelpContentPage, props: true }, { path: '/promo/:link', component: ContentModal, props: true }, { path: '(.*)?/settings/search', meta: { back: '/' }, component: SearchSettings,
     beforeEnter: function beforeEnter(to, from, next) {
         return store.state.user.sex ? next() : next('/confirm-sex/search');
     }

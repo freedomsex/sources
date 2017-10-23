@@ -22,7 +22,8 @@ Vue.component('abuse-dialog', {
         },
         send() {
             let hash = getTimestamp();
-            let text = `${this.selected.title}, ${this.selected.text} [${this.comment}]`;
+            let text = `${this.selected.title}, ${this.selected.text}`;
+                text = this.comment ? text + ` [${this.comment}]` : text;
             let data = {
                 id: this.humanId,
                 captcha: '',
