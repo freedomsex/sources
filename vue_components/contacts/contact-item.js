@@ -3,6 +3,7 @@ Vue.component('contact-item', {
     props: [
       'item',
       'index',
+      'idle',
       'quick',
     ],
     data() {

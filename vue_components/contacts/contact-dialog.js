@@ -34,7 +34,7 @@ var ContactDialog = {
             let max = this.offset <= this.max - this.batch;
             let min = this.amount >= this.batch;
             return (min && max);
-        }
+        },
     },
     methods: {
         close() {
@@ -102,7 +102,10 @@ const InitialDialog = Vue.component('initial-dialog', {
         contacts() {
             //console.log(this.$store);
             return this.$store.state.contacts.initial.list;
-        }
+        },
+        settings() {
+            return this.$store.state.search.settings;
+        },
     },
     methods: {
         load() {
@@ -128,6 +131,26 @@ const InitialDialog = Vue.component('initial-dialog', {
         splice(index) {
             //console.log(this.$store); return;
             this.$store.commit('initial/delete', index);
+        },
+        idle(data) {
+            console.log('idle', 123);
+            let result = false;
+            let {sex, city: where, age} = data.user;
+            let {who, city, up, to, town: closed} = this.settings;
+            console.log('idle', [data.user, this.settings]);
+            if (who && who != sex) {
+                result = true;
+            }
+            if (city != where && closed) {
+                result = true;
+            }
+            if (up && up >= age) {
+                result = true;
+            }
+            if (to && to <= age) {
+                result = true;
+            }
+            return result;
         },
     },
     template: '#initial-dialog'

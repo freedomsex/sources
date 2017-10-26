@@ -6,6 +6,7 @@
       <contact-item v-for="(item, index) in contacts" :key="index"
         :item="item"
         :index="index"
+        idle="idle(item)"
         quick="true"
         @bun="bun"
         @read="read"

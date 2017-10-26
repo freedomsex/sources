@@ -1070,6 +1070,9 @@ var InitialDialog = Vue.component('initial-dialog', {
         contacts: function contacts() {
             //console.log(this.$store);
             return this.$store.state.contacts.initial.list;
+        },
+        settings: function settings() {
+            return this.$store.state.search.settings;
         }
     },
     methods: {
@@ -1100,6 +1103,35 @@ var InitialDialog = Vue.component('initial-dialog', {
         splice: function splice(index) {
             //console.log(this.$store); return;
             this.$store.commit('initial/delete', index);
+        },
+        idle: function idle(data) {
+            console.log('idle', 123);
+            var result = false;
+            var _data$user = data.user,
+                sex = _data$user.sex,
+                where = _data$user.city,
+                age = _data$user.age;
+            var _settings = this.settings,
+                who = _settings.who,
+                city = _settings.city,
+                up = _settings.up,
+                to = _settings.to,
+                closed = _settings.town;
+
+            console.log('idle', [data.user, this.settings]);
+            if (who && who != sex) {
+                result = true;
+            }
+            if (city != where && closed) {
+                result = true;
+            }
+            if (up && up >= age) {
+                result = true;
+            }
+            if (to && to <= age) {
+                result = true;
+            }
+            return result;
         }
     },
     template: '#initial-dialog'
@@ -1204,7 +1236,7 @@ var SendsDialog = Vue.component('sends-dialog', {
 });
 
 Vue.component('contact-item', {
-    props: ['item', 'index', 'quick'],
+    props: ['item', 'index', 'idle', 'quick'],
     data: function data() {
         return {
             account: false,

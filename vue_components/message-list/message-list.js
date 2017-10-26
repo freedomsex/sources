@@ -121,7 +121,7 @@ Vue.component('message-list', {
         },
         userId() {
             return this.$store.state.user.uid;
-        }
+        },
     },
     template: '#message-list'
 });
