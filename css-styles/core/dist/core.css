@@ -2370,7 +2370,7 @@ a.name:hover {
   margin-right: 1px;
 }
 .message-item__bunn.idle {
-  background-color: #666666;
+  background-color: #999999;
 }
 .message-item__bunn-alert {
   cursor: pointer;

@@ -3,7 +3,7 @@
   <div class="contact-item" :class="{idle: idle}">
     <div class="contact-item__content" @click="show">
       <div class="contact-item__info">
-        <span class="user-list__name" :class="{idle: idle}">{{name}}</span><span v-show="age || city">,</span>
+        <span class="user-list__name" :class="{idle: idle}">{{name}}</span>
         <span class="user-list__age" :class="{idle: idle}" v-show="age">{{age}}</span>
         <span class="user-list__city" :class="{idle: idle}" v-show="city">{{city}}</span>
       </div>
