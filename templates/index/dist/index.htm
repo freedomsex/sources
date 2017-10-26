@@ -17,7 +17,7 @@
     
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1509017330567">
+<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1509017565494">
 
   <script type="text/javascript">  
     function get_cookie ( cookie_name )
@@ -779,8 +779,11 @@
       </div>
       Все ответы приходят во вкладку "Общение". Пишите сообщения - это Бесплатно, а значит всё честно и реально!
     </div>
+
     <div class="contact-list__next">
-      <div class="btn btn-default btn-xs" @click="next()" :disabled="response == false" v-show="more"> Следующие </div>
+      <div class="btn btn-default btn-sm" @click="next()" :disabled="response == false" v-show="more">
+        Следующие
+      </div>
     </div>
 
     <router-view @sended="splice"></router-view>
@@ -815,8 +818,11 @@
       </div>
       Воспользуйтесь Поиском, отправьте первое сообщение, это и будет предложением знакомства.
     </div>
+
     <div class="contact-list__next">
-      <div class="btn btn-default btn-xs" @click="next()" :disabled="response == false" v-show="more"> Следующие </div>
+      <div class="btn btn-default btn-sm" @click="next()" :disabled="response == false" v-show="more">
+        Следующие
+      </div>
     </div>
     <messages-activity @close="dialog = false" :humanId="dialog" :title="title" v-if="dialog"/>
 
@@ -2018,7 +2024,7 @@
 
  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/static/js/core.min.js?rel=1509017330565"></script>
+<script type="text/javascript" src="/static/js/core.min.js?rel=1509017565492"></script>
 <!-- Исходники можно найти в репозитории. Там же собранные не сжатые файлы -->
 <script type="text/javascript">
     // var addthis_config = {"data_track_addressbar":false};

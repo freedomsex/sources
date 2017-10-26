@@ -538,8 +538,11 @@
       </div>
       Все ответы приходят во вкладку "Общение". Пишите сообщения - это Бесплатно, а значит всё честно и реально!
     </div>
+
     <div class="contact-list__next">
-      <div class="btn btn-default btn-xs" @click="next()" :disabled="response == false" v-show="more"> Следующие </div>
+      <div class="btn btn-default btn-sm" @click="next()" :disabled="response == false" v-show="more">
+        Следующие
+      </div>
     </div>
 
     <router-view @sended="splice"></router-view>
@@ -574,8 +577,11 @@
       </div>
       Воспользуйтесь Поиском, отправьте первое сообщение, это и будет предложением знакомства.
     </div>
+
     <div class="contact-list__next">
-      <div class="btn btn-default btn-xs" @click="next()" :disabled="response == false" v-show="more"> Следующие </div>
+      <div class="btn btn-default btn-sm" @click="next()" :disabled="response == false" v-show="more">
+        Следующие
+      </div>
     </div>
     <messages-activity @close="dialog = false" :humanId="dialog" :title="title" v-if="dialog"/>
 
