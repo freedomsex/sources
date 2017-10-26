@@ -29,7 +29,26 @@
     overflow: hidden;
     font-size: 14px;
 
-    &-info {
+    &__content {
+        .link;
+        display: flex;
+        flex-direction: column;
+        flex: 1 2 auto;
+        padding: 7px @indent-sm;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    &__option {
+        flex: 0 0 90px;
+        align-self: center;
+        text-align: right;
+        // width: 100px;
+    }
+
+    &__info {
+        flex: 1 1 auto;
+        color: @dark-light;
         .user-list__name {
             color: @dark;
         }
@@ -44,27 +63,10 @@
         }
     }
 
-    &-content {
-        .link;
-        flex: 1 0 auto;
-        padding: 7px @indent-sm;
-        white-space: nowrap;
-    }
-
-    &-preview {
+    &__preview {
+        flex: 1 1 auto;
+        display: flex;
         //padding-top: @indent-xs;
-    }
-
-    &-option {
-        flex: 0 0 auto;
-        padding-top: 2px;
-        bottom: 0;
-        text-align: right;
-        // width: 100px;
-    }
-
-    &:after {
-      .clear-fix;
     }
 
     &.idle {
@@ -72,6 +74,7 @@
     }
 
     &__message {
+        flex: 1 1 auto;
         color: @gray-dark;
         overflow: hidden;
         display: inline-block;
@@ -94,12 +97,17 @@
         }
 
         &-read {
+            flex: 0 0 auto;
             background-color: @purpur-dark;
             width: 8px;
             height: 8px;
             display: inline-block;
             border-radius: 10px;
             vertical-align: middle;
+
+            &.idle {
+                background-color: @gray;
+            }
         }
     }
 }

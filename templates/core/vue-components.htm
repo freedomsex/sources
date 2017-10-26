@@ -512,11 +512,19 @@
 <script type="text/x-template" id="initial-dialog">
   <default-activity @close="close">
     <span slot="caption">Знакомства</span>
+
+    <div class="menu-user__navbar-right" slot="option">
+      <div class="navbar-button" @click="$router.push('/settings/search')">
+        <i class="material-icons">&#xE8B8;</i>
+        Настроить
+      </div>
+    </div>
+
     <div class="contact-list" v-if="count">
       <contact-item v-for="(item, index) in contacts" :key="index"
         :item="item"
         :index="index"
-        idle="idle(item)"
+        :idle="idle(item)"
         quick="true"
         @bun="bun"
         @read="read"
@@ -578,26 +586,26 @@
 
 <script type="text/x-template" id="contact-item">
   <div class="contact-item" :class="{idle: idle}">
-    <div class="contact-item-content" @click="show">
-      <div class="contact-item-info">
+    <div class="contact-item__content" @click="show">
+      <div class="contact-item__info">
         <span class="user-list__name" :class="{idle: idle}">{{name}}</span><span v-show="age || city">,</span>
         <span class="user-list__age" :class="{idle: idle}" v-show="age">{{age}}</span>
         <span class="user-list__city" :class="{idle: idle}" v-show="city">{{city}}</span>
       </div>
-      <div class="contact-item-preview">
+      <div class="contact-item__preview">
 
-        <span class="contact__status-read" v-if="unread"></span>
+        <span class="contact__status-read" :class="{idle: idle}" v-if="unread"></span>
         <span aria-hidden="true" class="glyphicon glyphicon-chevron-left contact-item__status-send" v-else v-show="sent"></span>
 
         <span class="contact-item__message" :class="{idle: idle}" v-html="message"></span>
       </div>
     </div>
     <div class="contact-item__option">
-      <span :class="0 ? 'message-item__bunn-alert' : 'message-item__bunn'"
+      <span class="message-item__bunn" :class="{idle: idle}"
         v-show="!sent" @click="confirmBun">
         <span aria-hidden="true" class="glyphicon glyphicon-thumbs-down"></span>
       </span>
-      <span class="message-item__remove" @click="confirmRemove">
+      <span class="message-item__remove" :class="{idle: idle}" @click="confirmRemove">
         <span aria-hidden="true" class="glyphicon glyphicon-remove"></span>
       </span>
     </div>

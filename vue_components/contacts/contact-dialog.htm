@@ -2,11 +2,19 @@
 <script type="text/x-template" id="initial-dialog">
   <default-activity @close="close">
     <span slot="caption">Знакомства</span>
+
+    <div class="menu-user__navbar-right" slot="option">
+      <div class="navbar-button" @click="$router.push('/settings/search')">
+        <i class="material-icons">&#xE8B8;</i>
+        Настроить
+      </div>
+    </div>
+
     <div class="contact-list" v-if="count">
       <contact-item v-for="(item, index) in contacts" :key="index"
         :item="item"
         :index="index"
-        idle="idle(item)"
+        :idle="idle(item)"
         quick="true"
         @bun="bun"
         @read="read"

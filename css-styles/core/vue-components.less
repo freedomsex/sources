@@ -469,7 +469,26 @@
     overflow: hidden;
     font-size: 14px;
 
-    &-info {
+    &__content {
+        .link;
+        display: flex;
+        flex-direction: column;
+        flex: 1 2 auto;
+        padding: 7px @indent-sm;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    &__option {
+        flex: 0 0 90px;
+        align-self: center;
+        text-align: right;
+        // width: 100px;
+    }
+
+    &__info {
+        flex: 1 1 auto;
+        color: @dark-light;
         .user-list__name {
             color: @dark;
         }
@@ -484,27 +503,10 @@
         }
     }
 
-    &-content {
-        .link;
-        flex: 1 0 auto;
-        padding: 7px @indent-sm;
-        white-space: nowrap;
-    }
-
-    &-preview {
+    &__preview {
+        flex: 1 1 auto;
+        display: flex;
         //padding-top: @indent-xs;
-    }
-
-    &-option {
-        flex: 0 0 auto;
-        padding-top: 2px;
-        bottom: 0;
-        text-align: right;
-        // width: 100px;
-    }
-
-    &:after {
-      .clear-fix;
     }
 
     &.idle {
@@ -512,6 +514,7 @@
     }
 
     &__message {
+        flex: 1 1 auto;
         color: @gray-dark;
         overflow: hidden;
         display: inline-block;
@@ -534,12 +537,17 @@
         }
 
         &-read {
+            flex: 0 0 auto;
             background-color: @purpur-dark;
             width: 8px;
             height: 8px;
             display: inline-block;
             border-radius: 10px;
             vertical-align: middle;
+
+            &.idle {
+                background-color: @gray;
+            }
         }
     }
 }
@@ -1067,104 +1075,104 @@ margin: 0 @indent-md @indent-md;
 }
 
 .message-item__info {
-  padding: @indent-sm @indent-sm;
+    padding: @indent-sm @indent-sm;
 }
 
 .message-item {
-  display:block;
-  margin: 2px 0;
-  &__sent {
-    text-align: right;
-    .message-item__balloon {
-      .message-balloon;
-      background: #D9E6F6;
-      float: right;
+    display:block;
+    margin: 2px 0;
+    &__sent {
+        text-align: right;
+        .message-item__balloon {
+            .message-balloon;
+            background: #D9E6F6;
+            float: right;
+        }
+        &:after {
+            .clear-fix;
+        }
     }
-    &:after {
-      .clear-fix;
-    }
-  }
 
-  &__received {
-    .message-item__balloon {
-      .message-balloon;
-      background: white;
+    &__received {
+        .message-item__balloon {
+            .message-balloon;
+            background: white;
+        }
+        &:after {
+            .clear-fix;
+        }
     }
-    &:after {
-      .clear-fix;
-    }
-  }
 }
 
 .message-image {
-  .link;
-   position: relative;
-   background-color: rgba(0,0,0, .3);
-   background-size: cover;
-   width: 200px;
-   height: 150px;
+    .link;
+    position: relative;
+    background-color: rgba(0,0,0, .3);
+    background-size: cover;
+    width: 200px;
+    height: 150px;
     text-align: center;
 }
 
 .message-image__info {
-  font-size: 0;
-  position: absolute;
-  bottom: 0;
-  right:0;
-  left:0;
-  padding: 20px 5px 5px 5px;
+    font-size: 0;
+    position: absolute;
+    bottom: 0;
+    right:0;
+    left:0;
+    padding: 20px 5px 5px 5px;
     text-align: right;
-  background: linear-gradient(to bottom right, transparent 70%, rgba(0,0,0, .3));
+    background: linear-gradient(to bottom right, transparent 70%, rgba(0,0,0, .3));
 }
 
 .message-image__time {
-  color: @white;
-  font-size: 11px;
-  margin-left: 5px;
+    color: @white;
+    font-size: 11px;
+    margin-left: 5px;
 }
 
 .message-image__status {
-  .message-info__status;
-  background-color: @white;
+    .message-info__status;
+    background-color: @white;
 }
 
 .message-image__play {
-  .btn-circle;
-  display: inline-block;
-  margin-top: 42px;
-  border-color: transparent;
-  background-color: rgba(0, 0, 0, .3);
-  img {
-   width:  48px;
-   height: 48px;
-   opacity: 0.7;
-   &:hover {
-    opacity: 0.9;
-   }
-  }
+    .btn-circle;
+    display: inline-block;
+    margin-top: 42px;
+    border-color: transparent;
+    background-color: rgba(0, 0, 0, .3);
+    img {
+        width:  48px;
+        height: 48px;
+        opacity: 0.7;
+        &:hover {
+            opacity: 0.9;
+        }
+    }
 }
 
 .message-info {
-  font-size: 0;
-  display: inline-block;
-  white-space: nowrap;
-  float: right;
-  margin-left: 7px;
-  margin-top: 5px;
+    font-size: 0;
+    display: inline-block;
+    white-space: nowrap;
+    float: right;
+    margin-left: 7px;
+    margin-top: 5px;
 }
 
 .message-info__time {
-  color: @gray-dark;
-  font-size: 11px;
-  margin-left: 5px;
+    color: @gray-dark;
+    font-size: 11px;
+    margin-left: 5px;
 }
 
 .message-info__status {
-  background-color: @purpur-dark;
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 10px;
+    background-color: @purpur-dark;
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 10px;
 }
 
 .message-item__date {
@@ -1181,39 +1189,49 @@ margin: 0 @indent-md @indent-md;
 }
 
 .message-item__options {
-  min-height: @indent-lg + 2;
+    min-height: @indent-lg + 2;
 }
 
 .message-item__spliter {
-  min-height: @indent-sm;
+    min-height: @indent-sm;
 }
 
-.message-item__ {
-  &bunn {
-    .btn-circle;
-    background-color: #337ab7;
-    margin: @indent-xs @indent-sm;
-    margin-right: 1px;
-  }
-  &bunn-alert {
-    .btn-circle;
-    background-color: #d9534f;
-    margin: @indent-xs @indent-sm;
-    margin-right: 1px;
-  }
+.message-item {
+    &__bunn {
+        .btn-circle;
+        background-color: #337ab7;
+        margin: @indent-xs @indent-sm;
+        margin-right: 1px;
+
+        &.idle {
+            background-color: @dark-light;
+        }
+    }
+
+    &__bunn-alert {
+        .btn-circle;
+        background-color: #d9534f;
+        margin: @indent-xs @indent-sm;
+        margin-right: 1px;
+    }
+
+    &__remove {
+        .btn-circle;
+        background-color: @gray-light;
+        margin: @indent-xs @indent-sm;
+        margin-left: 1px;
+
+        &.idle {
+            background-color: @gray;
+        }
+    }
 }
 
-.message-item__remove {
-  .btn-circle;
-  background-color: @gray-light;
-  margin: @indent-xs @indent-sm;
-  margin-left: 1px;
-}
 
 .message-item__delete {
-  padding: @indent-xs @indent-sm + 1;
-  display: inline-block;
-  font-size: @font-sm;
+    padding: @indent-xs @indent-sm + 1;
+    display: inline-block;
+    font-size: @font-sm;
     transition: color 0.2s ease;
     -moz-transition: color 0.2s ease;
     -o-transition: color 0.2s ease;
