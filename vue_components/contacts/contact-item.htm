@@ -9,7 +9,7 @@
       </div>
       <div class="contact-item__preview">
 
-        <span class="contact__status-read" :class="{idle: idle}" v-if="unread"></span>
+        <span class="contact-item__status-read" :class="{idle: idle}" v-if="unread"></span>
         <span aria-hidden="true" class="glyphicon glyphicon-chevron-left contact-item__status-send" v-else v-show="sent"></span>
 
         <span class="contact-item__message" :class="{idle: idle}" v-html="message"></span>

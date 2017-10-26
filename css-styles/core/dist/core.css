@@ -1671,6 +1671,9 @@ a.name:hover {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 .contact-item.idle {
   background: #e5e5e5;
@@ -1692,13 +1695,16 @@ a.name:hover {
   color: #cccccc;
 }
 .contact-item__status-send {
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 10px;
+          flex: 0 0 10px;
   color: #cccccc;
   font-size: 12px;
 }
 .contact-item__status-read {
   -webkit-box-flex: 0;
-      -ms-flex: 0 0 auto;
-          flex: 0 0 auto;
+      -ms-flex: 0 0 8px;
+          flex: 0 0 8px;
   background-color: #6F92D8;
   width: 8px;
   height: 8px;
