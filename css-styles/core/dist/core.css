@@ -1650,7 +1650,6 @@ a.name:hover {
   -webkit-box-flex: 1;
       -ms-flex: 1 1 auto;
           flex: 1 1 auto;
-  color: #666666;
 }
 .contact-item__info .user-list__name {
   color: #333333;
@@ -1676,7 +1675,8 @@ a.name:hover {
           align-items: center;
 }
 .contact-item.idle {
-  background: #e5e5e5;
+  background: #f5f5f5;
+  border-color: #e5e5e5;
 }
 .contact-item__message {
   -webkit-box-flex: 1;
@@ -1692,7 +1692,7 @@ a.name:hover {
   text-overflow: ellipsis;
 }
 .contact-item__message.idle {
-  color: #cccccc;
+  color: #e5e5e5;
 }
 .contact-item__status-send {
   -webkit-box-flex: 0;
@@ -1713,7 +1713,7 @@ a.name:hover {
   vertical-align: middle;
 }
 .contact-item__status-read.idle {
-  background-color: #cccccc;
+  background-color: #e5e5e5;
 }
 #captcha-dialog {
   max-width: 400px;
@@ -2370,7 +2370,7 @@ a.name:hover {
   margin-right: 1px;
 }
 .message-item__bunn.idle {
-  background-color: #999999;
+  background-color: #cccccc;
 }
 .message-item__bunn-alert {
   cursor: pointer;
@@ -2397,7 +2397,7 @@ a.name:hover {
   margin-left: 1px;
 }
 .message-item__remove.idle {
-  background-color: #cccccc;
+  background-color: #e5e5e5;
 }
 .message-item__delete {
   padding: 5px 11px;

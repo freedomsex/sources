@@ -48,7 +48,6 @@
 
     &__info {
         flex: 1 1 auto;
-        color: @dark-light;
         .user-list__name {
             color: @dark;
         }
@@ -71,7 +70,8 @@
     }
 
     &.idle {
-        background: @gray-light;
+        background: @light;
+        border-color: @gray-light;
     }
 
     &__message {
@@ -86,7 +86,7 @@
         text-overflow: ellipsis;
 
         &.idle {
-            color: @gray;
+            color: @gray-light;
         }
     }
 
@@ -108,7 +108,7 @@
             vertical-align: middle;
 
             &.idle {
-                background-color: @gray;
+                background-color: @gray-light;
             }
         }
     }
