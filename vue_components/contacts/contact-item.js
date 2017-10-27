@@ -10,7 +10,7 @@ Vue.component('contact-item', {
         return {
             account: false,
             detail:  false,
-            confirm: false
+            confirm: false,
         }
     },
     computed: {
@@ -45,10 +45,16 @@ Vue.component('contact-item', {
         humanId() {
             return this.item.human_id;
         },
+        acceptSettings() {
+            return this.$store.state.accepts.settings;
+        },
     },
     methods: {
         show() {
             //this.$emit('show');
+            if (this.idle && !this.acceptSettings) {
+                this.$emit('accept');
+            } else
             if (this.quick) {
                 this.reply();
             } else {

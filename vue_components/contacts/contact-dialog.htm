@@ -19,6 +19,7 @@
         @bun="bun"
         @read="read"
         @close="close"
+        @accept="modals.acceptSettings = true"
         @remove="remove"/>
     </div>
     <div class="activity__content" v-else>
@@ -34,7 +35,9 @@
         Следующие
       </div>
     </div>
-
+    <settings-inform v-if="modals.acceptSettings"
+     @close="modals.acceptSettings = false"
+     @confirm="accept"/>
     <router-view @sended="splice"></router-view>
   </default-activity>
 </script>

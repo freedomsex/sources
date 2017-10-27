@@ -17,7 +17,7 @@
     
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1509023700947">
+<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1509102541889">
 
   <script type="text/javascript">  
     function get_cookie ( cookie_name )
@@ -770,6 +770,7 @@
         @bun="bun"
         @read="read"
         @close="close"
+        @accept="modals.acceptSettings = true"
         @remove="remove"/>
     </div>
     <div class="activity__content" v-else>
@@ -785,7 +786,9 @@
         Следующие
       </div>
     </div>
-
+    <settings-inform v-if="modals.acceptSettings"
+     @close="modals.acceptSettings = false"
+     @confirm="accept"/>
     <router-view @sended="splice"></router-view>
   </default-activity>
 </script>
@@ -864,6 +867,33 @@
       @remove="remove"/>
   </div>
 </script>
+
+
+<script type="text/x-template" id="settings-inform">
+  <div>
+    <modal-dialog @close="$emit('close')">
+      <div class="dialog-caption">
+        <div class="dialog-caption__title">Удобные знакомства</div>
+        <div class="dialog-caption__option">
+          <i class="material-icons" @click="$emit('close')">&#xE14C;</i>
+        </div>
+      </div>
+      <div class="modal-dialog__wrapper capped">
+        <div class="modal-dialog__section">
+          Настройте знакомства для более комфортного общения.
+          Нажмите "Настройки" или "Настроить поиск" чтобы уточнить ваши параметры.
+          Неподходящие знакомства отмечаются особым образом.
+        </div>
+        <div class="modal-dialog__footer">
+          <button class="btn btn-primary btn-fat" @click="confirm()">
+            OK
+          </button>
+        </div>
+      </div>
+    </modal-dialog>
+  </div>
+</script>
+
 
 
 <script type="text/x-template" id="content-activity">
@@ -1771,6 +1801,7 @@
 
 <script type="text/x-template" id="search-settings">
   <closed-activity @close="close">
+    <span slot="caption">Кого вы ищете?</span>
     <div class="activity-section">
       <div class="activity-section__title">Мой город:</div>
       <div class="form-inline" @click="$router.push({path: 'account', query: {back: 'search'}})">
@@ -2024,7 +2055,7 @@
 
  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/static/js/core.min.js?rel=1509023700944"></script>
+<script type="text/javascript" src="/static/js/core.min.js?rel=1509102541888"></script>
 <!-- Исходники можно найти в репозитории. Там же собранные не сжатые файлы -->
 <script type="text/javascript">
     // var addthis_config = {"data_track_addressbar":false};

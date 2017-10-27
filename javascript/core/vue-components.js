@@ -751,6 +751,9 @@ var ContactDialog = {
             batch: 10,
             max: 100,
             dialog: false,
+            modals: {
+                acceptSettings: false,
+            }
         }
     },
     computed: {
@@ -889,6 +892,9 @@ const InitialDialog = Vue.component('initial-dialog', {
             }
             return result;
         },
+        accept() {
+            this.$store.commit('accepts/settings');
+        },
     },
     template: '#initial-dialog'
 });
@@ -985,7 +991,7 @@ Vue.component('contact-item', {
         return {
             account: false,
             detail:  false,
-            confirm: false
+            confirm: false,
         }
     },
     computed: {
@@ -1020,10 +1026,16 @@ Vue.component('contact-item', {
         humanId() {
             return this.item.human_id;
         },
+        acceptSettings() {
+            return this.$store.state.accepts.settings;
+        },
     },
     methods: {
         show() {
             //this.$emit('show');
+            if (this.idle && !this.acceptSettings) {
+                this.$emit('accept');
+            } else
             if (this.quick) {
                 this.reply();
             } else {
@@ -1078,6 +1090,15 @@ Vue.component('contact-item', {
 });
 
 
+Vue.component('settings-inform', {
+    template: '#settings-inform',
+    methods: {
+        confirm() {
+            this.$emit('confirm');
+            this.$emit('close');
+        },
+    },
+});
 
 var ContentActivity = Vue.component('content-activity', {
     extends: ActivityActions,

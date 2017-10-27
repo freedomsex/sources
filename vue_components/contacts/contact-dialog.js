@@ -14,6 +14,9 @@ var ContactDialog = {
             batch: 10,
             max: 100,
             dialog: false,
+            modals: {
+                acceptSettings: false,
+            }
         }
     },
     computed: {
@@ -151,6 +154,9 @@ const InitialDialog = Vue.component('initial-dialog', {
                 result = true;
             }
             return result;
+        },
+        accept() {
+            this.$store.commit('accepts/settings');
         },
     },
     template: '#initial-dialog'

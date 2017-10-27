@@ -972,7 +972,10 @@ var ContactDialog = {
             offset: 0,
             batch: 10,
             max: 100,
-            dialog: false
+            dialog: false,
+            modals: {
+                acceptSettings: false
+            }
         };
     },
 
@@ -1132,6 +1135,9 @@ var InitialDialog = Vue.component('initial-dialog', {
                 result = true;
             }
             return result;
+        },
+        accept: function accept() {
+            this.$store.commit('accepts/settings');
         }
     },
     template: '#initial-dialog'
@@ -1276,12 +1282,17 @@ Vue.component('contact-item', {
         },
         humanId: function humanId() {
             return this.item.human_id;
+        },
+        acceptSettings: function acceptSettings() {
+            return this.$store.state.accepts.settings;
         }
     },
     methods: {
         show: function show() {
             //this.$emit('show');
-            if (this.quick) {
+            if (this.idle && !this.acceptSettings) {
+                this.$emit('accept');
+            } else if (this.quick) {
                 this.reply();
             } else {
                 //this.anketa();
@@ -1332,6 +1343,16 @@ Vue.component('contact-item', {
         }
     },
     template: '#contact-item'
+});
+
+Vue.component('settings-inform', {
+    template: '#settings-inform',
+    methods: {
+        confirm: function confirm() {
+            this.$emit('confirm');
+            this.$emit('close');
+        }
+    }
 });
 
 var ContentActivity = Vue.component('content-activity', {
@@ -4012,7 +4033,8 @@ var accepts = {
     state: {
         photo: false,
         search: false,
-        moderator: false
+        moderator: false,
+        settings: false
     },
     actions: {
         LOAD: function LOAD(_ref11) {
@@ -4035,6 +4057,10 @@ var accepts = {
         },
         moderator: function moderator(state, value) {
             state.moderator = value == true;
+            ls.set('accepts', state);
+        },
+        settings: function settings(state) {
+            state.settings = true;
             ls.set('accepts', state);
         }
     }
