@@ -1093,21 +1093,20 @@ const InitialDialog = Vue.component('initial-dialog', {
             this.$store.commit('initial/delete', index);
         },
         idle(data) {
-            console.log('idle', 123);
             let result = false;
             let {sex, city: where, age} = data.user;
             let {who, city, up, to, town: closed} = this.settings;
-            console.log('idle', [data.user, this.settings]);
+
             if (who && who != sex) {
                 result = true;
             }
             if (city != where && closed) {
                 result = true;
             }
-            if (up && up >= age) {
+            if (up && up > age) {
                 result = true;
             }
-            if (to && to <= age) {
+            if (to && to < age) {
                 result = true;
             }
             return result;
