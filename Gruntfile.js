@@ -44,11 +44,7 @@ module.exports = function (grunt) {
                         'javascript/core/src/*.js',
                     ],
                 }
-            },
-            admin: {
-                src: ['javascript/admin/src/*.js'],
-                dest: 'javascript/admin/dist/admin.js',
-            },
+            }, 
             bundle_dev: {
                 files: {
                     'javascript/core/dist/core.js': [
@@ -192,7 +188,6 @@ module.exports = function (grunt) {
                 files: [
                     'javascript/core/vue-components.js',
                     'javascript/core/src/**/*.js',
-                    'javascript/admin/src/*.js',
                 ],
                 tasks: ['concat:javascript', 'babel:javascript', 'replace:dev', 'concat:bundle_dev'],
                 options: {
@@ -278,8 +273,7 @@ module.exports = function (grunt) {
         'less:dev'
     ]);
     //grunt.registerTask('default', ['concat', 'babel', 'uglify', 'less', 'processhtml']);
-    grunt.registerTask('dev',  ['core', 'replace:dev', 'concat:bundle_dev', 'processhtml:dev', 'cachebreaker']);
-    grunt.registerTask('admin', ['concat:admin']);
+    grunt.registerTask('dev',  ['core', 'replace:dev', 'concat:bundle_dev', 'processhtml:dev', 'cachebreaker']); 
     grunt.registerTask('prod', ['core', 'replace:dist', 'uglify', 'concat:bundle_prod', 'processhtml:dist', 'autoprefixer', 'cachebreaker']);
     grunt.registerTask('p',    ['prod', 'watch']);
     grunt.registerTask('d',    ['dev', 'watch']);
