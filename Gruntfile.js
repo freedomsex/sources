@@ -279,6 +279,7 @@ module.exports = function (grunt) {
     ]);
     //grunt.registerTask('default', ['concat', 'babel', 'uglify', 'less', 'processhtml']);
     grunt.registerTask('dev',  ['core', 'replace:dev', 'concat:bundle_dev', 'processhtml:dev', 'cachebreaker']);
+    grunt.registerTask('admin', ['concat:admin']);
     grunt.registerTask('prod', ['core', 'replace:dist', 'uglify', 'concat:bundle_prod', 'processhtml:dist', 'autoprefixer', 'cachebreaker']);
     grunt.registerTask('p',    ['prod', 'watch']);
     grunt.registerTask('d',    ['dev', 'watch']);
