@@ -81,7 +81,6 @@ module.exports = function (grunt) {
                   rootpath: 'css-styles',
                 },
                 files: {
-                  "css-styles/admin/dist/admin.css": "css-styles/admin/src/_main.less",
                   "css-styles/core/dist/core.css":   "css-styles/core/src/_main.less",
                   "css-styles/blog/dist/blog.css":   "css-styles/blog/src/_main.less",
                 }
@@ -200,7 +199,6 @@ module.exports = function (grunt) {
                     'css-styles/core/vue-components.less',
                     'css-styles/0_import/**/*',
                     'css-styles/core/src/*',
-                    'css-styles/admin/src/*',
                     'css-styles/blog/src/*',
                 ],
                 tasks: ['less:dev'],
