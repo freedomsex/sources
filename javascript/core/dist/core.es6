@@ -2478,7 +2478,10 @@ Vue.component('search-item', {
     },
     computed: {
         search() {
-            var result = 'парня или девушку ';
+            var result = 'парня ';
+            if (this.human.sex) {
+                result = this.human.sex == 2 ? 'парня ' : 'девушку ';
+            }
             if (this.human.who) {
                 result = this.human.who == 1 ? 'парня ' : 'девушку ';
             }
@@ -3240,7 +3243,6 @@ const SearchSettings = Vue.component('search-settings', {
     data() {
         return {
              ageRange: [0,16,17,18,20,23,25,27,30,35,40,45,50,60,80],
-             selectWho: 0,
              selectUp: 0,
              selectTo: 0,
              selectCity: '',
@@ -3303,7 +3305,6 @@ const SearchSettings = Vue.component('search-settings', {
             }
             return (
                 this.selectCity == this.city &&
-                this.selectWho == this.who &&
                 this.selectUp == this.up &&
                 this.selectTo == this.to &&
                 this.checkedTown == this.town &&
@@ -3315,7 +3316,6 @@ const SearchSettings = Vue.component('search-settings', {
     created() {
         let {city, who, up, to} = defaultSettings; // GLOBAL
         this.selectCity = this.city ? this.city : city;
-        this.selectWho = this.who ? this.who : who;
         this.selectUp = this.up ? this.up : this.age(up);
         this.selectTo = this.to ? this.to : this.age(to);
         this.checkedTown = this.town;
@@ -3349,7 +3349,6 @@ const SearchSettings = Vue.component('search-settings', {
         // },
         save() {
             var data = {
-                who:  this.selectWho,
                 city: this.city,
                 up:   this.selectUp,
                 to:   this.selectTo,
@@ -4385,7 +4384,6 @@ var search = {
             city: '',
         },
         settings: {
-            who: 0,
             city: '',
             up: null,
             to: null,
@@ -4406,8 +4404,9 @@ var search = {
             });
         },
         LOAD({state, rootState, commit}) {
-            let {who, city, up, to, any} = state.settings;
+            let {city, up, to, any} = state.settings;
             let sex = rootState.user.sex;
+            let who = (sex == 1) ? 2 : 1;
             up = up ? up : 0;
             to = to ? to : 0;
             if (!city || any) {
@@ -4484,7 +4483,6 @@ var search = {
                 }
                 catch(e) { }
                 state.settings.city = data.city;
-                state.settings.who = Number(data.who);
                 state.settings.up = Number(data.up);
                 state.settings.to = Number(data.to);
                 state.settings.town = Boolean(data.town);

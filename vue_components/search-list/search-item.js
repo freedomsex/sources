@@ -30,7 +30,10 @@ Vue.component('search-item', {
     },
     computed: {
         search() {
-            var result = 'парня или девушку ';
+            var result = 'парня ';
+            if (this.human.sex) {
+                result = this.human.sex == 2 ? 'парня ' : 'девушку ';
+            }
             if (this.human.who) {
                 result = this.human.who == 1 ? 'парня ' : 'девушку ';
             }

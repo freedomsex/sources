@@ -1431,6 +1431,16 @@ a.name:hover {
   margin-bottom: 10px;
   font-size: 18px;
 }
+.activity-section__links {
+  margin-top: 15px;
+}
+.activity-section__links .section-link {
+  color: #0066cc;
+  cursor: pointer;
+  text-decoration: none;
+  margin-bottom: 5px;
+  display: block;
+}
 .default-activity {
   position: fixed;
   background: rgba(0, 0, 0, 0.2);
@@ -1798,6 +1808,9 @@ a.name:hover {
 }
 .content-activity .activity__content {
   padding-bottom: 25px;
+}
+.content-activity .activity__content h1 {
+  margin-top: 5px;
 }
 .content-modal__mask {
   position: fixed;

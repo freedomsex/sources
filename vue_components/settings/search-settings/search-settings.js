@@ -5,7 +5,6 @@ const SearchSettings = Vue.component('search-settings', {
     data() {
         return {
              ageRange: [0,16,17,18,20,23,25,27,30,35,40,45,50,60,80],
-             selectWho: 0,
              selectUp: 0,
              selectTo: 0,
              selectCity: '',
@@ -68,7 +67,6 @@ const SearchSettings = Vue.component('search-settings', {
             }
             return (
                 this.selectCity == this.city &&
-                this.selectWho == this.who &&
                 this.selectUp == this.up &&
                 this.selectTo == this.to &&
                 this.checkedTown == this.town &&
@@ -80,7 +78,6 @@ const SearchSettings = Vue.component('search-settings', {
     created() {
         let {city, who, up, to} = defaultSettings; // GLOBAL
         this.selectCity = this.city ? this.city : city;
-        this.selectWho = this.who ? this.who : who;
         this.selectUp = this.up ? this.up : this.age(up);
         this.selectTo = this.to ? this.to : this.age(to);
         this.checkedTown = this.town;
@@ -114,7 +111,6 @@ const SearchSettings = Vue.component('search-settings', {
         // },
         save() {
             var data = {
-                who:  this.selectWho,
                 city: this.city,
                 up:   this.selectUp,
                 to:   this.selectTo,

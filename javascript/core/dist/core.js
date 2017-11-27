@@ -2556,7 +2556,10 @@ Vue.component('search-item', {
 
     computed: {
         search: function search() {
-            var result = 'парня или девушку ';
+            var result = 'парня ';
+            if (this.human.sex) {
+                result = this.human.sex == 2 ? 'парня ' : 'девушку ';
+            }
             if (this.human.who) {
                 result = this.human.who == 1 ? 'парня ' : 'девушку ';
             }
@@ -3333,7 +3336,6 @@ var SearchSettings = Vue.component('search-settings', {
     data: function data() {
         return {
             ageRange: [0, 16, 17, 18, 20, 23, 25, 27, 30, 35, 40, 45, 50, 60, 80],
-            selectWho: 0,
             selectUp: 0,
             selectTo: 0,
             selectCity: '',
@@ -3397,7 +3399,7 @@ var SearchSettings = Vue.component('search-settings', {
             if (state.search.settings.to != this.to) {
                 return false;
             }
-            return this.selectCity == this.city && this.selectWho == this.who && this.selectUp == this.up && this.selectTo == this.to && this.checkedTown == this.town && this.checkedVirt == this.virt && this.checkedAnyCity == this.any;
+            return this.selectCity == this.city && this.selectUp == this.up && this.selectTo == this.to && this.checkedTown == this.town && this.checkedVirt == this.virt && this.checkedAnyCity == this.any;
         }
     }),
     created: function created() {
@@ -3408,7 +3410,6 @@ var SearchSettings = Vue.component('search-settings', {
             to = _defaultSettings3.to; // GLOBAL
 
         this.selectCity = this.city ? this.city : city;
-        this.selectWho = this.who ? this.who : who;
         this.selectUp = this.up ? this.up : this.age(up);
         this.selectTo = this.to ? this.to : this.age(to);
         this.checkedTown = this.town;
@@ -3450,7 +3451,6 @@ var SearchSettings = Vue.component('search-settings', {
         // },
         save: function save() {
             var data = {
-                who: this.selectWho,
                 city: this.city,
                 up: this.selectUp,
                 to: this.selectTo,
@@ -4580,7 +4580,6 @@ var search = {
             city: ''
         },
         settings: {
-            who: 0,
             city: '',
             up: null,
             to: null,
@@ -4607,13 +4606,13 @@ var search = {
                 rootState = _ref43.rootState,
                 commit = _ref43.commit;
             var _state$settings = state.settings,
-                who = _state$settings.who,
                 city = _state$settings.city,
                 up = _state$settings.up,
                 to = _state$settings.to,
                 any = _state$settings.any;
 
             var sex = rootState.user.sex;
+            var who = sex == 1 ? 2 : 1;
             up = up ? up : 0;
             to = to ? to : 0;
             if (!city || any) {
@@ -4699,7 +4698,6 @@ var search = {
                     data = JSON.parse(data);
                 } catch (e) {}
                 state.settings.city = data.city;
-                state.settings.who = Number(data.who);
                 state.settings.up = Number(data.up);
                 state.settings.to = Number(data.to);
                 state.settings.town = Boolean(data.town);

@@ -1,7 +1,7 @@
 
 <script type="text/x-template" id="search-settings">
   <closed-activity @close="close">
-    <span slot="caption">Кого вы ищете?</span>
+    <span slot="caption">Настроить поиск</span>
     <div class="activity-section">
       <div class="activity-section__title">Мой город:</div>
       <div class="form-inline" @click="$router.push({path: 'account', query: {back: 'search'}})">
@@ -10,23 +10,6 @@
       </div>
       <label style="display: block; margin-top: 15px;"><input type="checkbox" v-model="checkedAnyCity">
         Искать в любом городе</label>
-    </div>
-    <div class="activity-section">
-      <div class="activity-section__title">Кого вы ищете:</div>
-      <div class="radio">
-        <label class="radio-inline">
-          <input type="radio" v-model.number="selectWho" value="2">
-          Девушку
-        </label>
-        <label class="radio-inline">
-          <input type="radio" v-model.number="selectWho" value="1">
-          Парня
-        </label>
-        <label class="radio-inline">
-          <input type="radio" v-model.number="selectWho" value="0">
-          Кого угодно
-        </label>
-      </div>
     </div>
 
     <div class="activity-section">
@@ -57,7 +40,10 @@
     </div>
 
     <div class="activity-section">
-      <a class="" href="http://freedomsex.me/блог/как-найти-девушку-или-парня-для-секса/" target="_blank">Больше возможностей</a>
+      <div class="activity-section__links">
+        <span class="section-link" @click="$router.push('/help/heterosexual')">Парни находят девушек</span>
+        <a class="section-link" href="http://freedomsex.me/блог/как-найти-девушку-или-парня-для-секса/" target="_blank">Больше возможностей</a>
+      </div>
     </div>
 
   </closed-activity>

@@ -504,7 +504,6 @@ var search = {
             city: '',
         },
         settings: {
-            who: 0,
             city: '',
             up: null,
             to: null,
@@ -525,8 +524,9 @@ var search = {
             });
         },
         LOAD({state, rootState, commit}) {
-            let {who, city, up, to, any} = state.settings;
+            let {city, up, to, any} = state.settings;
             let sex = rootState.user.sex;
+            let who = (sex == 1) ? 2 : 1;
             up = up ? up : 0;
             to = to ? to : 0;
             if (!city || any) {
@@ -603,7 +603,6 @@ var search = {
                 }
                 catch(e) { }
                 state.settings.city = data.city;
-                state.settings.who = Number(data.who);
                 state.settings.up = Number(data.up);
                 state.settings.to = Number(data.to);
                 state.settings.town = Boolean(data.town);
