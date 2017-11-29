@@ -5384,7 +5384,7 @@ var ApiContact = function (_Api6) {
         _classCallCheck(this, ApiContact);
 
         var key = store.state.apiToken;
-        var host = 'http://212.83.134.89:9000/';
+        var host = 'http://212.83.134.89/';
         return _possibleConstructorReturn(this, (ApiContact.__proto__ || Object.getPrototypeOf(ApiContact)).call(this, host, key, null, routing));
     }
 
