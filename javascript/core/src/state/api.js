@@ -213,7 +213,6 @@ class ApiUser extends Api {
 
     saveSearch(data) {
         data = {
-            search_sex: data.who,
             years_up: data.up,
             years_to: data.to,
             option_mess_town: data.town,

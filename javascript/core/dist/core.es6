@@ -1400,6 +1400,14 @@ var HelpContentPage = Vue.component('help-page', {
     }
 });
 
+var ReleaseContentPage = Vue.component('release-page', {
+    extends: ContentActivity,
+    mounted() {
+        this.title = 'Что нового';
+        this.load(`/content/releases/${this.link}`);
+    }
+});
+
 var RulesContentPage = Vue.component('rules-page', {
     extends: ContentActivity,
     mounted() {
@@ -3809,6 +3817,56 @@ Vue.component('alert-widget', {
         this.compact = true;
     }
 });
+Vue.component('info-widget', {
+    data() {
+        return {
+            enable: true,
+            version: '2017-12-01',
+            users: {
+                idUp: null,
+                idTo: 67500000,
+                sex: null,
+                city: [],
+            },
+            accept: true,
+        }
+    },
+    mounted() {
+        this.accept = ls.get('release-info') <= this.version;
+    },
+    computed: {
+        userId() {
+            return this.$store.state.user.uid;
+        },
+        sex() {
+            return this.$store.state.user.sex;
+        },
+        city() {
+            return this.$store.state.user.city;
+        },
+    },
+    methods: {
+        forId(id) {
+            let result = true;
+            if (id) {
+                result = this.users.idUp ? id > this.users.idUp : result;
+                result = this.users.idTo ? id < this.users.idTo : result;
+            }
+            return result;
+        },
+        show() {
+            return (this.enable && !this.accept && this.forId(this.userId));
+        },
+        confirm() {
+            ls.set('release-info', this.version);
+            this.accept = true;
+        },
+        more() {
+            this.$router.push(`/releases/${this.version}`);
+        }
+    },
+    template: '#info-widget',
+});
 
 Vue.component('photo-dialog', {
     methods: {
@@ -4887,7 +4945,6 @@ class ApiUser extends Api {
 
     saveSearch(data) {
         data = {
-            search_sex: data.who,
             years_up: data.up,
             years_to: data.to,
             option_mess_town: data.town,
@@ -5079,6 +5136,7 @@ var routes = [
     { path: '/content/rules/:locale?', component: RulesContentPage, props: true },
     { path: '/content/careers/:locale?', component: СareersContentPage, props: true },
     { path: '/help/:link/:locale?', component: HelpContentPage, props: true },
+    { path: '/releases/:link/:locale?', component: ReleaseContentPage, props: true },
     { path: '/promo/:link', component: ContentModal, props: true },
 
     { path: '(.*)?/settings/search', meta: {back: '/'}, component: SearchSettings,

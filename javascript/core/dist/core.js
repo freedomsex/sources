@@ -1444,6 +1444,14 @@ var HelpContentPage = Vue.component('help-page', {
     }
 });
 
+var ReleaseContentPage = Vue.component('release-page', {
+    extends: ContentActivity,
+    mounted: function mounted() {
+        this.title = 'Что нового';
+        this.load('/content/releases/' + this.link);
+    }
+});
+
 var RulesContentPage = Vue.component('rules-page', {
     extends: ContentActivity,
     mounted: function mounted() {
@@ -3925,6 +3933,57 @@ Vue.component('alert-widget', {
         this.compact = true;
     }
 });
+Vue.component('info-widget', {
+    data: function data() {
+        return {
+            enable: true,
+            version: '2017-12-01',
+            users: {
+                idUp: null,
+                idTo: 67500000,
+                sex: null,
+                city: []
+            },
+            accept: true
+        };
+    },
+    mounted: function mounted() {
+        this.accept = ls.get('release-info') <= this.version;
+    },
+
+    computed: {
+        userId: function userId() {
+            return this.$store.state.user.uid;
+        },
+        sex: function sex() {
+            return this.$store.state.user.sex;
+        },
+        city: function city() {
+            return this.$store.state.user.city;
+        }
+    },
+    methods: {
+        forId: function forId(id) {
+            var result = true;
+            if (id) {
+                result = this.users.idUp ? id > this.users.idUp : result;
+                result = this.users.idTo ? id < this.users.idTo : result;
+            }
+            return result;
+        },
+        show: function show() {
+            return this.enable && !this.accept && this.forId(this.userId);
+        },
+        confirm: function confirm() {
+            ls.set('release-info', this.version);
+            this.accept = true;
+        },
+        more: function more() {
+            this.$router.push('/releases/' + this.version);
+        }
+    },
+    template: '#info-widget'
+});
 
 Vue.component('photo-dialog', {
     methods: {
@@ -5219,7 +5278,6 @@ var ApiUser = function (_Api4) {
         key: 'saveSearch',
         value: function saveSearch(data) {
             data = {
-                search_sex: data.who,
                 years_up: data.up,
                 years_to: data.to,
                 option_mess_town: data.town,
@@ -5444,7 +5502,7 @@ var routes = [{ path: '/write/:humanId(\\d+)/(.*)?', name: 'quickWrite', compone
     children: [{ path: ':humanId(\\d+)/(.*)?', name: 'dialog', meta: { back: '/intimate' }, component: MessagesActivity, props: true,
         children: [{ path: 'uploads', name: 'uploads', meta: { back: '.' }, component: PhotoSettings, props: true }, { path: 'incoming', name: 'incoming', meta: { back: '.' }, component: IncomingPhoto, props: true }]
     }]
-}, { path: '/confirm-sex/:show?', component: SexConfirm, props: true }, { path: '/protect', component: ModeratorActivity }, { path: '/content/deal/:link/:locale?', component: DealContentPage, props: true }, { path: '/content/rules/:locale?', component: RulesContentPage, props: true }, { path: '/content/careers/:locale?', component: СareersContentPage, props: true }, { path: '/help/:link/:locale?', component: HelpContentPage, props: true }, { path: '/promo/:link', component: ContentModal, props: true }, { path: '(.*)?/settings/search', meta: { back: '/' }, component: SearchSettings,
+}, { path: '/confirm-sex/:show?', component: SexConfirm, props: true }, { path: '/protect', component: ModeratorActivity }, { path: '/content/deal/:link/:locale?', component: DealContentPage, props: true }, { path: '/content/rules/:locale?', component: RulesContentPage, props: true }, { path: '/content/careers/:locale?', component: СareersContentPage, props: true }, { path: '/help/:link/:locale?', component: HelpContentPage, props: true }, { path: '/releases/:link/:locale?', component: ReleaseContentPage, props: true }, { path: '/promo/:link', component: ContentModal, props: true }, { path: '(.*)?/settings/search', meta: { back: '/' }, component: SearchSettings,
     beforeEnter: function beforeEnter(to, from, next) {
         return store.state.user.sex ? next() : next('/confirm-sex/search');
     }

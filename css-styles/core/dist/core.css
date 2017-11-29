@@ -3316,6 +3316,24 @@ a.name:hover {
   color: #666666;
   text-decoration: none;
 }
+.info-widget {
+  margin-top: 15px;
+  background: #ffffff;
+  background: #FCF8E3;
+  color: #8a6d3b;
+  padding: 15px 15px 15px;
+}
+.info-widget__title {
+  font-size: 24px;
+  margin-bottom: 5px;
+}
+.info-widget__options {
+  margin-top: 15px;
+}
+.info-widget__new-list {
+  font-size: 16px;
+  margin-top: 10px;
+}
 .split-top {
   margin-top: 15px;
 }

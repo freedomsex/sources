@@ -1,0 +1,18 @@
+
+<script type="text/x-template" id="info-widget">
+  <div class="container info-widget split-bottom" v-if="show()">
+    <div class="info-widget__title">ЧТО НОВОГО</div>
+    <div>
+      Сейчас проект рассчитан только на девушек, которые хотят найти парня и парней которые ищут девушку в данный момент. Сервис быстрых знакомств с возможностью анонимного общения и приватного обмена фотографиями.
+      <div class="info-widget__new-list">
+        <div class="item-new">* Теперь только гетеро знакомства, парень-девушка</div>
+        <div class="item-new">* Теперь без оскорблений, БДСМ общение нарушает правила</div>
+      </div>
+    </div>
+    <div class="info-widget__options">
+      <button class="btn btn-default" @click="confirm()">Хорошо, спасибо</button>
+      <button class="btn btn-link" @click="more()">Читать подробнее...</button>
+    </div>
+
+  </div>
+</script>

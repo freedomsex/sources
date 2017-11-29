@@ -1007,7 +1007,6 @@ class ApiUser extends Api {
 
     saveSearch(data) {
         data = {
-            search_sex: data.who,
             years_up: data.up,
             years_to: data.to,
             option_mess_town: data.town,
@@ -1199,6 +1198,7 @@ var routes = [
     { path: '/content/rules/:locale?', component: RulesContentPage, props: true },
     { path: '/content/careers/:locale?', component: СareersContentPage, props: true },
     { path: '/help/:link/:locale?', component: HelpContentPage, props: true },
+    { path: '/releases/:link/:locale?', component: ReleaseContentPage, props: true },
     { path: '/promo/:link', component: ContentModal, props: true },
 
     { path: '(.*)?/settings/search', meta: {back: '/'}, component: SearchSettings,
