@@ -138,9 +138,9 @@ const InitialDialog = Vue.component('initial-dialog', {
         idle(data) {
             let result = false;
             let {sex, city: where, age} = data.user;
-            let {who, city, up, to, town: closed} = this.settings;
+            let {sex: who, city, up, to, town: closed} = this.settings;
 
-            if (who && who != sex) {
+            if (who == sex) {
                 result = true;
             }
             if (city != where && closed) {

@@ -1114,14 +1114,14 @@ var InitialDialog = Vue.component('initial-dialog', {
                 where = _data$user.city,
                 age = _data$user.age;
             var _settings = this.settings,
-                who = _settings.who,
+                who = _settings.sex,
                 city = _settings.city,
                 up = _settings.up,
                 to = _settings.to,
                 closed = _settings.town;
 
 
-            if (who && who != sex) {
+            if (who == sex) {
                 result = true;
             }
             if (city != where && closed) {
