@@ -3323,6 +3323,8 @@ a.name:hover {
   background: #FCF8E3;
   color: #8a6d3b;
   padding: 15px 15px 15px;
+  border-bottom: 2px solid #faebcc;
+  border-top: 2px solid #faebcc;
 }
 .info-widget__title {
   font-size: 24px;
