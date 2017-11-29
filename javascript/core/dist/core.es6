@@ -4135,8 +4135,10 @@ const initial = _.extend({
             ls.set('initial-contacts', state.list);
         },
         read(state, index) {
-            state.list[index].message.unread = 0;
-            ls.set('initial-contacts', state.list);
+            if (state.list[index].message) {
+                state.list[index].message.unread = 0;
+                ls.set('initial-contacts', state.list);
+            }
         }
     }, mutations)
 });
@@ -4196,8 +4198,10 @@ const intimate = _.extend({
             ls.set('intimate-contacts', state.list);
         },
         read(state, index) {
-            state.list[index].message.unread = 0;
-            ls.set('intimate-contacts', state.list);
+            if (state.list[index].message) {
+                state.list[index].message.unread = 0;
+                ls.set('intimate-contacts', state.list);
+            }
         }
     }, mutations)
 });

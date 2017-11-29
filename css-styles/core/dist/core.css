@@ -3176,7 +3176,8 @@ a.name:hover {
   display: inline-block;
   font-size: 12px;
   line-height: 1;
-  padding: 3px 7px;
+  border-radius: 3px;
+  padding: 5px 10px;
   background: #999999;
   color: #ffffff;
 }
