@@ -5,7 +5,7 @@ Vue.component('info-widget', {
             version: '2017-12-01',
             users: {
                 idUp: null,
-                idTo: 67500000,
+                idTo: 67300000,
                 sex: null,
                 city: [],
             },

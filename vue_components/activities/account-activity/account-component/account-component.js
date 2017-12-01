@@ -42,7 +42,10 @@ Vue.component('account-component', {
             return this.ignore ? 0 : this.human.hold;
         },
         who() {
-            var result = 'Парня или девушку ';
+            var result = 'Парня ';
+            if (this.human.sex) {
+                result = this.human.sex == 2 ? 'Парня ' : 'Девушку ';
+            }
             if (this.human.who) {
                 result = this.human.who == 1 ? 'Парня ' : 'Девушку ';
             }
