@@ -1,0 +1,77 @@
+
+<script type="text/x-template" id="question-activity">
+  <default-activity @close="close">
+      <span slot="caption">Помощь</span>
+
+      <div class="activity__content">
+        <div class="activity-section">
+          На вопросы отвечают администраторы Сообщества, такие же Пользователи как и вы. Их много.
+          Они не обязаны быть вежливыми, но и хамство бывает редко. Они помогают новичкам, если есть возможность.
+          Простые вопросы. Не для конфиденциальной информации.
+        </div>
+
+        <div class="activity-section__title">Задать вопрос</div>
+        <div class="activity-section">
+          <input type="text" class="form-control" placeholder="Введите текст..." v-model="text" v-if="!showForm">
+          <div :class="{'has-error': isEmpty}" v-show="showForm">
+            <textarea class="form-control" v-model="text" rows="3" ref="text"></textarea>
+            <label style="margin: 10px 0 12px;"><input type="checkbox" v-model="needResponse"> Я хочу получить ответ</label>
+            <div>
+              <button class="btn btn-primary" @click="handle()" v-show="!sended && !process">Отправить</button>
+              <button class="btn btn-primary" v-show="process" disabled>Отправляю...</button>
+              <button class="btn btn-default" v-show="sended && !process" disabled>Отправлено</button>
+              <button class="btn btn-link" @click="switchToReviews()">Оставить отзыв</button>
+            </div>
+          </div>
+        </div>
+        <div class="activity-section" v-if="queries && !showForm && !text">
+          <div v-for="(item, index) in queries">
+            <a class="query-list__query" @click="show(index)">{{item.query}}</a>
+            <div class="query-list__answer" v-show="item.show">
+            {{item.text}} <a class="link_simple" :href="item.more" target="_blank" v-show="item.more">Подробнее...</a>
+            </div>
+          </div>
+        </div>
+        <div v-if="!showForm && text">
+          <button class="btn btn-primary" @click="expand()">Продолжить</button>
+        </div>
+        <div v-show="labels.load">Загружаю...</div>
+      </div>
+
+
+      <modal-dialog @close="noReviews()" v-if="!needResponse">
+        <div class="modal-dialog__wrapper">
+          <div class="modal-dialog__caption">
+            Отправьте ваш отзыв
+          </div>
+          <div class="modal-dialog__body">
+            Пожалуйста, нажмите кнопку "Отправить отзыв", если хотите высказать мнение, поделиться советом или сообщить информацию.
+          </div>
+          <div class="modal-dialog__footer">
+            <button class="btn btn-default" @click="noReviews()">Отмена</button>
+            <button class="btn btn-primary" @click="switchToReviews()">Отправить отзыв</button>
+          </div>
+        </div>
+      </modal-dialog>
+
+      <modal-dialog @close="close()" v-if="sended">
+        <div class="modal-dialog__wrapper">
+          <div class="modal-dialog__caption">
+            Скоро ответим
+          </div>
+          <div class="modal-dialog__body">
+             Ответ будет отправлен в анкету на сайте или на почту. Чем выше важность вопроса, тем больше шансов скоро получить ответ.
+             Некоторые вопросы могут остаться без ответа. Отвечают быстро, но это не точно...
+          </div>
+          <div class="modal-dialog__footer">
+            <button class="btn btn-primary" @click="close()">Закрыть</button>
+          </div>
+        </div>
+      </modal-dialog>
+
+
+
+
+
+  </default-activity>
+</script>

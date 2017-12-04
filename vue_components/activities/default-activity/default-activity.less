@@ -85,18 +85,15 @@
 }
 
 .activity-section {
-    margin-bottom: @indent-sm;
+    margin-bottom: @indent-md;
     &__title {
-        margin-bottom: @indent-sm;
+        margin-bottom: @indent-sm - 3;
         font-size: @font-lg;
     }
-    &__links {
-        margin-top: @indent-md;
-        .section-link {
-            .link_simple;
-            margin-bottom: @indent-xs;
-            display: block;
-        }
+    &__link {
+        .link_simple;
+        margin-bottom: @indent-sm;
+        display: block;
     }
 }
 

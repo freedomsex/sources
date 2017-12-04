@@ -208,6 +208,107 @@
 </script>
 
 
+<script type="text/x-template" id="list-date">
+  <div class="message-item__date" v-if="date">
+    <span>{{date}}</span>
+  </div>
+</script>
+
+<script type="text/x-template" id="messages-item">
+<div class="message-item" @mouseleave="showOption = false">
+  <div class="message-item__spliter" v-show="!previous"></div>
+  <div :class="[sent ? 'message-item__sent' : 'message-item__received']">
+    <div class="message-item__balloon" @mouseover="showOption = true" @click="fix">
+      <div v-if="image" class="message-image" :style="{ backgroundImage: 'url('+image+')' }">
+        <div class="message-image__play" @click="play">
+          <img src="/static/img/icon/play.png">
+        </div>
+        <span class="message-image__info">
+          <span class="message-image__status" v-show="!read"></span>
+          <span class="message-image__time">{{time}}</span>
+        </span>
+      </div>
+      <span v-else>
+        <span v-html="item.mess"></span>
+        <span class="message-info">
+          <span class="message-info__status" v-show="!read"></span>
+          <span class="message-info__time">{{time}}</span>
+        </span>
+
+      </span>
+
+
+    </div>
+    <span :class="attention ? 'message-item__bunn-alert' : 'message-item__bunn'"
+      v-show="!sent && option" @click="showDialog = sent ? 'some' : 'doit'">
+      <span aria-hidden="true" class="glyphicon glyphicon-thumbs-down"></span>
+    </span>
+    <span class="message-item__remove" v-show="option" @click="showDialog = sent ? 'some' : 'must'">
+      <span aria-hidden="true" class="glyphicon glyphicon-remove"></span>
+    </span>
+  </div>
+  <remove-confirm v-show="showDialog" :show="showDialog"
+    :data="item"
+    @bun="bun"
+    @close="cancel"
+    @remove="remove"/>
+
+  <photo-send v-if="photo" :photo="photo" @close="photo = false"/>
+  <toast v-if="photoNotFound" @close="photoNotFound = false">Фото не найдено</toast>
+</div>
+</script>
+
+
+
+
+<script type="text/x-template" id="message-list">
+  <div class="message-list" v-show="!error">
+    <div class="abuse-widget">
+      <button class="btn" @click="dialog.abuse = true">
+        Замечаний нет
+      </button>
+      <div class="abuse-widget__hint" v-if="abuseSuccessHint" @click="abuseSuccessHint = false">
+        Спасибо, замечание скоро появится в списке
+      </div>
+    </div>
+
+    <abuse-dialog :humanId="humanId" v-if="dialog.abuse"
+      @needed="dialog.claim = true"
+      @success="abuseSuccessHint = true"
+      @close="dialog.abuse = false"/>
+    <claim-needed  v-if="dialog.claim" @close="dialog.claim = false"/>
+
+    <div class="messages__new" v-show="newCount" @click="load">
+      <span class="messages__new-lamp">Новые
+      +<b>{{newCount}}</b>
+      </span>
+    </div>
+    <div class="messages__next" @click="loadNext" v-show="more">
+      <span class="btn btn-default btn-xs">Следующие</span>
+    </div>
+    <div class="messages" v-if="count">
+      <template v-for="(item, index) in messages">
+        <list-date :list="messages" :index="index"/>
+        <message-item
+          :item="item"
+          :index="index"
+          :count="count"
+          :alert="attention"
+          :key="index"
+          @admit="admit"
+          @remove="remove"
+          @set-new="setNew"/>
+      </template>
+    </div>
+    <div class="messages__loader" v-show="!error && !response">
+      <span>
+        <img src="/static/img/icon/mess_loader.gif" v-show="toSlow" style="display: none;">
+        Загружаем
+      </span>
+    </div>
+  </div>
+</script>
+
 
 <script type="text/x-template" id="messages-activity">
   <default-activity @close="close">
@@ -356,6 +457,84 @@
 
 
 
+<script type="text/x-template" id="question-activity">
+  <default-activity @close="close">
+      <span slot="caption">Помощь</span>
+
+      <div class="activity__content">
+        <div class="activity-section">
+          На вопросы отвечают администраторы Сообщества, такие же Пользователи как и вы. Их много.
+          Они не обязаны быть вежливыми, но и хамство бывает редко. Они помогают новичкам, если есть возможность.
+          Простые вопросы. Не для конфиденциальной информации.
+        </div>
+
+        <div class="activity-section__title">Задать вопрос</div>
+        <div class="activity-section">
+          <input type="text" class="form-control" placeholder="Введите текст..." v-model="text" v-if="!showForm">
+          <div :class="{'has-error': isEmpty}" v-show="showForm">
+            <textarea class="form-control" v-model="text" rows="3" ref="text"></textarea>
+            <label style="margin: 10px 0 12px;"><input type="checkbox" v-model="needResponse"> Я хочу получить ответ</label>
+            <div>
+              <button class="btn btn-primary" @click="handle()" v-show="!sended && !process">Отправить</button>
+              <button class="btn btn-primary" v-show="process" disabled>Отправляю...</button>
+              <button class="btn btn-default" v-show="sended && !process" disabled>Отправлено</button>
+              <button class="btn btn-link" @click="switchToReviews()">Оставить отзыв</button>
+            </div>
+          </div>
+        </div>
+        <div class="activity-section" v-if="queries && !showForm && !text">
+          <div v-for="(item, index) in queries">
+            <a class="query-list__query" @click="show(index)">{{item.query}}</a>
+            <div class="query-list__answer" v-show="item.show">
+            {{item.text}} <a class="link_simple" :href="item.more" target="_blank" v-show="item.more">Подробнее...</a>
+            </div>
+          </div>
+        </div>
+        <div v-if="!showForm && text">
+          <button class="btn btn-primary" @click="expand()">Продолжить</button>
+        </div>
+        <div v-show="labels.load">Загружаю...</div>
+      </div>
+
+
+      <modal-dialog @close="noReviews()" v-if="!needResponse">
+        <div class="modal-dialog__wrapper">
+          <div class="modal-dialog__caption">
+            Отправьте ваш отзыв
+          </div>
+          <div class="modal-dialog__body">
+            Пожалуйста, нажмите кнопку "Отправить отзыв", если хотите высказать мнение, поделиться советом или сообщить информацию.
+          </div>
+          <div class="modal-dialog__footer">
+            <button class="btn btn-default" @click="noReviews()">Отмена</button>
+            <button class="btn btn-primary" @click="switchToReviews()">Отправить отзыв</button>
+          </div>
+        </div>
+      </modal-dialog>
+
+      <modal-dialog @close="close()" v-if="sended">
+        <div class="modal-dialog__wrapper">
+          <div class="modal-dialog__caption">
+            Скоро ответим
+          </div>
+          <div class="modal-dialog__body">
+             Ответ будет отправлен в анкету на сайте или на почту. Чем выше важность вопроса, тем больше шансов скоро получить ответ.
+             Некоторые вопросы могут остаться без ответа. Отвечают быстро, но это не точно...
+          </div>
+          <div class="modal-dialog__footer">
+            <button class="btn btn-primary" @click="close()">Закрыть</button>
+          </div>
+        </div>
+      </modal-dialog>
+
+
+
+
+
+  </default-activity>
+</script>
+
+
 <script type="text/x-template" id="search-activity">
   <default-activity @close="close">
     <span slot="caption">Поиск</span>
@@ -369,134 +548,6 @@
   </default-activity>
 </script>
 
-
-
-<script type="text/x-template" id="ad-top">
-  <div>
-<!-- build:remove:dev -->
-  <div class="container hidden-xs" v-if="desktop">
-    <div class="row" style="border-bottom: 2px solid #e5e5e5;">
-<iframe id="frame-id-01" style="position: relative; background-color: transparent; border: none; overflow: hidden;  height: 89px; width: 728px; " src="//data.freedomsex.me/din_new8.php?code=c1b2082d1105d784218299f23aa44f93&bid=35225&w=728&h=89&linkdest=&modelnick=&clickurl=&refresh=1&meffect=random&einterval=none&logo=black&bbgcolor=none&bg_none=none&btextcolor=222222&mbordercolor=000000&mhovercolor=F7941D&mbordertype=solid&shad=0&bfontfamily=Arial&mtextalign=right&id=28644&server=runetki.com&langs=ru&campaign=655683&size=728x89&header=1&modelname=1&modelicon=1&modelinfo=1&geoflag=1&geoheader=1&selgeoheader=0&mediagroup=0&mediatype=2&skins=def&no_ab=1&no_ab_sub_data=1&no_ab_sub_media=2&category=all&srv=0&no_ab=1&no_ab_sub_data=1&no_ab_sub_media=2&no_ab_domain=freedomsex.me"></iframe>
-    </div>
-  </div>
-  <div class="container visible-xs-block" v-else-if="width">
-    <div class="row">
-      <a href="//runetki.com/984787/" rel="nofollow" target="_blank" >
-        <img :src="source" style="width: 100%;">
-      </a>
-    </div>
-  </div>
-<!-- /build -->
-  </div>
-</script>
-
-
-<script type="text/x-template" id="api-key-update">
-  <div></div>
-</script>
-
-
-<script type="text/x-template" id="attention-wall">
-  <modal-dialog @close="close">
-    <div class="attention-wall">
-      <div class="attention-wall__content">
-        <div class="attention-wall__caption">{{caption}}</div>
-        <div class="attention-wall__text">{{text}}</div>
-        <div class="attention-wall__option">
-          <button class="btn btn-primary" @click="close">
-            <span aria-hidden="true" class="glyphicon glyphicon-remove"></span>
-            Закрыть
-          </button>
-          <button class="btn btn-default" @click="promt">
-            <span aria-hidden="true" class="glyphicon glyphicon-ok"></span>
-            Смотреть
-          </button>
-        </div>
-      </div>
-    </div>
-  </modal-dialog>
-</script>
-<script type="text/x-template" id="auth-board">
-  <div>
-    <div class="auth-board">
-      <div v-show="!loaded">
-        Запомните или запишите ваш пароль.
-      </div>
-      <transition name="auth-board">
-        <div v-show="loaded">
-          Ваш логин: <b>{{login}}</b> пароль: <b>{{password}}</b>
-          <button class="btn btn-default btn-sm" @click="confirmSend = true">
-            Отправить на почту
-          </button>
-        </div>
-      </transition>
-    </div>
-
-    <modal-dialog @close="confirmSend = false" v-if="confirmSend">
-      <div class="modal-dialog__wrapper">
-        <div class="modal-dialog__body">
-          <div class="modal-dialog__section">
-          Логин и пароль будут отправлены на этот адрес. Подсказака с логином будет убрана.
-          </div>
-          <div class="modal-dialog__section">
-            <div class="form-inline">
-              <input class="form-control" type="email" name="email" v-model="email" placeholder="Ваш емайл адрес">
-            </div>
-          </div>
-          <div class="modal-dialog__section">
-            {{hint}}
-          </div>
-        </div>
-        <div class="modal-dialog__footer">
-          <button class="btn btn-default" @click="confirmSend = false">
-            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-            Закрыть
-          </button>
-          <button class="btn btn-primary" @click="send()">
-            <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-            Отправить
-          </button>
-        </div>
-      </div>
-    </modal-dialog>
-  </div>
-</script>
-
-<script type="text/x-template" id="captcha-dialog">
-  <modal-dialog @close="close">
-    <div class="captcha-dialog__caption">
-      Подтвердите
-      <a href="/блог/простые-проверки/" target="_blank" aria-hidden="true" class="glyphicon glyphicon-info-sign"></a>
-    </div>
-    <div class="captcha-dialog__body">
-      <div class="human-dialog__desire">
-        Введите код с картинки
-      </div>
-      <div class="input-group" style="max-width: 300px;">
-        <span class="captcha-dialog__addon input-group-addon captcha-img__addon">
-          <span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span>
-        </span>
-        <span class="captcha-dialog__addon input-group-addon captcha-img__addon">
-          <img class="form-message__captcha-img" :src="src" width="48" height="20" @click="update">
-        </span>
-        <input class="form-control" type="tel" inputmode="numeric" autocomplete="off" v-model="code">
-      </div>
-    </div>
-
-    <div class="captcha-dialog__option">
-      <button class="btn btn-default" @click="close">
-        Вернуться
-      </button>
-      <button class="btn btn-warning" @click="send">
-        Отправить
-      </button>
-    </div>
-
-    <div class="human-dialog__form">
-
-    </div>
-  </modal-dialog>
-</script>
 
 
 <script type="text/x-template" id="city-suggest">
@@ -716,20 +767,62 @@
   </div>
 </script>
 
-<script type="text/x-template" id="desires-widget">
-  <div class="container desires-widget">
-    <div class="row">
-      <div class="desires-widget__caption">Желания и фантазии</div>
-      <div class="desires-widget__wrapper">
-        <desire-list :tags="list"></desire-list>
-        <div class="desires-widget__next" v-show="more">
-          <span class="btn btn-default btn-sm" @click="load">
-            Ещё
-          </span>
+
+<script type="text/x-template" id="attention-wall">
+  <modal-dialog @close="close">
+    <div class="attention-wall">
+      <div class="attention-wall__content">
+        <div class="attention-wall__caption">{{caption}}</div>
+        <div class="attention-wall__text">{{text}}</div>
+        <div class="attention-wall__option">
+          <button class="btn btn-primary" @click="close">
+            <span aria-hidden="true" class="glyphicon glyphicon-remove"></span>
+            Закрыть
+          </button>
+          <button class="btn btn-default" @click="promt">
+            <span aria-hidden="true" class="glyphicon glyphicon-ok"></span>
+            Смотреть
+          </button>
         </div>
       </div>
     </div>
-  </div>
+  </modal-dialog>
+</script>
+
+<script type="text/x-template" id="captcha-dialog">
+  <modal-dialog @close="close">
+    <div class="captcha-dialog__caption">
+      Подтвердите
+      <a href="/блог/простые-проверки/" target="_blank" aria-hidden="true" class="glyphicon glyphicon-info-sign"></a>
+    </div>
+    <div class="captcha-dialog__body">
+      <div class="human-dialog__desire">
+        Введите код с картинки
+      </div>
+      <div class="input-group" style="max-width: 300px;">
+        <span class="captcha-dialog__addon input-group-addon captcha-img__addon">
+          <span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span>
+        </span>
+        <span class="captcha-dialog__addon input-group-addon captcha-img__addon">
+          <img class="form-message__captcha-img" :src="src" width="48" height="20" @click="update">
+        </span>
+        <input class="form-control" type="tel" inputmode="numeric" autocomplete="off" v-model="code">
+      </div>
+    </div>
+
+    <div class="captcha-dialog__option">
+      <button class="btn btn-default" @click="close">
+        Вернуться
+      </button>
+      <button class="btn btn-warning" @click="send">
+        Отправить
+      </button>
+    </div>
+
+    <div class="human-dialog__form">
+
+    </div>
+  </modal-dialog>
 </script>
 
 <script type="text/x-template" id="email-sended">
@@ -777,7 +870,6 @@
 </script>
 
 
-
 <script type="text/x-template" id="loading-cover">
   <div class="loading-cover" v-if="show">
     <div class="loading-cover__wrapper">
@@ -796,107 +888,6 @@
   </div>
 </script>
 
-
-<script type="text/x-template" id="list-date">
-  <div class="message-item__date" v-if="date">
-    <span>{{date}}</span>
-  </div>
-</script>
-
-<script type="text/x-template" id="messages-item">
-<div class="message-item" @mouseleave="showOption = false">
-  <div class="message-item__spliter" v-show="!previous"></div>
-  <div :class="[sent ? 'message-item__sent' : 'message-item__received']">
-    <div class="message-item__balloon" @mouseover="showOption = true" @click="fix">
-      <div v-if="image" class="message-image" :style="{ backgroundImage: 'url('+image+')' }">
-        <div class="message-image__play" @click="play">
-          <img src="/static/img/icon/play.png">
-        </div>
-        <span class="message-image__info">
-          <span class="message-image__status" v-show="!read"></span>
-          <span class="message-image__time">{{time}}</span>
-        </span>
-      </div>
-      <span v-else>
-        <span v-html="item.mess"></span>
-        <span class="message-info">
-          <span class="message-info__status" v-show="!read"></span>
-          <span class="message-info__time">{{time}}</span>
-        </span>
-
-      </span>
-
-
-    </div>
-    <span :class="attention ? 'message-item__bunn-alert' : 'message-item__bunn'"
-      v-show="!sent && option" @click="showDialog = sent ? 'some' : 'doit'">
-      <span aria-hidden="true" class="glyphicon glyphicon-thumbs-down"></span>
-    </span>
-    <span class="message-item__remove" v-show="option" @click="showDialog = sent ? 'some' : 'must'">
-      <span aria-hidden="true" class="glyphicon glyphicon-remove"></span>
-    </span>
-  </div>
-  <remove-confirm v-show="showDialog" :show="showDialog"
-    :data="item"
-    @bun="bun"
-    @close="cancel"
-    @remove="remove"/>
-
-  <photo-send v-if="photo" :photo="photo" @close="photo = false"/>
-  <toast v-if="photoNotFound" @close="photoNotFound = false">Фото не найдено</toast>
-</div>
-</script>
-
-
-
-
-<script type="text/x-template" id="message-list">
-  <div class="message-list" v-show="!error">
-    <div class="abuse-widget">
-      <button class="btn" @click="dialog.abuse = true">
-        Замечаний нет
-      </button>
-      <div class="abuse-widget__hint" v-if="abuseSuccessHint" @click="abuseSuccessHint = false">
-        Спасибо, замечание скоро появится в списке
-      </div>
-    </div>
-
-    <abuse-dialog :humanId="humanId" v-if="dialog.abuse"
-      @needed="dialog.claim = true"
-      @success="abuseSuccessHint = true"
-      @close="dialog.abuse = false"/>
-    <claim-needed  v-if="dialog.claim" @close="dialog.claim = false"/>
-
-    <div class="messages__new" v-show="newCount" @click="load">
-      <span class="messages__new-lamp">Новые
-      +<b>{{newCount}}</b>
-      </span>
-    </div>
-    <div class="messages__next" @click="loadNext" v-show="more">
-      <span class="btn btn-default btn-xs">Следующие</span>
-    </div>
-    <div class="messages" v-if="count">
-      <template v-for="(item, index) in messages">
-        <list-date :list="messages" :index="index"/>
-        <message-item
-          :item="item"
-          :index="index"
-          :count="count"
-          :alert="attention"
-          :key="index"
-          @admit="admit"
-          @remove="remove"
-          @set-new="setNew"/>
-      </template>
-    </div>
-    <div class="messages__loader" v-show="!error && !response">
-      <span>
-        <img src="/static/img/icon/mess_loader.gif" v-show="toSlow" style="display: none;">
-        Загружаем
-      </span>
-    </div>
-  </div>
-</script>
 
 <script type="text/x-template" id="modal-dialog">
   <div class="modal-dialog__mask" transition="modal" @click="close">
@@ -920,82 +911,6 @@
       <div class="option-dialog__container" @click.stop>
         <slot></slot>
       </div>
-    </div>
-  </div>
-</script>
-
-
-<script type="text/x-template" id="photo-send">
-  <div class="photo-send__mask" transition="modal" @click="close">
-    <div class="photo-send__container" @click.stop>
-
-      <div class="close-self-button">
-        <i class="material-icons" @click="close"></i>
-      </div>
-      <photo-view :photo="photo.photo" :thumb="photo.thumb" :maxWidth="600" @close="close"/>
-      <div class="photo-send__options" v-show="options">
-        <button class="btn btn-default" @click="remove = true">
-          <span aria-hidden="true" class="glyphicon glyphicon-trash"></span>
-          Удалить
-        </button>
-        <button class="btn btn-primary" @click="$emit('send')">
-          <span aria-hidden="true" class="glyphicon glyphicon-send"></span>
-          Отправить
-        </button>
-      </div>
-      <!-- <toast v-if="remove" @close="remove = false">Временно недоступно</toast> -->
-
-      <modal-dialog @close="close" v-if="remove">
-        <div class="modal-dialog__wrapper">
-          <div class="modal-dialog__caption">
-            Удалить фото?
-          </div>
-          <div class="modal-dialog__body">
-            Восстановить фото будет невозможно.
-            Вы действительно хотите удалить фотографию?
-          </div>
-          <div class="modal-dialog__footer">
-            <button class="btn btn-default" @click="remove = false">
-              Отмена
-            </button>
-            <button class="btn btn-primary" @click="removePhoto()">
-              <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-              Удалить
-            </button>
-          </div>
-        </div>
-      </modal-dialog>
-
-
-      <slot></slot>
-    </div>
-  </div>
-</script>
-
-
-<script type="text/x-template" id="photo-view">
-  <div class="photo-view" :style="{ backgroundImage: 'url('+thumb+')' }">
-
-    <modal-dialog @close="close" v-if="!accept">
-      <div class="modal-dialog__wrapper">
-        <div class="modal-dialog__caption">
-          Контроль содержания отсутствует
-        </div>
-        <div class="modal-dialog__body">
-          У администраторов нет доступа к загружаемым фото.
-          Внимание! Изображения могут иметь возрастные ограничения. Пожалуйста, подтвердите
-          что вы имеете право продолжить просмотр.
-        </div>
-        <div class="modal-dialog__footer">
-          <button class="btn btn-success" @click="approve">
-            <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-            Подтверждаю
-          </button>
-        </div>
-      </div>
-    </modal-dialog>
-    <div v-else>
-      <img :src="photo" :style="{ maxWidth: maxWidth +'px' }">
     </div>
   </div>
 </script>
@@ -1122,6 +1037,142 @@
       </div>
     </div>
   </modal-dialog>
+</script>
+
+
+<script type="text/x-template" id="sex-confirm">
+  <modal-dialog @close="close">
+    <div class="modal-dialog__wrapper" style="padding-bottom: 10px;">
+      <div class="modal-dialog__caption">
+        {{caption}}
+      </div>
+      <div class="modal-dialog__body">
+        {{text}}
+      </div>
+      <div class="modal-dialog__centred" style="margin-bottom: 10px;">
+        <button class="btn btn-primary btn-fat" @click="save(2)">   Девушка   </button>
+        <button class="btn btn-primary btn-fat" @click="save(1)">   Парень   </button>
+      </div>
+      <div class="modal-dialog__centred">
+        <button class="btn btn-link btn-fat" @click="$router.push('/login')">  Уже есть анкета?  </button>
+      </div>
+    </div>
+  </modal-dialog>
+</script>
+
+
+<script type="text/x-template" id="simple-captcha">
+  <div class="form-inline">
+    <div class="input-group" style="max-width: 300px;">
+      <span class="captcha-dialog__addon input-group-addon captcha-img__addon" @click="update">
+        <span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span>
+      </span>
+      <span class="captcha-dialog__addon input-group-addon captcha-img__addon">
+        <img class="form-message__captcha-img" :src="src" width="48" height="20" @click="update">
+      </span>
+      <input class="form-control" type="tel" inputmode="numeric" autocomplete="off" v-model="code" @change="input">
+    </div>
+  </div>
+</script>
+
+
+<script type="text/x-template" id="ad-top">
+  <div>
+<!-- build:remove:dev -->
+  <div class="container hidden-xs" v-if="desktop">
+    <div class="row" style="border-bottom: 2px solid #e5e5e5;">
+<iframe id="frame-id-01" style="position: relative; background-color: transparent; border: none; overflow: hidden;  height: 89px; width: 728px; " src="//data.freedomsex.me/din_new8.php?code=c1b2082d1105d784218299f23aa44f93&bid=35225&w=728&h=89&linkdest=&modelnick=&clickurl=&refresh=1&meffect=random&einterval=none&logo=black&bbgcolor=none&bg_none=none&btextcolor=222222&mbordercolor=000000&mhovercolor=F7941D&mbordertype=solid&shad=0&bfontfamily=Arial&mtextalign=right&id=28644&server=runetki.com&langs=ru&campaign=655683&size=728x89&header=1&modelname=1&modelicon=1&modelinfo=1&geoflag=1&geoheader=1&selgeoheader=0&mediagroup=0&mediatype=2&skins=def&no_ab=1&no_ab_sub_data=1&no_ab_sub_media=2&category=all&srv=0&no_ab=1&no_ab_sub_data=1&no_ab_sub_media=2&no_ab_domain=freedomsex.me"></iframe>
+    </div>
+  </div>
+  <div class="container visible-xs-block" v-else-if="width">
+    <div class="row">
+      <a href="//runetki.com/984787/" rel="nofollow" target="_blank" >
+        <img :src="source" style="width: 100%;">
+      </a>
+    </div>
+  </div>
+<!-- /build -->
+  </div>
+</script>
+
+
+<script type="text/x-template" id="api-key-update">
+  <div></div>
+</script>
+
+<script type="text/x-template" id="photo-send">
+  <div class="photo-send__mask" transition="modal" @click="close">
+    <div class="photo-send__container" @click.stop>
+
+      <div class="close-self-button">
+        <i class="material-icons" @click="close"></i>
+      </div>
+      <photo-view :photo="photo.photo" :thumb="photo.thumb" :maxWidth="600" @close="close"/>
+      <div class="photo-send__options" v-show="options">
+        <button class="btn btn-default" @click="remove = true">
+          <span aria-hidden="true" class="glyphicon glyphicon-trash"></span>
+          Удалить
+        </button>
+        <button class="btn btn-primary" @click="$emit('send')">
+          <span aria-hidden="true" class="glyphicon glyphicon-send"></span>
+          Отправить
+        </button>
+      </div>
+      <!-- <toast v-if="remove" @close="remove = false">Временно недоступно</toast> -->
+
+      <modal-dialog @close="close" v-if="remove">
+        <div class="modal-dialog__wrapper">
+          <div class="modal-dialog__caption">
+            Удалить фото?
+          </div>
+          <div class="modal-dialog__body">
+            Восстановить фото будет невозможно.
+            Вы действительно хотите удалить фотографию?
+          </div>
+          <div class="modal-dialog__footer">
+            <button class="btn btn-default" @click="remove = false">
+              Отмена
+            </button>
+            <button class="btn btn-primary" @click="removePhoto()">
+              <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+              Удалить
+            </button>
+          </div>
+        </div>
+      </modal-dialog>
+
+
+      <slot></slot>
+    </div>
+  </div>
+</script>
+
+
+<script type="text/x-template" id="photo-view">
+  <div class="photo-view" :style="{ backgroundImage: 'url('+thumb+')' }">
+
+    <modal-dialog @close="close" v-if="!accept">
+      <div class="modal-dialog__wrapper">
+        <div class="modal-dialog__caption">
+          Контроль содержания отсутствует
+        </div>
+        <div class="modal-dialog__body">
+          У администраторов нет доступа к загружаемым фото.
+          Внимание! Изображения могут иметь возрастные ограничения. Пожалуйста, подтвердите
+          что вы имеете право продолжить просмотр.
+        </div>
+        <div class="modal-dialog__footer">
+          <button class="btn btn-success" @click="approve">
+            <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+            Подтверждаю
+          </button>
+        </div>
+      </div>
+    </modal-dialog>
+    <div v-else>
+      <img :src="photo" :style="{ maxWidth: maxWidth +'px' }">
+    </div>
+  </div>
 </script>
 
 
@@ -1293,14 +1344,9 @@
       </div>
     </div>
 
-    <div class="activity__splitter"></div>
-
     <div class="activity-section">
-      <span class="link_simple" @click="$router.push('other')">Другие настройки</span>
-    </div>
-
-    <div class="activity-section">
-      <span class="link_simple" @click="$router.push('/login')">Уже есть анкета?</span>
+      <span class="activity-section__link" @click="$router.push('other')">Другие настройки</span>
+      <span class="activity-section__link" @click="$router.push('/login')">Уже есть анкета?</span>
     </div>
 
   </closed-activity>
@@ -1495,31 +1541,21 @@
  -->
     <div class="activity-section">
       <div class="activity-section__title">Настройки</div>
-      <span class="link_simple" @click="$router.push('security')">Безопасность</span>
+        <span class="activity-section__link" @click="$router.push('security')">Безопасность</span>
+        <span class="activity-section__link" @click="$router.push('desires')">Желания и фантазии</span>
+        <span class="activity-section__link" @click="$router.push('social')">Контакты, соцсети</span>
+        <span class="activity-section__link" @click="$router.push('about')">Анкетные данные</span>
     </div>
 
-    <div class="activity-section">
-      <span class="link_simple" @click="$router.push('desires')">Желания и фантазии</span>
-    </div>
-
-    <div class="activity-section">
-      <span class="link_simple" @click="$router.push('social')">Контакты, соцсети</span>
-    </div>
-
-    <div class="activity-section">
-      <span class="link_simple" @click="$router.push('about')">Анкетные данные</span>
-    </div>
-
-<!--
     <div class="activity-section">
       <div class="activity-section__title">Поддержка</div>
-      <span class="link_simple" @click="$emit('security')">Оставить отзыв</span>
+      <span class="activity-section__link" @click="$router.push('reviews')">Оставить отзыв</span>
+      <span class="activity-section__link" @click="$router.push('question')">Задать вопрос</span>
     </div>
 
     <div class="activity-section">
-      <span class="link_simple" @click="$emit('about')">Задать вопрос</span>
     </div>
- -->
+
 
     <div class="activity-section">
       <div class="activity-section__title">Аккаунт</div>
@@ -1529,7 +1565,7 @@
       <span class="btn btn-primary" @click="logout">Выйти с сайта</span>
     </div>
     <div class="activity-section">
-      <a class="link_simple" href="/блог/удаление-анкет-автоматическое/" target="_blank">Удалить аккаунт</a>
+      <a class="activity-section__link" href="/блог/удаление-анкет-автоматическое/" target="_blank">Удалить аккаунт</a>
     </div>
 
   </closed-activity>
@@ -1554,6 +1590,68 @@
         <input id="fileupload" type="file" name="file" data-form-data='{"script": "true"}'>
       </div>
     </div>
+  </closed-activity>
+</script>
+
+
+<script type="text/x-template" id="review-settings">
+  <closed-activity @close="close">
+
+    <div class="activity-section">
+      Пожалуйста, оставьте отзыв о сайте. Для нас важно каждое мнение и в любой форме.
+      Будет ещё приятнее, если вы выскажитесь максимально подробно.
+      Нажмите кнопку "Задать вопрос", если важен ответ.
+    </div>
+
+    <div class="activity-section__title">Оставить отзыв</div>
+    <div class="activity-section">
+      <div :class="{'has-error': isEmpty}">
+        <textarea placeholder="Введите текст..." class="form-control" v-model="text" rows="3"></textarea>
+        <label style="margin: 10px 0 12px;"><input type="checkbox" v-model="needResponse"> Я хочу получить ответ</label>
+      </div>
+
+      <div>
+        <button class="btn btn-primary" @click="handle()" v-show="!sended && !process">Отправить</button>
+        <button class="btn btn-primary" v-show="process" disabled>Отправляю...</button>
+        <button class="btn btn-default" v-show="sended && !process" disabled>Отправлено</button>
+        <button class="btn btn-link" @click="switchToQuestions()">Задать вопрос</button>
+      </div>
+    </div>
+
+    <div class="activity__splitter"></div>
+
+
+    <modal-dialog @close="noResponse()" v-if="needResponse">
+      <div class="modal-dialog__wrapper">
+        <div class="modal-dialog__caption">
+          Задайте вопрос
+        </div>
+        <div class="modal-dialog__body">
+          Пожалуйста, нажмите кнопку "Задать вопрос", если для вас важен ответ.
+          Отзывы нужны чтобы высказать мнение, или сообщить информацию, когда ответ не обязателен.
+        </div>
+        <div class="modal-dialog__footer">
+          <button class="btn btn-default" @click="noResponse()">Отмена</button>
+          <button class="btn btn-primary" @click="switchToQuestions()">Задать вопрос</button>
+        </div>
+      </div>
+    </modal-dialog>
+
+    <modal-dialog @close="close()" v-if="sended">
+      <div class="modal-dialog__wrapper">
+        <div class="modal-dialog__caption">
+          Спасибо за отзыв
+        </div>
+        <div class="modal-dialog__body">
+          Для нас важно каждое мнение и в любой форме. Ориентируясь на отзывы Пользователей, разработчики стараются
+          делать сайт ещё приятнее и удобнее.
+        </div>
+        <div class="modal-dialog__footer">
+          <button class="btn btn-primary" @click="close()">Закрыть</button>
+        </div>
+      </div>
+    </modal-dialog>
+
   </closed-activity>
 </script>
 
@@ -1599,10 +1697,10 @@
     </div>
 
     <div class="activity-section">
-      <div class="activity-section__links">
-        <span class="section-link" @click="$router.push('/help/heterosexual')">Парни находят девушек</span>
-        <a class="section-link" href="http://freedomsex.me/блог/как-найти-девушку-или-парня-для-секса/" target="_blank">Больше возможностей</a>
-      </div>
+        <span class="activity-section__link" @click="$router.push('/help/heterosexual')">Парни находят девушек</span>
+        <a class="activity-section__link" href="http://freedomsex.me/блог/как-найти-девушку-или-парня-для-секса/" target="_blank">
+          Больше возможностей
+        </a>
     </div>
 
   </closed-activity>
@@ -1725,38 +1823,93 @@
   </closed-activity>
 </script>
 
-<script type="text/x-template" id="sex-confirm">
-  <modal-dialog @close="close">
-    <div class="modal-dialog__wrapper" style="padding-bottom: 10px;">
-      <div class="modal-dialog__caption">
-        {{caption}}
+
+<script type="text/x-template" id="suggest-input">
+  <div class="dropdown suggest-input form-inline">
+    <input class="form-control" type="text" autocomplete="off" v-model="query" :disabled="disabled"
+     @focus="load" @keyup="load">
+    <ul class="dropdown-menu" v-show="suggested">
+      <li v-for="(item, index) in items" :key="index" @click="select(item)"><a href="#" @click.prevent>{{item}}</a></li>
+    </ul>
+  </div>
+</script>
+<script type="text/x-template" id="auth-board">
+  <div>
+    <div class="auth-board">
+      <div v-show="!loaded">
+        Запомните или запишите ваш пароль.
       </div>
-      <div class="modal-dialog__body">
-        {{text}}
+      <transition name="auth-board">
+        <div v-show="loaded">
+          Ваш логин: <b>{{login}}</b> пароль: <b>{{password}}</b>
+          <button class="btn btn-default btn-sm" @click="confirmSend = true">
+            Отправить на почту
+          </button>
+        </div>
+      </transition>
+    </div>
+
+    <modal-dialog @close="confirmSend = false" v-if="confirmSend">
+      <div class="modal-dialog__wrapper">
+        <div class="modal-dialog__body">
+          <div class="modal-dialog__section">
+          Логин и пароль будут отправлены на этот адрес. Подсказака с логином будет убрана.
+          </div>
+          <div class="modal-dialog__section">
+            <div class="form-inline">
+              <input class="form-control" type="email" name="email" v-model="email" placeholder="Ваш емайл адрес">
+            </div>
+          </div>
+          <div class="modal-dialog__section">
+            {{hint}}
+          </div>
+        </div>
+        <div class="modal-dialog__footer">
+          <button class="btn btn-default" @click="confirmSend = false">
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            Закрыть
+          </button>
+          <button class="btn btn-primary" @click="send()">
+            <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+            Отправить
+          </button>
+        </div>
       </div>
-      <div class="modal-dialog__centred" style="margin-bottom: 10px;">
-        <button class="btn btn-primary btn-fat" @click="save(2)">   Девушка   </button>
-        <button class="btn btn-primary btn-fat" @click="save(1)">   Парень   </button>
-      </div>
-      <div class="modal-dialog__centred">
-        <button class="btn btn-link btn-fat" @click="$router.push('/login')">  Уже есть анкета?  </button>
+    </modal-dialog>
+  </div>
+</script>
+<script type="text/x-template" id="desires-widget">
+  <div class="container desires-widget">
+    <div class="row">
+      <div class="desires-widget__caption">Желания и фантазии</div>
+      <div class="desires-widget__wrapper">
+        <desire-list :tags="list"></desire-list>
+        <div class="desires-widget__next" v-show="more">
+          <span class="btn btn-default btn-sm" @click="load">
+            Ещё
+          </span>
+        </div>
       </div>
     </div>
-  </modal-dialog>
+  </div>
 </script>
 
 
-<script type="text/x-template" id="simple-captcha">
-  <div class="form-inline">
-    <div class="input-group" style="max-width: 300px;">
-      <span class="captcha-dialog__addon input-group-addon captcha-img__addon" @click="update">
-        <span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span>
-      </span>
-      <span class="captcha-dialog__addon input-group-addon captcha-img__addon">
-        <img class="form-message__captcha-img" :src="src" width="48" height="20" @click="update">
-      </span>
-      <input class="form-control" type="tel" inputmode="numeric" autocomplete="off" v-model="code" @change="input">
+<script type="text/x-template" id="info-widget">
+  <div class="container info-widget split-bottom" v-if="show()">
+    <div class="info-widget__title">ЧТО НОВОГО</div>
+    <div>
+      Сейчас проект рассчитан только на девушек, которые хотят найти парня и парней которые ищут девушку в данный момент. Сервис быстрых знакомств с возможностью анонимного общения и приватного обмена фотографиями.
+      <div class="info-widget__new-list">
+        <div class="item-new">* Теперь только гетеро знакомства, парень-девушка</div>
+        <div class="item-new">* Теперь без оскорблений, БДСМ общение нарушает правила</div>
+      </div>
     </div>
+    <div class="info-widget__options">
+      <button class="btn btn-default" @click="confirm()">Хорошо, спасибо</button>
+      <button class="btn btn-link" @click="more()">Читать подробнее...</button>
+    </div>
+
   </div>
 </script>
 <script type="text/x-template" id="snackbar">
@@ -1777,38 +1930,10 @@
     </div>
   </transition>
 </script>
-
-<script type="text/x-template" id="suggest-input">
-  <div class="dropdown suggest-input form-inline">
-    <input class="form-control" type="text" autocomplete="off" v-model="query" :disabled="disabled"
-     @focus="load" @keyup="load">
-    <ul class="dropdown-menu" v-show="suggested">
-      <li v-for="(item, index) in items" :key="index" @click="select(item)"><a href="#" @click.prevent>{{item}}</a></li>
-    </ul>
-  </div>
-</script>
 <script type="text/x-template" id="toast">
   <div class="toast" @click="close">
     <div class="toast__body">
       <slot></slot>
     </div>
-  </div>
-</script>
-
-<script type="text/x-template" id="info-widget">
-  <div class="container info-widget split-bottom" v-if="show()">
-    <div class="info-widget__title">ЧТО НОВОГО</div>
-    <div>
-      Сейчас проект рассчитан только на девушек, которые хотят найти парня и парней которые ищут девушку в данный момент. Сервис быстрых знакомств с возможностью анонимного общения и приватного обмена фотографиями.
-      <div class="info-widget__new-list">
-        <div class="item-new">* Теперь только гетеро знакомства, парень-девушка</div>
-        <div class="item-new">* Теперь без оскорблений, БДСМ общение нарушает правила</div>
-      </div>
-    </div>
-    <div class="info-widget__options">
-      <button class="btn btn-default" @click="confirm()">Хорошо, спасибо</button>
-      <button class="btn btn-link" @click="more()">Читать подробнее...</button>
-    </div>
-
   </div>
 </script>

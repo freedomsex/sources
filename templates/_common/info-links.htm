@@ -1,6 +1,6 @@
 <alert-widget inline-template>
-  <div class="container alert-widget" @click="compact = (compact == false)">
-    <div class="alert-widget__wrapper" :class="{compact: compact}">
+  <div class="container alert-widget">
+    <div class="alert-widget__wrapper" :class="{compact: compact}" @click.self="compact = (compact == false)">
       Сайт полностью бесплатен и создан для общения.
       Если вам кто-то предложит что-либо оплатить,
       <a href="/блог/как-подать-жалобу-модераторам/" rel="nofollow" target="_blank">сообщите нам</a>

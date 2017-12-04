@@ -7,6 +7,7 @@ const ActivityActions = {
         return {
             toSlow: false,
             slowTime: 3,
+            process: false,
             labels: {
                 load: false,
                 error: false,

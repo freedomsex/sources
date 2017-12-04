@@ -76,6 +76,8 @@ var routes = [
             beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/search')
     },
     { path: '(.*)?/settings/security', meta: {back: 'other'}, component: SecuritySettings },
+    { path: '(.*)?/settings/reviews', meta: {back: 'other'}, component: ReviewSettings },
+    { path: '(.*)?/settings/question', meta: {back: 'other'}, component: QuestionActivity },
     { path: '(.*)?/wizard/city', meta: {back: '/settings/account'}, component: CityWizard,
         beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/city')
     },
