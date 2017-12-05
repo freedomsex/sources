@@ -4001,6 +4001,9 @@ Vue.component('info-widget', {
         },
         city: function city() {
             return this.$store.state.user.city;
+        },
+        show: function show() {
+            return this.enable && !this.accept && this.forId(this.userId);
         }
     },
     methods: {
@@ -4014,9 +4017,6 @@ Vue.component('info-widget', {
                 result = this.users.idTo ? id < this.users.idTo : result;
             }
             return result;
-        },
-        show: function show() {
-            return this.enable && !this.accept && this.forId(this.userId);
         },
         confirm: function confirm() {
             ls.set('release-info', this.version);

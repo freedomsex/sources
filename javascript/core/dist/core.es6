@@ -3868,6 +3868,9 @@ Vue.component('info-widget', {
         city() {
             return this.$store.state.user.city;
         },
+        show() {
+            return (this.enable && !this.accept && this.forId(this.userId));
+        },
     },
     methods: {
         forId(id) {
@@ -3880,9 +3883,6 @@ Vue.component('info-widget', {
                 result = this.users.idTo ? id < this.users.idTo : result;
             }
             return result;
-        },
-        show() {
-            return (this.enable && !this.accept && this.forId(this.userId));
         },
         confirm() {
             ls.set('release-info', this.version);
