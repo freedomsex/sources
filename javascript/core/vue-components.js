@@ -3649,6 +3649,8 @@ Vue.component('info-widget', {
             return this.$store.state.user.city;
         },
         show() {
+            console.log('show', [this.enable, !this.accept, this.forId(this.userId)])
+
             return (this.enable && !this.accept && this.forId(this.userId));
         },
     },
