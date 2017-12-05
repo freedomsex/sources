@@ -4006,6 +4006,9 @@ Vue.component('info-widget', {
     methods: {
         forId: function forId(id) {
             var result = true;
+            if (this.users.idUp || this.users.idTo) {
+                result = false;
+            }
             if (id) {
                 result = this.users.idUp ? id > this.users.idUp : result;
                 result = this.users.idTo ? id < this.users.idTo : result;
