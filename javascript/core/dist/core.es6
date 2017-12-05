@@ -3869,8 +3869,6 @@ Vue.component('info-widget', {
             return this.$store.state.user.city;
         },
         show() {
-            console.log('show', [this.enable, !this.accept, this.forId(this.userId)])
-
             return (this.enable && !this.accept && this.forId(this.userId));
         },
     },
@@ -3928,10 +3926,10 @@ Vue.component('search-wizard', {
             return range ? ' в возрасте ' + range + ' лет ' : '';
         },
         who(state) {
-            var settings = state.search.settings;
+            var sex = state.user.sex;
             var who = ' знакомства с кем угодно ';
-            if (settings.who) {
-                who = settings.who == 1 ? ' знакомства с парнем ' : ' знакомства с девушкой ';
+            if (sex) {
+                who = (sex == 2) ? ' знакомства с парнем ' : ' знакомства с девушкой ';
             }
             return who;
         },
