@@ -17,7 +17,7 @@
     
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1512463558313">
+<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1512827538677">
 
   <script type="text/javascript">  
     function get_cookie ( cookie_name )
@@ -191,7 +191,7 @@
    <a class="more-information__link" rel="nofollow" href="/10336" target="_blank">Помощник по сайту</a><i>·</i>
 
    <a class="more-information__link" rel="nofollow" href="/блог/реклама-на-сайте/" target="_blank">Реклама на сайте</a><i>·</i>
-   <span class="more-information__link" @click="$router.push('/promo/envelop')">Написать разработчикам</span><i>·</i>
+   <span class="more-information__link" @click="$router.push('/settings/envelop')">Написать разработчикам</span><i>·</i>
    <a class="more-information__link" href="//cats-x.com" target="_blank" rel="nofollow noopener noreferrer">Версия с котиками</a>
   </div>
 
@@ -1681,6 +1681,34 @@
 </script>
 
 
+<script type="text/x-template" id="envelop-settings">
+  <closed-activity @close="close">
+    <span slot="caption">Написать разработчикам</span>
+    <div class="activity-section">
+      Обсудить развитие можно на <a href="https://github.com/freedomsex/freedomsex/issues">GitHub</a>.
+      Частные вопросы отправляйте по адресу <b>support@freedomsex.net</b>
+      Если вы столкнулись с неполадками в работе сайта, пожалуйста,
+      свяжитесь с нами.
+    </div>
+
+    <div class="activity-section">
+      <div class="activity-section__title">Поддержка</div>
+      <span class="activity-section__link" @click="$router.push('reviews')">Оставить отзыв или мнение о сайте</span>
+      <span class="activity-section__link" @click="$router.push('question')">Задать вопрос, если нужна помощь</span>
+    </div>
+
+    <div class="activity-section__title">Обнаружив неполадку</div>
+    <div class="activity-section">
+      Очень важно описать возникшую проблему и <i>сообщить некоторые технические детали</i>,
+      такие как: устройство, с которого вы используете сайт и браузер
+      в котором открываете.
+    </div>
+
+
+  </closed-activity>
+</script>
+
+
 <script type="text/x-template" id="incoming-photo">
   <closed-activity @close="close">
     <span slot="caption">Галерея</span>
@@ -2189,7 +2217,7 @@
 
  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/static/js/core.min.js?rel=1512463558311"></script>
+<script type="text/javascript" src="/static/js/core.min.js?rel=1512827538675"></script>
 <!-- Исходники можно найти в репозитории. Там же собранные не сжатые файлы -->
 <script type="text/javascript">
     // var addthis_config = {"data_track_addressbar":false};

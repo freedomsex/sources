@@ -61,7 +61,7 @@ var routes = [
     { path: '/content/careers/:locale?', component: СareersContentPage, props: true },
     { path: '/help/:link/:locale?', component: HelpContentPage, props: true },
     { path: '/releases/:link/:locale?', component: ReleaseContentPage, props: true },
-    { path: '/promo/:link', component: ContentModal, props: true },
+    // { path: '/promo/:link', component: ContentModal, props: true },
 
     { path: '(.*)?/settings/search', meta: {back: '/'}, component: SearchSettings,
         beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/search')
@@ -78,6 +78,7 @@ var routes = [
     { path: '(.*)?/settings/security', meta: {back: 'other'}, component: SecuritySettings },
     { path: '(.*)?/settings/reviews', meta: {back: 'other'}, component: ReviewSettings },
     { path: '(.*)?/settings/question', meta: {back: 'other'}, component: QuestionActivity },
+    { path: '(.*)?/settings/envelop', meta: {back: 'other'}, component: EnvelopSettings },
     { path: '(.*)?/wizard/city', meta: {back: '/settings/account'}, component: CityWizard,
         beforeEnter: (to, from, next) => store.state.user.sex ? next() : next('/confirm-sex/city')
     },

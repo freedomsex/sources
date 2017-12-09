@@ -2774,6 +2774,12 @@ const DesiresSettings = Vue.component('desires-settings', {
 });
 
 
+const EnvelopSettings = Vue.component('envelop-settings', {
+    extends: ClosedActivity,
+    template: '#envelop-settings',
+});
+
+
 const IncomingPhoto = Vue.component('incoming-photo', {
     extends: ClosedActivity,
     props: ['humanId'],

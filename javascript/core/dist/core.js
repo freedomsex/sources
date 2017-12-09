@@ -3084,6 +3084,11 @@ var DesiresSettings = Vue.component('desires-settings', {
     template: '#desires-settings'
 });
 
+var EnvelopSettings = Vue.component('envelop-settings', {
+    extends: ClosedActivity,
+    template: '#envelop-settings'
+});
+
 var IncomingPhoto = Vue.component('incoming-photo', {
     extends: ClosedActivity,
     props: ['humanId'],
@@ -5640,7 +5645,10 @@ var routes = [{ path: '/write/:humanId(\\d+)/(.*)?', name: 'quickWrite', compone
     children: [{ path: ':humanId(\\d+)/(.*)?', name: 'dialog', meta: { back: '/intimate' }, component: MessagesActivity, props: true,
         children: [{ path: 'uploads', name: 'uploads', meta: { back: '.' }, component: PhotoSettings, props: true }, { path: 'incoming', name: 'incoming', meta: { back: '.' }, component: IncomingPhoto, props: true }]
     }]
-}, { path: '/confirm-sex/:show?', component: SexConfirm, props: true }, { path: '/protect', component: ModeratorActivity }, { path: '/content/deal/:link/:locale?', component: DealContentPage, props: true }, { path: '/content/rules/:locale?', component: RulesContentPage, props: true }, { path: '/content/careers/:locale?', component: СareersContentPage, props: true }, { path: '/help/:link/:locale?', component: HelpContentPage, props: true }, { path: '/releases/:link/:locale?', component: ReleaseContentPage, props: true }, { path: '/promo/:link', component: ContentModal, props: true }, { path: '(.*)?/settings/search', meta: { back: '/' }, component: SearchSettings,
+}, { path: '/confirm-sex/:show?', component: SexConfirm, props: true }, { path: '/protect', component: ModeratorActivity }, { path: '/content/deal/:link/:locale?', component: DealContentPage, props: true }, { path: '/content/rules/:locale?', component: RulesContentPage, props: true }, { path: '/content/careers/:locale?', component: СareersContentPage, props: true }, { path: '/help/:link/:locale?', component: HelpContentPage, props: true }, { path: '/releases/:link/:locale?', component: ReleaseContentPage, props: true },
+// { path: '/promo/:link', component: ContentModal, props: true },
+
+{ path: '(.*)?/settings/search', meta: { back: '/' }, component: SearchSettings,
     beforeEnter: function beforeEnter(to, from, next) {
         return store.state.user.sex ? next() : next('/confirm-sex/search');
     }
@@ -5652,7 +5660,7 @@ var routes = [{ path: '/write/:humanId(\\d+)/(.*)?', name: 'quickWrite', compone
     beforeEnter: function beforeEnter(to, from, next) {
         return store.state.user.sex ? next() : next('/confirm-sex/search');
     }
-}, { path: '(.*)?/settings/security', meta: { back: 'other' }, component: SecuritySettings }, { path: '(.*)?/settings/reviews', meta: { back: 'other' }, component: ReviewSettings }, { path: '(.*)?/settings/question', meta: { back: 'other' }, component: QuestionActivity }, { path: '(.*)?/wizard/city', meta: { back: '/settings/account' }, component: CityWizard,
+}, { path: '(.*)?/settings/security', meta: { back: 'other' }, component: SecuritySettings }, { path: '(.*)?/settings/reviews', meta: { back: 'other' }, component: ReviewSettings }, { path: '(.*)?/settings/question', meta: { back: 'other' }, component: QuestionActivity }, { path: '(.*)?/settings/envelop', meta: { back: 'other' }, component: EnvelopSettings }, { path: '(.*)?/wizard/city', meta: { back: '/settings/account' }, component: CityWizard,
     beforeEnter: function beforeEnter(to, from, next) {
         return store.state.user.sex ? next() : next('/confirm-sex/city');
     }
