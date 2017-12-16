@@ -2292,6 +2292,7 @@ Vue.component('simple-captcha', {
 const AdTop = Vue.component('ad-top', {
     data() {
         return {
+            enabled: false,
             width: 0
         }
     },
