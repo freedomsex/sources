@@ -2,7 +2,8 @@
 const AdTop = Vue.component('ad-top', {
     data() {
         return {
-            enabled: false,
+            enabled: true,
+            iframe: false,
             width: 0
         }
     },
