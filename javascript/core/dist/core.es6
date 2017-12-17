@@ -2293,7 +2293,7 @@ const AdTop = Vue.component('ad-top', {
     data() {
         return {
             enabled: true,
-            iframe: false,
+            iframe: true,
             width: 0
         }
     },
