@@ -212,12 +212,6 @@ class ApiUser extends Api {
     }
 
     saveSearch(data) {
-        data = {
-            years_up: data.up,
-            years_to: data.to,
-            option_mess_town: data.town,
-            option_virt_accept: data.virt,
-        };
         return super.save(data, null, 'msett/save');
     }
 

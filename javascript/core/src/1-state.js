@@ -511,9 +511,8 @@ var search = {
             city: '',
             up: null,
             to: null,
-            town: false,
-            virt: false,
             any: false,
+            virt: false,
         }
     },
     actions: {
@@ -528,32 +527,19 @@ var search = {
             });
         },
         LOAD({state, rootState, commit}) {
-            let {city, up, to, any} = state.settings;
-            let sex = rootState.user.sex;
-            let who = (sex == 1) ? 2 : 1;
+            let {sex, city, up, to, any, virt} = rootState.user;
+            let who = (sex == 2) ? 1 : 2;
             up = up ? up : 0;
             to = to ? to : 0;
             if (!city || any) {
                 city = null;
             }
-            return api.search.load({sex, who, city, up, to, next: state.next}).then(({data}) => {
+
+            return api.search.load({who, city, up, to, next: state.next}).then(({data}) => {
                 commit('results', data);
                 commit('last', data);
                 commit('next');
             });
-        },
-        RESET_SEARCH() {
-
-        },
-        SETTINGS({ commit }) {
-            commit('settingsCookies');
-            commit('settings', ls.get('search.settings'));
-            //let index = 'search.settings';
-        },
-        SAVE_SEARCH({state, commit}, data) {
-            commit('settings', data);
-            ls.set('search.settings', data);
-            return api.user.saveSearch(data).then((response) => { });
         },
     },
     mutations: {
@@ -586,12 +572,6 @@ var search = {
                 ls.set('last-search', users, 31*24*60*60);
             }
         },
-        settings(state, data) {
-            if (data) {
-                //console.log('settings:', data);
-                _.assign(state.settings, data);
-            }
-        },
         next(state, reset) {
             if (reset) {
                 state.next = 0;
@@ -599,26 +579,11 @@ var search = {
                 state.next += state.batch;
             }
         },
-        settingsCookies(state) {
-            var data = get_cookie('mail_sett');
-            if (data) {
-                try {
-                  data = JSON.parse(data);
-                }
-                catch(e) { }
-                state.settings.city = data.city;
-                state.settings.up = Number(data.up);
-                state.settings.to = Number(data.to);
-                state.settings.town = Boolean(data.town);
-                state.settings.virt = Boolean(data.virt);
-                //console.log('dataCookies:', data);
-            }
-        }
     },
     getters: {
         virgin(state, getters, rootState) {
-            let {who, up, to} = state.settings;
-            return (!who && !rootState.user.city && !up && !to);
+            let {up, to} = state.settings;
+            return (!rootState.user.city && !up && !to);
         },
         more(state) {
             return (state.received && state.received == state.batch) ? true : false;
@@ -636,6 +601,8 @@ const user = {
         age: 0,
         name: '',
         city: '',
+        any: 0,
+        virt: 0,
         contacts: {
             em: 0,
             vk: 0,
@@ -688,6 +655,10 @@ const user = {
             api.user.saveContacts(contacts).then((response) => { });
             commit('loadUser', {contacts});
         },
+        SAVE_SEARCH({state, commit}, data) {
+            commit('loadUser', data);
+            return api.user.saveSearch(data).then((response) => { });
+        },
     },
     mutations: {
         loadUser(state, data) {
@@ -695,6 +666,10 @@ const user = {
             ls.set('user.data', state, 23456);
         },
         resetUser(state, data) {
+            _.assign(state, data);
+            ls.set('user.data', data, 23456);
+        },
+        settings(state, data) {
             _.assign(state, data);
             ls.set('user.data', data, 23456);
         },
@@ -793,7 +768,6 @@ const store = new Vuex.Store({
 store.dispatch('LOAD_API_TOKEN');
 store.dispatch('accepts/LOAD');
 store.dispatch('LOAD_USER');
-store.dispatch('search/SETTINGS');
 
 
 
@@ -1010,12 +984,6 @@ class ApiUser extends Api {
     }
 
     saveSearch(data) {
-        data = {
-            years_up: data.up,
-            years_to: data.to,
-            option_mess_town: data.town,
-            option_virt_accept: data.virt,
-        };
         return super.save(data, null, 'msett/save');
     }
 

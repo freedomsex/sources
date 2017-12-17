@@ -52,5 +52,4 @@ const store = new Vuex.Store({
 store.dispatch('LOAD_API_TOKEN');
 store.dispatch('accepts/LOAD');
 store.dispatch('LOAD_USER');
-store.dispatch('search/SETTINGS');
 

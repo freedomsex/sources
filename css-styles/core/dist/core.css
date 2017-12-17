@@ -1425,17 +1425,17 @@ a.name:hover {
   background-image: url('/static/img/icon/error-outline.png');
 }
 .activity-section {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 .activity-section__title {
-  margin-bottom: 7px;
+  margin-bottom: 10px;
   font-size: 18px;
 }
 .activity-section__link {
   color: #0066cc;
   cursor: pointer;
   text-decoration: none;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   display: block;
 }
 .default-activity {

@@ -8,30 +8,16 @@ const SearchSettings = Vue.component('search-settings', {
              selectUp: 0,
              selectTo: 0,
              selectCity: '',
-             checkedTown: 0,
+             checkedAny: 0,
              checkedVirt: 0,
-             checkedAnyCity: 0,
         }
     },
-    // beforeRouteEnter(to, from, next) {,
-    //     beforeEnter: (to, from, next) => {
-    //         console.log(store.state.user.sex);
-    //         if (!store.state.user.sex) {
-    //             console.log('settings-search', store.state.user.sex );
-    //             next('/confirm-sex/search');
-    //         } else {
-    //             console.log('next', to );
-    //             next();
-    //         }
-    //     }
-
-    // },
     computed: Vuex.mapState({
-        who(state) {
-            var who = Number(state.search.settings.who);
-            if (who) {
-                return (who == 1) ? 1 : 2;
-            }
+        userSex: (state) => Number(state.user.sex), // GLOBAL
+        who() {
+            if (this.userSex) {
+                return (this.userSex == 1) ? 2 : 1;
+            } // [~!!!~] READ_ONLY
             return 0;
         },
         city(state) {
@@ -39,50 +25,45 @@ const SearchSettings = Vue.component('search-settings', {
             return state.user.city ? state.user.city : city; // [~!!!~] READ_ONLY
         },
         up(state) {
-            return this.age(state.search.settings.up);
+            return this.age(state.user.up);
         },
         to(state) {
-            return this.age(state.search.settings.to);
-        },
-        town(state) {
-            return state.search.settings.town == true;
-        },
-        virt(state) {
-            return state.search.settings.virt == true;
+            return this.age(state.user.to);
         },
         any(state) {
-            return state.search.settings.any == true;
+            return state.user.any == true;
+        },
+        virt(state) {
+            return state.user.virt == true;
         },
         virgin(state) {
             // Хак для пустых настроек
-            if (state.search.settings.city != this.city) {
+            if (state.user.city != this.city) {
                 return false;
             }
             // Хак для старых настроек NOT Range
-            if (state.search.settings.up != this.up) {
+            if (state.user.up != this.up) {
                 return false;
             }
-            if (state.search.settings.to != this.to) {
+            if (state.user.to != this.to) {
                 return false;
             }
             return (
                 this.selectCity == this.city &&
                 this.selectUp == this.up &&
                 this.selectTo == this.to &&
-                this.checkedTown == this.town &&
-                this.checkedVirt == this.virt &&
-                this.checkedAnyCity == this.any
+                this.checkedAny == this.any &&
+                this.checkedVirt == this.virt
             );
         }
     }),
     created() {
-        let {city, who, up, to} = defaultSettings; // GLOBAL
+        let {city, up, to} = defaultSettings; // GLOBAL
         this.selectCity = this.city ? this.city : city;
         this.selectUp = this.up ? this.up : this.age(up);
         this.selectTo = this.to ? this.to : this.age(to);
-        this.checkedTown = this.town;
+        this.checkedAny = this.any;
         this.checkedVirt = this.virt;
-        this.checkedAnyCity = this.any;
     },
     methods: {
         age(value) {
@@ -100,36 +81,18 @@ const SearchSettings = Vue.component('search-settings', {
                 }
             });
         },
-        // setWho(value) {
-        //     this.$store.commit('settings', {who: value});
-        // },
-        // setUp() {
-        //     this.$store.commit('settings', {up: this.selectUp});
-        // },
-        // setTo() {
-        //     this.$store.commit('settings', {to: this.selectTo});
-        // },
         save() {
             var data = {
-                city: this.city,
                 up:   this.selectUp,
                 to:   this.selectTo,
-                town: this.checkedTown,
+                any: this.checkedAny,
                 virt: this.checkedVirt,
-                any: this.checkedAnyCity,
             };
             console.log(data);
             if (!this.virgin) {
-                this.$store.dispatch('search/SAVE_SEARCH', data);
+                this.$store.dispatch('SAVE_SEARCH', data);
             }
         },
-        // account() {
-        //     if (this.root) {
-        //         this.$router.push({ name: 'account-settings', params: {root: true} })
-        //     } else {
-        //         this.$router.push({ name: 'account-settings'})
-        //     }
-        // },
         close() {
             this.save();
             this.back();

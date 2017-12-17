@@ -17,7 +17,7 @@
     
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1513498743047">
+<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1513545899327">
 
   <script type="text/javascript">  
     function get_cookie ( cookie_name )
@@ -1944,8 +1944,14 @@
         <input class="form-control" type="text" :value.trim="city" disabled>
         <button class="btn btn-default"> Изменить </button>
       </div>
-      <label style="display: block; margin-top: 15px;"><input type="checkbox" v-model="checkedAnyCity">
+    </div>
+
+
+    <div class="activity-section">
+      <label style="display: block;"><input type="checkbox" v-model="checkedAny">
         Искать в любом городе</label>
+      <label style="display: block;"><input type="checkbox" v-model="checkedVirt">
+        Виртуальный секс</label>
     </div>
 
     <div class="activity-section">
@@ -1965,14 +1971,6 @@
           </select>
         </div>
       </div>
-    </div>
-
-    <div class="activity-section">
-      <div class="activity-section__title">Пожелания:</div>
-      <label style="display: block;"><input type="checkbox" v-model="checkedTown">
-        Только в моём городе</label>
-      <label style="display: block;"><input type="checkbox" v-model="checkedVirt">
-        Виртуальный секс</label>
     </div>
 
     <div class="activity-section">
@@ -2222,7 +2220,7 @@
 
  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/static/js/core.min.js?rel=1513498743045"></script>
+<script type="text/javascript" src="/static/js/core.min.js?rel=1513545899320"></script>
 <!-- Исходники можно найти в репозитории. Там же собранные не сжатые файлы -->
 <script type="text/javascript">
     // var addthis_config = {"data_track_addressbar":false};

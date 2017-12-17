@@ -8,8 +8,14 @@
         <input class="form-control" type="text" :value.trim="city" disabled>
         <button class="btn btn-default"> Изменить </button>
       </div>
-      <label style="display: block; margin-top: 15px;"><input type="checkbox" v-model="checkedAnyCity">
+    </div>
+
+
+    <div class="activity-section">
+      <label style="display: block;"><input type="checkbox" v-model="checkedAny">
         Искать в любом городе</label>
+      <label style="display: block;"><input type="checkbox" v-model="checkedVirt">
+        Виртуальный секс</label>
     </div>
 
     <div class="activity-section">
@@ -29,14 +35,6 @@
           </select>
         </div>
       </div>
-    </div>
-
-    <div class="activity-section">
-      <div class="activity-section__title">Пожелания:</div>
-      <label style="display: block;"><input type="checkbox" v-model="checkedTown">
-        Только в моём городе</label>
-      <label style="display: block;"><input type="checkbox" v-model="checkedVirt">
-        Виртуальный секс</label>
     </div>
 
     <div class="activity-section">

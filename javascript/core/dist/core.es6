@@ -2378,8 +2378,8 @@ Vue.component('api-key-update', {
             //store.commit('loadUser', data.contacts);
         },
         upSettings(data) {
-            let {who, years_up: up, years_to: to, close: town, virt} = data;
-            this.$store.commit('search/settings', {who, up, to, virt, town});
+            let {up, to, any, virt} = data;
+            this.$store.commit('settings', {up, to, virt, any});
         }
     },
     template: '#api-key-update'
@@ -3399,30 +3399,16 @@ const SearchSettings = Vue.component('search-settings', {
              selectUp: 0,
              selectTo: 0,
              selectCity: '',
-             checkedTown: 0,
+             checkedAny: 0,
              checkedVirt: 0,
-             checkedAnyCity: 0,
         }
     },
-    // beforeRouteEnter(to, from, next) {,
-    //     beforeEnter: (to, from, next) => {
-    //         console.log(store.state.user.sex);
-    //         if (!store.state.user.sex) {
-    //             console.log('settings-search', store.state.user.sex );
-    //             next('/confirm-sex/search');
-    //         } else {
-    //             console.log('next', to );
-    //             next();
-    //         }
-    //     }
-
-    // },
     computed: Vuex.mapState({
-        who(state) {
-            var who = Number(state.search.settings.who);
-            if (who) {
-                return (who == 1) ? 1 : 2;
-            }
+        userSex: (state) => Number(state.user.sex), // GLOBAL
+        who() {
+            if (this.userSex) {
+                return (this.userSex == 1) ? 2 : 1;
+            } // [~!!!~] READ_ONLY
             return 0;
         },
         city(state) {
@@ -3430,50 +3416,45 @@ const SearchSettings = Vue.component('search-settings', {
             return state.user.city ? state.user.city : city; // [~!!!~] READ_ONLY
         },
         up(state) {
-            return this.age(state.search.settings.up);
+            return this.age(state.user.up);
         },
         to(state) {
-            return this.age(state.search.settings.to);
-        },
-        town(state) {
-            return state.search.settings.town == true;
-        },
-        virt(state) {
-            return state.search.settings.virt == true;
+            return this.age(state.user.to);
         },
         any(state) {
-            return state.search.settings.any == true;
+            return state.user.any == true;
+        },
+        virt(state) {
+            return state.user.virt == true;
         },
         virgin(state) {
             // Хак для пустых настроек
-            if (state.search.settings.city != this.city) {
+            if (state.user.city != this.city) {
                 return false;
             }
             // Хак для старых настроек NOT Range
-            if (state.search.settings.up != this.up) {
+            if (state.user.up != this.up) {
                 return false;
             }
-            if (state.search.settings.to != this.to) {
+            if (state.user.to != this.to) {
                 return false;
             }
             return (
                 this.selectCity == this.city &&
                 this.selectUp == this.up &&
                 this.selectTo == this.to &&
-                this.checkedTown == this.town &&
-                this.checkedVirt == this.virt &&
-                this.checkedAnyCity == this.any
+                this.checkedAny == this.any &&
+                this.checkedVirt == this.virt
             );
         }
     }),
     created() {
-        let {city, who, up, to} = defaultSettings; // GLOBAL
+        let {city, up, to} = defaultSettings; // GLOBAL
         this.selectCity = this.city ? this.city : city;
         this.selectUp = this.up ? this.up : this.age(up);
         this.selectTo = this.to ? this.to : this.age(to);
-        this.checkedTown = this.town;
+        this.checkedAny = this.any;
         this.checkedVirt = this.virt;
-        this.checkedAnyCity = this.any;
     },
     methods: {
         age(value) {
@@ -3491,36 +3472,18 @@ const SearchSettings = Vue.component('search-settings', {
                 }
             });
         },
-        // setWho(value) {
-        //     this.$store.commit('settings', {who: value});
-        // },
-        // setUp() {
-        //     this.$store.commit('settings', {up: this.selectUp});
-        // },
-        // setTo() {
-        //     this.$store.commit('settings', {to: this.selectTo});
-        // },
         save() {
             var data = {
-                city: this.city,
                 up:   this.selectUp,
                 to:   this.selectTo,
-                town: this.checkedTown,
+                any: this.checkedAny,
                 virt: this.checkedVirt,
-                any: this.checkedAnyCity,
             };
             console.log(data);
             if (!this.virgin) {
-                this.$store.dispatch('search/SAVE_SEARCH', data);
+                this.$store.dispatch('SAVE_SEARCH', data);
             }
         },
-        // account() {
-        //     if (this.root) {
-        //         this.$router.push({ name: 'account-settings', params: {root: true} })
-        //     } else {
-        //         this.$router.push({ name: 'account-settings'})
-        //     }
-        // },
         close() {
             this.save();
             this.back();
@@ -4578,9 +4541,8 @@ var search = {
             city: '',
             up: null,
             to: null,
-            town: false,
-            virt: false,
             any: false,
+            virt: false,
         }
     },
     actions: {
@@ -4595,32 +4557,19 @@ var search = {
             });
         },
         LOAD({state, rootState, commit}) {
-            let {city, up, to, any} = state.settings;
-            let sex = rootState.user.sex;
-            let who = (sex == 1) ? 2 : 1;
+            let {sex, city, up, to, any, virt} = rootState.user;
+            let who = (sex == 2) ? 1 : 2;
             up = up ? up : 0;
             to = to ? to : 0;
             if (!city || any) {
                 city = null;
             }
-            return api.search.load({sex, who, city, up, to, next: state.next}).then(({data}) => {
+
+            return api.search.load({who, city, up, to, next: state.next}).then(({data}) => {
                 commit('results', data);
                 commit('last', data);
                 commit('next');
             });
-        },
-        RESET_SEARCH() {
-
-        },
-        SETTINGS({ commit }) {
-            commit('settingsCookies');
-            commit('settings', ls.get('search.settings'));
-            //let index = 'search.settings';
-        },
-        SAVE_SEARCH({state, commit}, data) {
-            commit('settings', data);
-            ls.set('search.settings', data);
-            return api.user.saveSearch(data).then((response) => { });
         },
     },
     mutations: {
@@ -4653,12 +4602,6 @@ var search = {
                 ls.set('last-search', users, 31*24*60*60);
             }
         },
-        settings(state, data) {
-            if (data) {
-                //console.log('settings:', data);
-                _.assign(state.settings, data);
-            }
-        },
         next(state, reset) {
             if (reset) {
                 state.next = 0;
@@ -4666,26 +4609,11 @@ var search = {
                 state.next += state.batch;
             }
         },
-        settingsCookies(state) {
-            var data = get_cookie('mail_sett');
-            if (data) {
-                try {
-                  data = JSON.parse(data);
-                }
-                catch(e) { }
-                state.settings.city = data.city;
-                state.settings.up = Number(data.up);
-                state.settings.to = Number(data.to);
-                state.settings.town = Boolean(data.town);
-                state.settings.virt = Boolean(data.virt);
-                //console.log('dataCookies:', data);
-            }
-        }
     },
     getters: {
         virgin(state, getters, rootState) {
-            let {who, up, to} = state.settings;
-            return (!who && !rootState.user.city && !up && !to);
+            let {up, to} = state.settings;
+            return (!rootState.user.city && !up && !to);
         },
         more(state) {
             return (state.received && state.received == state.batch) ? true : false;
@@ -4703,6 +4631,8 @@ const user = {
         age: 0,
         name: '',
         city: '',
+        any: 0,
+        virt: 0,
         contacts: {
             em: 0,
             vk: 0,
@@ -4755,6 +4685,10 @@ const user = {
             api.user.saveContacts(contacts).then((response) => { });
             commit('loadUser', {contacts});
         },
+        SAVE_SEARCH({state, commit}, data) {
+            commit('loadUser', data);
+            return api.user.saveSearch(data).then((response) => { });
+        },
     },
     mutations: {
         loadUser(state, data) {
@@ -4762,6 +4696,10 @@ const user = {
             ls.set('user.data', state, 23456);
         },
         resetUser(state, data) {
+            _.assign(state, data);
+            ls.set('user.data', data, 23456);
+        },
+        settings(state, data) {
             _.assign(state, data);
             ls.set('user.data', data, 23456);
         },
@@ -4860,7 +4798,6 @@ const store = new Vuex.Store({
 store.dispatch('LOAD_API_TOKEN');
 store.dispatch('accepts/LOAD');
 store.dispatch('LOAD_USER');
-store.dispatch('search/SETTINGS');
 
 
 
@@ -5077,12 +5014,6 @@ class ApiUser extends Api {
     }
 
     saveSearch(data) {
-        data = {
-            years_up: data.up,
-            years_to: data.to,
-            option_mess_town: data.town,
-            option_virt_accept: data.virt,
-        };
         return super.save(data, null, 'msett/save');
     }
 

@@ -5,6 +5,8 @@ const user = {
         age: 0,
         name: '',
         city: '',
+        any: 0,
+        virt: 0,
         contacts: {
             em: 0,
             vk: 0,
@@ -57,6 +59,10 @@ const user = {
             api.user.saveContacts(contacts).then((response) => { });
             commit('loadUser', {contacts});
         },
+        SAVE_SEARCH({state, commit}, data) {
+            commit('loadUser', data);
+            return api.user.saveSearch(data).then((response) => { });
+        },
     },
     mutations: {
         loadUser(state, data) {
@@ -64,6 +70,10 @@ const user = {
             ls.set('user.data', state, 23456);
         },
         resetUser(state, data) {
+            _.assign(state, data);
+            ls.set('user.data', data, 23456);
+        },
+        settings(state, data) {
             _.assign(state, data);
             ls.set('user.data', data, 23456);
         },

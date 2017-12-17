@@ -60,8 +60,8 @@ Vue.component('api-key-update', {
             //store.commit('loadUser', data.contacts);
         },
         upSettings(data) {
-            let {who, years_up: up, years_to: to, close: town, virt} = data;
-            this.$store.commit('search/settings', {who, up, to, virt, town});
+            let {up, to, any, virt} = data;
+            this.$store.commit('settings', {up, to, virt, any});
         }
     },
     template: '#api-key-update'
