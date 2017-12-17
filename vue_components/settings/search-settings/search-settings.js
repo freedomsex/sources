@@ -91,6 +91,7 @@ const SearchSettings = Vue.component('search-settings', {
             console.log(data);
             if (!this.virgin) {
                 this.$store.dispatch('SAVE_SEARCH', data);
+                console.log(this.$store.state.user);
             }
         },
         close() {

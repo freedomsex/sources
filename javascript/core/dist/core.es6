@@ -3479,6 +3479,7 @@ const SearchSettings = Vue.component('search-settings', {
             console.log(data);
             if (!this.virgin) {
                 this.$store.dispatch('SAVE_SEARCH', data);
+                console.log(this.$store.state.user);
             }
         },
         close() {
@@ -3880,7 +3881,8 @@ Vue.component('search-wizard', {
     store,
     computed: Vuex.mapState({
         range(state) {
-            let {up, to} = state.user;
+            var up = state.user.up;
+            var to = state.user.to;
             var range = '';
             if (up && to) {
                 range = up + ' - ' + to;
@@ -4534,13 +4536,6 @@ var search = {
             age: 0,
             city: '',
         },
-        settings: {
-            city: '',
-            up: null,
-            to: null,
-            any: false,
-            virt: false,
-        }
     },
     actions: {
         HUMAN({ commit }, tid) {
@@ -4609,8 +4604,8 @@ var search = {
     },
     getters: {
         virgin(state, getters, rootState) {
-            let {up, to} = state.settings;
-            return (!rootState.user.city && !up && !to);
+            let {city, up, to} = rootState.user;
+            return (!city && !up && !to);
         },
         more(state) {
             return (state.received && state.received == state.batch) ? true : false;
@@ -4628,6 +4623,8 @@ const user = {
         age: 0,
         name: '',
         city: '',
+        up: null,
+        to: null,
         any: 0,
         virt: 0,
         contacts: {

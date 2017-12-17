@@ -5,6 +5,8 @@ const user = {
         age: 0,
         name: '',
         city: '',
+        up: null,
+        to: null,
         any: 0,
         virt: 0,
         contacts: {

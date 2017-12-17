@@ -8,7 +8,8 @@ Vue.component('search-wizard', {
     store,
     computed: Vuex.mapState({
         range(state) {
-            let {up, to} = state.user;
+            var up = state.user.up;
+            var to = state.user.to;
             var range = '';
             if (up && to) {
                 range = up + ' - ' + to;
