@@ -106,9 +106,6 @@ const InitialDialog = Vue.component('initial-dialog', {
             //console.log(this.$store);
             return this.$store.state.contacts.initial.list;
         },
-        settings() {
-            return this.$store.state.search.settings;
-        },
     },
     methods: {
         load() {
@@ -138,12 +135,12 @@ const InitialDialog = Vue.component('initial-dialog', {
         idle(data) {
             let result = false;
             let {sex, city: where, age} = data.user;
-            let {sex: who, city, up, to, town: closed} = this.settings;
+            let {sex: who, city, up, to, any} = this.$store.state.user;
 
             if (who == sex) {
                 result = true;
             }
-            if (city != where && closed) {
+            if (city != where && !any) {
                 result = true;
             }
             if (up && up > age) {

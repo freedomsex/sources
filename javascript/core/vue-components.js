@@ -1031,9 +1031,6 @@ const InitialDialog = Vue.component('initial-dialog', {
             //console.log(this.$store);
             return this.$store.state.contacts.initial.list;
         },
-        settings() {
-            return this.$store.state.search.settings;
-        },
     },
     methods: {
         load() {
@@ -1063,12 +1060,12 @@ const InitialDialog = Vue.component('initial-dialog', {
         idle(data) {
             let result = false;
             let {sex, city: where, age} = data.user;
-            let {sex: who, city, up, to, town: closed} = this.settings;
+            let {sex: who, city, up, to, any} = this.$store.state.user;
 
             if (who == sex) {
                 result = true;
             }
-            if (city != where && closed) {
+            if (city != where && !any) {
                 result = true;
             }
             if (up && up > age) {
@@ -2453,7 +2450,7 @@ Vue.component('search-list', {
             return this.$store.getters['search/more'];
         },
         compact() {
-            let {city, any} = this.$store.state.search.settings;
+            let {city, any} = this.$store.state.user;
             return city && !any;
         },
         visited() {
@@ -3663,16 +3660,16 @@ Vue.component('search-wizard', {
     store,
     computed: Vuex.mapState({
         range(state) {
-            var settings = state.search.settings;
+            let {up, to} = state.user;
             var range = '';
-            if (settings.up && settings.to) {
-                range = settings.up + ' - ' + settings.to;
+            if (up && to) {
+                range = up + ' - ' + to;
             } else
-            if (settings.up && !settings.to) {
-                range = ' от ' + settings.up;
+            if (up && !to) {
+                range = ' от ' + up;
             } else
-            if (!settings.up && settings.to) {
-                range = ' до ' + settings.to;
+            if (!up && to) {
+                range = ' до ' + to;
             }
             return range ? ' в возрасте ' + range + ' лет ' : '';
         },

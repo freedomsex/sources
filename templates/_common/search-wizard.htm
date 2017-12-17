@@ -2,7 +2,7 @@
   <div id="search-wizard">
     <div @click="$router.push('/settings/search')" style="display: none;" v-show="say">
       <i class="material-icons">&#xE8B4;</i>
-      Вы ищете: {{say}} &nbsp;
+      Вы ищете: <span v-text="say"></span> &nbsp;
       <div class="clearfix visible-xs"></div>
       <button class="btn btn-primary btn-sm">
         <span aria-hidden="true" class="glyphicon glyphicon-cog"></span>

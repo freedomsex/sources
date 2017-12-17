@@ -32,7 +32,7 @@ Vue.component('search-list', {
             return this.$store.getters['search/more'];
         },
         compact() {
-            let {city, any} = this.$store.state.search.settings;
+            let {city, any} = this.$store.state.user;
             return city && !any;
         },
         visited() {

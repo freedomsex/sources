@@ -1255,9 +1255,6 @@ var InitialDialog = Vue.component('initial-dialog', {
         contacts: function contacts() {
             //console.log(this.$store);
             return this.$store.state.contacts.initial.list;
-        },
-        settings: function settings() {
-            return this.$store.state.search.settings;
         }
     },
     methods: {
@@ -1295,18 +1292,18 @@ var InitialDialog = Vue.component('initial-dialog', {
                 sex = _data$user.sex,
                 where = _data$user.city,
                 age = _data$user.age;
-            var _settings = this.settings,
-                who = _settings.sex,
-                city = _settings.city,
-                up = _settings.up,
-                to = _settings.to,
-                closed = _settings.town;
+            var _$store$state$user = this.$store.state.user,
+                who = _$store$state$user.sex,
+                city = _$store$state$user.city,
+                up = _$store$state$user.up,
+                to = _$store$state$user.to,
+                any = _$store$state$user.any;
 
 
             if (who == sex) {
                 result = true;
             }
-            if (city != where && closed) {
+            if (city != where && !any) {
                 result = true;
             }
             if (up && up > age) {
@@ -2471,11 +2468,11 @@ var MenuUser = Vue.component('menu-user', {
         },
         signature: function signature() {
             var results = 'Кто вы?';
-            var _$store$state$user = this.$store.state.user,
-                name = _$store$state$user.name,
-                city = _$store$state$user.city,
-                age = _$store$state$user.age,
-                sex = _$store$state$user.sex;
+            var _$store$state$user2 = this.$store.state.user,
+                name = _$store$state$user2.name,
+                city = _$store$state$user2.city,
+                age = _$store$state$user2.age,
+                sex = _$store$state$user2.sex;
 
             if (sex) {
                 results = sex == 1 ? 'Парень' : 'Девушка';
@@ -2755,9 +2752,9 @@ Vue.component('search-list', {
             return this.$store.getters['search/more'];
         },
         compact: function compact() {
-            var _$store$state$search$ = this.$store.state.search.settings,
-                city = _$store$state$search$.city,
-                any = _$store$state$search$.any;
+            var _$store$state$user3 = this.$store.state.user,
+                city = _$store$state$user3.city,
+                any = _$store$state$user3.any;
 
             return city && !any;
         },
@@ -4014,14 +4011,17 @@ Vue.component('search-wizard', {
     store: store,
     computed: Vuex.mapState({
         range: function range(state) {
-            var settings = state.search.settings;
+            var _state$user = state.user,
+                up = _state$user.up,
+                to = _state$user.to;
+
             var range = '';
-            if (settings.up && settings.to) {
-                range = settings.up + ' - ' + settings.to;
-            } else if (settings.up && !settings.to) {
-                range = ' от ' + settings.up;
-            } else if (!settings.up && settings.to) {
-                range = ' до ' + settings.to;
+            if (up && to) {
+                range = up + ' - ' + to;
+            } else if (up && !to) {
+                range = ' от ' + up;
+            } else if (!up && to) {
+                range = ' до ' + to;
             }
             return range ? ' в возрасте ' + range + ' лет ' : '';
         },

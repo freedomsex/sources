@@ -8,16 +8,16 @@ Vue.component('search-wizard', {
     store,
     computed: Vuex.mapState({
         range(state) {
-            var settings = state.search.settings;
+            let {up, to} = state.user;
             var range = '';
-            if (settings.up && settings.to) {
-                range = settings.up + ' - ' + settings.to;
+            if (up && to) {
+                range = up + ' - ' + to;
             } else
-            if (settings.up && !settings.to) {
-                range = ' от ' + settings.up;
+            if (up && !to) {
+                range = ' от ' + up;
             } else
-            if (!settings.up && settings.to) {
-                range = ' до ' + settings.to;
+            if (!up && to) {
+                range = ' до ' + to;
             }
             return range ? ' в возрасте ' + range + ' лет ' : '';
         },
