@@ -84,6 +84,11 @@
     }
 }
 
+.activity-subsection {
+    margin-bottom: @indent-md;
+    display: block;
+}
+
 .activity-section {
     margin-bottom: @indent-lg;
     &__title {
@@ -92,8 +97,7 @@
     }
     &__link {
         .link_simple;
-        margin-bottom: @indent-md;
-        display: block;
+        .activity-subsection;
     }
 }
 

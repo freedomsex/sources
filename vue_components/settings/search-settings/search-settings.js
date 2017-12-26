@@ -10,6 +10,10 @@ const SearchSettings = Vue.component('search-settings', {
              selectCity: '',
              checkedAny: 0,
              checkedVirt: 0,
+             tooltip: {
+                any: false,
+                virt: false,
+             }
         }
     },
     computed: Vuex.mapState({
@@ -98,6 +102,16 @@ const SearchSettings = Vue.component('search-settings', {
             this.save();
             this.back();
             this.$root.reload();
+        },
+        tooltipAnyForce() {
+            if (this.checkedAny) {
+                this.tooltip.any = true;
+            }
+        },
+        tooltipVirtForce() {
+            if (this.checkedVirt) {
+                this.tooltip.virt = true;
+            }
         },
     },
     template: '#search-settings',

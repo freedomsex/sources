@@ -12,10 +12,17 @@
 
 
     <div class="activity-section">
-      <label style="display: block;"><input type="checkbox" v-model="checkedAny">
-        Искать в любом городе</label>
-      <label style="display: block;"><input type="checkbox" v-model="checkedVirt">
-        Виртуальный секс</label>
+      <div>
+        <label><input type="checkbox" v-model="checkedAny" @change="tooltipAnyForce()"> Искать в любом городе</label>
+        <tooltip :force="tooltip.any" @close="tooltip.any = false"
+          text="Мы находим для вас подходящие анкеты в вашем городе. Если вы хотите искать по всем городам, отметьте эту настройку."/>
+      </div>
+      <div>
+        <label><input type="checkbox" v-model="checkedVirt" @change="tooltipVirtForce()"> Виртуальный секс</label>
+        <tooltip :force="tooltip.virt" @close="tooltip.virt = false"
+          text="Наш сайт для реальных знакомств. Отметьте опцию, если хотите попробовать виртуальный секс.
+          Предлагать вирт всем подряд запрещено."/>
+      </div>
     </div>
 
     <div class="activity-section">

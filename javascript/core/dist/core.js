@@ -3498,7 +3498,11 @@ var SearchSettings = Vue.component('search-settings', {
             selectTo: 0,
             selectCity: '',
             checkedAny: 0,
-            checkedVirt: 0
+            checkedVirt: 0,
+            tooltip: {
+                any: false,
+                virt: false
+            }
         };
     },
 
@@ -3597,6 +3601,16 @@ var SearchSettings = Vue.component('search-settings', {
             this.save();
             this.back();
             this.$root.reload();
+        },
+        tooltipAnyForce: function tooltipAnyForce() {
+            if (this.checkedAny) {
+                this.tooltip.any = true;
+            }
+        },
+        tooltipVirtForce: function tooltipVirtForce() {
+            if (this.checkedVirt) {
+                this.tooltip.virt = true;
+            }
         }
     },
     template: '#search-settings'
@@ -4085,6 +4099,23 @@ Vue.component('toast', {
     },
 
     template: '#toast'
+});
+
+Vue.component('tooltip', {
+    props: ['text', 'force'],
+    data: function data() {
+        return {
+            show: false
+        };
+    },
+
+    methods: {
+        close: function close() {
+            this.show = false;
+            this.$emit('close');
+        }
+    },
+    template: '#tooltip'
 });
 
 Vue.component('photo-dialog', {

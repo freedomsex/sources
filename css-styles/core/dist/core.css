@@ -1424,6 +1424,10 @@ a.name:hover {
   border: 0px solid #cccccc;
   background-image: url('/static/img/icon/error-outline.png');
 }
+.activity-subsection {
+  margin-bottom: 15px;
+  display: block;
+}
 .activity-section {
   margin-bottom: 20px;
 }
@@ -2210,7 +2214,7 @@ a.name:hover {
 }
 .modal-dialog__mask {
   position: fixed;
-  z-index: 1;
+  z-index: 3;
   top: 0;
   left: 0;
   width: 100%;
@@ -3343,6 +3347,11 @@ a.name:hover {
   min-width: 100px;
   max-width: 400px;
   border-radius: 50px;
+}
+.question-tooltip {
+  vertical-align: text-top;
+  color: #cccccc;
+  padding: 0 5px;
 }
 .split-top {
   margin-top: 15px;
