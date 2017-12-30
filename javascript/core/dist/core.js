@@ -2335,7 +2335,10 @@ var AdTop = Vue.component('ad-top', {
         return {
             enabled: true,
             iframe: true,
-            width: 0
+            width: 0,
+            rotation: {
+                desktop: [0, 1]
+            }
         };
     },
     mounted: function mounted() {
@@ -2351,6 +2354,9 @@ var AdTop = Vue.component('ad-top', {
     computed: {
         desktop: function desktop() {
             return this.width >= 700;
+        },
+        banner: function banner() {
+            return this.random(1, 2);
         },
         source: function source() {
             return '/static/img/ad/ad-hm-' + this.random(0, 2) + '.gif';
