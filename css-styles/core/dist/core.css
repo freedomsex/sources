@@ -210,6 +210,9 @@ body {
   width: auto;
   vertical-align: middle;
 }
+.input-group .form-control {
+  z-index: 0;
+}
 a {
   -moz-transition: color 0.2s ease;
   -o-transition: color 0.2s ease;
