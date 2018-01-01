@@ -4799,6 +4799,8 @@ var search = {
             var state = _ref46.state,
                 rootState = _ref46.rootState,
                 commit = _ref46.commit;
+
+            store.dispatch('LOAD_USER'); // КОСТЫЛЬ [!!!]
             var _rootState$user = rootState.user,
                 sex = _rootState$user.sex,
                 city = _rootState$user.city,
@@ -4813,7 +4815,8 @@ var search = {
             if (!city || any) {
                 city = null;
             }
-
+            console.log('SRCH-LOAD', { who: who, sex: sex, city: city, up: up, to: to, any: any, virt: virt });
+            console.log('User.data', ls.get('user.data'));
             return api.search.load({ who: who, city: city, up: up, to: to, next: state.next }).then(function (_ref47) {
                 var data = _ref47.data;
 
@@ -4979,11 +4982,11 @@ var user = {
         },
         resetUser: function resetUser(state, data) {
             _.assign(state, data);
-            ls.set('user.data', data, 23456);
+            ls.set('user.data', state, 23456);
         },
         settings: function settings(state, data) {
             _.assign(state, data);
-            ls.set('user.data', data, 23456);
+            ls.set('user.data', state, 23456);
         }
     }
 };

@@ -26,6 +26,7 @@ var search = {
             });
         },
         LOAD({state, rootState, commit}) {
+            store.dispatch('LOAD_USER'); // КОСТЫЛЬ [!!!]
             let {sex, city, up, to, any, virt} = rootState.user;
             let who = (sex == 2) ? 1 : 2;
             up = up ? up : 0;
@@ -33,7 +34,8 @@ var search = {
             if (!city || any) {
                 city = null;
             }
-
+            console.log('SRCH-LOAD', {who, sex, city, up, to, any, virt});
+            console.log('User.data', ls.get('user.data'));
             return api.search.load({who, city, up, to, next: state.next}).then(({data}) => {
                 commit('results', data);
                 commit('last', data);

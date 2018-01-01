@@ -73,11 +73,11 @@ const user = {
         },
         resetUser(state, data) {
             _.assign(state, data);
-            ls.set('user.data', data, 23456);
+            ls.set('user.data', state, 23456);
         },
         settings(state, data) {
             _.assign(state, data);
-            ls.set('user.data', data, 23456);
+            ls.set('user.data', state, 23456);
         },
     }
 }
