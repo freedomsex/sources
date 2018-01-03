@@ -35,7 +35,7 @@ const SearchSettings = Vue.component('search-settings', {
             return this.age(state.user.to);
         },
         any(state) {
-            return state.user.any == true;
+            return state.user.any;
         },
         virt(state) {
             return state.user.virt == true;
