@@ -1288,29 +1288,31 @@ var InitialDialog = Vue.component('initial-dialog', {
         },
         idle: function idle(data) {
             var result = false;
-            var _data$user = data.user,
-                sex = _data$user.sex,
-                where = _data$user.city,
-                age = _data$user.age;
-            var _$store$state$user = this.$store.state.user,
-                who = _$store$state$user.sex,
-                city = _$store$state$user.city,
-                up = _$store$state$user.up,
-                to = _$store$state$user.to,
-                any = _$store$state$user.any;
+            if (data.user) {
+                var _data$user = data.user,
+                    sex = _data$user.sex,
+                    where = _data$user.city,
+                    age = _data$user.age;
+                var _$store$state$user = this.$store.state.user,
+                    _who = _$store$state$user.sex,
+                    _city = _$store$state$user.city,
+                    up = _$store$state$user.up,
+                    to = _$store$state$user.to,
+                    any = _$store$state$user.any;
 
 
-            if (who == sex) {
-                result = true;
-            }
-            if (city != where && !any) {
-                result = true;
-            }
-            if (up && up > age) {
-                result = true;
-            }
-            if (to && to < age) {
-                result = true;
+                if (_who == sex) {
+                    result = true;
+                }
+                if (_city != where && !any) {
+                    result = true;
+                }
+                if (up && up > age) {
+                    result = true;
+                }
+                if (to && to < age) {
+                    result = true;
+                }
             }
             return result;
         },

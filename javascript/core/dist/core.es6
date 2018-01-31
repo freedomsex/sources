@@ -1279,20 +1279,22 @@ const InitialDialog = Vue.component('initial-dialog', {
         },
         idle(data) {
             let result = false;
-            let {sex, city: where, age} = data.user;
-            let {sex: who, city, up, to, any} = this.$store.state.user;
+            if (data.user) {
+                let {sex, city: where, age} = data.user;
+                let {sex: who, city, up, to, any} = this.$store.state.user;
 
-            if (who == sex) {
-                result = true;
-            }
-            if (city != where && !any) {
-                result = true;
-            }
-            if (up && up > age) {
-                result = true;
-            }
-            if (to && to < age) {
-                result = true;
+                if (who == sex) {
+                    result = true;
+                }
+                if (city != where && !any) {
+                    result = true;
+                }
+                if (up && up > age) {
+                    result = true;
+                }
+                if (to && to < age) {
+                    result = true;
+                }
             }
             return result;
         },
