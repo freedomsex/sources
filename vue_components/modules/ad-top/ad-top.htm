@@ -4,7 +4,8 @@
   <!-- build:remove:dev -->
     <div class="container hidden-xs" v-if="desktop">
       <div class="row" style="border-bottom: 2px solid #e5e5e5; text-align: center; line-height: 0;" v-if="iframe">
-        <iframe scrolling="no" frameborder="0" width="750" height="90" src="/ad.htm"></iframe>
+        <iframe sandbox="allow-scripts" scrolling="no" frameborder="0" width="750" height="90" src="/ad.htm"></iframe>
+      </div>
       <div class="row" style="border-bottom: 2px solid #e5e5e5;" v-else>
         <a href="//runetki.com/" rel="nofollow" target="_blank" >
           <img :src="source" style="width: 100%;">
