@@ -2358,10 +2358,10 @@ var AdTop = Vue.component('ad-top', {
             return this.width >= 700;
         },
         banner: function banner() {
-            return this.random(1, 2);
+            return 'ad-hm-' + this.random(1, 2) + '.gif';
         },
         source: function source() {
-            return '/static/img/ad/ad-hm-' + this.random(0, 2) + '.gif';
+            return '/static/img/ad/' + this.banner;
         }
     },
     template: '#ad-top'
