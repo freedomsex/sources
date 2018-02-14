@@ -440,6 +440,11 @@ const ActivityActions = {
         },
         errorStop() {
             this.labels.error = false;
+        },
+        processTimeout(second) {
+            this.process = true;
+            second = second ? second : this.slowTime;
+            setTimeout(() => this.process = false, second * 1000);
         }
     },
 }
@@ -2156,6 +2161,11 @@ Vue.component('remove-contact', {
 const SexConfirm = Vue.component('sex-confirm', {
     extends: ModalDialog,
     props: ['show'],
+    data() {
+        return {
+            sex: null,
+        }
+    },
     computed: {
         variant() {
             return this.show ? this.show : 'message';
@@ -2165,7 +2175,7 @@ const SexConfirm = Vue.component('sex-confirm', {
         },
         text() {
             return this.content[this.variant].text;
-        }
+        },
     },
     // beforeRouteLeave(to, from, next) {
     //     if (this.$store.state.user.sex) {
@@ -2199,10 +2209,22 @@ const SexConfirm = Vue.component('sex-confirm', {
         index(val) {
             return val == this.variant;
         },
-        save(sex) {
-            this.$store.dispatch('SAVE_SEX', sex);
-            this.$emit('select', this.show);
-            this.redirect();
+        verify(sex) {
+            this.sex = sex;
+            this.processTimeout();
+            this.$refs.recaptcha.render(this.save);
+            this.$refs.recaptcha.execute();
+        },
+        save(token) {
+            this.process = true;
+            if (this.sex) {
+                this.$store.dispatch('SAVE_SEX', {sex: this.sex, token}).then(({data}) => {
+                    app.$refs['api-key'].load();
+                });
+                this.$emit('select', this.show);
+                this.redirect();
+            }
+            this.$refs.recaptcha.reset();
         },
         login() {
             this.$emit('login');
@@ -2247,6 +2269,10 @@ const SexConfirm = Vue.component('sex-confirm', {
             account: {
                 caption: 'Кто вы?',
                 text: 'Приватная анкета в один клик. Самое быстрое общение. Достаточно указать кто вы, парень или девушка. И начинайте общаться.'
+            },
+            register: {
+                caption: 'Очень легко!',
+                text: 'Самое быстрое общение. Приватная анкета в один клик. Достаточно указать, парень вы или девушка. И начинайте общаться.'
             }
         };
         content.city = content.contacts;
@@ -2368,6 +2394,7 @@ Vue.component('api-key-update', {
         noReg(data) {
             // зарегистрирован / не авторизован
             this.upKey(data);
+            console.log('зарегистрирован / не авторизован');
         },
         upKey(data) {
             this.$store.dispatch('LOAD_API_TOKEN');
@@ -2492,7 +2519,9 @@ const MenuUser = Vue.component('menu-user', {
         },
 
         regmy() {
-            window.location = '/user/regnow';
+            app.$refs.recaptcha.render((token) => this.$store.dispatch('REGISTRATION', token));
+            app.$refs.recaptcha.execute();
+            console.log('recaptcha начало проверки');
         },
     },
 });
@@ -2556,6 +2585,41 @@ Vue.component('photo-view', {
         }
     },
     template: '#photo-view'
+});
+
+Vue.component('recaptcha', {
+    data() {
+        return {
+            sitekey: '6LdxP0YUAAAAAMzR_XFTV_G5VVOhyPnXLjdudFoe',
+            widgetId: null,
+        }
+    },
+    methods: {
+        execute () {
+          window.grecaptcha.execute(this.widgetId)
+        },
+        reset () {
+          window.grecaptcha.reset(this.widgetId)
+        },
+        verify(token) {
+            this.$store.commit('grecaptchaTokenUpdate', token);
+            this.$emit('verify');
+            this.reset();
+        },
+        render(callback) {
+            if (!this.widgetId && window.grecaptcha) {
+                this.widgetId = window.grecaptcha.render('g-recaptcha', {
+                    'sitekey': this.sitekey,
+                    'size': 'invisible',
+                    //'expired-callback': this.$emit('cancel'),
+                    //'error-callback': this.$emit('cancel'),
+                    callback
+                });
+                console.log('recaptcha ready', this.widgetId );
+            }
+        },
+    },
+    template: '#recaptcha'
 });
 
 
@@ -4693,12 +4757,18 @@ const user = {
             // }
             commit('loadUser', ls.get('user.data'));
         },
-        SAVE_SEX({ state, commit }, sex) {
-            commit('loadUser', { sex, name: '' });
-            if (sex) {
-                api.user.saveSex(sex).then((response) => { });
-                commit('loadUser', { sex });
+
+        REGISTRATION({ state, commit }, token) {
+            if (token) {
+                api.user.regnow(token).then(({data}) => {
+                    location.reload();
+                });
             }
+        },
+
+        SAVE_SEX({ state, commit }, { sex, token }) {
+            commit('loadUser', { sex, name: '' });
+            return api.user.saveSex(sex, token);
         },
         SAVE_AGE({ state, commit }, age) {
             if (age && state.age != age) {
@@ -4803,6 +4873,7 @@ const store = new Vuex.Store({
         ready: false,
         locale: 'ru',
         apiToken: '',
+        grecaptchaToken: null,
         photoServer: '@@API-PHOTO',
         simple: false
     },
@@ -4823,6 +4894,9 @@ const store = new Vuex.Store({
         },
         ready(state, data) {
             state.ready = (data == true);
+        },
+        grecaptchaTokenUpdate(state, token) {
+            state.grecaptchaToken = token;
         },
     },
     getters: {
@@ -5034,8 +5108,11 @@ class ApiUser extends Api {
         let host = '/';
         super(host, key, null, null);
     }
-    saveSex(sex) {
-        return this.save({sex}, null, 'option/sex');
+    regnow(token) {
+        return this.save({token}, null, 'user/regnow');
+    }
+    saveSex(sex, token) {
+        return this.save({sex, token}, null, 'option/sex');
     }
     saveAge(age) {
         return super.save({age}, null, 'option/age');

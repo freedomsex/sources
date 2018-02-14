@@ -100,7 +100,9 @@ const MenuUser = Vue.component('menu-user', {
         },
 
         regmy() {
-            window.location = '/user/regnow';
+            app.$refs.recaptcha.render((token) => this.$store.dispatch('REGISTRATION', token));
+            app.$refs.recaptcha.execute();
+            console.log('recaptcha начало проверки');
         },
     },
 });

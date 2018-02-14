@@ -17,7 +17,7 @@
     
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1518453904470">
+<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1518623980067">
 
   <script type="text/javascript">  
     function get_cookie ( cookie_name )
@@ -62,7 +62,7 @@
           </div>
         </div>
         <div class="menu-user__getlogin" v-show="!authorized" style="display: none;">
-          <div class="navbar-button" @click="regmy">
+          <div class="navbar-button" @click="$router.push('/confirm-sex/register')">
             <div class="hidden-xs">
               Получить логин и пароль прямо сейчас
             </div>
@@ -200,21 +200,28 @@
     <span class="extra-information__link" @click="$router.push('/content/careers/ru')">Работа и вакансии</span>
   </div>
 
+
   <div style="text-align: center; margin: 10px 0 0;">
     <a class="nav-table_git-link" href="https://github.com/freedomsex/freedomsex" target="_blank" rel="nofollow"></a>
   </div>
 
-  <div class="more-information" style="margin-top: 15px;">
+  <div class="more-information" style="margin-top: 5px;">
     <a class="more-information__link" href="http://bongacams.com/track?c=567852" target="_blank" rel="nofollow noopener noreferrer">
       При поддержке <span style="color: #f78f00;">BongaCams.com</span>
     </a>
+  </div>
+
+  <div class="notation">
+    Защита от спама <a href="https://www.google.com/recaptcha" target="_blank" rel="nofollow">reCAPTCHA</a> <i>·</i>
+   <a class="notation__link" rel="nofollow" href="https://www.google.com/intl/ru/policies/privacy/" target="_blank" rel="nofollow">Конфиденциальность</a> <i>·</i>
+   <a class="notation__link" rel="nofollow" href="https://www.google.com/intl/ru/policies/terms/" target="_blank" rel="nofollow">Условия использования</a>
   </div>
   
 <div id="router-view">
   <router-view @close="$router.go(-1)" @warning="showSnackbar" @alert="toast"></router-view>
 </div>
 
-<api-key-update></api-key-update>
+<api-key-update ref="api-key"></api-key-update>
 
 <snackbar v-if="snackbar.text"
   :callback="snackbar.callback"
@@ -1298,13 +1305,15 @@
         {{text}}
       </div>
       <div class="modal-dialog__centred" style="margin-bottom: 10px;">
-        <button class="btn btn-primary btn-fat" @click="save(2)">   Девушка   </button>
-        <button class="btn btn-primary btn-fat" @click="save(1)">   Парень   </button>
+        <button class="btn btn-primary btn-fat" @click="verify(2)" :disabled="process">   Девушка   </button>
+        <button class="btn btn-primary btn-fat" @click="verify(1)" :disabled="process">   Парень   </button>
       </div>
       <div class="modal-dialog__centred">
         <button class="btn btn-link btn-fat" @click="$router.push('/login')">  Уже есть анкета?  </button>
       </div>
     </div>
+
+    <recaptcha ref="recaptcha" @verify="save" @cancel="close"></recaptcha>
   </modal-dialog>
 </script>
 
@@ -1425,6 +1434,12 @@
 </script>
 
 
+
+<script type="text/x-template" id="recaptcha">
+<div>
+  <div id="g-recaptcha" class="g-recaptcha"></div>
+</div>
+</script>
 
 <script type="text/x-template" id="search-item">
   <div class="search-item" :class="{visited: visited, gold: gold && !visited}" @click="quick()">
@@ -2238,7 +2253,10 @@
 
  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/static/js/core.min.js?rel=1518453904467"></script>
+<script type="text/javascript" src="/static/js/core.min.js?rel=1518623980065"></script>
+
+<script src='https://www.google.com/recaptcha/api.js?render=explicit' async defer></script>
+
 <!-- Исходники можно найти в репозитории. Там же собранные не сжатые файлы -->
 <script type="text/javascript">
     // var addthis_config = {"data_track_addressbar":false};

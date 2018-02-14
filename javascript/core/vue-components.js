@@ -220,6 +220,11 @@ const ActivityActions = {
         },
         errorStop() {
             this.labels.error = false;
+        },
+        processTimeout(second) {
+            this.process = true;
+            second = second ? second : this.slowTime;
+            setTimeout(() => this.process = false, second * 1000);
         }
     },
 }
@@ -1936,6 +1941,11 @@ Vue.component('remove-contact', {
 const SexConfirm = Vue.component('sex-confirm', {
     extends: ModalDialog,
     props: ['show'],
+    data() {
+        return {
+            sex: null,
+        }
+    },
     computed: {
         variant() {
             return this.show ? this.show : 'message';
@@ -1945,7 +1955,7 @@ const SexConfirm = Vue.component('sex-confirm', {
         },
         text() {
             return this.content[this.variant].text;
-        }
+        },
     },
     // beforeRouteLeave(to, from, next) {
     //     if (this.$store.state.user.sex) {
@@ -1979,10 +1989,22 @@ const SexConfirm = Vue.component('sex-confirm', {
         index(val) {
             return val == this.variant;
         },
-        save(sex) {
-            this.$store.dispatch('SAVE_SEX', sex);
-            this.$emit('select', this.show);
-            this.redirect();
+        verify(sex) {
+            this.sex = sex;
+            this.processTimeout();
+            this.$refs.recaptcha.render(this.save);
+            this.$refs.recaptcha.execute();
+        },
+        save(token) {
+            this.process = true;
+            if (this.sex) {
+                this.$store.dispatch('SAVE_SEX', {sex: this.sex, token}).then(({data}) => {
+                    app.$refs['api-key'].load();
+                });
+                this.$emit('select', this.show);
+                this.redirect();
+            }
+            this.$refs.recaptcha.reset();
         },
         login() {
             this.$emit('login');
@@ -2027,6 +2049,10 @@ const SexConfirm = Vue.component('sex-confirm', {
             account: {
                 caption: 'Кто вы?',
                 text: 'Приватная анкета в один клик. Самое быстрое общение. Достаточно указать кто вы, парень или девушка. И начинайте общаться.'
+            },
+            register: {
+                caption: 'Очень легко!',
+                text: 'Самое быстрое общение. Приватная анкета в один клик. Достаточно указать, парень вы или девушка. И начинайте общаться.'
             }
         };
         content.city = content.contacts;
@@ -2148,6 +2174,7 @@ Vue.component('api-key-update', {
         noReg(data) {
             // зарегистрирован / не авторизован
             this.upKey(data);
+            console.log('зарегистрирован / не авторизован');
         },
         upKey(data) {
             this.$store.dispatch('LOAD_API_TOKEN');
@@ -2272,7 +2299,9 @@ const MenuUser = Vue.component('menu-user', {
         },
 
         regmy() {
-            window.location = '/user/regnow';
+            app.$refs.recaptcha.render((token) => this.$store.dispatch('REGISTRATION', token));
+            app.$refs.recaptcha.execute();
+            console.log('recaptcha начало проверки');
         },
     },
 });
@@ -2336,6 +2365,41 @@ Vue.component('photo-view', {
         }
     },
     template: '#photo-view'
+});
+
+Vue.component('recaptcha', {
+    data() {
+        return {
+            sitekey: '6LdxP0YUAAAAAMzR_XFTV_G5VVOhyPnXLjdudFoe',
+            widgetId: null,
+        }
+    },
+    methods: {
+        execute () {
+          window.grecaptcha.execute(this.widgetId)
+        },
+        reset () {
+          window.grecaptcha.reset(this.widgetId)
+        },
+        verify(token) {
+            this.$store.commit('grecaptchaTokenUpdate', token);
+            this.$emit('verify');
+            this.reset();
+        },
+        render(callback) {
+            if (!this.widgetId && window.grecaptcha) {
+                this.widgetId = window.grecaptcha.render('g-recaptcha', {
+                    'sitekey': this.sitekey,
+                    'size': 'invisible',
+                    //'expired-callback': this.$emit('cancel'),
+                    //'error-callback': this.$emit('cancel'),
+                    callback
+                });
+                console.log('recaptcha ready', this.widgetId );
+            }
+        },
+    },
+    template: '#recaptcha'
 });
 
 

@@ -45,6 +45,7 @@ Vue.component('api-key-update', {
         noReg(data) {
             // зарегистрирован / не авторизован
             this.upKey(data);
+            console.log('зарегистрирован / не авторизован');
         },
         upKey(data) {
             this.$store.dispatch('LOAD_API_TOKEN');

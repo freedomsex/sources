@@ -195,8 +195,11 @@ class ApiUser extends Api {
         let host = '/';
         super(host, key, null, null);
     }
-    saveSex(sex) {
-        return this.save({sex}, null, 'option/sex');
+    regnow(token) {
+        return this.save({token}, null, 'user/regnow');
+    }
+    saveSex(sex, token) {
+        return this.save({sex, token}, null, 'option/sex');
     }
     saveAge(age) {
         return super.save({age}, null, 'option/age');

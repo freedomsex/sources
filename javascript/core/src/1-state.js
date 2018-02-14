@@ -623,12 +623,18 @@ const user = {
             // }
             commit('loadUser', ls.get('user.data'));
         },
-        SAVE_SEX({ state, commit }, sex) {
-            commit('loadUser', { sex, name: '' });
-            if (sex) {
-                api.user.saveSex(sex).then((response) => { });
-                commit('loadUser', { sex });
+
+        REGISTRATION({ state, commit }, token) {
+            if (token) {
+                api.user.regnow(token).then(({data}) => {
+                    location.reload();
+                });
             }
+        },
+
+        SAVE_SEX({ state, commit }, { sex, token }) {
+            commit('loadUser', { sex, name: '' });
+            return api.user.saveSex(sex, token);
         },
         SAVE_AGE({ state, commit }, age) {
             if (age && state.age != age) {
@@ -733,6 +739,7 @@ const store = new Vuex.Store({
         ready: false,
         locale: 'ru',
         apiToken: '',
+        grecaptchaToken: null,
         photoServer: '@@API-PHOTO',
         simple: false
     },
@@ -753,6 +760,9 @@ const store = new Vuex.Store({
         },
         ready(state, data) {
             state.ready = (data == true);
+        },
+        grecaptchaTokenUpdate(state, token) {
+            state.grecaptchaToken = token;
         },
     },
     getters: {
@@ -964,8 +974,11 @@ class ApiUser extends Api {
         let host = '/';
         super(host, key, null, null);
     }
-    saveSex(sex) {
-        return this.save({sex}, null, 'option/sex');
+    regnow(token) {
+        return this.save({token}, null, 'user/regnow');
+    }
+    saveSex(sex, token) {
+        return this.save({sex, token}, null, 'option/sex');
     }
     saveAge(age) {
         return super.save({age}, null, 'option/age');

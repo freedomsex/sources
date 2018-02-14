@@ -20,6 +20,7 @@ const store = new Vuex.Store({
         ready: false,
         locale: 'ru',
         apiToken: '',
+        grecaptchaToken: null,
         photoServer: '@@API-PHOTO',
         simple: false
     },
@@ -40,6 +41,9 @@ const store = new Vuex.Store({
         },
         ready(state, data) {
             state.ready = (data == true);
+        },
+        grecaptchaTokenUpdate(state, token) {
+            state.grecaptchaToken = token;
         },
     },
     getters: {

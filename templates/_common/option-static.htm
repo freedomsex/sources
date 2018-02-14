@@ -3,7 +3,7 @@
   <router-view @close="$router.go(-1)" @warning="showSnackbar" @alert="toast"></router-view>
 </div>
 
-<api-key-update></api-key-update>
+<api-key-update ref="api-key"></api-key-update>
 
 <snackbar v-if="snackbar.text"
   :callback="snackbar.callback"

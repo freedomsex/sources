@@ -42,6 +42,11 @@ const ActivityActions = {
         },
         errorStop() {
             this.labels.error = false;
+        },
+        processTimeout(second) {
+            this.process = true;
+            second = second ? second : this.slowTime;
+            setTimeout(() => this.process = false, second * 1000);
         }
     },
 }

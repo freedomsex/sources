@@ -1,6 +1,11 @@
 const SexConfirm = Vue.component('sex-confirm', {
     extends: ModalDialog,
     props: ['show'],
+    data() {
+        return {
+            sex: null,
+        }
+    },
     computed: {
         variant() {
             return this.show ? this.show : 'message';
@@ -10,7 +15,7 @@ const SexConfirm = Vue.component('sex-confirm', {
         },
         text() {
             return this.content[this.variant].text;
-        }
+        },
     },
     // beforeRouteLeave(to, from, next) {
     //     if (this.$store.state.user.sex) {
@@ -44,10 +49,22 @@ const SexConfirm = Vue.component('sex-confirm', {
         index(val) {
             return val == this.variant;
         },
-        save(sex) {
-            this.$store.dispatch('SAVE_SEX', sex);
-            this.$emit('select', this.show);
-            this.redirect();
+        verify(sex) {
+            this.sex = sex;
+            this.processTimeout();
+            this.$refs.recaptcha.render(this.save);
+            this.$refs.recaptcha.execute();
+        },
+        save(token) {
+            this.process = true;
+            if (this.sex) {
+                this.$store.dispatch('SAVE_SEX', {sex: this.sex, token}).then(({data}) => {
+                    app.$refs['api-key'].load();
+                });
+                this.$emit('select', this.show);
+                this.redirect();
+            }
+            this.$refs.recaptcha.reset();
         },
         login() {
             this.$emit('login');
@@ -92,6 +109,10 @@ const SexConfirm = Vue.component('sex-confirm', {
             account: {
                 caption: 'Кто вы?',
                 text: 'Приватная анкета в один клик. Самое быстрое общение. Достаточно указать кто вы, парень или девушка. И начинайте общаться.'
+            },
+            register: {
+                caption: 'Очень легко!',
+                text: 'Самое быстрое общение. Приватная анкета в один клик. Достаточно указать, парень вы или девушка. И начинайте общаться.'
             }
         };
         content.city = content.contacts;

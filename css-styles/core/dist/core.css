@@ -1004,6 +1004,20 @@ a.name:hover {
 .extra-information__link:hover {
   background: #333333;
 }
+.notation {
+  text-align: center;
+  margin: 10px auto;
+  margin-top: 15px;
+  max-width: 750px;
+  color: #666666;
+  font-size: 10px;
+}
+.notation__link {
+  font-size: 10px;
+  color: #666666;
+  cursor: pointer;
+  text-decoration: none;
+}
 .more-information {
   text-align: center;
   margin: 10px auto;
