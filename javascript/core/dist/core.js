@@ -3038,7 +3038,7 @@ var AccountSettings = Vue.component('account-settings', {
 
     methods: {
         saveSex: function saveSex() {
-            this.$store.dispatch('SAVE_SEX', this.selectSex);
+            this.$store.dispatch('SAVE_SEX', { sex: this.selectSex, token: null });
             this.resetName();
         },
         saveCity: function saveCity(city) {
