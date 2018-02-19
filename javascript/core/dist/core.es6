@@ -4679,7 +4679,7 @@ var search = {
             if (users && state.received) {
                 state.list = _.union(state.list, users);
             }
-            state.next += state.batch;
+            //state.next += state.batch;
         },
         last(state, {users}) {
             if (users && !state.last) {
