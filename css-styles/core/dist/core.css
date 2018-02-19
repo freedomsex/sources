@@ -3198,6 +3198,7 @@ a.name:hover {
   color: #8a6d3b;
 }
 .auth-board .btn {
+  margin: -6px 0;
   margin-left: 10px;
 }
 .auth-board .glyphicon {

@@ -16,11 +16,7 @@ Vue.component('search-list', {
         };
     },
     mounted() {
-        if (this.virgin && this.defaults) {
-            this.preload()
-        } else {
-            this.load();
-        }
+        this.load();
         this.visitedSync();
         this.$store.dispatch('desires/PICK');
     },
@@ -43,10 +39,6 @@ Vue.component('search-list', {
             let accept = this.$store.state.accepts.search;
             return !this.ignore && !accept && (next > batch);
         },
-        defaults() {
-            var result = defaultResults ? json.parse(defaultResults) : null;
-            return (result && _.isObject(result) && _.has(result, 'users') && result.users.length) ? result : [];
-        },
         virgin() {
             return this.$store.getters['search/virgin'];
         },
@@ -64,12 +56,6 @@ Vue.component('search-list', {
         },
     },
     methods: {
-        preload() {
-            this.compact = false;
-            this.$store.commit('search/results', this.defaults);
-            console.log('defaults', this.defaults);
-            this.onLoad();
-        },
         reload() {
             this.$store.commit('ready', false);
             this.$store.commit('search/reset', false);
