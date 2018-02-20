@@ -2860,10 +2860,16 @@ Vue.component('search-list', {
             return this.$store.state.ready && (!this.response || !this.items.length);
         },
         city: function city() {
-            return this.$store.state.user.city;
+            return this.$store.state.user.city || defaultSettings.city;
         },
         age: function age() {
-            return this.$store.state.user.age;
+            return this.$store.state.user.age || defaultSettings.age;
+        },
+        up: function up() {
+            return this.$store.state.user.up || defaultSettings.up || 0;
+        },
+        to: function to() {
+            return this.$store.state.user.to || defaultSettings.to || 0;
         }
     },
     methods: {
@@ -2879,7 +2885,12 @@ Vue.component('search-list', {
             var _this42 = this;
 
             this.response = 0;
-            this.$store.dispatch('search/LOAD').then(function (response) {
+            var params = {
+                city: this.city,
+                up: this.up,
+                to: this.to
+            };
+            this.$store.dispatch('search/LOAD', params).then(function (response) {
                 _this42.onLoad();
             }).catch(function (error) {
                 _this42.response = 200;
@@ -4860,7 +4871,7 @@ var search = {
                 ls.set(index, response.data, 1500);
             });
         },
-        LOAD: function LOAD(_ref47) {
+        LOAD: function LOAD(_ref47, params) {
             var state = _ref47.state,
                 rootState = _ref47.rootState,
                 commit = _ref47.commit;
@@ -4868,15 +4879,13 @@ var search = {
             store.dispatch('LOAD_USER'); // КОСТЫЛЬ [!!!]
             var _rootState$user = rootState.user,
                 sex = _rootState$user.sex,
-                city = _rootState$user.city,
-                up = _rootState$user.up,
-                to = _rootState$user.to,
                 any = _rootState$user.any,
                 virt = _rootState$user.virt;
+            var city = params.city,
+                up = params.up,
+                to = params.to;
 
             var who = sex == 2 ? 1 : 2;
-            up = up ? up : 0;
-            to = to ? to : 0;
             if (!city || any) {
                 city = null;
             }

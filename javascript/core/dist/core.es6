@@ -2759,10 +2759,16 @@ Vue.component('search-list', {
             return this.$store.state.ready && (!this.response || !this.items.length);
         },
         city() {
-            return this.$store.state.user.city;
+            return this.$store.state.user.city || defaultSettings.city;
         },
         age() {
-            return this.$store.state.user.age;
+            return this.$store.state.user.age || defaultSettings.age;
+        },
+        up() {
+            return this.$store.state.user.up || defaultSettings.up || 0;
+        },
+        to() {
+            return this.$store.state.user.to || defaultSettings.to || 0;
         },
     },
     methods: {
@@ -2776,7 +2782,12 @@ Vue.component('search-list', {
         },
         load() {
             this.response = 0;
-            this.$store.dispatch('search/LOAD').then((response) => {
+            let params = {
+                city: this.city,
+                up: this.up,
+                to: this.to,
+            };
+            this.$store.dispatch('search/LOAD', params).then((response) => {
                 this.onLoad();
             }).catch((error) => {
                 this.response = 200;
@@ -4639,12 +4650,11 @@ var search = {
                 ls.set(index, response.data, 1500);
             });
         },
-        LOAD({state, rootState, commit}) {
+        LOAD({state, rootState, commit}, params) {
             store.dispatch('LOAD_USER'); // КОСТЫЛЬ [!!!]
-            let {sex, city, up, to, any, virt} = rootState.user;
+            let {sex, any, virt} = rootState.user;
+            let {city, up, to} = params;
             let who = (sex == 2) ? 1 : 2;
-            up = up ? up : 0;
-            to = to ? to : 0;
             if (!city || any) {
                 city = null;
             }

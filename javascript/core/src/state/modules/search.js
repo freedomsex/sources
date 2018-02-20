@@ -25,12 +25,11 @@ var search = {
                 ls.set(index, response.data, 1500);
             });
         },
-        LOAD({state, rootState, commit}) {
+        LOAD({state, rootState, commit}, params) {
             store.dispatch('LOAD_USER'); // КОСТЫЛЬ [!!!]
-            let {sex, city, up, to, any, virt} = rootState.user;
+            let {sex, any, virt} = rootState.user;
+            let {city, up, to} = params;
             let who = (sex == 2) ? 1 : 2;
-            up = up ? up : 0;
-            to = to ? to : 0;
             if (!city || any) {
                 city = null;
             }
