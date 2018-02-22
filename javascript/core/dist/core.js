@@ -5149,7 +5149,7 @@ var store = new Vuex.Store({
         locale: 'ru',
         apiToken: '',
         grecaptchaToken: null,
-        photoServer: '195.154.54.70',
+        photoServer: 'photo.a4sex.net',
         simple: false
     },
     actions: {
@@ -5575,7 +5575,7 @@ var ApiSearch = function (_Api5) {
         _classCallCheck(this, ApiSearch);
 
         var key = '1234';
-        var host = 'http://212.83.162.58/';
+        var host = 'http://search.a4sex.net/';
         var routing = {
             route: 'users',
             get: '{tid}'
@@ -5593,7 +5593,7 @@ var ApiContact = function (_Api6) {
         _classCallCheck(this, ApiContact);
 
         var key = store.state.apiToken;
-        var host = 'http://212.83.134.89/';
+        var host = 'http://contact.a4sex.net/';
         return _possibleConstructorReturn(this, (ApiContact.__proto__ || Object.getPrototypeOf(ApiContact)).call(this, host, key, null, routing));
     }
 

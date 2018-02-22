@@ -113,9 +113,9 @@ module.exports = function (grunt) {
                     {
                         json: {
                             "NET-DELAY": 0,
-                            "API-PHOTO": "195.154.54.70",
-                            "API-SEARCH": "212.83.162.58",
-                            "API-CONTACT": "212.83.134.89",
+                            "API-PHOTO": "photo.a4sex.net",
+                            "API-SEARCH": "search.a4sex.net",
+                            "API-CONTACT": "contact.a4sex.net",
                         }
                     }
                   ]
