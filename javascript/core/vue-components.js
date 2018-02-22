@@ -2550,6 +2550,9 @@ Vue.component('search-list', {
         to() {
             return this.$store.state.user.to || defaultSettings.to || 0;
         },
+        who() {
+            return defaultSettings.who || null;
+        },
     },
     methods: {
         reload() {
@@ -2563,6 +2566,7 @@ Vue.component('search-list', {
         load() {
             this.response = 0;
             let params = {
+                who: this.who,
                 city: this.city,
                 up: this.up,
                 to: this.to,

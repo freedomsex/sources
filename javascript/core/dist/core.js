@@ -2870,6 +2870,9 @@ Vue.component('search-list', {
         },
         to: function to() {
             return this.$store.state.user.to || defaultSettings.to || 0;
+        },
+        who: function who() {
+            return defaultSettings.who || null;
         }
     },
     methods: {
@@ -2886,6 +2889,7 @@ Vue.component('search-list', {
 
             this.response = 0;
             var params = {
+                who: this.who,
                 city: this.city,
                 up: this.up,
                 to: this.to
@@ -4881,11 +4885,14 @@ var search = {
                 sex = _rootState$user.sex,
                 any = _rootState$user.any,
                 virt = _rootState$user.virt;
-            var city = params.city,
+            var who = params.who,
+                city = params.city,
                 up = params.up,
                 to = params.to;
 
-            var who = sex == 2 ? 1 : 2;
+            if (sex) {
+                who = sex == 2 ? 1 : 2;
+            }
             if (!city || any) {
                 city = null;
             }

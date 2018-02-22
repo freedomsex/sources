@@ -522,8 +522,10 @@ var search = {
         LOAD({state, rootState, commit}, params) {
             store.dispatch('LOAD_USER'); // КОСТЫЛЬ [!!!]
             let {sex, any, virt} = rootState.user;
-            let {city, up, to} = params;
-            let who = (sex == 2) ? 1 : 2;
+            let {who, city, up, to} = params;
+            if (sex) {
+                who = (sex == 2) ? 1 : 2;
+            }
             if (!city || any) {
                 city = null;
             }

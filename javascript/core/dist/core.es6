@@ -2770,6 +2770,9 @@ Vue.component('search-list', {
         to() {
             return this.$store.state.user.to || defaultSettings.to || 0;
         },
+        who() {
+            return defaultSettings.who || null;
+        },
     },
     methods: {
         reload() {
@@ -2783,6 +2786,7 @@ Vue.component('search-list', {
         load() {
             this.response = 0;
             let params = {
+                who: this.who,
                 city: this.city,
                 up: this.up,
                 to: this.to,
@@ -4653,8 +4657,10 @@ var search = {
         LOAD({state, rootState, commit}, params) {
             store.dispatch('LOAD_USER'); // КОСТЫЛЬ [!!!]
             let {sex, any, virt} = rootState.user;
-            let {city, up, to} = params;
-            let who = (sex == 2) ? 1 : 2;
+            let {who, city, up, to} = params;
+            if (sex) {
+                who = (sex == 2) ? 1 : 2;
+            }
             if (!city || any) {
                 city = null;
             }
