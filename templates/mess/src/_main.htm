@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-<!-- build:include ../../_common/head.htm --><!-- /build -->
+<title>Просмотр анкеты</title>
+ <META http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- build:include ../../_common/favicon.htm --><!-- /build -->
+<!-- build:include ../../_common/css-list.htm --><!-- /build -->
 </head>
 <body>
-
-<script>
-  var humanId = '%%HUMAN_ID%%';
-  var humanData = '%%HUMAN_DATA%%';
-</script>
-%%JS_DEFAULTS%%
 <div id="app">
   <!-- build:include ../../_common/menu-user.htm --><!-- /build -->
   <div class="container content split-bottom">
@@ -22,14 +20,22 @@
   <div class="container content paper">
     <div class="row">
       <div class="col-md-12">
-        <div class="row">
+        <div class="row" style="display: none;" v-show="human.id">
           <div class="col-sm-8">
-            <account-component :human="human" key="2" v-if="human"></account-component>
+            <account-component :human="human" key="2" v-if="human.id"></account-component>
           </div>
           <div class="col-sm-4">
-          <!-- build:include sidebar.htm --><!-- /build -->
+            <!-- build:include sidebar.htm --><!-- /build -->
           </div>
         </div>
+
+        <div class="preloader" v-show="!ready" v-if="!human.id">
+          <!-- build:include ../../_common/preloader-raw-svg.htm --><!-- /build -->
+          <div class="preloader__hint">
+            Получаю данные этой анкеты
+          </div>
+        </div>
+
       </div>
     </div>
   </div>

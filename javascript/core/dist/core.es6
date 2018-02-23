@@ -2022,24 +2022,6 @@ const QuickReply = Vue.component('quick-reply', {
     },
 });
 
-Vue.component('quick-write', {
-    // extends: QuickMessage,
-    props: ['humanId'],
-    data() {
-        return {
-            account: false,
-            open: false,
-            sended: false
-        }
-    },
-    methods: {
-        write() {
-            this.$router.push('write/' + this.humanId);
-        },
-    },
-    template: '#quick-write',
-});
-
 Vue.component('remind-login', {
     data() {
         return {
@@ -5388,9 +5370,13 @@ var app = new Vue({
     },
     mounted() {
         this.$store.dispatch('notes/LOAD');
+        if (this.humanId) {
+            this.$store.dispatch('search/HUMAN', this.humanId);
+        }
     },
     computed: {
         humanId() {
+            let humanId = parseInt(window.location.pathname.split( '/' )[1]);
             return humanId ? humanId : null;
         },
         simple() {
@@ -5407,8 +5393,7 @@ var app = new Vue({
             return this.$store.getters['search/tags'];
         },
         human() {
-            var result = humanData ? json.parse(humanData) : null;
-            return (result && _.isObject(result) && _.has(result, 'id')) ? result : [];
+            return this.$store.state.search.human;
         },
     },
     methods: {

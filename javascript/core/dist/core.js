@@ -2080,25 +2080,6 @@ var QuickReply = Vue.component('quick-reply', {
     }
 });
 
-Vue.component('quick-write', {
-    // extends: QuickMessage,
-    props: ['humanId'],
-    data: function data() {
-        return {
-            account: false,
-            open: false,
-            sended: false
-        };
-    },
-
-    methods: {
-        write: function write() {
-            this.$router.push('write/' + this.humanId);
-        }
-    },
-    template: '#quick-write'
-});
-
 Vue.component('remind-login', {
     data: function data() {
         return {
@@ -5778,22 +5759,16 @@ var app = new Vue({
     },
     mounted: function mounted() {
         this.$store.dispatch('notes/LOAD');
+        if (this.humanId) {
+            this.$store.dispatch('search/HUMAN', this.humanId);
+        }
     },
 
     computed: {
-        humanId: function (_humanId) {
-            function humanId() {
-                return _humanId.apply(this, arguments);
-            }
-
-            humanId.toString = function () {
-                return _humanId.toString();
-            };
-
-            return humanId;
-        }(function () {
+        humanId: function humanId() {
+            var humanId = parseInt(window.location.pathname.split('/')[1]);
             return humanId ? humanId : null;
-        }),
+        },
         simple: function simple() {
             return this.$store.state.simple;
         },
@@ -5809,8 +5784,7 @@ var app = new Vue({
             return this.$store.getters['search/tags'];
         },
         human: function human() {
-            var result = humanData ? json.parse(humanData) : null;
-            return result && _.isObject(result) && _.has(result, 'id') ? result : [];
+            return this.$store.state.search.human;
         }
     },
     methods: {

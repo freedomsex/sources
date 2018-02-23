@@ -1,12 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>%%PAGE_TITLE%%</title>
- 
+<title>Просмотр анкеты</title>
  <META http-equiv="content-type" content="text/html; charset=UTF-8">
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <META name="description" content="%%META_DESC%%">
- <META name="keywords" content="%%META_KEYW%%">
 
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
@@ -17,28 +14,9 @@
     
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1519311562294">
-
-  <script type="text/javascript">  
-    function get_cookie ( cookie_name )
-    {
-      var results = document.cookie.match ( '(^|;) ?' + cookie_name + '=([^;]*)(;|$)' );
-
-      if ( results )
-        return ( unescape ( results[2] ) );
-      else
-        return null;
-    }   
-  </script>
-
+<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1519406357987">
 </head>
 <body>
-
-<script>
-  var humanId = '%%HUMAN_ID%%';
-  var humanData = '%%HUMAN_DATA%%';
-</script>
-%%JS_DEFAULTS%%
 <div id="app">
   
 <menu-user inline-template @snackbar="showSnackbar">
@@ -119,34 +97,45 @@
   <div class="container content paper">
     <div class="row">
       <div class="col-md-12">
-        <div class="row">
+        <div class="row" style="display: none;" v-show="human.id">
           <div class="col-sm-8">
-            <account-component :human="human" key="2" v-if="human"></account-component>
+            <account-component :human="human" key="2" v-if="human.id"></account-component>
           </div>
           <div class="col-sm-4">
-          <div style="border-left: 1px solid #e5e5e5; padding-left: 10px;">
+            <div style="border-left: 1px solid #e5e5e5; padding-left: 10px;">
 
   <div class="account-section">
-    <quick-write :human-id="humanId" inline-template>
-      <div>
-        <div class="btn btn-primary" @click="write()">Написать сообщение</div>
-        <!-- <quick-message v-if="open" :human-id="humanId" @sended="sended = true" @close="open = false" @account="account = humanId"></quick-message> -->
-        <snackbar v-if="sended" @close="sended = false">Сообщение отправлено.</snackbar>
-      </div>
-    </quick-write>
+    <div class="btn btn-primary" @click="$router.push('write/' + humanId)">Написать сообщение</div>
   </div>
 
   <div class="account-section">
     <a class="btn btn-xs btn-link" href="/">Быстрые знакомства</a><br>
-    <a class="btn btn-xs btn-link" href="/%%TOWN%%">Секс знакомства %%TOWN%%</a><br>
-    <a class="btn btn-xs btn-link" href="/%%LINK_WHO%%">%%LINK_WHO%% для секса</a><br>
+    <a class="btn btn-xs btn-link" :href="'/' + human.city">Секс знакомства {{human.city}}</a><br>
+    <a class="btn btn-xs btn-link" href="/Девушки">Девушки для секса</a><br>
+    <a class="btn btn-xs btn-link" :href="'/' + human.city + '/Девушки'">Девушки {{human.city}}</a><br>
+    <a class="btn btn-xs btn-link" href="/Парни">Парни для секса</a><br>
 
-    <a class="btn btn-xs btn-link" href="/envelope.htm" target="_blank">Написать разработчикам</a><br>
-    <a class="btn btn-xs btn-link" href="/rules.php" target="_blank">Правила сайта</a><br>
+    <span class="btn btn-xs btn-link" @click="$router.push('/settings/envelop')">Написать разработчикам</span><br>
+    <span class="btn btn-xs btn-link" @click="$router.push('/content/rules/ru')">Правила сайта</span><br>
   </div>
 </div>
           </div>
         </div>
+
+        <div class="preloader" v-show="!ready" v-if="!human.id">
+          <svg width="80px" height="80px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"
+  preserveAspectRatio="xMidYMid" class="lds-heart" style="">
+<g transform="translate(50 50)">
+  <path d="M40.7-34.3c-9.8-9.8-25.6-9.8-35.4,0L0-29l-5.3-5.3c-9.8-9.8-25.6-9.8-35.4,0l0,0c-9.8,9.8-9.8,25.6,0,35.4l5.3,5.3L-23,18.7l23,23l23-23L35.4,6.3L40.7,1C50.4-8.8,50.4-24.6,40.7-34.3z" fill="#f81b24" transform="scale(0.803928 0.803928)">
+    <animateTransform attributeName="transform" type="scale" calcMode="spline" values="0.85;1;0.75;0.9;0.85;0.8" keyTimes="0;0.05;0.39;0.45;0.6;1" dur="1s" keySplines="0.215 0.61,0.355 1;0.215 0.61,0.355 1;0.215 0.61,0.355 1;0.215 0.61,0.355 1;0.215 0.61,0.355 1" begin="0s" repeatCount="indefinite"></animateTransform>
+  </path>
+</g>
+</svg>
+          <div class="preloader__hint">
+            Получаю данные этой анкеты
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -2257,7 +2246,7 @@
 
  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/static/js/core.min.js?rel=1519311562291"></script>
+<script type="text/javascript" src="/static/js/core.min.js?rel=1519406357983"></script>
 
 <script src='https://www.google.com/recaptcha/api.js?render=explicit' async defer></script>
 

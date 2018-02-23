@@ -1,21 +1,17 @@
 <div style="border-left: 1px solid #e5e5e5; padding-left: 10px;">
 
   <div class="account-section">
-    <quick-write :human-id="humanId" inline-template>
-      <div>
-        <div class="btn btn-primary" @click="write()">Написать сообщение</div>
-        <!-- <quick-message v-if="open" :human-id="humanId" @sended="sended = true" @close="open = false" @account="account = humanId"></quick-message> -->
-        <snackbar v-if="sended" @close="sended = false">Сообщение отправлено.</snackbar>
-      </div>
-    </quick-write>
+    <div class="btn btn-primary" @click="$router.push('write/' + humanId)">Написать сообщение</div>
   </div>
 
   <div class="account-section">
     <a class="btn btn-xs btn-link" href="/">Быстрые знакомства</a><br>
-    <a class="btn btn-xs btn-link" href="/%%TOWN%%">Секс знакомства %%TOWN%%</a><br>
-    <a class="btn btn-xs btn-link" href="/%%LINK_WHO%%">%%LINK_WHO%% для секса</a><br>
+    <a class="btn btn-xs btn-link" :href="'/' + human.city">Секс знакомства {{human.city}}</a><br>
+    <a class="btn btn-xs btn-link" href="/Девушки">Девушки для секса</a><br>
+    <a class="btn btn-xs btn-link" :href="'/' + human.city + '/Девушки'">Девушки {{human.city}}</a><br>
+    <a class="btn btn-xs btn-link" href="/Парни">Парни для секса</a><br>
 
-    <a class="btn btn-xs btn-link" href="/envelope.htm" target="_blank">Написать разработчикам</a><br>
-    <a class="btn btn-xs btn-link" href="/rules.php" target="_blank">Правила сайта</a><br>
+    <span class="btn btn-xs btn-link" @click="$router.push('/settings/envelop')">Написать разработчикам</span><br>
+    <span class="btn btn-xs btn-link" @click="$router.push('/content/rules/ru')">Правила сайта</span><br>
   </div>
 </div>

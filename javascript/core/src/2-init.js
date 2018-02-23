@@ -10,9 +10,13 @@ var app = new Vue({
     },
     mounted() {
         this.$store.dispatch('notes/LOAD');
+        if (this.humanId) {
+            this.$store.dispatch('search/HUMAN', this.humanId);
+        }
     },
     computed: {
         humanId() {
+            let humanId = parseInt(window.location.pathname.split( '/' )[1]);
             return humanId ? humanId : null;
         },
         simple() {
@@ -29,8 +33,7 @@ var app = new Vue({
             return this.$store.getters['search/tags'];
         },
         human() {
-            var result = humanData ? json.parse(humanData) : null;
-            return (result && _.isObject(result) && _.has(result, 'id')) ? result : [];
+            return this.$store.state.search.human;
         },
     },
     methods: {
