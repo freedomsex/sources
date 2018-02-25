@@ -350,7 +350,7 @@
         </div>
       </div>
     </div>
-    <!-- <incoming-photo :humanId="incoming" v-if="incoming" @close="incoming = false"/> -->
+    <!-- <incoming-photo :humanId="incoming"  v-if="incoming" @close="incoming = false"/> -->
     <photo-send v-if="preview" :photo="photo" :options="true" @send="sendMessage" @close="preview = false" @removed="photoIsRemoved = true"/>
     <captcha-dialog v-if="captcha" @close="close" @cancel="cancel" @send="setCode"/>
 
