@@ -357,6 +357,8 @@
     <toast v-if="photoIsRemoved" @close="photoIsRemoved = false">Фото удалено</toast>
 
     <router-view @select="select"></router-view>
+
+    <recaptcha ref="recaptcha" @verify="save" @cancel="close"></recaptcha>
   </default-activity>
 </script>
 

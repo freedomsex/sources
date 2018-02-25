@@ -807,6 +807,7 @@ const MessagesActivity = Vue.component('messages-activity', {
         dirt: false,
         alert: false,
             captcha: false,
+            virification: false,
             preview: false,
             photo: false,
         photoIsRemoved: false,
@@ -858,7 +859,7 @@ const MessagesActivity = Vue.component('messages-activity', {
             this.photo = data;
             this.preview = data;
         },
-        sendMessage() {
+        sendMessage(token) {
             console.log(data);
             let data = {
                 id: this.humanId,
@@ -866,6 +867,7 @@ const MessagesActivity = Vue.component('messages-activity', {
             };
             if (this.photo && this.photo.alias) {
                 data['photo'] = this.photo.alias;
+                data['token'] = token;
             } else
             if (true) {
                 data['mess'] = this.message;
@@ -884,10 +886,15 @@ const MessagesActivity = Vue.component('messages-activity', {
             this.code = code;
             this.sendMessage();
         },
-        onMessageSend(data) {
-            if (!data.saved && data.error) {
-                if (data.error == 'need_captcha') {
+        onMessageSend({saved, error}) {
+            if (!saved && error) {
+                if (error == 'need_captcha') {
                     this.captcha = true;
+                }
+                if (error == 'need_verify') {
+                    this.virification = true;
+                    this.$refs.recaptcha.render(this.sendMessage);
+                    this.$refs.recaptcha.execute();
                 }
                 this.onError();
             } else {
@@ -899,6 +906,7 @@ const MessagesActivity = Vue.component('messages-activity', {
             //MessList.messages.unshift(data.message);
             this.$refs.messages.reload();
             this.reset();
+            this.$refs.recaptcha.reset();
         },
         onError() {
             this.process = false;
