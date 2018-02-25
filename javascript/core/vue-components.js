@@ -640,14 +640,14 @@ const MessagesActivity = Vue.component('messages-activity', {
             this.preview = data;
         },
         sendMessage(token) {
-            console.log(data);
+            this.$store.commit('grecaptchaTokenUpdate', token);
             let data = {
                 id: this.humanId,
                 captcha_code: this.code
             };
             if (this.photo && this.photo.alias) {
                 data['photo'] = this.photo.alias;
-                data['token'] = token;
+                data['token'] = this.$store.state.grecaptchaToken;
             } else
             if (true) {
                 data['mess'] = this.message;
@@ -2377,7 +2377,7 @@ Vue.component('recaptcha', {
             this.reset();
         },
         render(callback) {
-            if (!this.widgetId && window.grecaptcha) {
+            if (this.widgetId === null && window.grecaptcha) {
                 this.widgetId = window.grecaptcha.render('g-recaptcha', {
                     'sitekey': this.sitekey,
                     'size': 'invisible',

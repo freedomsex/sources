@@ -763,7 +763,9 @@ const store = new Vuex.Store({
             state.ready = (data == true);
         },
         grecaptchaTokenUpdate(state, token) {
-            state.grecaptchaToken = token;
+            if (token) {
+                state.grecaptchaToken = token;
+            }
         },
     },
     getters: {

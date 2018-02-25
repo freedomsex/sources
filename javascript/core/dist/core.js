@@ -851,14 +851,14 @@ var MessagesActivity = Vue.component('messages-activity', {
         sendMessage: function sendMessage(token) {
             var _this9 = this;
 
-            console.log(data);
+            this.$store.commit('grecaptchaTokenUpdate', token);
             var data = {
                 id: this.humanId,
                 captcha_code: this.code
             };
             if (this.photo && this.photo.alias) {
                 data['photo'] = this.photo.alias;
-                data['token'] = token;
+                data['token'] = this.$store.state.grecaptchaToken;
             } else if (true) {
                 data['mess'] = this.message;
                 data['re'] = this.reply;
@@ -2690,7 +2690,7 @@ Vue.component('recaptcha', {
             this.reset();
         },
         render: function render(callback) {
-            if (!this.widgetId && window.grecaptcha) {
+            if (this.widgetId === null && window.grecaptcha) {
                 this.widgetId = window.grecaptcha.render('g-recaptcha', {
                     'sitekey': this.sitekey,
                     'size': 'invisible',
@@ -5165,7 +5165,9 @@ var store = new Vuex.Store({
             state.ready = data == true;
         },
         grecaptchaTokenUpdate: function grecaptchaTokenUpdate(state, token) {
-            state.grecaptchaToken = token;
+            if (token) {
+                state.grecaptchaToken = token;
+            }
         }
     },
     getters: {

@@ -18,7 +18,7 @@ Vue.component('recaptcha', {
             this.reset();
         },
         render(callback) {
-            if (!this.widgetId && window.grecaptcha) {
+            if (this.widgetId === null && window.grecaptcha) {
                 this.widgetId = window.grecaptcha.render('g-recaptcha', {
                     'sitekey': this.sitekey,
                     'size': 'invisible',
