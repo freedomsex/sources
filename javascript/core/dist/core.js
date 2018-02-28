@@ -5774,6 +5774,7 @@ var app = new Vue({
         this.$store.dispatch('notes/LOAD');
         if (this.humanId) {
             this.$store.dispatch('search/HUMAN', this.humanId);
+            this.title();
         }
     },
 
@@ -5819,6 +5820,46 @@ var app = new Vue({
         redirectHome: function redirectHome() {
             console.log('Hard reload mail page to home');
             window.location = '/';
+        },
+        title: function title() {
+            var title = '| Секс знакомства';
+            if (this.human) {
+                var name = '';
+                if (this.human.name) {
+                    name = this.human.name + ' | ';
+                }
+                if (this.human.sex) {
+                    name += this.human.sex == 2 ? 'Девушка' : 'Парень';
+                } else {
+                    name += 'Парень или девушка';
+                }
+                name += ' ';
+
+                var age = '';
+                if (this.human.age) {
+                    age = ' ' + moment.duration(this.human.age, "years").humanize();
+                }
+                var _city2 = ' ищет ';
+                if (this.human.city) {
+                    _city2 = ' из города ' + this.human.city + ' ищет ';
+                }
+                var _who2 = ' девушку или парня ';
+                if (this.human.sex) {
+                    _who2 = this.human.sex == 2 ? 'парня' : 'девушку';
+                }
+                _who2 += ' для секса или общения ';
+                var _years = '';
+                if (this.human.up && this.human.to) {
+                    _years = ' в возрасте от ' + this.human.up + ' до ' + moment.duration(this.human.to, "years").humanize();
+                }
+                if (this.human.up && !this.human.to) {
+                    _years = ' в возрасте от ' + moment.duration(this.human.up, "years").humanize();
+                }
+                if (!this.human.up && this.human.to) {
+                    _years = ' в возрасте до ' + moment.duration(this.human.to, "years").humanize();
+                }
+                document.title = name + age + _city2 + _who2 + _years;
+            }
         }
     },
     el: '#app',
