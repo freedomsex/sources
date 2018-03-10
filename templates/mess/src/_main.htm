@@ -23,6 +23,7 @@
         <div class="row" style="display: none;" v-show="human.id">
           <div class="col-sm-8">
             <account-component :human="human" key="2" v-if="human.id"></account-component>
+            <title-mail :human="human" key="2" v-if="human.id"></title-mail>
           </div>
           <div class="col-sm-4">
             <!-- build:include sidebar.htm --><!-- /build -->

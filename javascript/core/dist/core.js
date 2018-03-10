@@ -2705,6 +2705,67 @@ Vue.component('recaptcha', {
     template: '#recaptcha'
 });
 
+Vue.component('title-mail', {
+    props: ['human'],
+    data: function data() {
+        return {
+            loading: false
+        };
+    },
+    mounted: function mounted() {
+        this.title();
+    },
+
+    watch: {
+        human: function human() {
+            this.title();
+        }
+    },
+    methods: {
+        title: function title() {
+            var title = '| Секс знакомства';
+            if (this.human) {
+                var name = '';
+                if (this.human.name) {
+                    name = this.human.name + ' | ';
+                }
+                if (this.human.sex) {
+                    name += this.human.sex == 2 ? 'Девушка' : 'Парень';
+                } else {
+                    name += 'Парень или девушка';
+                }
+                name += ' ';
+
+                var age = '';
+                if (this.human.age) {
+                    age = ' ' + moment.duration(this.human.age, "years").humanize();
+                }
+                var _city2 = ' ищет ';
+                if (this.human.city) {
+                    _city2 = ' из города ' + this.human.city + ' ищет ';
+                }
+                var _who2 = ' девушку или парня ';
+                if (this.human.sex) {
+                    _who2 = this.human.sex == 2 ? 'парня' : 'девушку';
+                }
+                _who2 += ' для секса или общения ';
+                var _years = '';
+                if (this.human.up && this.human.to) {
+                    _years = ' в возрасте от ' + this.human.up + ' до ' + moment.duration(this.human.to, "years").humanize();
+                }
+                if (this.human.up && !this.human.to) {
+                    _years = ' в возрасте от ' + moment.duration(this.human.up, "years").humanize();
+                }
+                if (!this.human.up && this.human.to) {
+                    _years = ' в возрасте до ' + moment.duration(this.human.to, "years").humanize();
+                }
+                document.title = name + age + _city2 + _who2 + _years;
+            };
+        }
+    },
+    template: '<div></div>'
+});
+
 Vue.component('search-item', {
     props: ['human', 'visited', 'gold', 'compact'],
     data: function data() {
@@ -4860,17 +4921,19 @@ var search = {
 
             var index = 'human.data.' + tid;
             commit('resetHuman', tid);
-            commit('setHuman', ls.get(index));
-            console.log('HUMAN', tid);
-            return api.search.get({ tid: tid }).then(function (response) {
-                commit('setHuman', response.data);
-                ls.set(index, response.data, 1500);
+            console.log('HUMAN actions', tid);
+            api.search.get({ tid: tid }).then(function (_ref48) {
+                var data = _ref48.data;
+
+                commit('setHuman', data);
+                ls.set(index, data, 1500);
             });
+            commit('setHuman', ls.get(index));
         },
-        LOAD: function LOAD(_ref48, params) {
-            var state = _ref48.state,
-                rootState = _ref48.rootState,
-                commit = _ref48.commit;
+        LOAD: function LOAD(_ref49, params) {
+            var state = _ref49.state,
+                rootState = _ref49.rootState,
+                commit = _ref49.commit;
 
             store.dispatch('LOAD_USER'); // КОСТЫЛЬ [!!!]
             var _rootState$user = rootState.user,
@@ -4890,8 +4953,8 @@ var search = {
             }
             console.log('SRCH-LOAD', { who: who, sex: sex, city: city, up: up, to: to, any: any, virt: virt });
             console.log('User.data', ls.get('user.data'));
-            return api.search.load({ who: who, city: city, up: up, to: to, next: state.next }).then(function (_ref49) {
-                var data = _ref49.data;
+            return api.search.load({ who: who, city: city, up: up, to: to, next: state.next }).then(function (_ref50) {
+                var data = _ref50.data;
 
                 commit('results', data);
                 commit('last', data);
@@ -4915,10 +4978,11 @@ var search = {
         setHuman: function setHuman(state, data) {
             if (data) {
                 state.human = data;
+                console.log('HUMAN', data);
             }
         },
-        results: function results(state, _ref50) {
-            var users = _ref50.users;
+        results: function results(state, _ref51) {
+            var users = _ref51.users;
 
             state.received = users ? users.length : 0;
             if (users && state.received) {
@@ -4926,8 +4990,8 @@ var search = {
             }
             //state.next += state.batch;
         },
-        last: function last(state, _ref51) {
-            var users = _ref51.users;
+        last: function last(state, _ref52) {
+            var users = _ref52.users;
 
             if (users && !state.last) {
                 state.last = users;
@@ -4988,72 +5052,72 @@ var user = {
         last: ''
     },
     actions: {
-        LOAD_USER: function LOAD_USER(_ref52) {
-            var commit = _ref52.commit;
+        LOAD_USER: function LOAD_USER(_ref53) {
+            var commit = _ref53.commit;
 
             // if (uid) {
             //     commit('loadUser', {uid});
             // }
             commit('loadUser', ls.get('user.data'));
         },
-        REGISTRATION: function REGISTRATION(_ref53, token) {
-            var state = _ref53.state,
-                commit = _ref53.commit;
+        REGISTRATION: function REGISTRATION(_ref54, token) {
+            var state = _ref54.state,
+                commit = _ref54.commit;
 
             if (token) {
-                api.user.regnow(token).then(function (_ref54) {
-                    var data = _ref54.data;
+                api.user.regnow(token).then(function (_ref55) {
+                    var data = _ref55.data;
 
                     location.reload();
                 });
             }
         },
-        SAVE_SEX: function SAVE_SEX(_ref55, _ref56) {
-            var state = _ref55.state,
-                commit = _ref55.commit;
-            var sex = _ref56.sex,
-                token = _ref56.token;
+        SAVE_SEX: function SAVE_SEX(_ref56, _ref57) {
+            var state = _ref56.state,
+                commit = _ref56.commit;
+            var sex = _ref57.sex,
+                token = _ref57.token;
 
             commit('loadUser', { sex: sex, name: '' });
             return api.user.saveSex(sex, token);
         },
-        SAVE_AGE: function SAVE_AGE(_ref57, age) {
-            var state = _ref57.state,
-                commit = _ref57.commit;
+        SAVE_AGE: function SAVE_AGE(_ref58, age) {
+            var state = _ref58.state,
+                commit = _ref58.commit;
 
             if (age && state.age != age) {
                 api.user.saveAge(age).then(function (response) {});
                 commit('loadUser', { age: age });
             }
         },
-        SAVE_NAME: function SAVE_NAME(_ref58, name) {
-            var state = _ref58.state,
-                commit = _ref58.commit;
+        SAVE_NAME: function SAVE_NAME(_ref59, name) {
+            var state = _ref59.state,
+                commit = _ref59.commit;
 
             if (name && state.name != name) {
                 api.user.saveName(name).then(function (response) {});
                 commit('loadUser', { name: name });
             }
         },
-        SAVE_CITY: function SAVE_CITY(_ref59, city) {
-            var state = _ref59.state,
-                commit = _ref59.commit;
+        SAVE_CITY: function SAVE_CITY(_ref60, city) {
+            var state = _ref60.state,
+                commit = _ref60.commit;
 
             if (city && state.city != city) {
                 api.user.saveCity(city).then(function (response) {});
                 commit('loadUser', { city: city });
             }
         },
-        SAVE_CONTACTS: function SAVE_CONTACTS(_ref60, contacts) {
-            var state = _ref60.state,
-                commit = _ref60.commit;
+        SAVE_CONTACTS: function SAVE_CONTACTS(_ref61, contacts) {
+            var state = _ref61.state,
+                commit = _ref61.commit;
 
             api.user.saveContacts(contacts).then(function (response) {});
             commit('loadUser', { contacts: contacts });
         },
-        SAVE_SEARCH: function SAVE_SEARCH(_ref61, data) {
-            var state = _ref61.state,
-                commit = _ref61.commit;
+        SAVE_SEARCH: function SAVE_SEARCH(_ref62, data) {
+            var state = _ref62.state,
+                commit = _ref62.commit;
 
             commit('loadUser', data);
             return api.user.saveSearch(data).then(function (response) {});
@@ -5081,10 +5145,10 @@ var visited = {
         list: []
     },
     actions: {
-        SYNC: function SYNC(_ref62) {
-            var rootState = _ref62.rootState,
-                state = _ref62.state,
-                commit = _ref62.commit;
+        SYNC: function SYNC(_ref63) {
+            var rootState = _ref63.rootState,
+                state = _ref63.state,
+                commit = _ref63.commit;
 
             var index = 'visited-' + rootState.user.uid;
             commit('update', ls.get(index));
@@ -5095,10 +5159,10 @@ var visited = {
                 ls.set(index, state.list, 31 * 24 * 60 * 60);
             });
         },
-        ADD: function ADD(_ref63, tid) {
-            var rootState = _ref63.rootState,
-                state = _ref63.state,
-                commit = _ref63.commit;
+        ADD: function ADD(_ref64, tid) {
+            var rootState = _ref64.rootState,
+                state = _ref64.state,
+                commit = _ref64.commit;
 
             var uid = rootState.user.uid;
             var index = 'visited-' + uid;
@@ -5145,8 +5209,8 @@ var store = new Vuex.Store({
         simple: false
     },
     actions: {
-        LOAD_API_TOKEN: function LOAD_API_TOKEN(_ref64) {
-            var commit = _ref64.commit;
+        LOAD_API_TOKEN: function LOAD_API_TOKEN(_ref65) {
+            var commit = _ref65.commit;
 
             commit('setApiToken', { apiToken: get_cookie('jwt') });
         }
@@ -5764,6 +5828,7 @@ settingsRouter.beforeEach(function (to, from, next) {
 var app = new Vue({
     data: {
         alert: '',
+        humanId: null,
         snackbar: {
             text: '',
             callback: null,
@@ -5772,17 +5837,14 @@ var app = new Vue({
     },
     mounted: function mounted() {
         this.$store.dispatch('notes/LOAD');
+        var humanId = parseInt(window.location.pathname.split('/')[1]);
+        this.humanId = humanId ? humanId : null;
         if (this.humanId) {
             this.$store.dispatch('search/HUMAN', this.humanId);
-            this.title();
         }
     },
 
     computed: {
-        humanId: function humanId() {
-            var humanId = parseInt(window.location.pathname.split('/')[1]);
-            return humanId ? humanId : null;
-        },
         simple: function simple() {
             return this.$store.state.simple;
         },
@@ -5820,46 +5882,6 @@ var app = new Vue({
         redirectHome: function redirectHome() {
             console.log('Hard reload mail page to home');
             window.location = '/';
-        },
-        title: function title() {
-            var title = '| Секс знакомства';
-            if (this.human) {
-                var name = '';
-                if (this.human.name) {
-                    name = this.human.name + ' | ';
-                }
-                if (this.human.sex) {
-                    name += this.human.sex == 2 ? 'Девушка' : 'Парень';
-                } else {
-                    name += 'Парень или девушка';
-                }
-                name += ' ';
-
-                var age = '';
-                if (this.human.age) {
-                    age = ' ' + moment.duration(this.human.age, "years").humanize();
-                }
-                var _city2 = ' ищет ';
-                if (this.human.city) {
-                    _city2 = ' из города ' + this.human.city + ' ищет ';
-                }
-                var _who2 = ' девушку или парня ';
-                if (this.human.sex) {
-                    _who2 = this.human.sex == 2 ? 'парня' : 'девушку';
-                }
-                _who2 += ' для секса или общения ';
-                var _years = '';
-                if (this.human.up && this.human.to) {
-                    _years = ' в возрасте от ' + this.human.up + ' до ' + moment.duration(this.human.to, "years").humanize();
-                }
-                if (this.human.up && !this.human.to) {
-                    _years = ' в возрасте от ' + moment.duration(this.human.up, "years").humanize();
-                }
-                if (!this.human.up && this.human.to) {
-                    _years = ' в возрасте до ' + moment.duration(this.human.to, "years").humanize();
-                }
-                document.title = name + age + _city2 + _who2 + _years;
-            }
         }
     },
     el: '#app',

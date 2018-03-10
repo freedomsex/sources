@@ -14,7 +14,7 @@
     
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1519809150994">
+<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1520676199663">
 </head>
 <body>
 <div id="app">
@@ -100,6 +100,7 @@
         <div class="row" style="display: none;" v-show="human.id">
           <div class="col-sm-8">
             <account-component :human="human" key="2" v-if="human.id"></account-component>
+            <title-mail :human="human" key="2" v-if="human.id"></title-mail>
           </div>
           <div class="col-sm-4">
             <div style="border-left: 1px solid #e5e5e5; padding-left: 10px;">
@@ -2248,7 +2249,7 @@
 
  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/static/js/core.min.js?rel=1519809150991"></script>
+<script type="text/javascript" src="/static/js/core.min.js?rel=1520676199660"></script>
 
 <script src='https://www.google.com/recaptcha/api.js?render=explicit' async defer></script>
 

@@ -512,12 +512,12 @@ var search = {
         HUMAN({ commit }, tid) {
             let index = 'human.data.'+tid;
             commit('resetHuman', tid);
-            commit('setHuman', ls.get(index));
-                console.log('HUMAN', tid);
-            return api.search.get({tid}).then((response) => {
-                commit('setHuman', response.data);
-                ls.set(index, response.data, 1500);
+                console.log('HUMAN actions', tid);
+            api.search.get({tid}).then(({data}) => {
+                commit('setHuman', data);
+                ls.set(index, data, 1500);
             });
+            commit('setHuman', ls.get(index));
         },
         LOAD({state, rootState, commit}, params) {
             store.dispatch('LOAD_USER'); // КОСТЫЛЬ [!!!]
@@ -553,6 +553,7 @@ var search = {
         setHuman(state, data) {
             if (data) {
                 state.human = data;
+                console.log('HUMAN', data);
             }
         },
         results(state, {users}) {
