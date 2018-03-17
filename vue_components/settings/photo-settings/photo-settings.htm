@@ -17,5 +17,20 @@
         <input id="fileupload" type="file" name="file" data-form-data='{"script": "true"}'>
       </div>
     </div>
+
+    <modal-dialog @close="photoAlert = false" v-if="photoAlert">
+      <div class="modal-dialog__wrapper">
+        <div class="modal-dialog__body">
+          Загрузите новое фото. Для предупреждения использования чужих фото,
+          загрузить повторно может не получиться, даже если фото ваше.
+        </div>
+        <div class="modal-dialog__footer">
+          <button class="btn btn-primary btn-flat" @click="photoAlert = false">
+            Хорошо
+          </button>
+        </div>
+      </div>
+    </modal-dialog>
+
   </closed-activity>
 </script>

@@ -3,14 +3,17 @@ Vue.component('recaptcha', {
         return {
             sitekey: '6LdxP0YUAAAAAMzR_XFTV_G5VVOhyPnXLjdudFoe',
             widgetId: null,
+            show: true,
         }
     },
     methods: {
         execute () {
-          window.grecaptcha.execute(this.widgetId)
+          this.show = true;
+          window.grecaptcha.execute(this.widgetId);
         },
         reset () {
-          window.grecaptcha.reset(this.widgetId)
+          window.grecaptcha.reset(this.widgetId);
+          this.show = false;
         },
         verify(token) {
             this.$store.commit('grecaptchaTokenUpdate', token);
@@ -18,6 +21,7 @@ Vue.component('recaptcha', {
             this.reset();
         },
         render(callback) {
+            this.show = true;
             if (this.widgetId === null && window.grecaptcha) {
                 this.widgetId = window.grecaptcha.render('g-recaptcha', {
                     'sitekey': this.sitekey,

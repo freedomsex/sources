@@ -5,6 +5,7 @@ const PhotoSettings = Vue.component('photo-settings', {
     data() {
         return {
             photos: [],
+            photoAlert: false,
         }
     },
     computed: Vuex.mapState({
@@ -23,6 +24,9 @@ const PhotoSettings = Vue.component('photo-settings', {
             },
             done(e, data) {
                 self.preview(data.result.photo);
+            },
+            fail() {
+                self.failed();
             }
         });
         this.loadPhoto();
@@ -73,6 +77,9 @@ const PhotoSettings = Vue.component('photo-settings', {
             } else {
                 this.close();
             }
+        },
+        failed() {
+            this.photoAlert = true;
         }
     },
     template: '#photo-settings',

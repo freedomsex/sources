@@ -2673,16 +2673,19 @@ Vue.component('recaptcha', {
     data: function data() {
         return {
             sitekey: '6LdxP0YUAAAAAMzR_XFTV_G5VVOhyPnXLjdudFoe',
-            widgetId: null
+            widgetId: null,
+            show: true
         };
     },
 
     methods: {
         execute: function execute() {
+            this.show = true;
             window.grecaptcha.execute(this.widgetId);
         },
         reset: function reset() {
             window.grecaptcha.reset(this.widgetId);
+            this.show = false;
         },
         verify: function verify(token) {
             this.$store.commit('grecaptchaTokenUpdate', token);
@@ -2690,6 +2693,7 @@ Vue.component('recaptcha', {
             this.reset();
         },
         render: function render(callback) {
+            this.show = true;
             if (this.widgetId === null && window.grecaptcha) {
                 this.widgetId = window.grecaptcha.render('g-recaptcha', {
                     'sitekey': this.sitekey,
@@ -3474,7 +3478,8 @@ var PhotoSettings = Vue.component('photo-settings', {
     props: ['humanId'],
     data: function data() {
         return {
-            photos: []
+            photos: [],
+            photoAlert: false
         };
     },
 
@@ -3492,6 +3497,9 @@ var PhotoSettings = Vue.component('photo-settings', {
             },
             done: function done(e, data) {
                 self.preview(data.result.photo);
+            },
+            fail: function fail() {
+                self.failed();
             }
         });
         this.loadPhoto();
@@ -3545,6 +3553,9 @@ var PhotoSettings = Vue.component('photo-settings', {
             } else {
                 this.close();
             }
+        },
+        failed: function failed() {
+            this.photoAlert = true;
         }
     },
     template: '#photo-settings'
