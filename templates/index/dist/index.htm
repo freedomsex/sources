@@ -17,7 +17,7 @@
     
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1521288625852">
+<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1521309545266">
 
   <script type="text/javascript">  
     function get_cookie ( cookie_name )
@@ -191,7 +191,7 @@
    <a class="more-information__link" rel="nofollow" href="/блог/соглашение-о-предоставлении-услуг/" target="_blank">Пользовательское соглашение</a><i>·</i>
    <span class="more-information__link" @click="$router.push('/content/deal/confidencial/ru')">Конфиденциальность</span><i>·</i>
    <span class="more-information__link" @click="$router.push('/content/deal/slander/ru')">Номер телефона и клевета</span><i>·</i>
-   <a class="more-information__link" rel="nofollow" href="/10336" target="_blank">Помощник по сайту</a><i>·</i>
+   <span class="more-information__link" @click="$router.push('/settings/question')">Помощь по сайту</span><i>·</i>
 
    <a class="more-information__link" rel="nofollow" href="/блог/реклама-на-сайте/" target="_blank">Реклама на сайте</a><i>·</i>
    <span class="more-information__link" @click="$router.push('/settings/envelop')">Написать разработчикам</span><i>·</i>
@@ -848,7 +848,9 @@
         Здесь будет список поступивших вам предложений знакомства.
         Список отправленных посмотреть нельзя.
       </div>
-      Все ответы приходят во вкладку "Общение". Пишите сообщения - это Бесплатно, а значит всё честно и реально!
+      Все ответы приходят во вкладку "Общение". Кружочки могут светиться без причины.
+      Пишите сообщения - это Бесплатно, а значит всё честно и реально!
+
     </div>
 
     <div class="contact-list__next">
@@ -1235,6 +1237,7 @@
 
     <attention-wall :show="hold" v-if="hold" @promt="cancel" @close="close"/>
     <captcha-dialog v-if="captcha" @close="close" @cancel="cancel" @send="setCode"/>
+    <recaptcha ref="recaptcha" @cancel="close"></recaptcha>
 
     <notepad v-if="modals.notepad"
      @select="setText"
@@ -2288,7 +2291,7 @@
 
  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/static/js/core.min.js?rel=1521288625849"></script>
+<script type="text/javascript" src="/static/js/core.min.js?rel=1521309545264"></script>
 
 <script src='https://www.google.com/recaptcha/api.js?render=explicit' async defer></script>
 

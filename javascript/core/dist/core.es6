@@ -411,6 +411,7 @@ const ActivityActions = {
                 error: false,
             },
             timerLoader: null,
+            timerProcess: null,
         }
     },
     methods: {
@@ -443,8 +444,9 @@ const ActivityActions = {
         },
         processTimeout(second) {
             this.process = true;
+            clearTimeout(this.timerProcess);
             second = second ? second : this.slowTime;
-            setTimeout(() => this.process = false, second * 1000);
+            this.timerProcess = setTimeout(() => this.process = false, second * 1000);
         }
     },
 }
@@ -863,11 +865,11 @@ const MessagesActivity = Vue.component('messages-activity', {
             this.$store.commit('grecaptchaTokenUpdate', token);
             let data = {
                 id: this.humanId,
-                captcha_code: this.code
+                captcha_code: this.code,
+                token: this.$store.state.grecaptchaToken,
             };
             if (this.photo && this.photo.alias) {
                 data['photo'] = this.photo.alias;
-                data['token'] = this.$store.state.grecaptchaToken;
             } else
             if (true) {
                 data['mess'] = this.message;
@@ -887,7 +889,7 @@ const MessagesActivity = Vue.component('messages-activity', {
             this.sendMessage();
         },
         onMessageSend({saved, error}) {
-            if (!saved && error) {
+            if (error) {
                 if (error == 'need_captcha') {
                     this.captcha = true;
                 }
@@ -1844,7 +1846,6 @@ const QuickDialog = {
         return {
             text: '',
             captcha: false,
-            process: false,
             loading: false,
             confirm: false,
             ignore: false,
@@ -1910,41 +1911,44 @@ const QuickDialog = {
             this.ignore = true;
             console.log('cancel');
         },
-        inProcess(sec) {
-            this.process = true;
-            setTimeout(() => this.process = false, sec*1000);
-        },
-        send() {
+        send(token) {
+            this.$store.commit('grecaptchaTokenUpdate', token);
             let data = {
                 id: this.humanId,
                 mess: this.text,
-                captcha_code: this.code
+                captcha_code: this.code,
+                token: this.$store.state.grecaptchaToken,
             };
-            api.messages.send(data).then((response) => {
-                this.onMessageSend(response.data);
+            api.messages.send(data).then(({data}) => {
+                this.onMessageSend(data);
             }).catch((error) => {
                 this.onError(error);
             });
             //  this.sended();
-            this.inProcess(5);
+            this.processTimeout(5);
         },
         setCode(code) {
             this.code = code;
             this.send();
         },
-        onMessageSend(response) {
-            if (!response.saved && response.error) {
-                if (response.error == 'need_captcha') {
+        onMessageSend({saved, error}) {
+            if (error) {
+                if (error == 'need_captcha') {
                     this.captcha = true;
                 }
-                this.onError();
+                if (error == 'need_verify') {
+                    this.processTimeout(5);
+                    this.$refs.recaptcha.render(this.send);
+                    this.$refs.recaptcha.execute();
+                }
             } else {
                 this.$store.dispatch('notes/UPDATE', this.text);
                 this.sended();
             }
-            this.process = false;
         },
         sended() {
+            this.process = false;
+            this.$refs.recaptcha.reset();
             this.$emit('sended');
             this.close();
         },
@@ -2578,6 +2582,7 @@ Vue.component('photo-view', {
 });
 
 Vue.component('recaptcha', {
+    props: ['success', 'failed', 'expired'],
     data() {
         return {
             sitekey: '6LdxP0YUAAAAAMzR_XFTV_G5VVOhyPnXLjdudFoe',

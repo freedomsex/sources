@@ -1,4 +1,5 @@
 Vue.component('recaptcha', {
+    props: ['success', 'failed', 'expired'],
     data() {
         return {
             sitekey: '6LdxP0YUAAAAAMzR_XFTV_G5VVOhyPnXLjdudFoe',

@@ -590,7 +590,9 @@
         Здесь будет список поступивших вам предложений знакомства.
         Список отправленных посмотреть нельзя.
       </div>
-      Все ответы приходят во вкладку "Общение". Пишите сообщения - это Бесплатно, а значит всё честно и реально!
+      Все ответы приходят во вкладку "Общение". Кружочки могут светиться без причины.
+      Пишите сообщения - это Бесплатно, а значит всё честно и реально!
+
     </div>
 
     <div class="contact-list__next">
@@ -977,6 +979,7 @@
 
     <attention-wall :show="hold" v-if="hold" @promt="cancel" @close="close"/>
     <captcha-dialog v-if="captcha" @close="close" @cancel="cancel" @send="setCode"/>
+    <recaptcha ref="recaptcha" @cancel="close"></recaptcha>
 
     <notepad v-if="modals.notepad"
      @select="setText"

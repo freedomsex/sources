@@ -57,6 +57,7 @@
 
     <attention-wall :show="hold" v-if="hold" @promt="cancel" @close="close"/>
     <captcha-dialog v-if="captcha" @close="close" @cancel="cancel" @send="setCode"/>
+    <recaptcha ref="recaptcha" @cancel="close"></recaptcha>
 
     <notepad v-if="modals.notepad"
      @select="setText"

@@ -13,6 +13,7 @@ const ActivityActions = {
                 error: false,
             },
             timerLoader: null,
+            timerProcess: null,
         }
     },
     methods: {
@@ -45,8 +46,9 @@ const ActivityActions = {
         },
         processTimeout(second) {
             this.process = true;
+            clearTimeout(this.timerProcess);
             second = second ? second : this.slowTime;
-            setTimeout(() => this.process = false, second * 1000);
+            this.timerProcess = setTimeout(() => this.process = false, second * 1000);
         }
     },
 }

@@ -70,11 +70,11 @@ const MessagesActivity = Vue.component('messages-activity', {
             this.$store.commit('grecaptchaTokenUpdate', token);
             let data = {
                 id: this.humanId,
-                captcha_code: this.code
+                captcha_code: this.code,
+                token: this.$store.state.grecaptchaToken,
             };
             if (this.photo && this.photo.alias) {
                 data['photo'] = this.photo.alias;
-                data['token'] = this.$store.state.grecaptchaToken;
             } else
             if (true) {
                 data['mess'] = this.message;
@@ -94,7 +94,7 @@ const MessagesActivity = Vue.component('messages-activity', {
             this.sendMessage();
         },
         onMessageSend({saved, error}) {
-            if (!saved && error) {
+            if (error) {
                 if (error == 'need_captcha') {
                     this.captcha = true;
                 }
