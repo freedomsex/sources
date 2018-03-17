@@ -1994,7 +1994,7 @@ var QuickDialog = {
             var saved = _ref10.saved,
                 error = _ref10.error;
 
-            if (error) {
+            if (!saved && error) {
                 if (error == 'need_captcha') {
                     this.captcha = true;
                 }
@@ -2010,9 +2010,9 @@ var QuickDialog = {
         },
         sended: function sended() {
             this.process = false;
-            this.$refs.recaptcha.reset();
             this.$emit('sended');
             this.close();
+            this.$refs.recaptcha.reset();
         },
         account: function account() {
             this.$router.push(this.humanId + '/detail');

@@ -1712,7 +1712,7 @@ const QuickDialog = {
             this.send();
         },
         onMessageSend({saved, error}) {
-            if (error) {
+            if (!saved && error) {
                 if (error == 'need_captcha') {
                     this.captcha = true;
                 }
@@ -1728,9 +1728,9 @@ const QuickDialog = {
         },
         sended() {
             this.process = false;
-            this.$refs.recaptcha.reset();
             this.$emit('sended');
             this.close();
+            this.$refs.recaptcha.reset();
         },
         account() {
             this.$router.push(this.humanId + '/detail')
