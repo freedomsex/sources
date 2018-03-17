@@ -39,6 +39,23 @@
       <div class="form-inline">
         <input class="form-control" type="text" v-model="selectName" @blur="saveName" placeholder="Ваше имя">
       </div>
+
+      <modal-dialog @close="nameAlert = false" v-if="nameAlert">
+        <div class="modal-dialog__wrapper">
+          <div class="modal-dialog__body">
+            Есть ограничение, вы можете указать простое, обычное имя.
+            Некоторые могут не сохраниться и это нормально.
+            Можно указать не своё, любое.
+          </div>
+          <div class="modal-dialog__footer">
+            <button class="btn btn-primary btn-flat" @click="nameAlert = false">
+              Хорошо
+            </button>
+          </div>
+        </div>
+      </modal-dialog>
+
+
     </div>
 
     <div class="activity-section">

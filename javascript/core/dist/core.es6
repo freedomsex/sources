@@ -2944,7 +2944,8 @@ const AccountSettings = Vue.component('account-settings', {
              selectCity: '',
              selectSex: 0,
              selectAge: 0,
-             selectName: ''
+             selectName: '',
+             nameAlert: false
         }
     },
     computed: Vuex.mapState({
@@ -2962,12 +2963,8 @@ const AccountSettings = Vue.component('account-settings', {
             return state.user.age;
         },
         name(state) {
-            var variant = [];
-            variant[1] = ['Саша','Дима','Сергей','Иван','Максим','Валера','Николай'];
-            variant[2] = ['Оля','Юля','Настя','Алена','Катя','Маргарита','Татьяна'];
-            let x = Math.floor( Math.random() * 7);
             let name = state.user.name;
-            let auto = this.sex ? variant[this.sex][x] : '';
+            let auto = (!name && this.sex) ? this.autoName() : '';
             return name ? name : auto;
         },
     }),
@@ -2979,6 +2976,13 @@ const AccountSettings = Vue.component('account-settings', {
         this.selectName = this.name;
     },
     methods: {
+        autoName() {
+            var variant = [];
+            variant[1] = ['Саша','Дима','Сергей','Иван','Максим','Валера','Николай'];
+            variant[2] = ['Оля','Юля','Настя','Алена','Катя','Маргарита','Татьяна'];
+            let x = Math.floor( Math.random() * 7);
+            return this.sex ? variant[this.sex][x] : '';
+        },
         saveSex() {
             this.$store.dispatch('SAVE_SEX',  {sex: this.selectSex, token: null});
             this.resetName();
@@ -2997,7 +3001,10 @@ const AccountSettings = Vue.component('account-settings', {
             }
         },
         saveName() {
-            this.$store.dispatch('SAVE_NAME', this.selectName);
+            this.$store.dispatch('SAVE_NAME', this.selectName).catch(() => {
+                this.resetName();
+                this.nameAlert = true;
+            });
         },
         resetName() {
             this.selectName = this.name;
@@ -4830,8 +4837,9 @@ const user = {
         },
         SAVE_NAME({ state, commit }, name) {
             if (name && state.name != name) {
-                api.user.saveName(name).then((response) => { });
-                commit('loadUser', {name});
+                return api.user.saveName(name).then(() => {
+                    commit('loadUser', {name});
+                });
             }
         },
         SAVE_CITY({ state, commit }, city) {

@@ -646,8 +646,9 @@ const user = {
         },
         SAVE_NAME({ state, commit }, name) {
             if (name && state.name != name) {
-                api.user.saveName(name).then((response) => { });
-                commit('loadUser', {name});
+                return api.user.saveName(name).then(() => {
+                    commit('loadUser', {name});
+                });
             }
         },
         SAVE_CITY({ state, commit }, city) {

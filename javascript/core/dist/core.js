@@ -3051,7 +3051,8 @@ var AccountSettings = Vue.component('account-settings', {
             selectCity: '',
             selectSex: 0,
             selectAge: 0,
-            selectName: ''
+            selectName: '',
+            nameAlert: false
         };
     },
 
@@ -3070,12 +3071,8 @@ var AccountSettings = Vue.component('account-settings', {
             return state.user.age;
         },
         name: function name(state) {
-            var variant = [];
-            variant[1] = ['Саша', 'Дима', 'Сергей', 'Иван', 'Максим', 'Валера', 'Николай'];
-            variant[2] = ['Оля', 'Юля', 'Настя', 'Алена', 'Катя', 'Маргарита', 'Татьяна'];
-            var x = Math.floor(Math.random() * 7);
             var name = state.user.name;
-            var auto = this.sex ? variant[this.sex][x] : '';
+            var auto = !name && this.sex ? this.autoName() : '';
             return name ? name : auto;
         }
     }),
@@ -3091,6 +3088,13 @@ var AccountSettings = Vue.component('account-settings', {
     },
 
     methods: {
+        autoName: function autoName() {
+            var variant = [];
+            variant[1] = ['Саша', 'Дима', 'Сергей', 'Иван', 'Максим', 'Валера', 'Николай'];
+            variant[2] = ['Оля', 'Юля', 'Настя', 'Алена', 'Катя', 'Маргарита', 'Татьяна'];
+            var x = Math.floor(Math.random() * 7);
+            return this.sex ? variant[this.sex][x] : '';
+        },
         saveSex: function saveSex() {
             this.$store.dispatch('SAVE_SEX', { sex: this.selectSex, token: null });
             this.resetName();
@@ -3109,7 +3113,12 @@ var AccountSettings = Vue.component('account-settings', {
             }
         },
         saveName: function saveName() {
-            this.$store.dispatch('SAVE_NAME', this.selectName);
+            var _this44 = this;
+
+            this.$store.dispatch('SAVE_NAME', this.selectName).catch(function () {
+                _this44.resetName();
+                _this44.nameAlert = true;
+            });
         },
         resetName: function resetName() {
             this.selectName = this.name;
@@ -3193,11 +3202,11 @@ var DesiresSettings = Vue.component('desires-settings', {
         }
     }),
     mounted: function mounted() {
-        var _this44 = this;
+        var _this45 = this;
 
         this.process = true;
         this.$store.dispatch('desires/SYNC').then(function (response) {
-            _this44.process = false;
+            _this45.process = false;
         });
     },
 
@@ -3206,11 +3215,11 @@ var DesiresSettings = Vue.component('desires-settings', {
             this.$emit('close');
         },
         add: function add(tag) {
-            var _this45 = this;
+            var _this46 = this;
 
             this.process = true;
             this.$store.dispatch('desires/ADD', tag).then(function (response) {
-                _this45.process = false;
+                _this46.process = false;
             });
         },
         remove: function remove() {
@@ -3252,14 +3261,14 @@ var IncomingPhoto = Vue.component('incoming-photo', {
     },
     methods: {
         loadPhoto: function loadPhoto() {
-            var _this46 = this;
+            var _this47 = this;
 
             var config = {
                 headers: { 'Authorization': 'Bearer ' + this.$store.state.apiToken },
                 params: { tid: this.humanId, hash: hash }
             };
             axios.get('http://' + this.server + '/api/v1/users/' + this.uid + '/sends', config).then(function (response) {
-                _this46.photos = response.data.photos;
+                _this47.photos = response.data.photos;
                 //console.log(this.photos);
             }).catch(function (error) {
                 console.log(error);
@@ -3313,7 +3322,7 @@ var LoginAccount = Vue.component('login-account', {
             this.$emit('close');
         },
         send: function send() {
-            var _this47 = this;
+            var _this48 = this;
 
             var data = {
                 login: this.login,
@@ -3321,10 +3330,10 @@ var LoginAccount = Vue.component('login-account', {
                 captcha: this.code
             };
             api.user.post(data, null, 'sync/login').then(function (response) {
-                _this47.hint = response.data.say;
-                _this47.error = response.data.err;
-                _this47.captcha = response.data.captcha;
-                _this47.onLogin();
+                _this48.hint = response.data.say;
+                _this48.error = response.data.err;
+                _this48.captcha = response.data.captcha;
+                _this48.onLogin();
             });
         },
         onLogin: function onLogin() {
@@ -3367,15 +3376,15 @@ var MessagesCliche = Vue.component('messages-cliche', {
     },
     methods: {
         load: function load(value) {
-            var _this48 = this;
+            var _this49 = this;
 
             var result = value ? value : this.default.tab;
             api.raw.load(null, 'static/json/cliche/' + result + '.json?v=' + this.version).then(function (_ref12) {
                 var data = _ref12.data;
 
-                _this48.texts = data;
-                _this48.active = result;
-                ls.set('cliche-active', _this48.active, 3 * 24 * 60 * 60);
+                _this49.texts = data;
+                _this49.active = result;
+                ls.set('cliche-active', _this49.active, 3 * 24 * 60 * 60);
             });
         },
         size: function size(value) {
@@ -3412,10 +3421,10 @@ var Notepad = Vue.component('notepad', {
         };
     },
     mounted: function mounted() {
-        var _this49 = this;
+        var _this50 = this;
 
         this.$store.dispatch('notes/WRITES').then(function (data) {
-            _this49.writes = data;
+            _this50.writes = data;
         });
     },
 
@@ -3493,7 +3502,7 @@ var PhotoSettings = Vue.component('photo-settings', {
             this.back();
         },
         loadPhoto: function loadPhoto() {
-            var _this50 = this;
+            var _this51 = this;
 
             var server = this.$store.state.photoServer;
             var uid = this.$store.state.user.uid;
@@ -3504,9 +3513,9 @@ var PhotoSettings = Vue.component('photo-settings', {
             axios.get('http://' + server + '/api/v1/users/' + uid + '/photos', config).then(function (response) {
                 var result = response.data.photos;
                 if (result && result.length) {
-                    _this50.photos = response.data.photos;
+                    _this51.photos = response.data.photos;
                 }
-                console.log(_this50.photos);
+                console.log(_this51.photos);
             }).catch(function (error) {
                 console.log(error);
             });
@@ -3600,7 +3609,7 @@ var ReviewSettings = Vue.component('review-settings', {
             this.text ? this.send() : this.isEmpty = true;
         },
         send: function send() {
-            var _this51 = this;
+            var _this52 = this;
 
             api.raw.post({
                 text: this.text,
@@ -3608,8 +3617,8 @@ var ReviewSettings = Vue.component('review-settings', {
             }, null, 'security/remark').then(function (_ref13) {
                 var data = _ref13.data;
 
-                _this51.process = false;
-                _this51.text = '';
+                _this52.process = false;
+                _this52.text = '';
                 ls.remove('review-text');
             });
             this.isEmpty = false;
@@ -3790,14 +3799,14 @@ var SecuritySettings = Vue.component('security-settings', {
         }
     }),
     mounted: function mounted() {
-        var _this52 = this;
+        var _this53 = this;
 
         console.log('auth/SYNC');
         this.$store.dispatch('auth/SYNC').then(function () {
-            _this52.init();
-            _this52.process = false;
+            _this53.init();
+            _this53.process = false;
         }).catch(function () {
-            _this52.process = false;
+            _this53.process = false;
         });
         this.process = true;
         this.init();
@@ -3814,53 +3823,38 @@ var SecuritySettings = Vue.component('security-settings', {
             this.virgin = false;
         },
         saveLogin: function saveLogin() {
-            var _this53 = this;
+            var _this54 = this;
 
             this.processLogin = true;
             this.$store.dispatch('auth/SAVE_LOGIN', this.inputLogin).then(function (response) {
                 var data = response.data;
                 if (data.say) {
-                    _this53.$emit('warning', data.say);
+                    _this54.$emit('warning', data.say);
                 }
-                _this53.processLogin = false;
+                _this54.processLogin = false;
             }).catch(function () {
-                _this53.processLogin = false;
+                _this54.processLogin = false;
             });
         },
         savePasswd: function savePasswd() {
-            var _this54 = this;
+            var _this55 = this;
 
             this.processPasswd = true;
             this.$store.dispatch('auth/SAVE_PASSWD', this.inputPasswd).then(function (response) {
                 var data = response.data;
                 if (data.say) {
-                    _this54.$emit('warning', data.say);
+                    _this55.$emit('warning', data.say);
                 }
-                _this54.processPasswd = false;
+                _this55.processPasswd = false;
             }).catch(function () {
-                _this54.processPasswd = false;
+                _this55.processPasswd = false;
             });
         },
         saveEmail: function saveEmail() {
-            var _this55 = this;
+            var _this56 = this;
 
             this.processEmail = true;
             this.$store.dispatch('auth/SAVE_EMAIL', this.inputEmail).then(function (response) {
-                var data = response.data;
-                if (data.err) {
-                    _this55.$emit('warning', data.say);
-                }
-                _this55.processEmail = false;
-            }).catch(function () {
-                _this55.processEmail = false;
-            });
-        },
-        removeEmail: function removeEmail() {
-            var _this56 = this;
-
-            this.confirmRemove = false;
-            this.processEmail = true;
-            this.$store.dispatch('auth/REMOVE_EMAIL').then(function (response) {
                 var data = response.data;
                 if (data.err) {
                     _this56.$emit('warning', data.say);
@@ -3868,6 +3862,21 @@ var SecuritySettings = Vue.component('security-settings', {
                 _this56.processEmail = false;
             }).catch(function () {
                 _this56.processEmail = false;
+            });
+        },
+        removeEmail: function removeEmail() {
+            var _this57 = this;
+
+            this.confirmRemove = false;
+            this.processEmail = true;
+            this.$store.dispatch('auth/REMOVE_EMAIL').then(function (response) {
+                var data = response.data;
+                if (data.err) {
+                    _this57.$emit('warning', data.say);
+                }
+                _this57.processEmail = false;
+            }).catch(function () {
+                _this57.processEmail = false;
             });
         },
         saveSubscribe: function saveSubscribe() {
@@ -3952,10 +3961,10 @@ Vue.component('suggest-input', {
     },
     methods: {
         load: function load() {
-            var _this57 = this;
+            var _this58 = this;
 
             api.user.get({ q: this.query }, 'tag/suggest').then(function (response) {
-                _this57.loaded(response.data);
+                _this58.loaded(response.data);
             });
         },
         reset: function reset() {
@@ -3999,11 +4008,11 @@ Vue.component('auth-board', {
         };
     },
     mounted: function mounted() {
-        var _this58 = this;
+        var _this59 = this;
 
         _.delay(function () {
-            _this58.$store.dispatch('auth/SYNC').then(function () {
-                _this58.email = _this58.$store.state.auth.email;
+            _this59.$store.dispatch('auth/SYNC').then(function () {
+                _this59.email = _this59.$store.state.auth.email;
             });
         }, 2500);
     },
@@ -4021,7 +4030,7 @@ Vue.component('auth-board', {
     },
     methods: {
         send: function send() {
-            var _this59 = this;
+            var _this60 = this;
 
             if (!this.email) {
                 return;
@@ -4029,9 +4038,9 @@ Vue.component('auth-board', {
             this.process = true;
             this.hint = 'Отправляю...';
             this.$store.dispatch('auth/SAVE_EMAIL', this.email).then(function (response) {
-                _this59.hint = response.data.say;
-                _this59.error = response.data.err;
-                _this59.sended();
+                _this60.hint = response.data.say;
+                _this60.error = response.data.err;
+                _this60.sended();
             });
         },
         sended: function sended() {
@@ -5095,8 +5104,9 @@ var user = {
                 commit = _ref59.commit;
 
             if (name && state.name != name) {
-                api.user.saveName(name).then(function (response) {});
-                commit('loadUser', { name: name });
+                return api.user.saveName(name).then(function () {
+                    commit('loadUser', { name: name });
+                });
             }
         },
         SAVE_CITY: function SAVE_CITY(_ref60, city) {
