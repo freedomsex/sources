@@ -1436,6 +1436,26 @@ Vue.component('desire-list', {
     },
     template: '#desire-list'
 });
+const ModalDialog = Vue.component('modal-dialog', {
+    extends: ActivityActions,
+    methods: {
+        onEsc(event) {
+            if (event.keyCode === 27) {
+                this.close();
+            }
+        }
+    },
+    mounted() {
+        // Close the modal when the escape key is pressed.
+        var self = this;
+        document.addEventListener('keydown', this.onEsc);
+    },
+    beforeDestroy() {
+        document.removeEventListener('keydown', this.onEsc);
+    },
+    template: '#modal-dialog',
+});
+
 
 Vue.component('attention-wall', {
     props: ['show'],
@@ -1508,6 +1528,12 @@ Vue.component('captcha-dialog', {
 Vue.component('email-sended', {
     template: '#email-sended'
 });
+Vue.component('info-dialog', {
+    props: ['text'],
+    extends: ModalDialog,
+    template: '#info-dialog',
+});
+
 
 Vue.component('inform-dialog', {
     props: [
@@ -1565,26 +1591,6 @@ Vue.component('loading-wall', {
 });
 
 
-
-const ModalDialog = Vue.component('modal-dialog', {
-    extends: ActivityActions,
-    methods: {
-        onEsc(event) {
-            if (event.keyCode === 27) {
-                this.close();
-            }
-        }
-    },
-    mounted() {
-        // Close the modal when the escape key is pressed.
-        var self = this;
-        document.addEventListener('keydown', this.onEsc);
-    },
-    beforeDestroy() {
-        document.removeEventListener('keydown', this.onEsc);
-    },
-    template: '#modal-dialog',
-});
 
 ///
 // Модальное окно настроек OptionDialog - контейнер
@@ -1994,12 +2000,6 @@ Vue.component('remove-contact', {
     },
     template: '#remove-confirm',
 });
-Vue.component('info-dialog', {
-    props: ['text'],
-    extends: ModalDialog,
-    template: '#info-dialog',
-});
-
 const SexConfirm = Vue.component('sex-confirm', {
     extends: ModalDialog,
     props: ['show'],

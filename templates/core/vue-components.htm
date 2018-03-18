@@ -771,6 +771,14 @@
   </div>
 </script>
 
+<script type="text/x-template" id="modal-dialog">
+  <div class="modal-dialog__mask" transition="modal" @click="close">
+    <div class="modal-dialog__container" @click.stop>
+      <slot></slot>
+    </div>
+  </div>
+</script>
+
 
 <script type="text/x-template" id="attention-wall">
   <modal-dialog @close="close">
@@ -850,6 +858,23 @@
 
 
 
+<script type="text/x-template" id="info-dialog">
+  <modal-dialog @close="close()">
+    <div class="modal-dialog__wrapper">
+      <div class="modal-dialog__body">
+        {{text}}
+      </div>
+      <div class="modal-dialog__footer">
+        <button class="btn btn-primary btn-flat" @click="close()">
+          Хорошо
+        </button>
+      </div>
+    </div>
+  </modal-dialog>
+</script>
+
+
+
 <script type="text/x-template" id="inform-dialog">
   <option-dialog @close="close">
     <div class="contact-dialog">
@@ -892,14 +917,6 @@
   </div>
 </script>
 
-
-<script type="text/x-template" id="modal-dialog">
-  <div class="modal-dialog__mask" transition="modal" @click="close">
-    <div class="modal-dialog__container" @click.stop>
-      <slot></slot>
-    </div>
-  </div>
-</script>
 
 
 <script type="text/x-template" id="option-static__dialog-window">
@@ -992,7 +1009,7 @@
     <contact-wizard v-if="addition"
       :humanCity = "human.city"
       :humanAge = "human.age"
-      @approve="proxy()"
+      @approve=""
       @close="addition = false"/>
 
 
@@ -1057,23 +1074,6 @@
         <button class="btn btn-primary" @click="bun()" v-if="show == 'doit'">{{action}}</button>
         <button class="btn btn-danger" @click="remove()" v-else>{{action}}</button>
         <button class="btn btn-default" @click="close()">Отмена</button>
-      </div>
-    </div>
-  </modal-dialog>
-</script>
-
-
-
-<script type="text/x-template" id="info-dialog">
-  <modal-dialog @close="close()">
-    <div class="modal-dialog__wrapper">
-      <div class="modal-dialog__body">
-        {{text}}
-      </div>
-      <div class="modal-dialog__footer">
-        <button class="btn btn-primary btn-flat" @click="close()">
-          Хорошо
-        </button>
       </div>
     </div>
   </modal-dialog>

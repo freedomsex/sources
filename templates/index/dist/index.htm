@@ -17,7 +17,7 @@
     
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1521379501094">
+<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1521381401460">
 
   <script type="text/javascript">  
     function get_cookie ( cookie_name )
@@ -1029,6 +1029,14 @@
   </div>
 </script>
 
+<script type="text/x-template" id="modal-dialog">
+  <div class="modal-dialog__mask" transition="modal" @click="close">
+    <div class="modal-dialog__container" @click.stop>
+      <slot></slot>
+    </div>
+  </div>
+</script>
+
 
 <script type="text/x-template" id="attention-wall">
   <modal-dialog @close="close">
@@ -1108,6 +1116,23 @@
 
 
 
+<script type="text/x-template" id="info-dialog">
+  <modal-dialog @close="close()">
+    <div class="modal-dialog__wrapper">
+      <div class="modal-dialog__body">
+        {{text}}
+      </div>
+      <div class="modal-dialog__footer">
+        <button class="btn btn-primary btn-flat" @click="close()">
+          Хорошо
+        </button>
+      </div>
+    </div>
+  </modal-dialog>
+</script>
+
+
+
 <script type="text/x-template" id="inform-dialog">
   <option-dialog @close="close">
     <div class="contact-dialog">
@@ -1150,14 +1175,6 @@
   </div>
 </script>
 
-
-<script type="text/x-template" id="modal-dialog">
-  <div class="modal-dialog__mask" transition="modal" @click="close">
-    <div class="modal-dialog__container" @click.stop>
-      <slot></slot>
-    </div>
-  </div>
-</script>
 
 
 <script type="text/x-template" id="option-static__dialog-window">
@@ -1250,7 +1267,7 @@
     <contact-wizard v-if="addition"
       :humanCity = "human.city"
       :humanAge = "human.age"
-      @approve="proxy()"
+      @approve=""
       @close="addition = false"/>
 
 
@@ -1315,23 +1332,6 @@
         <button class="btn btn-primary" @click="bun()" v-if="show == 'doit'">{{action}}</button>
         <button class="btn btn-danger" @click="remove()" v-else>{{action}}</button>
         <button class="btn btn-default" @click="close()">Отмена</button>
-      </div>
-    </div>
-  </modal-dialog>
-</script>
-
-
-
-<script type="text/x-template" id="info-dialog">
-  <modal-dialog @close="close()">
-    <div class="modal-dialog__wrapper">
-      <div class="modal-dialog__body">
-        {{text}}
-      </div>
-      <div class="modal-dialog__footer">
-        <button class="btn btn-primary btn-flat" @click="close()">
-          Хорошо
-        </button>
       </div>
     </div>
   </modal-dialog>
@@ -2326,7 +2326,7 @@
 
  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/static/js/core.min.js?rel=1521379501092"></script>
+<script type="text/javascript" src="/static/js/core.min.js?rel=1521381401458"></script>
 
 <script src='https://www.google.com/recaptcha/api.js?render=explicit' async defer></script>
 
