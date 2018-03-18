@@ -1836,14 +1836,20 @@ Vue.component('loading-wall', {
 
 var ModalDialog = Vue.component('modal-dialog', {
     extends: ActivityActions,
+    methods: {
+        onEsc: function onEsc(event) {
+            if (event.keyCode === 27) {
+                this.close();
+            }
+        }
+    },
     mounted: function mounted() {
         // Close the modal when the escape key is pressed.
         var self = this;
-        document.addEventListener('keydown', function () {
-            if (self.show && event.keyCode === 27) {
-                self.close();
-            }
-        });
+        document.addEventListener('keydown', this.onEsc);
+    },
+    beforeDestroy: function beforeDestroy() {
+        document.removeEventListener('keydown', this.onEsc);
     },
 
     template: '#modal-dialog'
@@ -1903,6 +1909,14 @@ var QuickDialog = {
             modals: {
                 cliche: false,
                 notepad: false
+            },
+            interests: {
+                show: false,
+                ignore: false
+            },
+            dirt: {
+                show: false,
+                ignore: false
             }
         };
     },
@@ -1948,6 +1962,19 @@ var QuickDialog = {
             }).catch(function (error) {
                 _this28.loading = false;
             });
+        },
+        isDirt: function isDirt() {
+            var word = /\w{0,5}[хx]([хx\s\!@#\$%\^&*+-\|\/]{0,6})[уy]([уy\s\!@#\$%\^&*+-\|\/]{0,6})[ёiлeеюийя]\w{0,7}|\w{0,6}[пp]([пp\s\!@#\$%\^&*+-\|\/]{0,6})[iие]([iие\s\!@#\$%\^&*+-\|\/]{0,6})[3зс]([3зс\s\!@#\$%\^&*+-\|\/]{0,6})[дd]\w{0,10}|[сcs][уy]([уy\!@#\$%\^&*+-\|\/]{0,6})[4чkк]\w{1,3}|\w{0,4}[bб]([bб\s\!@#\$%\^&*+-\|\/]{0,6})[lл]([lл\s\!@#\$%\^&*+-\|\/]{0,6})[yя]\w{0,10}|\w{0,8}[её][bб][лске@eыиаa][наи@йвл]\w{0,8}|\w{0,4}[еe]([еe\s\!@#\$%\^&*+-\|\/]{0,6})[бb]([бb\s\!@#\$%\^&*+-\|\/]{0,6})[uу]([uу\s\!@#\$%\^&*+-\|\/]{0,6})[н4ч]\w{0,4}|\w{0,4}[еeё]([еeё\s\!@#\$%\^&*+-\|\/]{0,6})[бb]([бb\s\!@#\$%\^&*+-\|\/]{0,6})[нn]([нn\s\!@#\$%\^&*+-\|\/]{0,6})[уy]\w{0,4}|\w{0,4}[еe]([еe\s\!@#\$%\^&*+-\|\/]{0,6})[бb]([бb\s\!@#\$%\^&*+-\|\/]{0,6})[оoаa@]([оoаa@\s\!@#\$%\^&*+-\|\/]{0,6})[тnнt]\w{0,4}|\w{0,10}[ё]([ё\!@#\$%\^&*+-\|\/]{0,6})[б]\w{0,6}|\w{0,4}[pп]([pп\s\!@#\$%\^&*+-\|\/]{0,6})[иeеi]([иeеi\s\!@#\$%\^&*+-\|\/]{0,6})[дd]([дd\s\!@#\$%\^&*+-\|\/]{0,6})[oоаa@еeиi]([oоаa@еeиi\s\!@#\$%\^&*+-\|\/]{0,6})[рr]\w{0,12}/i;
+            return word.test(this.text) ? true : false;
+        },
+        proxy: function proxy() {
+            if (this.added) {
+                this.addition = true;
+            } else if (this.isDirt() && !this.dirt.ignore) {
+                this.dirt.show = true;
+            } else {
+                this.send();
+            }
         },
         loaded: function loaded() {
             this.loading = false;
@@ -2072,6 +2099,17 @@ var QuickMessage = Vue.component('quick-message', {
                 this.$router.push('wizard/city');
             } else if (!this.user.age) {
                 this.$router.push('settings/account');
+            }
+        },
+        proxy: function proxy() {
+            if (this.added) {
+                this.addition = true;
+            } else if (this.information && !this.interests.ignore) {
+                this.interests.show = true;
+            } else if (this.isDirt() && !this.dirt.ignore) {
+                this.dirt.show = true;
+            } else {
+                this.send();
             }
         }
     }
@@ -2210,6 +2248,12 @@ Vue.component('remove-contact', {
     },
     template: '#remove-confirm'
 });
+Vue.component('info-dialog', {
+    props: ['text'],
+    extends: ModalDialog,
+    template: '#info-dialog'
+});
+
 var SexConfirm = Vue.component('sex-confirm', (_Vue$component = {
     extends: ModalDialog,
     props: ['show'],

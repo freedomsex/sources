@@ -26,7 +26,7 @@
           <div class="dialog-form">
             <div class="dialog-form__textarea">
               <textarea class="dialog-form__message-text" rows="1" placeholder="Введите текст" v-model="text" v-resized
-                @keyup.ctrl.enter.prevent="send()"></textarea>
+                @keyup.ctrl.enter.prevent="proxy()"></textarea>
             </div>
             <div class="dialog-form__button-paste" @click="modals.cliche = true" v-if="!reply">
               <i class="material-icons">&#xE02F;</i>
@@ -40,7 +40,7 @@
 
 
         <div class="modal-dialog__options">
-          <button class="btn btn-primary" @click="added ? (addition = true) : send()">
+          <button class="btn btn-primary" @click="proxy()">
             <i class="material-icons">&#xE163;</i>
             Отправить
           </button>
@@ -70,8 +70,21 @@
     <contact-wizard v-if="addition"
       :humanCity = "human.city"
       :humanAge = "human.age"
-      @approve="send()"
+      @approve="proxy()"
       @close="addition = false"/>
+
+
+    <info-dialog v-if="interests.show && !interests.ignore"
+      text="Учитывайте интересы собеседника. Потребуется подтверждение, если не совпадает желаемый город или возраст.
+      Вирт интересен далеко не всем."
+      @close="interests.ignore = true"/>
+
+    <info-dialog v-if="dirt.show && !dirt.ignore"
+      text="Оскорбления в любой форме запрещены. На вас поступят жалобы,
+      что грозит блокировкой анкеты. Возможно потребуется подтверждение."
+      @close="dirt.ignore = true"/>
+
+
   </div>
 </script>
 

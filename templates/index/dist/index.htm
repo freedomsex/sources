@@ -17,7 +17,7 @@
     
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1521318903297">
+<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1521372945697">
 
   <script type="text/javascript">  
     function get_cookie ( cookie_name )
@@ -1206,7 +1206,7 @@
           <div class="dialog-form">
             <div class="dialog-form__textarea">
               <textarea class="dialog-form__message-text" rows="1" placeholder="Введите текст" v-model="text" v-resized
-                @keyup.ctrl.enter.prevent="send()"></textarea>
+                @keyup.ctrl.enter.prevent="proxy()"></textarea>
             </div>
             <div class="dialog-form__button-paste" @click="modals.cliche = true" v-if="!reply">
               <i class="material-icons">&#xE02F;</i>
@@ -1220,7 +1220,7 @@
 
 
         <div class="modal-dialog__options">
-          <button class="btn btn-primary" @click="added ? (addition = true) : send()">
+          <button class="btn btn-primary" @click="proxy()">
             <i class="material-icons">&#xE163;</i>
             Отправить
           </button>
@@ -1250,8 +1250,21 @@
     <contact-wizard v-if="addition"
       :humanCity = "human.city"
       :humanAge = "human.age"
-      @approve="send()"
+      @approve="proxy()"
       @close="addition = false"/>
+
+
+    <info-dialog v-if="interests.show && !interests.ignore"
+      text="Учитывайте интересы собеседника. Потребуется подтверждение, если не совпадает желаемый город или возраст.
+      Вирт интересен далеко не всем."
+      @close="interests.ignore = true"/>
+
+    <info-dialog v-if="dirt.show && !dirt.ignore"
+      text="Оскорбления в любой форме запрещены. На вас поступят жалобы,
+      что грозит блокировкой анкеты. Возможно потребуется подтверждение."
+      @close="dirt.ignore = true"/>
+
+
   </div>
 </script>
 
@@ -1297,6 +1310,23 @@
         <button class="btn btn-primary" @click="bun()" v-if="show == 'doit'">{{action}}</button>
         <button class="btn btn-danger" @click="remove()" v-else>{{action}}</button>
         <button class="btn btn-default" @click="close()">Отмена</button>
+      </div>
+    </div>
+  </modal-dialog>
+</script>
+
+
+
+<script type="text/x-template" id="info-dialog">
+  <modal-dialog @close="close()">
+    <div class="modal-dialog__wrapper">
+      <div class="modal-dialog__body">
+        {{text}}
+      </div>
+      <div class="modal-dialog__footer">
+        <button class="btn btn-primary btn-flat" @click="close()">
+          Хорошо
+        </button>
       </div>
     </div>
   </modal-dialog>
@@ -2291,7 +2321,7 @@
 
  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/static/js/core.min.js?rel=1521318903294"></script>
+<script type="text/javascript" src="/static/js/core.min.js?rel=1521372945695"></script>
 
 <script src='https://www.google.com/recaptcha/api.js?render=explicit' async defer></script>
 
