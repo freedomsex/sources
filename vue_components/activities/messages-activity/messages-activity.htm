@@ -1,53 +1,56 @@
 
 <script type="text/x-template" id="messages-activity">
-  <default-activity @close="close">
-    <span slot="caption">{{caption}}</span>
+  <div>
+    <default-activity @close="close">
+      <span slot="caption">{{caption}}</span>
 
-    <div class="menu-user__navbar-right" slot="option">
-      <div class="navbar-button">
-        <i class="material-icons" @click="videochat">&#xE04B;</i>
+      <div class="menu-user__navbar-right" slot="option">
+        <div class="navbar-button">
+          <i class="material-icons" @click="videochat">&#xE04B;</i>
+        </div>
+        <div class="navbar-button">
+          <i class="material-icons" @click="incoming()">&#xE3B6;</i>
+        </div>
       </div>
-      <div class="navbar-button">
-        <i class="material-icons" @click="incoming()">&#xE3B6;</i>
-      </div>
-    </div>
 
-    <div class="message-dialog" key="humanId">
-      <div id="dialog-history" class="message-dialog__history">
-        <message-list :humanId="humanId" ref="messages" @attention="attention"></message-list>
-      </div>
-      <div class="messages__alert" v-show="alert" @click.self="alert = false">
-        Игнорируйте номера телефонов, ссылки и мессенджеры. Наказывайте мошенников. Узнайте о том, как избежать обмана.
-        <a href="/блог/как-не-попасть-на-уловки-мошенников/" target="_blank">Подробнее...</a>
-      </div>
-      <div class="message-dialog__tools">
-        <div class="send-form">
-          <div class="send-form__button-account" @click="account()">
-            <i class="material-icons">&#xE853;</i>
-          </div>
-          <div class="send-form__textarea">
-            <textarea class="send-form__message-text" v-model="message" v-resized
-             :disabled="process == true" :placeholder="process ? 'Отправляю...' : 'Введите текст'"
-             @keyup.ctrl.enter.prevent="sendMessage"></textarea>
-          </div>
-          <div class="send-form__button-send" @click="sendMessage" v-if="message">
-            <i class="material-icons">&#xE163;</i>
-          </div>
-          <div class="send-form__button-send" @click="uploads()" v-else>
-            <i class="material-icons">&#xE3B0;</i>
+      <div class="message-dialog" key="humanId">
+        <div id="dialog-history" class="message-dialog__history">
+          <message-list :humanId="humanId" ref="messages" @attention="attention"></message-list>
+        </div>
+        <div class="messages__alert" v-show="alert" @click.self="alert = false">
+          Игнорируйте номера телефонов, ссылки и мессенджеры. Наказывайте мошенников. Узнайте о том, как избежать обмана.
+          <a href="/блог/как-не-попасть-на-уловки-мошенников/" target="_blank">Подробнее...</a>
+        </div>
+        <div class="message-dialog__tools">
+          <div class="send-form">
+            <div class="send-form__button-account" @click="account()">
+              <i class="material-icons">&#xE853;</i>
+            </div>
+            <div class="send-form__textarea">
+              <textarea class="send-form__message-text" v-model="message" v-resized
+               :disabled="process == true" :placeholder="process ? 'Отправляю...' : 'Введите текст'"
+               @keyup.ctrl.enter.prevent="sendMessage"></textarea>
+            </div>
+            <div class="send-form__button-send" @click="sendMessage" v-if="message">
+              <i class="material-icons">&#xE163;</i>
+            </div>
+            <div class="send-form__button-send" @click="uploads()" v-else>
+              <i class="material-icons">&#xE3B0;</i>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <!-- <incoming-photo :humanId="incoming"  v-if="incoming" @close="incoming = false"/> -->
-    <photo-send v-if="preview" :photo="photo" :options="true" @send="sendMessage" @close="preview = false" @removed="photoIsRemoved = true"/>
-    <captcha-dialog v-if="captcha" @close="close" @cancel="cancel" @send="setCode"/>
+      <!-- <incoming-photo :humanId="incoming"  v-if="incoming" @close="incoming = false"/> -->
+      <photo-send v-if="preview" :photo="photo" :options="true" @send="sendMessage" @close="preview = false" @removed="photoIsRemoved = true"/>
+      <captcha-dialog v-if="captcha" @close="close" @cancel="cancel" @send="setCode"/>
 
-    <toast v-if="photoIsRemoved" @close="photoIsRemoved = false">Фото удалено</toast>
+      <toast v-if="photoIsRemoved" @close="photoIsRemoved = false">Фото удалено</toast>
 
-    <router-view @select="select"></router-view>
+      <router-view @select="select"></router-view>
+
+    </default-activity>
 
     <recaptcha ref="recaptcha" @cancel="close"></recaptcha>
-  </default-activity>
+  </div>
 </script>
 

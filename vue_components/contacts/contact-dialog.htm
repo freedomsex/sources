@@ -1,5 +1,6 @@
 
 <script type="text/x-template" id="initial-dialog">
+<div>
   <default-activity @close="close">
     <span slot="caption">Знакомства</span>
 
@@ -40,12 +41,14 @@
     <settings-inform v-if="modals.acceptSettings"
      @close="modals.acceptSettings = false"
      @confirm="accept"/>
-    <router-view @sended="splice"></router-view>
   </default-activity>
+  <router-view @sended="splice"></router-view>
+</div>
 </script>
 
 
 <script type="text/x-template" id="intimate-dialog">
+<div>
   <default-activity @close="close">
     <span slot="caption">Общение</span>
 
@@ -82,4 +85,5 @@
 
     <router-view @sended="splice"></router-view>
   </default-activity>
+</div>
 </script>
