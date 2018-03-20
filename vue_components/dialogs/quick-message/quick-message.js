@@ -190,20 +190,20 @@ const QuickMessage = Vue.component('quick-message', {
         reply: () => false,
         information() {
             var result = '';
-            var who = {1: 'парни', 2: 'девушки'};
+            var who = {2: 'парни', 1: 'девушки'};
             if (this.human.close && this.user.city && this.user.city != this.human.city) {
                 result = 'Мне интересно общение только в моём городе';
             }
-            if (this.human.who && this.human.who != this.user.sex) {
-                result = 'Мне интересны только ' + who[this.human.who];
+            if (this.human.sex && this.human.sex == this.user.sex) {
+                result = 'Мне интересны только ' + who[this.human.sex];
             } else
-            if (this.human.who) {
+            if (this.human.sex) {
                 var age = this.user.age;
                 if (this.human.up && age && this.human.up > age) {
-                    result = 'Мне интересны ' + who[this.human.who] + ' в возрасте от ' + this.human.up + ' лет ';
+                    result = 'Мне интересны ' + who[this.human.sex] + ' в возрасте от ' + this.human.up + ' лет ';
                 }
                 if (this.human.to && age && this.human.to < age) {
-                    result = 'Мне интересны ' + who[this.human.who] + ' в возрасте до ' + this.human.to + ' лет ';
+                    result = 'Мне интересны ' + who[this.human.sex] + ' в возрасте до ' + this.human.to + ' лет ';
                 }
             }
             if (!this.user.age) {

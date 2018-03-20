@@ -1745,6 +1745,31 @@ Vue.component('captcha-dialog', {
     template: '#captcha-dialog',
 });
 
+
+const ContactWizard = Vue.component('contact-wizard', {
+    extends: AccountSettings,
+    props: ['humanCity', 'humanAge'],
+    created() {
+        if (!this.selectCity && this.humanCity) {
+            this.selectCity = this.humanCity;
+        }
+        if (!this.selectAge && this.humanAge) {
+            this.selectAge = this.humanAge;
+        }
+    },
+    methods: {
+        approve() {
+            this.save();
+            this.$emit('approve');
+            this.$emit('close');
+        },
+        close() {
+            this.$emit('close');
+        }
+    },
+    template: '#contact-wizard',
+});
+
 Vue.component('email-sended', {
     template: '#email-sended'
 });
@@ -2030,20 +2055,20 @@ const QuickMessage = Vue.component('quick-message', {
         reply: () => false,
         information() {
             var result = '';
-            var who = {1: 'парни', 2: 'девушки'};
+            var who = {2: 'парни', 1: 'девушки'};
             if (this.human.close && this.user.city && this.user.city != this.human.city) {
                 result = 'Мне интересно общение только в моём городе';
             }
-            if (this.human.who && this.human.who != this.user.sex) {
-                result = 'Мне интересны только ' + who[this.human.who];
+            if (this.human.sex && this.human.sex == this.user.sex) {
+                result = 'Мне интересны только ' + who[this.human.sex];
             } else
-            if (this.human.who) {
+            if (this.human.sex) {
                 var age = this.user.age;
                 if (this.human.up && age && this.human.up > age) {
-                    result = 'Мне интересны ' + who[this.human.who] + ' в возрасте от ' + this.human.up + ' лет ';
+                    result = 'Мне интересны ' + who[this.human.sex] + ' в возрасте от ' + this.human.up + ' лет ';
                 }
                 if (this.human.to && age && this.human.to < age) {
-                    result = 'Мне интересны ' + who[this.human.who] + ' в возрасте до ' + this.human.to + ' лет ';
+                    result = 'Мне интересны ' + who[this.human.sex] + ' в возрасте до ' + this.human.to + ' лет ';
                 }
             }
             if (!this.user.age) {
@@ -3132,31 +3157,6 @@ const CityWizard = Vue.component('city-wizard', {
         },
     },
     template: '#city-wizard',
-});
-
-
-const ContactWizard = Vue.component('contact-wizard', {
-    extends: AccountSettings,
-    props: ['humanCity', 'humanAge'],
-    created() {
-        if (!this.selectCity && this.humanCity) {
-            this.selectCity = this.humanCity;
-        }
-        if (!this.selectAge && this.humanAge) {
-            this.selectAge = this.humanAge;
-        }
-    },
-    methods: {
-        approve() {
-            this.save();
-            this.$emit('approve');
-            this.$emit('close');
-        },
-        close() {
-            this.$emit('close');
-        }
-    },
-    template: '#contact-wizard',
 });
 
 
