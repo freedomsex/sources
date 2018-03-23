@@ -4035,6 +4035,13 @@ Vue.component('suggest-input', {
     computed: {
         suggested: function suggested() {
             return this.items.length;
+        },
+        hint: function hint() {
+            if (this.query && !this.items.length) {
+                return 'Выберите из списка...';
+            } else {
+                return 'Введите название';
+            }
         }
     },
     methods: {
@@ -4044,11 +4051,21 @@ Vue.component('suggest-input', {
             api.user.get({ q: this.query }, 'tag/suggest').then(function (response) {
                 _this57.loaded(response.data);
             });
+            setTimeout(function () {
+                _this57.toSlow = true;
+            }, second * 1000);
         },
         reset: function reset() {
             this.query = '';
             this.items = [];
         },
+        clear: function clear() {
+            this.items = [];
+        },
+
+        suggest: _.debounce(function () {
+            this.load();
+        }, 500),
         select: function select(item) {
             this.query = item;
             this.$emit('select', item);
@@ -4059,6 +4076,9 @@ Vue.component('suggest-input', {
                 this.items = data;
                 console.log('loaded', data);
             } else {
+                this.clear();
+            }
+            if (!this.query) {
                 this.reset();
             }
         }

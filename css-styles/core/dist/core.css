@@ -3128,6 +3128,10 @@ a.name:hover {
 .slider-vertical__link.active {
   background: #333333;
 }
+.suggest-input__hint {
+  color: #666666;
+  margin: 5px 0 5px;
+}
 .suggest-input .dropdown-menu {
   display: inline-block;
 }
