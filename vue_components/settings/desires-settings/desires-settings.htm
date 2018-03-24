@@ -3,7 +3,7 @@
   <closed-activity @close="close">
     <div class="activity-section">
       <div class="activity-section__title">Желания и фантазии</div>
-      <suggest-input @select="add" :disabled="process"/>
+      <suggest-input @select="add" :tags="tags" :disabled="process"/>
     </div>
 
     <div class="activity-section">

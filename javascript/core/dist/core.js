@@ -4023,25 +4023,19 @@ Vue.component('slider-vertical', {
     }
 });
 Vue.component('suggest-input', {
-    props: ['url', 'disabled'],
+    props: ['url', 'disabled', 'tags'],
     data: function data() {
         return {
             query: '',
             items: [],
-            enable: true
+            enable: true,
+            init: true
         };
     },
 
     computed: {
         suggested: function suggested() {
             return this.items.length;
-        },
-        hint: function hint() {
-            if (this.query && !this.items.length) {
-                return 'Выберите из списка...';
-            } else {
-                return 'Введите название';
-            }
         }
     },
     methods: {
@@ -4051,9 +4045,6 @@ Vue.component('suggest-input', {
             api.user.get({ q: this.query }, 'tag/suggest').then(function (response) {
                 _this57.loaded(response.data);
             });
-            // setTimeout(() => {
-            //     this.toSlow = true
-            // }, second * 1000);
         },
         reset: function reset() {
             this.query = '';
@@ -4064,23 +4055,24 @@ Vue.component('suggest-input', {
         },
 
         suggest: _.debounce(function () {
+            this.init = false;
             this.load();
         }, 500),
         select: function select(item) {
-            this.query = item;
-            this.$emit('select', item);
+            if (!this.saved(item)) {
+                this.$emit('select', item);
+            }
             this.reset();
         },
         loaded: function loaded(data) {
             if (data && data.length) {
                 this.items = data;
-                console.log('loaded', data);
             } else {
-                this.clear();
+                //this.clear();
             }
-            if (!this.query) {
-                this.reset();
-            }
+        },
+        saved: function saved(tag) {
+            return _.findWhere(this.tags, { tag: tag }) ? true : false;
         }
     },
     template: '#suggest-input'

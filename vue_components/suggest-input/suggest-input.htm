@@ -3,12 +3,17 @@
 <div>
   <div class="dropdown suggest-input form-inline">
     <input class="form-control" type="text" autocomplete="off" v-model="query" :disabled="disabled"
-     @focus="load" @keyup="suggest" placeholder="Ваше желание">
+     @focus="load" @keyup="suggest" placeholder="Ваше текст">
 
     <ul class="dropdown-menu" v-show="suggested">
-      <li v-for="(item, index) in items" :key="index" @click="select(item)"><a href="#" @click.prevent>{{item}}</a></li>
+      <li v-for="(item, index) in items"
+       :key="index" :class="{disabled: saved(item)}"
+       @click="select(item)">
+        <a href="#" @click.prevent>
+          {{item}}
+        </a>
+      </li>
     </ul>
   </div>
-  <div class="suggest-input__hint">{{hint}}</div>
 </div>
 </script>

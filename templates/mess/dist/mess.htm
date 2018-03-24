@@ -14,7 +14,7 @@
     
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1521850021501">
+<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1521886954425">
 </head>
 <body>
 <div id="app">
@@ -1715,7 +1715,7 @@
   <closed-activity @close="close">
     <div class="activity-section">
       <div class="activity-section__title">Желания и фантазии</div>
-      <suggest-input @select="add" :disabled="process"/>
+      <suggest-input @select="add" :tags="tags" :disabled="process"/>
     </div>
 
     <div class="activity-section">
@@ -2199,13 +2199,18 @@
 <div>
   <div class="dropdown suggest-input form-inline">
     <input class="form-control" type="text" autocomplete="off" v-model="query" :disabled="disabled"
-     @focus="load" @keyup="suggest" placeholder="Ваше желание">
+     @focus="load" @keyup="suggest" placeholder="Ваше текст">
 
     <ul class="dropdown-menu" v-show="suggested">
-      <li v-for="(item, index) in items" :key="index" @click="select(item)"><a href="#" @click.prevent>{{item}}</a></li>
+      <li v-for="(item, index) in items"
+       :key="index" :class="{disabled: saved(item)}"
+       @click="select(item)">
+        <a href="#" @click.prevent>
+          {{item}}
+        </a>
+      </li>
     </ul>
   </div>
-  <div class="suggest-input__hint">{{hint}}</div>
 </div>
 </script>
 <script type="text/x-template" id="auth-board">
@@ -2331,7 +2336,7 @@
 
  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/static/js/core.min.js?rel=1521850021499"></script>
+<script type="text/javascript" src="/static/js/core.min.js?rel=1521886954423"></script>
 
 <script src='https://www.google.com/recaptcha/api.js?render=explicit' async defer></script>
 
