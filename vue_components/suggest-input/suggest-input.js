@@ -24,9 +24,9 @@ Vue.component('suggest-input', {
             api.user.get({q: this.query}, 'tag/suggest').then((response) => {
                 this.loaded(response.data);
             });
-            setTimeout(() => {
-                this.toSlow = true
-            }, second * 1000);
+            // setTimeout(() => {
+            //     this.toSlow = true
+            // }, second * 1000);
         },
         reset() {
             this.query = '';

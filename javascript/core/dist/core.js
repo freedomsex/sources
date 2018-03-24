@@ -4051,9 +4051,9 @@ Vue.component('suggest-input', {
             api.user.get({ q: this.query }, 'tag/suggest').then(function (response) {
                 _this57.loaded(response.data);
             });
-            setTimeout(function () {
-                _this57.toSlow = true;
-            }, second * 1000);
+            // setTimeout(() => {
+            //     this.toSlow = true
+            // }, second * 1000);
         },
         reset: function reset() {
             this.query = '';
