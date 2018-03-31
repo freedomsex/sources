@@ -11,6 +11,8 @@ var ContentActivity = Vue.component('content-activity', {
             edit: null,
             loader: true,
             error: false,
+            galery: [],
+            preview: null,
         }
     },
     methods: {
@@ -28,13 +30,17 @@ var ContentActivity = Vue.component('content-activity', {
             } else {
                 this.text = data.content;
                 this.file = data.file;
-                this.more = data.more ? data.more : null;
-                this.edit = data.edit ? data.edit : null;
+                this.more = data.more || null;
+                this.edit = data.edit || null;
+                this.galery = data.galery || null;
             }
         },
         failed() {
             this.error = true;
-        }
+        },
+        show(index) {
+            this.preview = this.galery[index];
+        },
     },
     template: '#content-activity',
 });

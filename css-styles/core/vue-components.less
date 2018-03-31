@@ -917,6 +917,68 @@ margin: 0 @indent-md @indent-md;
             margin-top: @indent-xs;
         }
     }
+
+    .image-galery {
+        margin: 10px -5px 15px;
+        font-size: 0;
+        &__item {
+            width: 175px;
+            height: 175px;
+                @media (max-width: 500px) {
+                    @indent: (20*2 + 2 - 5*2) / 3;
+                    width:  ~"calc(33.33vmin - @{indent}px)";
+                    height:  ~"calc(33.33vmin - @{indent}px)";
+                }
+                @media (max-width: 735px) and (min-width: 500px) {
+                    @indent: (20*2 + 2 - 5*2) / 4;
+                    width:  ~"calc(25vmin - @{indent}px)";
+                    height:  ~"calc(25vmin - @{indent}px)";
+                }
+            border: 5px solid @white;
+            position: relative;
+            display: inline-block;
+            background-size: cover;
+            background-position: center;
+        }
+    }
+
+
+    .content-reviews {
+        margin: 20px 0 20px;
+
+        &__caption {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding: 10px 0px;
+            border-bottom: 1px solid @gray;
+        }
+
+        &__item {
+            border-radius: 0px;
+            border-top: 0px solid #cccccc;
+            margin: 15px 0 0 0px;
+            text-align: left;
+            font-size: 16px;
+
+            &.man b {
+                border-top: 0px solid #669933;
+                color: #669933;
+            }
+            &.woman b {
+                border-top: 0px solid #c082c0;
+                color: #c082c0;
+            }
+            .reply {
+                background: @light;
+                border-left: 3px solid @gray-dark;
+                margin: 10px 10px 0px;
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+        }
+    }
+
 }
  .content-modal {
     &__mask {

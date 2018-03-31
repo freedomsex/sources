@@ -740,6 +740,15 @@
       <div class="activity__content">
         <div class="activity__loader" v-show="loader && !error">Загружаю...</div>
         <div v-html="text"></div>
+
+        <div>
+          <div class="image-galery" v-if="galery.length">
+            <span class="image-galery__item" :style="{backgroundImage: 'url(' + item + ')'}" v-for="(item, index) in galery" @click="show(index)"></span>
+
+            <photo-send v-if="preview" :photo="{photo: preview}" @close="preview = null"/>
+          </div>
+        </div>
+
         <div>
           <a class="btn btn-primary" :href="more" target="_blank" v-show="more">
             <span aria-hidden="true" class="glyphicon glyphicon-file"></span>
@@ -750,6 +759,20 @@
             Редактировать
           </a>
         </div>
+
+        <div class="content-reviews" v-if="reviews.length">
+          <div class="content-reviews__caption">Отзывы</div>
+          <div class="content-reviews__item" :class="item.sex" v-for="(item, index) in reviews">
+            <b>{{item.name}}:</b>
+            {{item.text}}
+            <div class="reply" v-show="item.reply">{{item.reply}}</div>
+          </div>
+        </div>
+
+        <div>
+          <button class="btn btn-default" @click="$router.push('/settings/reviews')"> Оставить отзыв </button>
+        </div>
+
       </div>
     </div>
   </div>
@@ -1223,7 +1246,7 @@
 
 
 <script type="text/x-template" id="photo-view">
-  <div class="photo-view" :style="{ backgroundImage: 'url('+thumb+')' }">
+  <div class="photo-view" :style="background">
 
     <modal-dialog @close="close" v-if="!accept">
       <div class="modal-dialog__wrapper">
@@ -1290,13 +1313,16 @@
         Вашу анкету находят только те, кому безразличен возраст. Таких мало, и вам очень редко пишут.
       </div>
 
-      <div class="search-list__next">
+      <div class="search-list__next" v-show="more">
         <span class="btn btn-default btn-sm" @click="loadNext" v-show="more && !loader" :disabled="!response">
           Следующие
         </span>
         <span class="btn btn-default btn-sm" v-show="loader" disabled>
           Загружаю...
         </span>
+
+        <span class="btn btn-link btn-sm" @click="$router.push('/help/how-it-works')">Узнать больше...</span>
+
       </div>
     </div>
 
@@ -1821,9 +1847,7 @@
 
     <div class="activity-section">
         <span class="activity-section__link" @click="$router.push('/help/heterosexual')">Парни находят девушек</span>
-        <a class="activity-section__link" href="http://freedomsex.me/блог/как-найти-девушку-или-парня-для-секса/" target="_blank">
-          Больше возможностей
-        </a>
+        <span class="activity-section__link" @click="$router.push('/help/how-it-works'>Больше возможностей</span>
     </div>
 
   </closed-activity>

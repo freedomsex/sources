@@ -11,13 +11,16 @@
         Вашу анкету находят только те, кому безразличен возраст. Таких мало, и вам очень редко пишут.
       </div>
 
-      <div class="search-list__next">
+      <div class="search-list__next" v-show="more">
         <span class="btn btn-default btn-sm" @click="loadNext" v-show="more && !loader" :disabled="!response">
           Следующие
         </span>
         <span class="btn btn-default btn-sm" v-show="loader" disabled>
           Загружаю...
         </span>
+
+        <span class="btn btn-link btn-sm" @click="$router.push('/help/how-it-works')">Узнать больше...</span>
+
       </div>
     </div>
 

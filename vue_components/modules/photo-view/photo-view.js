@@ -18,7 +18,10 @@ Vue.component('photo-view', {
     computed: {
         accept() {
             return (this.$store.state.accepts.photo || this.bypass) ? true : false;
-        }
+        },
+        background() {
+            return this.thumb ? {backgroundImage: `'url(${this.thumb})'`} : null;
+        },
     },
     template: '#photo-view'
 });

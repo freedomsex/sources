@@ -1,6 +1,6 @@
 
 <script type="text/x-template" id="photo-view">
-  <div class="photo-view" :style="{ backgroundImage: 'url('+thumb+')' }">
+  <div class="photo-view" :style="background">
 
     <modal-dialog @close="close" v-if="!accept">
       <div class="modal-dialog__wrapper">
