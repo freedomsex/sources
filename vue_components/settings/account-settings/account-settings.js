@@ -56,6 +56,7 @@ const AccountSettings = Vue.component('account-settings', {
             }
             if (this.selectCity != this.city) {
                 this.$store.dispatch('SAVE_CITY', this.selectCity);
+                this.$root.reload();
             }
         },
         saveAge() {

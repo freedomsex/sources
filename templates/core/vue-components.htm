@@ -1305,12 +1305,14 @@
     <div class="search-list">
       <search-item v-for="item in items" :human="item" :visited="old(item.id)" :gold="gold(item.tags)" :key="item.id" :compact="compact"/>
 
-      <div class="search-list__alert" v-if="!city" @click="$router.push('wizard/city')">
-        Получайте в десять раз больше новых знакомств. Укажите <span class="link_dashed">ваш город</span>  в анкете. Вы редко появляетесь в результатах поиска. Ведь все ищут по Городу, а он у вас не указан.
-      </div>
-      <div class="search-list__alert" v-else-if="!age" @click="$router.push('settings/account')">
-        Укажите <span class="link_dashed">возраст в анкете</span> и получайте больше интересных знакомств.
-        Вашу анкету находят только те, кому безразличен возраст. Таких мало, и вам очень редко пишут.
+      <div v-if="userId">
+        <div class="search-list__alert" v-if="!city" @click="$router.push('wizard/city')">
+          Получайте в десять раз больше новых знакомств. Укажите <span class="link_dashed">ваш город</span>  в анкете. Вы редко появляетесь в результатах поиска. Ведь все ищут по Городу, а он у вас не указан.
+        </div>
+        <div class="search-list__alert" v-else-if="!age" @click="$router.push('settings/account')">
+          Укажите <span class="link_dashed">возраст в анкете</span> и получайте больше интересных знакомств.
+          Вашу анкету находят только те, кому безразличен возраст. Таких мало, и вам очень редко пишут.
+        </div>
       </div>
 
       <div class="search-list__next" v-show="more">
@@ -1322,7 +1324,6 @@
         </span>
 
         <span class="btn btn-link btn-sm" @click="$router.push('/help/how-it-works')">Узнать больше...</span>
-
       </div>
     </div>
 

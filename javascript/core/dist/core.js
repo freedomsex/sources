@@ -2157,10 +2157,10 @@ var QuickMessage = Vue.component('quick-message', {
                     result = 'Мне интересны ' + who[this.human.sex] + ' в возрасте до ' + this.human.to + ' лет ';
                 }
             }
-            if (!this.user.age) {
+            if ((this.human.up || this.human.to) && !this.user.age) {
                 result = 'Укажите ваш возраст в анкете, для меня это важно';
             }
-            if (!this.user.city) {
+            if (this.human.close && !this.user.city) {
                 result = 'Укажите ваш город в анкете, для меня это важно';
             }
             return result;
@@ -2389,6 +2389,7 @@ var SexConfirm = Vue.component('sex-confirm', (_Vue$component = {
 
                     app.$refs['api-key'].load();
                 });
+                this.$root.reload();
                 this.$emit('select', this.show);
                 this.redirect();
             }
@@ -3052,6 +3053,9 @@ Vue.component('search-list', {
         },
         who: function who() {
             return defaultSettings.who || null;
+        },
+        userId: function userId() {
+            return this.$store.state.user.uid || 0;
         }
     },
     methods: {
@@ -3231,6 +3235,7 @@ var AccountSettings = Vue.component('account-settings', {
             }
             if (this.selectCity != this.city) {
                 this.$store.dispatch('SAVE_CITY', this.selectCity);
+                this.$root.reload();
             }
         },
         saveAge: function saveAge() {

@@ -17,7 +17,7 @@
     
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1522522001434">
+<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1522586011654">
 
   <script type="text/javascript">  
     function get_cookie ( cookie_name )
@@ -1564,12 +1564,14 @@
     <div class="search-list">
       <search-item v-for="item in items" :human="item" :visited="old(item.id)" :gold="gold(item.tags)" :key="item.id" :compact="compact"/>
 
-      <div class="search-list__alert" v-if="!city" @click="$router.push('wizard/city')">
-        Получайте в десять раз больше новых знакомств. Укажите <span class="link_dashed">ваш город</span>  в анкете. Вы редко появляетесь в результатах поиска. Ведь все ищут по Городу, а он у вас не указан.
-      </div>
-      <div class="search-list__alert" v-else-if="!age" @click="$router.push('settings/account')">
-        Укажите <span class="link_dashed">возраст в анкете</span> и получайте больше интересных знакомств.
-        Вашу анкету находят только те, кому безразличен возраст. Таких мало, и вам очень редко пишут.
+      <div v-if="userId">
+        <div class="search-list__alert" v-if="!city" @click="$router.push('wizard/city')">
+          Получайте в десять раз больше новых знакомств. Укажите <span class="link_dashed">ваш город</span>  в анкете. Вы редко появляетесь в результатах поиска. Ведь все ищут по Городу, а он у вас не указан.
+        </div>
+        <div class="search-list__alert" v-else-if="!age" @click="$router.push('settings/account')">
+          Укажите <span class="link_dashed">возраст в анкете</span> и получайте больше интересных знакомств.
+          Вашу анкету находят только те, кому безразличен возраст. Таких мало, и вам очень редко пишут.
+        </div>
       </div>
 
       <div class="search-list__next" v-show="more">
@@ -1581,7 +1583,6 @@
         </span>
 
         <span class="btn btn-link btn-sm" @click="$router.push('/help/how-it-works')">Узнать больше...</span>
-
       </div>
     </div>
 
@@ -2371,7 +2372,7 @@
 
  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/static/js/core.min.js?rel=1522522001431"></script>
+<script type="text/javascript" src="/static/js/core.min.js?rel=1522586011652"></script>
 
 <script src='https://www.google.com/recaptcha/api.js?render=explicit' async defer></script>
 

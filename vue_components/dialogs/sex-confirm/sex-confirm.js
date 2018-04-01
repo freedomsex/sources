@@ -61,6 +61,7 @@ const SexConfirm = Vue.component('sex-confirm', {
                 this.$store.dispatch('SAVE_SEX', {sex: this.sex, token}).then(({data}) => {
                     app.$refs['api-key'].load();
                 });
+                this.$root.reload();
                 this.$emit('select', this.show);
                 this.redirect();
             }

@@ -206,10 +206,10 @@ const QuickMessage = Vue.component('quick-message', {
                     result = 'Мне интересны ' + who[this.human.sex] + ' в возрасте до ' + this.human.to + ' лет ';
                 }
             }
-            if (!this.user.age) {
+            if ((this.human.up || this.human.to) && !this.user.age) {
                 result = 'Укажите ваш возраст в анкете, для меня это важно';
             }
-            if (!this.user.city) {
+            if (this.human.close && !this.user.city ) {
                 result = 'Укажите ваш город в анкете, для меня это важно';
             }
             return result;

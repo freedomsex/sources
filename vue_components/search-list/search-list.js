@@ -63,6 +63,9 @@ Vue.component('search-list', {
         who() {
             return defaultSettings.who || null;
         },
+        userId() {
+            return this.$store.state.user.uid || 0;
+        },
     },
     methods: {
         reload() {
