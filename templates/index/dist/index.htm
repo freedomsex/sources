@@ -17,7 +17,7 @@
     
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1522586011654">
+<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1522587728218">
 
   <script type="text/javascript">  
     function get_cookie ( cookie_name )
@@ -1021,17 +1021,20 @@
           </a>
         </div>
 
-        <div class="content-reviews" v-if="reviews.length">
-          <div class="content-reviews__caption">Отзывы</div>
-          <div class="content-reviews__item" :class="item.sex" v-for="(item, index) in reviews">
-            <b>{{item.name}}:</b>
-            {{item.text}}
-            <div class="reply" v-show="item.reply">{{item.reply}}</div>
+        <div v-if="enableReview">
+          <div class="content-reviews" v-if="reviews.length">
+            <div class="content-reviews__caption">Отзывы</div>
+            <div class="content-reviews__item" :class="item.sex" v-for="(item, index) in reviews">
+              <b>{{item.name}}:</b>
+              {{item.text}}
+              <div class="reply" v-show="item.reply">{{item.reply}}</div>
+            </div>
           </div>
-        </div>
 
-        <div>
-          <button class="btn btn-default" @click="$router.push('/settings/reviews')"> Оставить отзыв </button>
+          <div>
+            <button class="btn btn-default" v-if="0" @click=""> Следующие </button>
+            <button class="btn btn-default" @click="$router.push('/settings/reviews')"> Оставить отзыв </button>
+          </div>
         </div>
 
       </div>
@@ -2372,7 +2375,7 @@
 
  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/static/js/core.min.js?rel=1522586011652"></script>
+<script type="text/javascript" src="/static/js/core.min.js?rel=1522587728215"></script>
 
 <script src='https://www.google.com/recaptcha/api.js?render=explicit' async defer></script>
 

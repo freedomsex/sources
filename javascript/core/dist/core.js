@@ -1574,7 +1574,11 @@ var ContentActivity = Vue.component('content-activity', {
             loader: true,
             error: false,
             galery: [],
-            preview: null
+            preview: null,
+
+            enableReview: false,
+            reviews: [],
+            batch: 7
         };
     },
 
@@ -1599,7 +1603,7 @@ var ContentActivity = Vue.component('content-activity', {
                 this.file = data.file;
                 this.more = data.more || null;
                 this.edit = data.edit || null;
-                this.galery = data.galery || null;
+                this.galery = data.galery || [];
             }
         },
         failed: function failed() {
@@ -1653,7 +1657,7 @@ var HelpContentPage = Vue.component('help-page', {
     extends: ContentActivity,
     data: function data() {
         return {
-            reviews: []
+            enableReview: true
         };
     },
     mounted: function mounted() {

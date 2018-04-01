@@ -760,17 +760,20 @@
           </a>
         </div>
 
-        <div class="content-reviews" v-if="reviews.length">
-          <div class="content-reviews__caption">Отзывы</div>
-          <div class="content-reviews__item" :class="item.sex" v-for="(item, index) in reviews">
-            <b>{{item.name}}:</b>
-            {{item.text}}
-            <div class="reply" v-show="item.reply">{{item.reply}}</div>
+        <div v-if="enableReview">
+          <div class="content-reviews" v-if="reviews.length">
+            <div class="content-reviews__caption">Отзывы</div>
+            <div class="content-reviews__item" :class="item.sex" v-for="(item, index) in reviews">
+              <b>{{item.name}}:</b>
+              {{item.text}}
+              <div class="reply" v-show="item.reply">{{item.reply}}</div>
+            </div>
           </div>
-        </div>
 
-        <div>
-          <button class="btn btn-default" @click="$router.push('/settings/reviews')"> Оставить отзыв </button>
+          <div>
+            <button class="btn btn-default" v-if="0" @click=""> Следующие </button>
+            <button class="btn btn-default" @click="$router.push('/settings/reviews')"> Оставить отзыв </button>
+          </div>
         </div>
 
       </div>

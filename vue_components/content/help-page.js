@@ -3,7 +3,7 @@ var HelpContentPage = Vue.component('help-page', {
     extends: ContentActivity,
     data() {
         return {
-            reviews: [],
+            enableReview: true,
         }
     },
     mounted() {

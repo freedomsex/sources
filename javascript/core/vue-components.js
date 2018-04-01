@@ -1315,6 +1315,10 @@ var ContentActivity = Vue.component('content-activity', {
             error: false,
             galery: [],
             preview: null,
+
+            enableReview: false,
+            reviews: [],
+            batch: 7,
         }
     },
     methods: {
@@ -1334,7 +1338,7 @@ var ContentActivity = Vue.component('content-activity', {
                 this.file = data.file;
                 this.more = data.more || null;
                 this.edit = data.edit || null;
-                this.galery = data.galery || null;
+                this.galery = data.galery || [];
             }
         },
         failed() {
@@ -1384,7 +1388,7 @@ var HelpContentPage = Vue.component('help-page', {
     extends: ContentActivity,
     data() {
         return {
-            reviews: [],
+            enableReview: true,
         }
     },
     mounted() {
