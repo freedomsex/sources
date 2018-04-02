@@ -922,15 +922,15 @@ margin: 0 @indent-md @indent-md;
         margin: 20px 0px 20px;
         font-size: 0;
         &__item {
-            width: 175px;
-            height: 175px;
+            width: 170px;
+            height: 170px;
             // 20*2 от края, 2*4 между, 2 костыль
                 @media (max-width: 500px) {
                     @indent: (20*2 + 2*4 + 2) / 3;
                     width:  ~"calc(33.33vmin - @{indent}px)";
                     height:  ~"calc(33.33vmin - @{indent}px)";
                 }
-                @media (max-width: 735px) and (min-width: 500px) {
+                @media (max-width: 700px) and (min-width: 500px) {
                     @indent: (20*2 + 2*4 + 2) / 4;
                     width:  ~"calc(25vmin - @{indent}px)";
                     height:  ~"calc(25vmin - @{indent}px)";

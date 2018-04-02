@@ -2089,8 +2089,8 @@ a.name:hover {
   font-size: 0;
 }
 .content-activity .image-galery__item {
-  width: 175px;
-  height: 175px;
+  width: 170px;
+  height: 170px;
   border: 5px solid #ffffff;
   position: relative;
   display: inline-block;
@@ -2105,7 +2105,7 @@ a.name:hover {
     height: calc(33.33vmin - 16.666666666666668px);
   }
 }
-@media (max-width: 735px) and (min-width: 500px) {
+@media (max-width: 700px) and (min-width: 500px) {
   .content-activity .image-galery__item {
     width: calc(25vmin - 12.5px);
     height: calc(25vmin - 12.5px);
