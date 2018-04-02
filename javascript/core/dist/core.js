@@ -2152,9 +2152,6 @@ var QuickMessage = Vue.component('quick-message', {
         information: function information() {
             var result = '';
             var who = { 2: 'парни', 1: 'девушки' };
-            if (this.human.close && this.user.city && this.user.city != this.human.city) {
-                result = 'Мне интересно общение только в моём городе';
-            }
             if (this.human.sex && this.human.sex == this.user.sex) {
                 result = 'Мне интересны только ' + who[this.human.sex];
             } else if (this.human.sex) {
@@ -2168,6 +2165,9 @@ var QuickMessage = Vue.component('quick-message', {
             }
             if ((this.human.up || this.human.to) && !this.user.age) {
                 result = 'Укажите ваш возраст в анкете, для меня это важно';
+            }
+            if (this.human.close && this.user.city && this.user.city != this.human.city) {
+                result = 'Мне интересно общение только в моём городе';
             }
             if (this.human.close && !this.user.city) {
                 result = 'Укажите ваш город в анкете, для меня это важно';
