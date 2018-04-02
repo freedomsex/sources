@@ -2085,7 +2085,7 @@ a.name:hover {
   margin-top: 5px;
 }
 .content-activity .image-galery {
-  margin: 10px -5px 15px;
+  margin: 20px 0px 20px;
   font-size: 0;
 }
 .content-activity .image-galery__item {
@@ -2096,17 +2096,19 @@ a.name:hover {
   display: inline-block;
   background-size: cover;
   background-position: center;
+  box-shadow: 0 0 5px #cccccc;
+  margin: 0 2px 2px 0;
 }
 @media (max-width: 500px) {
   .content-activity .image-galery__item {
-    width: calc(33.33vmin - 10.666666666666666px);
-    height: calc(33.33vmin - 10.666666666666666px);
+    width: calc(33.33vmin - 16.666666666666668px);
+    height: calc(33.33vmin - 16.666666666666668px);
   }
 }
 @media (max-width: 735px) and (min-width: 500px) {
   .content-activity .image-galery__item {
-    width: calc(25vmin - 8px);
-    height: calc(25vmin - 8px);
+    width: calc(25vmin - 12.5px);
+    height: calc(25vmin - 12.5px);
   }
 }
 .content-activity .content-reviews {

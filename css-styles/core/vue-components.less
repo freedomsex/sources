@@ -919,18 +919,19 @@ margin: 0 @indent-md @indent-md;
     }
 
     .image-galery {
-        margin: 10px -5px 15px;
+        margin: 20px 0px 20px;
         font-size: 0;
         &__item {
             width: 175px;
             height: 175px;
+            // 20*2 от края, 2*4 между, 2 костыль
                 @media (max-width: 500px) {
-                    @indent: (20*2 + 2 - 5*2) / 3;
+                    @indent: (20*2 + 2*4 + 2) / 3;
                     width:  ~"calc(33.33vmin - @{indent}px)";
                     height:  ~"calc(33.33vmin - @{indent}px)";
                 }
                 @media (max-width: 735px) and (min-width: 500px) {
-                    @indent: (20*2 + 2 - 5*2) / 4;
+                    @indent: (20*2 + 2*4 + 2) / 4;
                     width:  ~"calc(25vmin - @{indent}px)";
                     height:  ~"calc(25vmin - @{indent}px)";
                 }
@@ -939,6 +940,8 @@ margin: 0 @indent-md @indent-md;
             display: inline-block;
             background-size: cover;
             background-position: center;
+            box-shadow: 0 0 5px @gray;
+            margin: 0 2px 2px 0;
         }
     }
 

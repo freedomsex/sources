@@ -1582,6 +1582,11 @@ var ContentActivity = Vue.component('content-activity', {
         };
     },
 
+    computed: {
+        ready: function ready() {
+            return !this.loader && !this.error;
+        }
+    },
     methods: {
         load: function load(url) {
             var _this24 = this;
@@ -1677,7 +1682,7 @@ var HelpContentPage = Vue.component('help-page', {
                 var data = _ref9.data;
 
                 _this26.reviews = data;
-            }).catch(function (e) {});
+            });
         }
     }
 });

@@ -31,7 +31,7 @@
           </div>
         </div>
 
-        <div>
+        <div v-if="ready">
           <a class="btn btn-primary" :href="more" target="_blank" v-show="more">
             <span aria-hidden="true" class="glyphicon glyphicon-file"></span>
             Основной текст
@@ -42,7 +42,7 @@
           </a>
         </div>
 
-        <div v-if="enableReview">
+        <div v-if="ready && enableReview">
           <div class="content-reviews" v-if="reviews.length">
             <div class="content-reviews__caption">Отзывы</div>
             <div class="content-reviews__item" :class="item.sex" v-for="(item, index) in reviews">

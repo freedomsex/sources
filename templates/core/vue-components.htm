@@ -749,7 +749,7 @@
           </div>
         </div>
 
-        <div>
+        <div v-if="ready">
           <a class="btn btn-primary" :href="more" target="_blank" v-show="more">
             <span aria-hidden="true" class="glyphicon glyphicon-file"></span>
             Основной текст
@@ -760,7 +760,7 @@
           </a>
         </div>
 
-        <div v-if="enableReview">
+        <div v-if="ready && enableReview">
           <div class="content-reviews" v-if="reviews.length">
             <div class="content-reviews__caption">Отзывы</div>
             <div class="content-reviews__item" :class="item.sex" v-for="(item, index) in reviews">
@@ -837,12 +837,12 @@
 <script type="text/x-template" id="captcha-dialog">
   <modal-dialog @close="close">
     <div class="captcha-dialog__caption">
-      Подтвердите
+      Низкий кредит доверия
       <a href="/блог/простые-проверки/" target="_blank" aria-hidden="true" class="glyphicon glyphicon-info-sign"></a>
     </div>
     <div class="captcha-dialog__body">
       <div class="human-dialog__desire">
-        Введите код с картинки
+        Введите код с картинки, чтобы продолжить
       </div>
       <div class="input-group" style="max-width: 300px;">
         <span class="captcha-dialog__addon input-group-addon captcha-img__addon">
@@ -856,8 +856,8 @@
     </div>
 
     <div class="captcha-dialog__option">
-      <button class="btn btn-default" @click="close">
-        Вернуться
+      <button class="btn btn-default" @click="$router.push('/help/credit-of-trust')">
+        Поднять доверие
       </button>
       <button class="btn btn-warning" @click="send">
         Отправить

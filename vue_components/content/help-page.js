@@ -18,8 +18,6 @@ var HelpContentPage = Vue.component('help-page', {
         loadReviews() {
             axios.get('/docs/blog/rev/'+this.link+'.json').then(({ data }) => {
                 this.reviews = data;
-            }).catch((e) => {
-
             });
         },
     }

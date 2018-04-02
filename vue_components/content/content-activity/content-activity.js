@@ -19,6 +19,11 @@ var ContentActivity = Vue.component('content-activity', {
             batch: 7,
         }
     },
+    computed: {
+        ready() {
+            return !this.loader && !this.error;
+        }
+    },
     methods: {
         load(url) {
             axios.get(url).then(({ data }) => {
