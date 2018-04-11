@@ -1556,31 +1556,6 @@ Vue.component('captcha-dialog', {
     template: '#captcha-dialog',
 });
 
-
-const ContactWizard = Vue.component('contact-wizard', {
-    extends: AccountSettings,
-    props: ['humanCity', 'humanAge'],
-    created() {
-        if (!this.selectCity && this.humanCity) {
-            this.selectCity = this.humanCity;
-        }
-        if (!this.selectAge && this.humanAge) {
-            this.selectAge = this.humanAge;
-        }
-    },
-    methods: {
-        approve() {
-            this.save();
-            this.$emit('approve');
-            this.$emit('close');
-        },
-        close() {
-            this.$emit('close');
-        }
-    },
-    template: '#contact-wizard',
-});
-
 Vue.component('email-sended', {
     template: '#email-sended'
 });
@@ -2986,6 +2961,31 @@ const CityWizard = Vue.component('city-wizard', {
         },
     },
     template: '#city-wizard',
+});
+
+
+const ContactWizard = Vue.component('contact-wizard', {
+    extends: AccountSettings,
+    props: ['humanCity', 'humanAge'],
+    created() {
+        if (!this.selectCity && this.humanCity) {
+            this.selectCity = this.humanCity;
+        }
+        if (!this.selectAge && this.humanAge) {
+            this.selectAge = this.humanAge;
+        }
+    },
+    methods: {
+        approve() {
+            this.save();
+            this.$emit('approve');
+            this.$emit('close');
+        },
+        close() {
+            this.$emit('close');
+        }
+    },
+    template: '#contact-wizard',
 });
 
 

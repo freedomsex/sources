@@ -14,7 +14,7 @@
     
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1522845233284">
+<link rel="stylesheet" type="text/css" href="/static/css/core.css?rel=1523479956728">
 </head>
 <body>
 <div id="app">
@@ -1120,30 +1120,6 @@
   </modal-dialog>
 </script>
 
-
-<script type="text/x-template" id="contact-wizard">
-  <modal-dialog @close="close">
-    <div class="modal-dialog__wrapper">
-      <div class="modal-dialog__section">
-        Ваше имя:<br>
-        <input class="form-control" type="text" v-model="selectName" @blur="saveName" placeholder="Ваше имя">
-      </div>
-      <div class="modal-dialog__section">
-        Город:<br>
-        <city-suggest :city="selectCity" @select="saveCity"/>
-      </div>
-      <div class="modal-dialog__section">
-        Возраст:<br>
-        <select class="form-control" v-model.number="selectAge" @change="saveAge">
-          <option v-for="(item, index) in _.range(16, 81)" :value="item" >{{item ? item : ''}}</option>
-        </select>
-      </div>
-      <div class="human-dialog__footer">
-        <button class="btn btn-primary" @click="approve">Продолжить</button>
-      </div>
-    </div>
-  </modal-dialog>
-</script>
 <script type="text/x-template" id="email-sended">
   <modal-dialog @close="$emit('close')">
     <div class="modal-dialog__wrapper">
@@ -1739,6 +1715,30 @@
       <span class="city-list__item btn btn-default btn-xs" v-for="item in cities" @click="select(item)"> {{item}} </span>
     </div>
   </closed-activity>
+</script>
+
+<script type="text/x-template" id="contact-wizard">
+  <modal-dialog @close="close">
+    <div class="modal-dialog__wrapper">
+      <div class="modal-dialog__section">
+        Ваше имя:<br>
+        <input class="form-control" type="text" v-model="selectName" @blur="saveName" placeholder="Ваше имя">
+      </div>
+      <div class="modal-dialog__section">
+        Город:<br>
+        <city-suggest :city="selectCity" @select="saveCity"/>
+      </div>
+      <div class="modal-dialog__section">
+        Возраст:<br>
+        <select class="form-control" v-model.number="selectAge" @change="saveAge">
+          <option v-for="(item, index) in _.range(16, 81)" :value="item" >{{item ? item : ''}}</option>
+        </select>
+      </div>
+      <div class="human-dialog__footer">
+        <button class="btn btn-primary" @click="approve">Продолжить</button>
+      </div>
+    </div>
+  </modal-dialog>
 </script>
 
 <script type="text/x-template" id="desires-settings">
@@ -2364,7 +2364,7 @@
 
  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/static/js/core.min.js?rel=1522845233282"></script>
+<script type="text/javascript" src="/static/js/core.min.js?rel=1523479956725"></script>
 
 <script src='https://www.google.com/recaptcha/api.js?render=explicit' async defer></script>
 
