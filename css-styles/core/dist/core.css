@@ -2881,6 +2881,7 @@ a.name:hover {
   border-radius: 2px;
   color: #666666;
   background: #E8E5FF;
+  cursor: pointer;
 }
 .search-item__virt {
   color: #84bf3b;
