@@ -1,0 +1,195 @@
+<script>
+import Vuex from 'vuex';
+import _ from 'underscore';
+import ClosedActivity from '~closed-activity/ClosedActivity';
+import ModalDialog from '~dialogs/ModalDialog';
+
+export default {
+  extends: ClosedActivity,
+  props: ['root'],
+  data() {
+    return {
+      selectCity: '',
+      selectSex: 0,
+      selectAge: 0,
+      selectName: '',
+      nameAlert: false,
+    };
+  },
+  computed: Vuex.mapState({
+    sex(state) {
+      const sex = Number(state.user.sex);
+      if (sex) {
+        return sex == 1 ? 1 : 2;
+      }
+      return 0;
+    },
+    city(state) {
+      return state.user.city;
+    },
+    age(state) {
+      return state.user.age;
+    },
+    name(state) {
+      const {name} = state.user;
+      const auto = !name && this.sex ? this.autoName() : '';
+      return name || auto;
+    },
+  }),
+  created() {
+    /* globals defaultSettings:false */
+    const {city, age} = defaultSettings; // TODO: GLOBAL defaultSettings var
+    this.selectCity = this.city ? this.city : city;
+    this.selectAge = this.age ? this.age : age;
+    this.selectSex = this.sex;
+    this.selectName = this.name;
+  },
+  methods: {
+    autoName() {
+      const variant = [];
+      variant[1] = [
+        'Саша',
+        'Дима',
+        'Сергей',
+        'Иван',
+        'Максим',
+        'Валера',
+        'Николай',
+      ];
+      variant[2] = [
+        'Оля',
+        'Юля',
+        'Настя',
+        'Алена',
+        'Катя',
+        'Маргарита',
+        'Татьяна',
+      ];
+      const x = Math.floor(Math.random() * 7);
+      return this.sex ? variant[this.sex][x] : '';
+    },
+    saveSex() {
+      this.$store.dispatch('SAVE_SEX', {sex: this.selectSex, token: null});
+      this.resetName();
+    },
+    saveCity(city) {
+      if (city) {
+        this.selectCity = city;
+      }
+      if (this.selectCity !== this.city) {
+        this.$store.dispatch('SAVE_CITY', this.selectCity);
+        this.$root.reload();
+      }
+    },
+    saveAge() {
+      if (this.selectAge !== this.age) {
+        this.$store.dispatch('SAVE_AGE', this.selectAge);
+      }
+    },
+    saveName() {
+      this.$store.dispatch('SAVE_NAME', this.selectName).catch(() => {
+        this.resetName();
+        this.nameAlert = true;
+      });
+    },
+    resetName() {
+      this.selectName = this.name;
+    },
+    randomAge() {
+      this.selectAge = _.random(19, 30);
+      this.saveAge();
+    },
+    save() {
+      this.saveCity();
+      this.saveAge();
+      this.saveName();
+    },
+    close() {
+      this.save();
+      this.back();
+    },
+  },
+  components: {
+    ClosedActivity,
+    ModalDialog,
+  },
+};
+</script>
+
+<template>
+  <ClosedActivity @close="close">
+    <div class="activity-section">
+      <div class="activity-section__title">Мой город:</div>
+      <div class="form-inline">
+        <city-suggest :city="selectCity" @select="saveCity"/>
+      </div>
+    </div>
+
+    <div class="activity-section">
+      <div class="activity-section__title">Кто вы:</div>
+      <div class="radio">
+        <label class="radio-inline">
+          <input type="radio" v-model.number="selectSex"
+           :value="2" @change="saveSex">
+          Девушка
+        </label>
+        <label class="radio-inline">
+          <input type="radio" v-model.number="selectSex"
+           :value="1" @change="saveSex">
+          Парень
+        </label>
+      </div>
+    </div>
+
+    <div class="activity-section">
+      <div class="activity-section__title">Возраст:</div>
+      <div class="form-inline">
+        <select class="form-control" v-model.number="selectAge" @change="saveAge">
+          <option v-for="(item, index) in _.range(16, 81)"
+           :value="item" >{{item ? item : ''}}</option>
+        </select>
+        <button class="btn btn-success" v-if="!selectAge" @click="randomAge()">
+          <span aria-hidden="true" class="glyphicon glyphicon-arrow-left"></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="activity-section">
+      <div class="activity-section__title">Имя:</div>
+      <div class="form-inline">
+        <input class="form-control" type="text"
+         v-model="selectName" @blur="saveName" placeholder="Ваше имя">
+      </div>
+
+      <ModalDialog @close="nameAlert = false" v-if="nameAlert">
+        <div class="modal-dialog__wrapper">
+          <div class="modal-dialog__body">
+            Есть ограничение, вы можете указать простое, обычное имя.
+            Некоторые могут не сохраниться и это нормально.
+            Можно указать не своё, любое.
+          </div>
+          <div class="modal-dialog__footer">
+            <button class="btn btn-primary btn-flat" @click="nameAlert = false">
+              Хорошо
+            </button>
+          </div>
+        </div>
+      </ModalDialog>
+
+    </div>
+
+    <div class="activity-section">
+      <span class="activity-section__link" @click="$router.push('other')">
+        Другие настройки</span>
+      <span class="activity-section__link" @click="$router.push('/login')">
+        Уже есть анкета?</span>
+    </div>
+
+  </ClosedActivity>
+</template>
+
+<style lang="less">
+.city-list__item {
+  margin: 0 @indent-xs @indent-xs 0;
+}
+</style>

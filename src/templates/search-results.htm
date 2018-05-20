@@ -1,0 +1,21 @@
+  <div class="container content">
+    <div class="row">
+      <auth-board v-if="promt"></auth-board>
+      ${require('~templates/search-wizard.htm')}
+    </div>
+    <div class="row">
+      <div class="preloader" v-show="!ready">
+        <!-- <div class="preloader__img"></div> -->
+        ${require('~templates/preloader-raw-svg.htm')}
+        <div class="preloader__hint">
+          Поиск анкет, всегда бесплатно
+        </div>
+      </div>
+
+      <ad-top></ad-top>
+
+      <search-list ref="results"></search-list>
+    </div>
+  </div>
+
+  <desires-widget :tags="tags" v-if="tags.length"></desires-widget>

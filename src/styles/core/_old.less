@@ -1,0 +1,90 @@
+
+@import "_imports.less";
+
+// Width variables (appears count calculates by raw css)
+@width0: 1067px; // Appears 2 times
+@width3: 180px; // Appears 2 times
+@width8: 274px; // Appears 2 times
+@width10: 728px; // Appears 4 times
+@width11: 320px; // Appears 2 times
+@width13: 16px; // Appears 3 times
+@width14: 100%; // Appears 3 times
+@width17: 7px; // Appears 2 times
+@width18: 1px; // Appears 2 times
+
+// Height variables (appears count calculates by raw css)
+@height1: 320px; // Appears 3 times
+@height3: 40px; // Appears 2 times
+@height4: 100%; // Appears 3 times
+@height7: 16px; // Appears 3 times
+@height8: 55px; // Appears 2 times
+@height10: 7px; // Appears 2 times
+@height11: 1px; // Appears 2 times
+
+
+
+
+
+.elem_online {
+    background: @white;
+    border-radius: 3px;
+    border: 1px solid @orange;
+    color: @orange;
+    display: inline-block;
+    font-size: 11px;
+    margin-right: 5px;
+    padding: 0px 3px 1px;
+}
+.elem_time {
+    background: @white;
+    border-radius: 3px;
+    border: 1px solid @gray-dark;
+    color: @gray-dark;
+    display: inline-block;
+    font-size: 11px;
+    margin-right: 5px;
+    padding: 0px 3px 1px;
+}
+.elem_your {
+    background: @white;
+    border-color: @green;
+    border-radius: 3px;
+    border: 1px solid @green;
+    color: @green;
+    display: inline-block;
+    font-size: 11px;
+    margin-right: 5px;
+    padding: 0px 3px 1px;
+}
+.left_vision {
+    float: right;
+}
+
+
+
+#block_static_tip {
+    background: @green;
+    border-radius: 0px;
+    color: @white;
+    display: block;
+    font-size: 14px;
+    font-weight: normal;
+    padding: 10px 20px;
+    u {
+        border-bottom: 1px dashed @white;
+        display: inline-block;
+        text-decoration: none;
+    }
+}
+
+
+.timer {
+    color: @gray-light;
+    display: none;
+    position: absolute;
+    right: -100px;
+    top: 150px;
+}
+
+
+@import "index.less";

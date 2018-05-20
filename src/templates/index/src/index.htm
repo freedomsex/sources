@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+${require('../../_common/head.htm')}
+</head>
+<body>
+  <div style="height: 50px; width: 100%; background-color: #3A5795; position: fixed;">
+    %%JS_USER_VARS%%
+  </div>
+<div style="height: 50px;"></div>
+
+<div id="app">
+  <menu-user @snackbar="showSnackbar"></menu-user>
+
+  <div class="container content split-bottom" v-show="!simple">
+    <div class="row" style="position: relative;">
+      ${require('~templates/hero-info.htm')}
+      ${require('~templates/ad-button.htm')}
+    </div>
+  </div>
+
+  <info-widget></info-widget>
+
+  ${require('~templates/search-results.htm')}
+
+  <div v-show="!simple">
+   ${require('~templates/slider-footer.htm')}
+  </div>
+  ${require('~templates/footer.htm')}
+
+  <div id="router-view">
+    <router-view @close="$router.go(-1)" @warning="showSnackbar" @alert="toast"></router-view>
+  </div>
+  <api-key-update ref="api-key"></api-key-update>
+  <snackbar v-if="snackbar.text"
+    :callback="snackbar.callback"
+    :action="snackbar.action"
+    :play="snackbar.play"
+    @close="snackbar.text = null">{{snackbar.text}}</snackbar>
+  <toast v-if="alert" @close="alert = null">{{alert}}</toast>
+</div>
+<!-- end of APP layer -->
+
+<!-- SETTINGS layer -->
+<div id="settings">
+  <router-view @close="$router.go(-1)" @warning="snackbar" @alert="toast"></router-view>
+
+  <snackbar v-if="warning" @close="warning = null">{{warning}}</snackbar>
+  <toast v-if="alert" @close="alert = null">{{alert}}</toast>
+</div>
+<!-- end of SETTINGS layer -->
+
+${require('~templates/counters.htm')}
+${require('~templates/js-libs.htm')}
+
+</body>
+</html>

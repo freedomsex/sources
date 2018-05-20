@@ -1,0 +1,33 @@
+<script>
+import ModalDialog from '~dialogs/ModalDialog';
+
+export default {
+  components: {
+    ModalDialog,
+  },
+};
+</script>
+
+<template>
+  <div>
+    <ModalDialog @close="$emit('close')">
+      <div class="dialog-caption">
+        <div class="dialog-caption__title">Наказывайте всегда</div>
+        <div class="dialog-caption__option">
+          <i class="material-icons" @click="$emit('close')">&#xE14C;</i>
+        </div>
+      </div>
+      <div class="modal-dialog__wrapper capped">
+        <div class="modal-dialog__section">
+          Нажмите «Наказать и удалить» у сообщения,
+          которое является причиной замечания. Можно несколько.
+          Это необходимо, и поможет быстрее определить истину,
+          а также степень вины.
+        </div>
+      </div>
+    </ModalDialog>
+  </div>
+</template>
+
+<style lang="less">
+</style>

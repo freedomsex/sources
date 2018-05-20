@@ -20,18 +20,9 @@
     "tests"
   ],
   "dependencies": {
-    "jquery": "^3.1.1",
-    "moment": "^2.17.1",
-    "vue": "^2.2.1",
-    "vuex": "^2.2.1",
-    "underscore": "^1.8.3",
-    "axios": "^0.15.3",
     "json3": "^3.3.2",
-    "lscache": "^1.0.5",
     "jquery-ui": "^1.12.1",
     "blueimp-file-upload": "fileupload#^9.17.0",
-    "vue-resource": "^1.2.1",
-    "vue-router": "~2.7.*",
     "pluralize": "^4.0.0",
     "es6-promise": "^4.0.5",
     "dexie": "^2.0.1"
