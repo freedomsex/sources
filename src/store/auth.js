@@ -46,21 +46,7 @@ export default {
       return axios.get('/sync/sess/').then(({data}) => {
         if (data.uid || data.reg) {
           rootStore.dispatch('LOAD_API_TOKEN');
-
-          const {
-            uid, city, sex, age, name, contacts, apromt: promt,
-          } = data; // User module
-          // console.log('upUser', data);
-          rootStore.commit('resetUser', {
-            uid,
-            city,
-            sex,
-            age,
-            name,
-            contacts,
-            promt,
-          });
-
+          rootStore.commit('resetUser', data);
           rootStore.commit('settings/restore', data);
         }
       });

@@ -88,7 +88,9 @@ export default {
       ls.set('user.data', state, 23456);
     },
     resetUser(state, data) {
-      _.assign(state, data);
+      const {uid, city, sex, age, name, contacts, apromt: promt} = data; // User module
+
+      _.assign(state, {uid, city, sex, age, name, contacts, promt});
       ls.set('user.data', state, 23456);
     },
     settings(state, data) {

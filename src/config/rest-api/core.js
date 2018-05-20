@@ -95,9 +95,9 @@ export default class Api extends requests {
   }
 
   refresh() {
-    // store.dispatch('LOAD_API_TOKEN');
+    store.dispatch('LOAD_API_TOKEN');
     // TODO: remove old hack
-    console.log('!!!!!!! refresh LOAD_API_TOKEN disabled !!!!!!!!');
+    // console.log('!!!!!!! refresh LOAD_API_TOKEN disabled !!!!!!!!');
     return this;
   }
 }

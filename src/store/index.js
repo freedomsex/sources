@@ -3,6 +3,7 @@ import moment from 'moment';
 import Vue from 'vue';
 import Vuex from 'vuex';
 import cookies from '~assets/legacy/utils/cookies'; // TODO: remove
+import CONFIG from '~config/';
 // import ls from 'lscache';
 
 import user from './user/';
@@ -38,11 +39,12 @@ const store = new Vuex.Store({
     locale: 'ru',
     apiToken: '',
     grecaptchaToken: null,
-    photoServer: '@@API-PHOTO',
+    photoServer: CONFIG.API_PHOTO,
     simple: false,
   },
   actions: {
     LOAD_API_TOKEN({commit}) {
+      console.log('***JWT***', cookies.get('jwt'));
       commit('setApiToken', {apiToken: cookies.get('jwt')});
     },
   },

@@ -1,6 +1,5 @@
 <script>
 export default {
-  props: ['item'],
   data() {
     return {
       attempt: 0,
