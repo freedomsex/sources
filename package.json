@@ -5,7 +5,7 @@
     "dev": "webpack --mode=development --watch --progress --hide-modules",
     "build": "webpack --mode=production --progress --hide-modules",
     "vuild": "webpack --mode=production --progress --verbose --display-modules",
-    "start": "webpack-dev-server --progress --hide-modules"
+    "start": "webpack-dev-server --mode=development --progress --hide-modules"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",

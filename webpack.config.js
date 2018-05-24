@@ -198,14 +198,14 @@ module.exports = {
     // ]),
     new WebpackCdnPlugin({
       modules: [
-        {name: 'vue', var: 'Vue'},
-        {name: 'vuex', var: 'Vuex'},
-        {name: 'vue-router', var: 'VueRouter'},
-        {name: 'axios'},
-        {name: 'jquery', var: '$'},
-        {name: 'underscore', var: '_'},
-        {name: 'lscache', var: 'ls'},
-        {name: 'dexie', var: 'Dexie'},
+        {name: 'vue', var: 'Vue', path: 'dist/vue.min.js'},
+        {name: 'vuex', var: 'Vuex', path: 'dist/vuex.min.js'},
+        {name: 'vue-router', var: 'VueRouter', path: 'dist/vue-router.min.js'},
+        {name: 'axios', path: 'dist/axios.min.js'},
+        {name: 'jquery', var: '$', path: 'dist/jquery.min.js'},
+        {name: 'underscore', var: '_', path: 'underscore-min.js'},
+        // {name: 'lscache', var: 'ls'},
+        {name: 'dexie', var: 'Dexie', path: 'dist/dexie.min.js'},
         {name: 'moment'},
       ],
       // publicPath: '/node_modules'
