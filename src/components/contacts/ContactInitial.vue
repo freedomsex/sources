@@ -120,7 +120,7 @@ export default {
        @close="modals.acceptSettings = false"
        @confirm="accept"/>
     </DefaultActivity>
-    <RouterView @sended="splice"/>
+    <router-view @sended="splice"/>
   </div>
 </template>
 

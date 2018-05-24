@@ -1,10 +1,9 @@
 import _ from 'underscore';
-import moment from 'moment';
 import Vue from 'vue';
 import Vuex from 'vuex';
 import cookies from '~assets/legacy/utils/cookies'; // TODO: remove
 import CONFIG from '~config/';
-// import ls from 'lscache';
+import api from '~config/api';
 
 import user from './user/';
 import auth from './auth';
@@ -16,8 +15,6 @@ import visited from './visited';
 import accepts from './accepts';
 import modals from './modals';
 import notes from './notes';
-
-moment.locale('ru');
 
 Vue.use(Vuex);
 
@@ -44,7 +41,11 @@ const store = new Vuex.Store({
   },
   actions: {
     LOAD_API_TOKEN({commit}) {
-      commit('setApiToken', {apiToken: cookies.get('jwt')});
+      const token = cookies.get('jwt');
+      commit('setApiToken', {apiToken: token});
+      console.log('apiToken', token);
+      api.contacts.initial.setAuthKey(token); // TODO: Переписать API
+      api.contacts.intimate.setAuthKey(token);
     },
   },
   mutations: {

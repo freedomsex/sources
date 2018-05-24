@@ -35,6 +35,7 @@ export default {
       const auto = !name && this.sex ? this.autoName() : '';
       return name || auto;
     },
+    range: () => _.range(16, 81),
   }),
   created() {
     /* globals defaultSettings:false */
@@ -145,7 +146,7 @@ export default {
       <div class="activity-section__title">Возраст:</div>
       <div class="form-inline">
         <select class="form-control" v-model.number="selectAge" @change="saveAge">
-          <option v-for="(item, index) in _.range(16, 81)"
+          <option v-for="(item, index) in range"
            :value="item" >{{item ? item : ''}}</option>
         </select>
         <button class="btn btn-success" v-if="!selectAge" @click="randomAge()">

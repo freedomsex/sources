@@ -28,16 +28,13 @@ export default {
     },
     load() {
       this.$store.dispatch('auth/UPDATE_KEY').then(({data}) => {
-        console.log('---auth/UPDATE_KEY---', data);
-
         if (data.uid || data.reg) {
-          this.$store.dispatch('LOAD_API_TOKEN');
           this.$store.commit('resetUser', data);
           this.$store.commit('search/restore', data);
+          this.$store.dispatch('LOAD_API_TOKEN');
         } else {
           this.reload();
         }
-
         if (!data.uid && data.reg) {
           this.noReg(data);
         }

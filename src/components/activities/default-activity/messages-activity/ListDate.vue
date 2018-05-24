@@ -1,6 +1,4 @@
 <script>
-import moment from 'moment';
-
 export default {
   props: ['list', 'index'],
   computed: {
@@ -11,23 +9,23 @@ export default {
       return this.list[this.index];
     },
     currDate() {
-      return moment(this.item.date).date();
+      return this.$moment(this.item.date).date();
     },
     prevDate() {
       if (this.index && this.index < this.count) {
-        return moment(this.list[this.index - 1].date).date();
+        return this.$moment(this.list[this.index - 1].date).date();
       }
       return null;
     },
     month() {
-      return moment(this.item.date)
+      return this.$moment(this.item.date)
         .format('MMMM')
         .substring(0, 3);
     },
     formatted() {
       let result = `${this.currDate} ${this.month}`;
-      const today = moment().date();
-      const yestd = moment()
+      const today = this.$moment().date();
+      const yestd = this.$moment()
         .subtract(1, 'day')
         .date();
       result = this.currDate === today ? 'Сегодня' : result;

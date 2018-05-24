@@ -62,6 +62,11 @@ export default {
     },
     reply() {
       this.$emit('read', this.index);
+      console.log('item show', {
+        humanId: this.humanId,
+        message: this.message,
+        index: this.index,
+      });
       this.$router.push({
         name: 'quickReply',
         params: {

@@ -1,4 +1,3 @@
-
 import {Vue, store} from '~store';
 import '~assets/directives/resized'; // TODO: оформить директивы
 import '~legacy/navigate'; // TODO: проверить/переписать навигацию клавиатуры
@@ -20,9 +19,13 @@ import SearchList from '~components/SearchList';
 import SliderFooter from '~components/SliderFooter';
 import DesiresWidget from '~widgets/DesiresWidget';
 
-import api from '~config/api';
-
 import 'styles/core/body.less';
+
+import moment from 'moment';
+
+moment.locale('ru');
+
+Vue.prototype.$moment = moment;
 
 const App = new Vue({
   data: {
@@ -126,4 +129,4 @@ const Layer = new Vue({
 store.commit('search/restore', global.defaultSettings || {});
 store.commit('personal', global.defaultSettings || {}); // TODO: to NS
 
-export {App, Layer, api};
+export {App, Layer};

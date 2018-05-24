@@ -1,5 +1,4 @@
 import _ from 'underscore';
-import {store} from '~store';
 
 import CONFIG from '~config/';
 import requests from '~config/rest-api/requests';
@@ -75,7 +74,7 @@ export default class Api extends requests {
     return result;
   }
   setUrl(method, params, url) {
-    this.refresh();
+    // this.refresh();
     const {route} = this.routing;
     let result;
     if (url) {
@@ -91,12 +90,5 @@ export default class Api extends requests {
     }
     result = this.setParams(params, result);
     return this.root + result;
-  }
-
-  refresh() {
-    store.dispatch('LOAD_API_TOKEN');
-    // TODO: remove old hack
-    // console.log('!!!!!!! refresh LOAD_API_TOKEN disabled !!!!!!!!');
-    return this;
   }
 }

@@ -1,6 +1,5 @@
 <script>
 import axios from 'axios';
-import moment from 'moment';
 import RemoveConfirm from '~dialogs/remove-confirm/RemoveConfirm';
 import PhotoSend from '~modules/PhotoSend';
 import Toast from '~widgets/Toast';
@@ -141,7 +140,7 @@ export default {
       return this.item.read != 0;
     },
     time() {
-      return moment(this.item.date).format('HH:mm');
+      return this.$moment(this.item.date).format('HH:mm');
     },
     alias() {
       let result = false;

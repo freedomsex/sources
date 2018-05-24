@@ -3,6 +3,7 @@ const path = require('path');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WebpackCdnPlugin = require('webpack-cdn-plugin');
+const CircularDependencyPlugin = require('circular-dependency-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 // const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
@@ -12,12 +13,16 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 
 let styleLoader = 'style-loader';
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV === 'production') {
   styleLoader = MiniCssExtractPlugin.loader;
 }
 
-const publicPath = '/static/';
-// const rootPath = '../../web';
+console.log('ENV', process.env.NODE_ENV);
+
+let publicPath = '/static/';
+if (process.env.NODE_ENV !== 'production') {
+  publicPath = 'http://localhost:8080/static/';
+}
 
 module.exports = {
   entry: {
@@ -162,13 +167,10 @@ module.exports = {
   plugins: [
     // make sure to include the plugin!
     new VueLoaderPlugin(),
-    // new UglifyJSPlugin(),
-    // new webpack.ProvidePlugin({
-    //   defaultSettings,
-    //   defaultResults,
-    // }),
+    new CircularDependencyPlugin({}),
+    // new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+    new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /ru/),
 
-    // Please remember that setting NODE_ENV doesn't automatically set mode.
     new webpack.DefinePlugin({
       NODE_ENV: process.env.NODE_ENV,
     }),
@@ -206,18 +208,13 @@ module.exports = {
         {name: 'underscore', var: '_', path: 'underscore-min.js'},
         // {name: 'lscache', var: 'ls'},
         {name: 'dexie', var: 'Dexie', path: 'dist/dexie.min.js'},
-        {name: 'moment'},
       ],
       // publicPath: '/node_modules'
     }),
   ],
-  // mode: 'development',
-  // externals: {
-  //   $: 'jquery',
-  //   _: 'underscore',
-  //   axios: 'axios',
-  //   ls: 'lscache',
-  // },
+  mode: process.env.NODE_ENV,
+
+  externals: {moment: 'moment'},
 
   optimization: {
     splitChunks: {

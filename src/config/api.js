@@ -1,5 +1,3 @@
-import {store} from '~store';
-
 import CONFIG from '~config/';
 import Api from '~config/rest-api/core';
 import ApiUser from '~config/rest-api/user';
@@ -57,16 +55,14 @@ class ApiSearch extends Api {
 
 class ApiContact extends Api {
   constructor(routing) {
-    const key = store.apiToken;
-    // const key = 1234;
+    const key = 1234;
     const host = `http://${CONFIG.API_CONTACT}/`;
     super(host, key, null, routing);
   }
 
-  refresh() {
-    store.dispatch('LOAD_API_TOKEN');
-    this.setAuthKey(store.apiToken);
-  }
+  // refreshToken(token) {
+  //   this.setAuthKey(token.apiToken);
+  // }
 }
 
 class ApiInitial extends ApiContact {

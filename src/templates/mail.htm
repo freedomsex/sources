@@ -42,6 +42,9 @@ ${require('./head.htm')}
       </div>
     </div>
     ${require('~templates/footer.htm')}
+    <div id="router-view">
+      <router-view @close="$router.go(-1)" @warning="showSnackbar" @alert="toast"></router-view>
+    </div>
   </div>
 
   <!-- SETTINGS layer -->

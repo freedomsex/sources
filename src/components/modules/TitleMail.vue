@@ -1,6 +1,4 @@
 <script>
-import moment from 'moment';
-
 export default {
   props: ['human'],
   data() {
@@ -33,7 +31,7 @@ export default {
 
         let age = '';
         if (this.human.age) {
-          age = ` ${moment.duration(this.human.age, 'years').humanize()}`;
+          age = ` ${this.$moment.duration(this.human.age, 'years').humanize()}`;
         }
         let city = ' ищет ';
         if (this.human.city) {
@@ -46,15 +44,15 @@ export default {
         who += ' для секса или общения ';
         let years = '';
         if (this.human.up && this.human.to) {
-          years = ` в возрасте от ${this.human.up} до ${moment
+          years = ` в возрасте от ${this.human.up} до ${this.$moment
             .duration(this.human.to, 'years')
             .humanize()}`;
         }
         if (this.human.up && !this.human.to) {
-          years = ` в возрасте от ${moment.duration(this.human.up, 'years').humanize()}`;
+          years = ` в возрасте от ${this.$moment.duration(this.human.up, 'years').humanize()}`;
         }
         if (!this.human.up && this.human.to) {
-          years = ` в возрасте до ${moment.duration(this.human.to, 'years').humanize()}`;
+          years = ` в возрасте до ${this.$moment.duration(this.human.to, 'years').humanize()}`;
         }
         document.title = name + age + city + who + years + title;
       }

@@ -1,5 +1,4 @@
 <script>
-import moment from 'moment';
 import DesireList from '~modules/DesireList/DesireList';
 
 export default {
@@ -9,9 +8,14 @@ export default {
       loading: false,
     };
   },
+  mounted() {
+    this.$moment().locale('ru');
+    console.log(this.$moment.locale());
+  },
   computed: {
     age() {
-      return this.human.age ? moment.duration(this.human.age, 'years').humanize() : null;
+      const ago = this.$moment.duration(this.human.age, 'years').humanize();
+      return this.human.age ? ago : null;
     },
     tags() {
       return 'tags' in this.human ? this.human.tags : [];
@@ -84,7 +88,7 @@ export default {
         result = null;
       } // else
       if (last > 777) {
-        result = moment.duration(0 - last, 'seconds').humanize(true);
+        result = this.$moment.duration(0 - last, 'seconds').humanize(true);
       }
       return result;
     },
