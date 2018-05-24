@@ -26,9 +26,7 @@ export default {
     },
     signature() {
       let results = 'Кто вы?';
-      const {
-        name, city, age, sex,
-      } = this.$store.state.user;
+      const {name, city, age, sex} = this.$store.state.user;
       if (sex) {
         results = sex == 1 ? 'Парень' : 'Девушка';
         results = name || results;
@@ -63,6 +61,7 @@ export default {
     },
     loadStatus() {
       const {uid} = this.$store.state.user;
+      // console.log('888uid888', uid);
       let delay = !uid ? 2 : 15;
       if (uid) {
         this.check();

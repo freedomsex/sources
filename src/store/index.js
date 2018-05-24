@@ -44,7 +44,6 @@ const store = new Vuex.Store({
   },
   actions: {
     LOAD_API_TOKEN({commit}) {
-      console.log('***JWT***', cookies.get('jwt'));
       commit('setApiToken', {apiToken: cookies.get('jwt')});
     },
   },

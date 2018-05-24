@@ -65,7 +65,7 @@ class ApiContact extends Api {
 
   refresh() {
     store.dispatch('LOAD_API_TOKEN');
-    this.setAuthKey(this.store.state.apiToken);
+    this.setAuthKey(store.apiToken);
   }
 }
 

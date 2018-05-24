@@ -108,7 +108,7 @@ export default {
        :title="title"
        v-if="dialog"/>
 
-      <RouterView @sended="splice"/>
+      <router-view @sended="splice"/>
     </DefaultActivity>
   </div>
 </template>

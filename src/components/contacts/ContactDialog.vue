@@ -79,11 +79,11 @@ export default {
     splice(index) {
       this.$store.commit('delete', index);
     },
-    error(error) {
-      this.response = true;
-      this.error = true;
-      console.log(error);
-    },
+    // error(error) {
+    //   this.response = true;
+    //   this.error = true;
+    //   console.log(error);
+    // },
     dialogOpen(data) {
       this.dialog = data.id;
       this.title = data.title;
@@ -94,12 +94,6 @@ export default {
   },
 };
 </script>
-
-<template>
-  <div class="">
-
-  </div>
-</template>
 
 <style lang="less">
 #contact-section {

@@ -9,7 +9,7 @@ import CaptchaDialog from '~dialogs/CaptchaDialog';
 import Recaptcha from '~modules/Recaptcha';
 import Notepad from '~default-activity/Notepad';
 import MessagesCliche from '~default-activity/MessagesCliche';
-import ContactWizard from '~closed-activity/CityWizard';
+import ContactWizard from '~dialogs/ContactWizard';
 import InfoDialog from '~dialogs/InfoDialog';
 
 export default {

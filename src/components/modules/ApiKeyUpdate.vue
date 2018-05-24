@@ -28,13 +28,19 @@ export default {
     },
     load() {
       this.$store.dispatch('auth/UPDATE_KEY').then(({data}) => {
-        if (!data.uid && data.reg) {
-          this.noReg(data);
+        console.log('---auth/UPDATE_KEY---', data);
+
+        if (data.uid || data.reg) {
+          this.$store.dispatch('LOAD_API_TOKEN');
+          this.$store.commit('resetUser', data);
+          this.$store.commit('search/restore', data);
         } else {
           this.reload();
         }
-      }).catch(() => {
-        console.log('! Ошибка обновления ключа, инет есть?');
+
+        if (!data.uid && data.reg) {
+          this.noReg(data);
+        }
       });
     },
     noReg() {

@@ -18,7 +18,7 @@ export default {
   },
   methods: {
     title() {
-      const title = '| Секс знакомства'; // TODO: проверить тайтл в страницах
+      const title = ' ';
       if (this.human) {
         let name = '';
         if (this.human.name) {
@@ -56,9 +56,13 @@ export default {
         if (!this.human.up && this.human.to) {
           years = ` в возрасте до ${moment.duration(this.human.to, 'years').humanize()}`;
         }
-        document.title = name + age + city + who + years;
+        document.title = name + age + city + who + years + title;
       }
     },
   },
 };
 </script>
+
+<template>
+  <div> </div>
+</template>

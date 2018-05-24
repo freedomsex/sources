@@ -4,6 +4,7 @@ import api from '~config/api';
 import DefaultActivity from './DefaultActivity';
 
 export default {
+  extends: DefaultActivity,
   props: [],
   data() {
     return {

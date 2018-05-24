@@ -42,14 +42,8 @@ export default {
       commit('subscr');
       return api.user.saveSubscribe();
     },
-    UPDATE_KEY({rootStore}) {
-      return axios.get('/sync/sess/').then(({data}) => {
-        if (data.uid || data.reg) {
-          rootStore.dispatch('LOAD_API_TOKEN');
-          rootStore.commit('resetUser', data);
-          rootStore.commit('settings/restore', data);
-        }
-      });
+    UPDATE_KEY() {
+      return axios.get('/sync/sess/');
     },
   },
   mutations: {

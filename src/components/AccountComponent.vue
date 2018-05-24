@@ -254,7 +254,7 @@ export default {
   }
 }
 
-@icon-path: '/static/img/icon';
+@icon-path: '~static/img/icon';
 
 .human-social {
   i {

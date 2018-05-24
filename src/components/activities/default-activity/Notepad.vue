@@ -2,6 +2,7 @@
 import DefaultActivity from './DefaultActivity';
 
 export default {
+  extends: DefaultActivity,
   props: [],
   data() {
     return {

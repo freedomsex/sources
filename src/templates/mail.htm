@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+${require('./head.htm')}
+</head>
+<body>
+  <div style="height: 50px; width: 100%; background-color: #3A5795; position: fixed;">
+    %%JS_USER_VARS%%
+  </div>
+  <div style="height: 50px;"></div>
+
+  <div id="app">
+    <menu-user @snackbar="showSnackbar"></menu-user>
+    <div class="container content split-bottom">
+      <div class="row">
+        <ad-top></ad-top>
+        ${require('~templates/search-wizard.htm')}
+      </div>
+    </div>
+
+    <div class="container content paper">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row" style="display: none;" v-show="human.id">
+            <div class="col-sm-8">
+              <account-component :human="human" :key="human.id" v-if="human.id"></account-component>
+              <title-mail :human="human" v-if="human.id"></title-mail>
+            </div>
+            <div class="col-sm-4">
+              ${require('~templates/sidebar.htm')}
+            </div>
+          </div>
+
+          <div class="preloader" v-show="!ready" v-if="!human.id">
+            ${require('~templates/preloader-raw-svg.htm')}
+            <div class="preloader__hint">
+              Получаю данные этой анкеты
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    ${require('~templates/footer.htm')}
+  </div>
+
+  <!-- SETTINGS layer -->
+  <div id="settings">
+    <router-view @close="$router.go(-1)" @warning="snackbar" @alert="toast"></router-view>
+
+    <snackbar v-if="warning" @close="warning = null">{{warning}}</snackbar>
+    <toast v-if="alert" @close="alert = null">{{alert}}</toast>
+  </div>
+  <!-- end of SETTINGS layer -->
+
+  <!-- BLOCK_COUNTERS -->
+  ${require('~templates/js-libs.htm')}
+
+</body>
+</html>

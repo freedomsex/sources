@@ -9,7 +9,6 @@ export default class Api extends requests {
     /* eslint-disable-next-line */
     const defHost = host || '/';
     super();
-    this.store = store;
     // Delay requests sec
     this.setDelay(CONFIG.NET_DELAY);
     // [!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]

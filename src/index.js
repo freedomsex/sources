@@ -6,6 +6,8 @@ import '~legacy/navigate'; // TODO: проверить/переписать на
 import {router, settingsRouter} from '~config/router';
 
 import MenuUser from '~modules/MenuUser';
+import TitleMail from '~modules/TitleMail';
+import AccountComponent from '~components/AccountComponent';
 import AdTop from '~modules/AdTop';
 
 import InfoWidget from '~widgets/InfoWidget';
@@ -88,6 +90,8 @@ const App = new Vue({
   router,
   components: {
     MenuUser,
+    TitleMail,
+    AccountComponent,
     InfoWidget,
     AuthBoard,
     SearchWizard,

@@ -2,29 +2,32 @@ const webpack = require('webpack');
 const path = require('path');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const WebpackCdnPlugin = require('webpack-cdn-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+// const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const formatter = require('eslint-friendly-formatter');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+// const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 
-const devMode = process.env.NODE_ENV !== 'production';
-
 let styleLoader = 'style-loader';
-if (devMode) {
+if (process.env.NODE_ENV !== 'production') {
   styleLoader = MiniCssExtractPlugin.loader;
 }
 
+const publicPath = '/static/';
+// const rootPath = '../../web';
+
 module.exports = {
   entry: {
-    app: ['./src/index.js'],
+    app: ['babel-polyfill', './src/index.js'],
   },
   output: {
     filename: '[name].[chunkhash:5].js',
     path: path.resolve(__dirname, 'dist'),
-    publicPath: 'http://localhost:8080/build/',
+    // publicPath: 'http://localhost:8080/build/',
+    publicPath,
   },
   resolve: {
     extensions: ['.js', '.json', '.vue', '.ts'],
@@ -164,30 +167,51 @@ module.exports = {
     //   defaultSettings,
     //   defaultResults,
     // }),
+
+    // Please remember that setting NODE_ENV doesn't automatically set mode.
     new webpack.DefinePlugin({
       NODE_ENV: process.env.NODE_ENV,
     }),
+    new WriteFilePlugin(),
 
     new HtmlWebpackPlugin({
-      template: './src/templates/index/src/index.htm',
-      // chunks: ['app']
+      template: './src/templates/index.htm',
+      xhtml: true,
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'mail.html',
+      template: './src/templates/mail.htm',
+      xhtml: true,
     }),
     new MiniCssExtractPlugin({
       filename: '[name].[chunkhash:5].css',
     }),
     new CleanWebpackPlugin([
       path.resolve(__dirname, 'dist'),
-      // path.resolve(__dirname, '../../web/build'),
-      '../../web/build',
+      // path.resolve(__dirname, `${rootPath}${publicPath}`),
+      // '../../web/static/js',
     ], {allowExternal: true}),
-    new CopyWebpackPlugin([
-      {from: './dist/app.*', to: '../../web/build', flatten: true},
-      {from: './dist/vendors*', to: '../../web/build', flatten: true},
-      // {from: './dist/index.html', to: '../../app/view/template/', flatten: true},
-    ]),
-    new WriteFilePlugin(),
+    // new CopyWebpackPlugin([
+    //   {from: './dist/app.*', to: `${rootPath}${publicPath}`, flatten: true},
+    //   {from: './dist/vendors*', to: `${rootPath}${publicPath}`, flatten: true},
+    //   // {from: './dist/index.html', to: '../../app/view/template/', flatten: true},
+    // ]),
+    new WebpackCdnPlugin({
+      modules: [
+        {name: 'vue', var: 'Vue'},
+        {name: 'vuex', var: 'Vuex'},
+        {name: 'vue-router', var: 'VueRouter'},
+        {name: 'axios'},
+        {name: 'jquery', var: '$'},
+        {name: 'underscore', var: '_'},
+        {name: 'lscache', var: 'ls'},
+        {name: 'dexie', var: 'Dexie'},
+        {name: 'moment'},
+      ],
+      // publicPath: '/node_modules'
+    }),
   ],
-  mode: 'development',
+  // mode: 'development',
   // externals: {
   //   $: 'jquery',
   //   _: 'underscore',
@@ -219,5 +243,6 @@ module.exports = {
   },
   stats: {
     entrypoints: false,
+    children: false,
   },
 };

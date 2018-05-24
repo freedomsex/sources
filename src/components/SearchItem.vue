@@ -43,6 +43,13 @@ export default {
       }
       return result;
     },
+    anketaLink() {
+      const sex = (this.human.sex == 1) ? 'Парень' : 'Девушка';
+      const {age, name, up, to} = this.human;
+      const city = this.human.city ? `/город/${this.human.city}` : '/';
+
+      return `/${this.human.id}/${sex}/${age}${city}?name=${name}&years_up=${up}&years_to=${to}`;
+    },
   },
   methods: {
     close() {
@@ -81,7 +88,7 @@ export default {
         {{human.city}}
       </div>
       <a class="search-item__search"
-        v-if="search" :href="'/' + human.id"
+        v-if="search" :href="anketaLink"
         @click.prevent>
         {{search}}
       </a>

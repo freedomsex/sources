@@ -33,7 +33,7 @@ export default {
 <style lang="less">
 .desire-item {
   background-color: @white;
-  background-image: url(/static/img/icon/desire_corner.png);
+  background-image: url(~static/img/icon/desire_corner.png);
   background-position: left top;
   background-repeat: no-repeat;
   border-radius: @radius-xs;
@@ -60,7 +60,7 @@ export default {
     border-color: @pink;
   }
   &.added {
-    background-image: url(/static/img/icon/desire_corner_blue.png);
+    background-image: url(~static/img/icon/desire_corner_blue.png);
     border-color: @purpur-dark;
   }
   &.process {
