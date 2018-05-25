@@ -4,6 +4,9 @@ import ModalDialog from '~dialogs/ModalDialog';
 export default {
   extends: ModalDialog,
   props: ['photo', 'thumb', 'maxWidth', 'bypass'],
+  mounted() {
+    console.log('background', this.background);
+  },
   methods: {
     approve() {
       this.$store.commit('accepts/photo');
@@ -17,7 +20,7 @@ export default {
       return !!(this.$store.state.accepts.photo || this.bypass);
     },
     background() {
-      return this.thumb ? {backgroundImage: `'url(${this.thumb})'`} : null;
+      return this.thumb ? {backgroundImage: `url('${this.thumb}')`} : null;
     },
   },
   components: {

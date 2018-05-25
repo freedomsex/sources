@@ -273,11 +273,11 @@ export default {
 
 .message-input__button-account {
   .message-input__button();
-  background-image: url("/static/img/icon/account.png");
+  background-image: url("~static/img/icon/account.png");
 }
 
 .message-input__button-send {
   .message-input__button();
-  background-image: url("/static/img/icon/send.png");
+  background-image: url("~static/img/icon/send.png");
 }
 </style>

@@ -1,9 +1,12 @@
 <script>
-import $ from 'jquery';
+// import $ from 'jquery';
 import axios from 'axios';
 import hasher from '~legacy/utils/simple-hash';
 import ClosedActivity from '~closed-activity/ClosedActivity';
 import ModalDialog from '~dialogs/ModalDialog';
+import AdaptPhotoData from '~assets/AdaptPhotoData';
+
+import FileUploadButton from './FileUploadButton';
 
 export default {
   extends: ClosedActivity,
@@ -15,25 +18,6 @@ export default {
     };
   },
   mounted() {
-    console.log('fileupload');
-    const self = this;
-    $('#fileupload').fileupload({
-      dataType: 'json',
-      add(e, data) {
-        const server = self.$store.state.photoServer;
-        const {uid} = self.$store.state.user;
-        data.url = `http://${server}/api/v1/users/${uid}/photos?jwt=${
-          self.$store.state.apiToken
-        }`;
-        data.submit();
-      },
-      done(e, data) {
-        self.preview(data.result.photo);
-      },
-      fail() {
-        self.failed();
-      },
-    });
     this.loadPhoto();
   },
   methods: {
@@ -61,39 +45,31 @@ export default {
         });
     },
     upload() {
-      $('#fileupload').click();
+      // $('#fileupload').click();
     },
     show(index) {
+      console.log('show', this.photos[index]);
       this.preview(this.photos[index]);
     },
-    preview(photo) {
-      const {_links: links} = photo;
-      if (links.origin.href) {
-        const data = {
-          photo: links.origin.href,
-          thumb: links.thumb.href,
-          alias: photo.alias,
-          height: photo.height,
-          width: photo.width,
-        };
-        // this.$router.push({ name: 'preview',
-        // params: {humanId: this.humanId, photo: data, options: true} });
-        this.$emit('select', data);
-        this.close();
-        // this.$store.commit('sendPhoto', data);
-        // console.log('sendPhoto');
-        // console.log(data);
-      } else {
-        this.close();
-      }
+    preview(data) {
+      // this.$router.push({ name: 'preview',
+      // params: {humanId: this.humanId, photo: data, options: true} });
+      const photo = AdaptPhotoData(data);
+      console.log('preview', photo);
+      this.$emit('select', photo);
+      this.close();
+      // this.$store.commit('sendPhoto', data);
+      // console.log('sendPhoto');
     },
     failed() {
       this.photoAlert = true;
+      // this.close();
     },
   },
   components: {
     ClosedActivity,
     ModalDialog,
+    FileUploadButton,
   },
 };
 </script>
@@ -112,10 +88,8 @@ export default {
 
     <div class="activity-section">
       <div class="upload_photo__add">
-        <button class="btn btn-primary" @click="upload">
-          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-          Добавить
-        </button>
+        <FileUploadButton @loaded="preview"/>
+
         <input id="fileupload" type="file" name="file" data-form-data='{"script": "true"}'>
       </div>
     </div>

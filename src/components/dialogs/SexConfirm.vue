@@ -92,8 +92,8 @@ export default {
       this.process = true;
       if (this.sex) {
         this.$store.dispatch('SAVE_SEX', {sex: this.sex, token}).then(() => {
-          // app.$refs['api-key'].load(); // TODO: global APP dep
-          this.$store.dispatch('auth/UPDATE_KEY');
+          // TODO: $root APP dep refresh() / reload()
+          this.$root.refresh();
         });
         this.$root.reload();
         this.$emit('select', this.show);

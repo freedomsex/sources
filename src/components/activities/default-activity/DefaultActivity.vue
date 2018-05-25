@@ -111,12 +111,12 @@ export default {
 
   &__label {
     .circle-label;
-    background-image: url('/static/img/loader.gif');
+    background-image: url('~static/img/loader.gif');
   }
   &__alert {
     .circle-label;
     border: 0px solid @gray;
-    background-image: url('/static/img/icon/error-outline.png');
+    background-image: url('~static/img/icon/error-outline.png');
   }
 }
 

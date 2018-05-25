@@ -180,7 +180,7 @@ export default {
       <div class="message-item__balloon" @mouseover="showOption = true" @click="fix">
         <div v-if="image" class="message-image" :style="{ backgroundImage: 'url('+image+')' }">
           <div class="message-image__play" @click="play">
-            <img src="/static/img/icon/play.png">
+            <img src="~static/img/play.png">
           </div>
           <span class="message-image__info">
             <span class="message-image__status" v-show="!read"></span>

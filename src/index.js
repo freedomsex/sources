@@ -74,6 +74,10 @@ const App = new Vue({
     toast(text) {
       this.alert = text;
     },
+    refresh() {
+      // TODO: without $root and $refs
+      this.$refs['api-key'].load();
+    },
     reload() {
       const home = this.$refs.results;
       if (home) {

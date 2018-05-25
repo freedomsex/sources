@@ -251,7 +251,7 @@ export default {
     margin: 0 auto;
     width: 100px;
     height: 100px;
-    background-image: url('/static/img/preloader.gif');
+    background-image: url('~static/img/preloader.gif');
   }
   &__hint {
     color: @gray-dark;

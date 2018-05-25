@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 import _ from 'underscore';
 import ClosedActivity from '~closed-activity/ClosedActivity';
 import ModalDialog from '~dialogs/ModalDialog';
+import CitySuggest from '~modules/CitySuggest';
 
 export default {
   extends: ClosedActivity,
@@ -113,6 +114,7 @@ export default {
   components: {
     ClosedActivity,
     ModalDialog,
+    CitySuggest,
   },
 };
 </script>
@@ -122,7 +124,7 @@ export default {
     <div class="activity-section">
       <div class="activity-section__title">Мой город:</div>
       <div class="form-inline">
-        <city-suggest :city="selectCity" @select="saveCity"/>
+        <CitySuggest :city="selectCity" @select="saveCity"/>
       </div>
     </div>
 

@@ -28,7 +28,7 @@ export default {
       return `ad-hm-${this.random(0, 2)}.gif`;
     },
     source() {
-      return `/static/img/ad/${this.banner}`;
+      return `~static/img/ad/${this.banner}`;
     },
   },
 };

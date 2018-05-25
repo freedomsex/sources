@@ -59,7 +59,7 @@ module.exports = {
   module: {
     rules: [
       {
-      /* Validate */
+        /* Validate */
         test: /\.(js|vue)$/,
         loader: 'eslint-loader',
         enforce: 'pre',
@@ -192,7 +192,8 @@ module.exports = {
       path.resolve(__dirname, 'dist'),
       // path.resolve(__dirname, `${rootPath}${publicPath}`),
       // '../../web/static/js',
-    ], {allowExternal: true}),
+    ],
+    {allowExternal: true}),
     // new CopyWebpackPlugin([
     //   {from: './dist/app.*', to: `${rootPath}${publicPath}`, flatten: true},
     //   {from: './dist/vendors*', to: `${rootPath}${publicPath}`, flatten: true},
@@ -200,7 +201,7 @@ module.exports = {
     // ]),
     new WebpackCdnPlugin({
       modules: [
-        {name: 'vue', var: 'Vue', path: 'dist/vue.min.js'},
+        {name: 'vue', var: 'Vue', path: 'dist/vue.js'},
         {name: 'vuex', var: 'Vuex', path: 'dist/vuex.min.js'},
         {name: 'vue-router', var: 'VueRouter', path: 'dist/vue-router.min.js'},
         {name: 'axios', path: 'dist/axios.min.js'},

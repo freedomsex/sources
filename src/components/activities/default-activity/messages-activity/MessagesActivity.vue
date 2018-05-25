@@ -72,6 +72,7 @@ export default {
       console.log('cancel');
     },
     select(data) {
+      console.log('select photo', data);
       this.photo = data;
       this.preview = data;
     },
