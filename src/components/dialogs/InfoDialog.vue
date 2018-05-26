@@ -14,6 +14,7 @@ export default {
   <ModalDialog @close="close()">
     <div class="modal-dialog__wrapper">
       <div class="modal-dialog__body">
+        <slot></slot>
         {{text}}
       </div>
       <div class="modal-dialog__footer">

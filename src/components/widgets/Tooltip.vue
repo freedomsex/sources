@@ -1,5 +1,5 @@
 <script>
-import ModalDialog from '~dialogs/ModalDialog';
+import InfoDialog from '~dialogs/InfoDialog';
 
 export default {
   props: ['text', 'force'],
@@ -15,7 +15,7 @@ export default {
     },
   },
   components: {
-    ModalDialog,
+    InfoDialog,
   },
 };
 </script>
@@ -23,14 +23,7 @@ export default {
 <template>
   <span>
     <span class="glyphicon glyphicon-question-sign question-tooltip" @click="show = true"></span>
-    <ModalDialog @close="close" v-if="show || force">
-      <div class="modal-dialog__wrapper">
-        <div class="modal-dialog__body">{{text}}</div>
-        <div class="modal-dialog__footer">
-          <button class="btn btn-primary btn-flat" @click="close">Хорошо</button>
-        </div>
-      </div>
-    </ModalDialog>
+    <InfoDialog @close="close" :text="text" v-if="show || force"/>
   </span>
 </template>
 

@@ -1,4 +1,4 @@
-import ls from 'lscache';
+import lscache from 'lscache';
 import _ from 'underscore';
 
 export default {
@@ -11,13 +11,13 @@ export default {
   },
   actions: {
     load({commit}) {
-      commit('loadUser', ls.get('user.search'));
+      commit('loadUser', lscache.get('user.search'));
     },
   },
   mutations: {
     restore(state, {up, to, any, virt}) {
       _.assign(state, {up, to, any, virt});
-      ls.set('user.search', state, 234567);
+      lscache.set('user.search', state, 234567);
     },
   },
 };

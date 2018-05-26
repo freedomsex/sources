@@ -1,5 +1,5 @@
 import _ from 'underscore';
-import ls from 'lscache';
+import lscache from 'lscache';
 import api from '~config/api';
 
 export default {
@@ -10,18 +10,18 @@ export default {
   actions: {
     SYNC({rootState, state, commit}) {
       const index = `visited-${rootState.user.uid}`;
-      commit('update', ls.get(index));
+      commit('update', lscache.get(index));
       return api.user.visitedList().then((response) => {
         const {data} = response;
         commit('update', data);
-        ls.set(index, state.list, 31 * 24 * 60 * 60);
+        lscache.set(index, state.list, 31 * 24 * 60 * 60);
       });
     },
     ADD({rootState, state, commit}, tid) {
       const {uid} = rootState.user;
       const index = `visited-${uid}`;
       commit('add', tid);
-      ls.set(index, state.list, 31 * 24 * 60 * 60);
+      lscache.set(index, state.list, 31 * 24 * 60 * 60);
       return api.user.visitedAdd(uid, tid).then(() => {});
     },
   },

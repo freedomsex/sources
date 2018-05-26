@@ -1,5 +1,5 @@
 import _ from 'underscore';
-import ls from 'lscache';
+import lscache from 'lscache';
 
 export default {
   namespaced: true,
@@ -11,7 +11,7 @@ export default {
   },
   actions: {
     LOAD({state}) {
-      const data = ls.get('accepts');
+      const data = lscache.get('accepts');
       if (data) {
         _.assign(state, data);
       }
@@ -20,19 +20,19 @@ export default {
   mutations: {
     photo(state) {
       state.photo = true;
-      ls.set('accepts', state);
+      lscache.set('accepts', state);
     },
     search(state) {
       state.search = true;
-      ls.set('accepts', state);
+      lscache.set('accepts', state);
     },
     moderator(state, value) {
       state.moderator = value == true;
-      ls.set('accepts', state);
+      lscache.set('accepts', state);
     },
     settings(state) {
       state.settings = true;
-      ls.set('accepts', state);
+      lscache.set('accepts', state);
     },
   },
 };

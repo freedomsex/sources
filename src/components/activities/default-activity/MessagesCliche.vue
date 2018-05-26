@@ -1,5 +1,5 @@
 <script>
-import ls from 'lscache';
+import lscache from 'lscache';
 import api from '~config/api';
 import DefaultActivity from './DefaultActivity';
 
@@ -20,7 +20,7 @@ export default {
     };
   },
   mounted() {
-    const active = ls.get('cliche-active');
+    const active = lscache.get('cliche-active');
     this.load(active);
   },
   computed: {
@@ -34,7 +34,7 @@ export default {
         .then(({data}) => {
           this.texts = data;
           this.active = result;
-          ls.set('cliche-active', this.active, 3 * 24 * 60 * 60);
+          lscache.set('cliche-active', this.active, 3 * 24 * 60 * 60);
         });
     },
     size(value) {

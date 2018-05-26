@@ -1,8 +1,9 @@
 <script>
-import ls from 'lscache';
+import lscache from 'lscache';
 import api from '~config/api';
 import hasher from '~legacy/utils/simple-hash';
-import ModalDialog from '~dialogs/ModalDialog';
+import InfoDialog from '~dialogs/InfoDialog';
+import ConfirmDialog from '~dialogs/ConfirmDialog';
 import ClosedActivity from './ClosedActivity';
 
 export default {
@@ -14,19 +15,29 @@ export default {
       needResponse: false,
       sended: false,
       isEmpty: false,
+      isShort: false,
     };
   },
   mounted() {
     this.flash();
   },
+  computed: {
+    short() {
+      return (this.text.length <= 25);
+    },
+  },
   methods: {
     flash() {
-      const text = ls.get('review-text');
+      const text = lscache.get('review-text');
       this.text = text || '';
     },
     handle() {
       if (this.text) {
-        this.send();
+        if (!this.short) {
+          this.send();
+        } else {
+          this.isShort = true;
+        }
       } else {
         this.isEmpty = true;
       }
@@ -42,7 +53,7 @@ export default {
         .then(() => {
           this.process = false;
           this.text = '';
-          ls.remove('review-text');
+          lscache.remove('review-text');
         });
       this.isEmpty = false;
       this.process = true;
@@ -52,20 +63,20 @@ export default {
       this.needResponse = false;
     },
     switchToQuestions() {
-      ls.set('review-text', this.text, 5);
+      lscache.set('review-text', this.text, 5);
       this.$router.push('question');
     },
   },
   components: {
     ClosedActivity,
-    ModalDialog,
+    ConfirmDialog,
+    InfoDialog,
   },
 };
 </script>
 
 <template>
   <ClosedActivity @close="close">
-
     <div class="activity-section">
       Пожалуйста, оставьте отзыв о сайте. Для нас важно каждое мнение и в любой форме.
       Будет ещё приятнее, если вы выскажитесь максимально подробно.
@@ -78,11 +89,12 @@ export default {
         <textarea placeholder="Введите текст..."
          class="form-control"
          v-model="text"
+         v-resized
          rows="3"></textarea>
         <label style="margin: 10px 0 12px;">
           <input type="checkbox" v-model="needResponse">
-           Я хочу получить ответ
-          </label>
+          Я хочу получить ответ
+        </label>
       </div>
 
       <div>
@@ -99,42 +111,31 @@ export default {
 
     <div class="activity__splitter"></div>
 
+    <InfoDialog @close="isShort = false" v-if="isShort">
+      Пожалуйста, сообщите больше информации.
+      Хотя бы одну-две фразы, иначе сложно понять суть.
+    </InfoDialog>
 
-    <ModalDialog @close="noResponse()" v-if="needResponse">
-      <div class="modal-dialog__wrapper">
-        <div class="modal-dialog__caption">
-          Задайте вопрос
-        </div>
-        <div class="modal-dialog__body">
-          Пожалуйста, нажмите кнопку "Задать вопрос", если для вас важен ответ.
-          Отзывы нужны чтобы высказать мнение, или сообщить информацию,
-          когда ответ не обязателен.
-        </div>
-        <div class="modal-dialog__footer">
-          <button class="btn btn-default" @click="noResponse()">Отмена</button>
-          <button class="btn btn-primary" @click="switchToQuestions()">Задать вопрос</button>
-        </div>
-      </div>
-    </ModalDialog>
+    <ConfirmDialog v-if="needResponse"
+     @close="noResponse()"
+     @confirm="switchToQuestions()"
+     yesText="Задать вопрос">
+      <span slot="title">Задайте вопрос</span>
+      Пожалуйста, нажмите кнопку "Задать вопрос", если для вас важен ответ.
+      Отзывы нужны чтобы высказать мнение, или сообщить информацию,
+      когда ответ не обязателен.
+    </ConfirmDialog>
 
-    <ModalDialog @close="close()" v-if="sended">
-      <div class="modal-dialog__wrapper">
-        <div class="modal-dialog__caption">
-          Спасибо за отзыв
-        </div>
-        <div class="modal-dialog__body">
-          Для нас важно каждое мнение и в любой форме.
-          Ориентируясь на отзывы Пользователей, разработчики стараются
-          делать сайт ещё приятнее и удобнее.
-        </div>
-        <div class="modal-dialog__footer">
-          <button class="btn btn-primary" @click="close()">Закрыть</button>
-        </div>
-      </div>
-    </ModalDialog>
+    <ConfirmDialog @close="close()" :simple="true" v-if="sended">
+      <span slot="title">Спасибо за отзыв</span>
+      Для нас важно каждое мнение и в любой форме.
+      Ориентируясь на отзывы Пользователей, разработчики стараются
+      делать сайт ещё приятнее и удобнее.
+    </ConfirmDialog>
 
   </ClosedActivity>
 </template>
 
 <style lang="less">
+
 </style>

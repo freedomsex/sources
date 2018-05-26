@@ -1,5 +1,5 @@
 import _ from 'underscore';
-import ls from 'lscache';
+import lscache from 'lscache';
 import api from '~config/api';
 import axios from 'axios';
 
@@ -32,7 +32,7 @@ const initial = _.extend({
   },
   actions: {
     LOAD({state, commit, rootState}) {
-      commit('load', ls.get('initial-contacts'));
+      commit('load', lscache.get('initial-contacts'));
       return api.contacts.initial
         .cget({
           uid: rootState.user.uid,
@@ -40,7 +40,7 @@ const initial = _.extend({
         })
         .then((response) => {
           commit('load', response.data);
-          ls.set('initial-contacts', state.list);
+          lscache.set('initial-contacts', state.list);
         });
     },
     NEXT({commit, rootState}, offset) {
@@ -79,12 +79,12 @@ const initial = _.extend({
   mutations: _.extend({
     delete(state, index) {
       state.list.splice(index, 1);
-      ls.set('initial-contacts', state.list);
+      lscache.set('initial-contacts', state.list);
     },
     read(state, index) {
       if (state.list[index].message) {
         state.list[index].message.unread = 0;
-        ls.set('initial-contacts', state.list);
+        lscache.set('initial-contacts', state.list);
       }
     },
   },
@@ -100,7 +100,7 @@ const intimate = _.extend({
   },
   actions: {
     LOAD({state, commit, rootState}) {
-      commit('load', ls.get('intimate-contacts'));
+      commit('load', lscache.get('intimate-contacts'));
       return api.contacts.intimate
         .cget({
           uid: rootState.user.uid,
@@ -108,7 +108,7 @@ const intimate = _.extend({
         })
         .then((response) => {
           commit('load', response.data);
-          ls.set('intimate-contacts', state.list);
+          lscache.set('intimate-contacts', state.list);
         });
     },
     NEXT({commit, rootState}, offset) {
@@ -147,12 +147,12 @@ const intimate = _.extend({
   mutations: _.extend({
     delete(state, index) {
       state.list.splice(index, 1);
-      ls.set('intimate-contacts', state.list);
+      lscache.set('intimate-contacts', state.list);
     },
     read(state, index) {
       if (state.list[index].message) {
         state.list[index].message.unread = 0;
-        ls.set('intimate-contacts', state.list);
+        lscache.set('intimate-contacts', state.list);
       }
     },
   },
@@ -166,7 +166,7 @@ const sends = _.extend({
   },
   actions: {
     LOAD({state, commit, rootState}) {
-      commit('load', ls.get('sends-contacts'));
+      commit('load', lscache.get('sends-contacts'));
       return api.contacts.sends
         .cget({
           uid: rootState.user.uid,
@@ -174,7 +174,7 @@ const sends = _.extend({
         })
         .then((response) => {
           commit('load', response.data);
-          ls.set('sends-contacts', state.list);
+          lscache.set('sends-contacts', state.list);
         });
     },
     NEXT({commit, rootState}, offset) {
@@ -199,7 +199,7 @@ const sends = _.extend({
   mutations: _.extend({
     delete(state, index) {
       state.list.splice(index, 1);
-      ls.set('sends-contacts', state.list);
+      lscache.set('sends-contacts', state.list);
     },
   },
   mutations),

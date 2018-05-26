@@ -97,13 +97,6 @@ module.exports = {
         ],
       },
       {
-        test: /\.ejs$/,
-        loader: 'ejs-html-loader',
-        options: {
-          //
-        },
-      },
-      {
         test: /\.js$/,
         exclude: /node_modules/,
         loader: 'babel-loader',
@@ -205,12 +198,10 @@ module.exports = {
         {name: 'vuex', var: 'Vuex', path: 'dist/vuex.min.js'},
         {name: 'vue-router', var: 'VueRouter', path: 'dist/vue-router.min.js'},
         {name: 'axios', path: 'dist/axios.min.js'},
-        {name: 'jquery', var: '$', path: 'dist/jquery.min.js'},
         {name: 'underscore', var: '_', path: 'underscore-min.js'},
-        // {name: 'lscache', var: 'ls'},
+        {name: 'lscache'},
         {name: 'dexie', var: 'Dexie', path: 'dist/dexie.min.js'},
       ],
-      // publicPath: '/node_modules'
     }),
   ],
   mode: process.env.NODE_ENV,

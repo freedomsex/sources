@@ -1,5 +1,4 @@
 <script>
-// import $ from 'jquery';
 import axios from 'axios';
 import hasher from '~legacy/utils/simple-hash';
 import ClosedActivity from '~closed-activity/ClosedActivity';

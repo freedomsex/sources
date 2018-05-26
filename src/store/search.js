@@ -1,5 +1,5 @@
 import _ from 'underscore';
-import ls from 'lscache';
+import lscache from 'lscache';
 import api from '~config/api';
 
 export default {
@@ -24,9 +24,9 @@ export default {
       console.log('HUMAN actions', tid);
       api.search.get({tid}).then(({data}) => {
         commit('setHuman', data);
-        ls.set(index, data, 1500);
+        lscache.set(index, data, 1500);
       });
-      commit('setHuman', ls.get(index));
+      commit('setHuman', lscache.get(index));
     },
 
     LOAD({state, rootState, commit, dispatch}, params) {
@@ -49,7 +49,7 @@ export default {
         any,
         virt,
       });
-      console.log('User.data', ls.get('user.data'));
+      console.log('User.data', lscache.get('user.data'));
       return api.search
         .load({
           who,
@@ -95,7 +95,7 @@ export default {
     last(state, {users}) {
       if (users && !state.last) {
         state.last = users;
-        ls.set('last-search', users, 31 * 24 * 60 * 60);
+        lscache.set('last-search', users, 31 * 24 * 60 * 60);
       }
     },
     next(state, reset) {

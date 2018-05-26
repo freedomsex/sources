@@ -1,9 +1,10 @@
 <script>
-import ls from 'lscache';
+import lscache from 'lscache';
 import axios from 'axios';
 import api from '~config/api';
 import hasher from '~legacy/utils/simple-hash';
-import ModalDialog from '~dialogs/ModalDialog';
+import InfoDialog from '~dialogs/InfoDialog';
+import ConfirmDialog from '~dialogs/ConfirmDialog';
 import DefaultActivity from './DefaultActivity';
 
 export default {
@@ -17,11 +18,17 @@ export default {
       sended: false,
       showForm: false,
       isEmpty: false,
+      isShort: false,
     };
   },
   mounted() {
     this.load();
     this.flash();
+  },
+  computed: {
+    short() {
+      return (this.text.length <= 25);
+    },
   },
   methods: {
     load() {
@@ -32,7 +39,7 @@ export default {
       });
     },
     flash() {
-      const text = ls.get('review-text');
+      const text = lscache.get('review-text');
       this.text = text || '';
     },
     show(index) {
@@ -47,7 +54,11 @@ export default {
     },
     handle() {
       if (this.text) {
-        this.send();
+        if (!this.short) {
+          this.send();
+        } else {
+          this.isShort = true;
+        }
       } else {
         this.isEmpty = true;
       }
@@ -63,7 +74,7 @@ export default {
         .then(() => {
           this.process = false;
           this.text = '';
-          ls.remove('review-text');
+          lscache.remove('review-text');
         });
       this.isEmpty = false;
       this.process = true;
@@ -73,13 +84,14 @@ export default {
       this.needResponse = true;
     },
     switchToReviews() {
-      ls.set('review-text', this.text, 5);
+      lscache.set('review-text', this.text, 5);
       this.$router.push('reviews');
     },
   },
   components: {
     DefaultActivity,
-    ModalDialog,
+    ConfirmDialog,
+    InfoDialog,
   },
 };
 </script>
@@ -141,40 +153,28 @@ export default {
         <div v-show="labels.load">Загружаю...</div>
       </div>
 
+      <InfoDialog @close="isShort = false" v-if="isShort">
+        Пожалуйста, сообщите больше информации.
+        Хотя бы одну-две фразы, иначе сложно понять суть.
+      </InfoDialog>
 
-      <ModalDialog @close="noReviews()" v-if="!needResponse">
-        <div class="modal-dialog__wrapper">
-          <div class="modal-dialog__caption">
-            Отправьте ваш отзыв
-          </div>
-          <div class="modal-dialog__body">
-            Пожалуйста, нажмите кнопку "Отправить отзыв",
-            если хотите высказать мнение, поделиться советом
-            или сообщить информацию.
-          </div>
-          <div class="modal-dialog__footer">
-            <button class="btn btn-default" @click="noReviews()">Отмена</button>
-            <button class="btn btn-primary" @click="switchToReviews()">Отправить отзыв</button>
-          </div>
-        </div>
-      </ModalDialog>
+      <ConfirmDialog v-if="!needResponse"
+       @close="noReviews()"
+       @confirm="switchToReviews()"
+       yesText="Отправить отзыв">
+        <span slot="title">Отправьте ваш отзыв</span>
+        Пожалуйста, нажмите кнопку "Отправить отзыв",
+        если хотите высказать мнение, поделиться советом
+        или сообщить информацию.
+      </ConfirmDialog>
 
-      <ModalDialog @close="close()" v-if="sended">
-        <div class="modal-dialog__wrapper">
-          <div class="modal-dialog__caption">
-            Скоро ответим
-          </div>
-          <div class="modal-dialog__body">
-             Ответ будет отправлен в анкету на сайте или на почту.
-             Чем выше важность вопроса, тем больше шансов скоро получить ответ.
-             Некоторые вопросы могут остаться без ответа.
-             Отвечают быстро, но это не точно...
-          </div>
-          <div class="modal-dialog__footer">
-            <button class="btn btn-primary" @click="close()">Закрыть</button>
-          </div>
-        </div>
-      </ModalDialog>
+      <ConfirmDialog @close="close()" :simple="true" v-if="sended">
+        <span slot="title">Скоро ответим</span>
+        Ответ будет отправлен в анкету на сайте или на почту.
+        Чем выше важность вопроса, тем больше шансов скоро получить ответ.
+        Некоторые вопросы могут остаться без ответа.
+        Отвечают быстро, но это не точно...
+      </ConfirmDialog>
 
   </DefaultActivity>
 </template>

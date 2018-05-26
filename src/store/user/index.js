@@ -1,5 +1,5 @@
 import _ from 'underscore';
-import ls from 'lscache';
+import lscache from 'lscache';
 import api from '~config/api';
 
 import search from './search';
@@ -38,7 +38,7 @@ export default {
       // if (uid) {
       //     commit('loadUser', {uid});
       // }
-      commit('loadUser', ls.get('user.data'));
+      commit('loadUser', lscache.get('user.data'));
     },
 
     REGISTRATION(context, token) {
@@ -85,21 +85,21 @@ export default {
   mutations: {
     loadUser(state, data) {
       _.assign(state, data);
-      ls.set('user.data', state, 23456);
+      lscache.set('user.data', state, 23456);
     },
     resetUser(state, data) {
       const {uid, city, sex, age, name, contacts, apromt: promt} = data; // User module
 
       _.assign(state, {uid, city, sex, age, name, contacts, promt});
-      ls.set('user.data', state, 23456);
+      lscache.set('user.data', state, 23456);
     },
     settings(state, data) {
       _.assign(state, data);
-      ls.set('user.data', state, 23456);
+      lscache.set('user.data', state, 23456);
     },
     personal(state, {city, sex, age, name}) {
       _.assign(state, {city, sex, age, name});
-      ls.set('user.data', state, 23456);
+      lscache.set('user.data', state, 23456);
     },
   },
 };

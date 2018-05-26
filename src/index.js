@@ -1,6 +1,6 @@
 import {Vue, store} from '~store';
 import '~assets/directives/resized'; // TODO: оформить директивы
-import '~legacy/navigate'; // TODO: проверить/переписать навигацию клавиатуры
+// import '~legacy/navigate'; // TODO: проверить/переписать навигацию клавиатуры
 
 import {router, settingsRouter} from '~config/router';
 
@@ -18,6 +18,8 @@ import ApiKeyUpdate from '~modules/ApiKeyUpdate';
 import SearchList from '~components/SearchList';
 import SliderFooter from '~components/SliderFooter';
 import DesiresWidget from '~widgets/DesiresWidget';
+import Snackbar from '~widgets/Snackbar';
+import Toast from '~widgets/Toast';
 
 import 'styles/core/body.less';
 
@@ -108,6 +110,8 @@ const App = new Vue({
     ApiKeyUpdate,
     SliderFooter,
     DesiresWidget,
+    Snackbar,
+    Toast,
   },
 });
 

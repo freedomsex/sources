@@ -1,5 +1,5 @@
 import _ from 'underscore';
-import ls from 'lscache';
+import lscache from 'lscache';
 import api from '~config/api';
 
 export default {
@@ -10,13 +10,13 @@ export default {
   },
   actions: {
     PICK({commit}) {
-      commit('update', ls.get('desires'));
+      commit('update', lscache.get('desires'));
     },
     SYNC({state, commit}) {
-      commit('update', ls.get('desires'));
+      commit('update', lscache.get('desires'));
       return api.user.desireList().then((response) => {
         commit('update', response.data);
-        ls.set('desires', state.list);
+        lscache.set('desires', state.list);
       });
     },
     ADD({commit}, tag) {
@@ -41,11 +41,11 @@ export default {
     add(state, data) {
       state.list.unshift(data);
       state.list = state.list.slice(0, state.limit);
-      ls.set('desires', state.list);
+      lscache.set('desires', state.list);
     },
     delete(state, index) {
       state.list.splice(index, 1);
-      ls.set('desires', state.list);
+      lscache.set('desires', state.list);
     },
   },
   getters: {

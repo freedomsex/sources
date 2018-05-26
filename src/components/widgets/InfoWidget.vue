@@ -1,5 +1,5 @@
 <script>
-import ls from 'lscache';
+import lscache from 'lscache';
 
 // TODO: Remame to RELEASEs
 export default {
@@ -17,7 +17,7 @@ export default {
     };
   },
   mounted() {
-    this.accept = ls.get('release-info') <= this.version;
+    this.accept = lscache.get('release-info') <= this.version;
   },
   computed: {
     userId() {
@@ -46,7 +46,7 @@ export default {
       return result;
     },
     confirm() {
-      ls.set('release-info', this.version);
+      lscache.set('release-info', this.version);
       this.accept = true;
     },
     more() {
