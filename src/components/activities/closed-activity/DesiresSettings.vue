@@ -4,6 +4,7 @@ import ClosedActivity from '~closed-activity/ClosedActivity';
 import ModalDialog from '~dialogs/ModalDialog';
 import DesireItem from '~modules/DesireList/DesireItem';
 import SuggestInput from '~modules/SuggestInput';
+import Tooltip from '~widgets/Tooltip';
 
 export default {
   props: [],
@@ -12,6 +13,9 @@ export default {
       process: false,
       desire: '',
       confirmRemove: null,
+      // tooltip: {
+      //   desire: false,
+      // },
     };
   },
   computed: Vuex.mapState({
@@ -45,6 +49,7 @@ export default {
     ModalDialog,
     SuggestInput,
     DesireItem,
+    Tooltip,
   },
 };
 </script>
@@ -52,7 +57,9 @@ export default {
 <template>
   <ClosedActivity @close="close">
     <div class="activity-section">
-      <div class="activity-section__title">Желания и фантазии</div>
+      <div class="activity-section__title">
+        Желания и фантазии
+      </div>
       <SuggestInput @select="add" :tags="tags" :disabled="process"/>
     </div>
 
@@ -67,7 +74,14 @@ export default {
     </div>
 
     <div class="activity-section">
-      <div class="activity-section__title">Фильтр желаний</div>
+      <div class="activity-section__title">
+        Фильтр желаний
+        <Tooltip>
+          Начните вводить желание или фантазию.
+          Выберите из списка, тысячи возможных вариантов.
+          Напишите разработчикам, если вам чего-то не хватает ;)
+        </Tooltip>
+      </div>
       Позволяет находить тех, чьи желания и фантазии совпадают с вашими.
       Просто заполните ваш список ваших Желаний. Когда желания вашего собеседника
       и ваши совпадут, его анкета будет выделена в Поиске.

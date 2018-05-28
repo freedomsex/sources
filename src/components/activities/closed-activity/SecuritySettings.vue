@@ -37,9 +37,9 @@ export default {
     },
   }),
   mounted() {
-    console.log('auth/SYNC');
+    console.log('auth/sync');
     this.$store
-      .dispatch('auth/SYNC')
+      .dispatch('auth/sync')
       .then(() => {
         this.init();
         this.process = false;

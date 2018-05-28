@@ -46,7 +46,8 @@ export default {
       let result = false;
       if (data.user) {
         const {sex, city: where, age} = data.user;
-        const {sex: who, city, up, to, any} = this.$store.state.user;
+        const {sex: who, city} = this.$store.state.user;
+        const {up, to, any} = this.$store.state.search;
 
         if (who == sex) {
           result = true;

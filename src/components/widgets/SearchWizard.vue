@@ -9,8 +9,7 @@ export default {
   },
   computed: Vuex.mapState({
     range(state) {
-      const {up} = state.user;
-      const {to} = state.user;
+      const {up, to} = state.search;
       let range = '';
       if (up && to) {
         range = `${up} - ${to}`;

@@ -11,7 +11,7 @@ export default {
   },
   computed: {
     human() {
-      return this.$store.state.search.human;
+      return this.$store.state.human;
     },
   },
   mounted() {
@@ -34,15 +34,12 @@ export default {
     load() {
       this.loading = true;
       this.hope();
-      this.$store
-        .dispatch('search/HUMAN', this.humanId)
-        .then(() => {
-          this.loaded();
-        })
-        .catch((error) => {
-          console.log(error);
-          this.loading = false;
-        });
+      this.$store.dispatch('human/load', this.humanId).then(() => {
+        this.loaded();
+      }).catch((error) => {
+        console.log(error);
+        this.loading = false;
+      });
     },
   },
   components: {

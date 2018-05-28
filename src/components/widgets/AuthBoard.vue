@@ -13,7 +13,7 @@ export default {
   },
   mounted() {
     _.delay(() => {
-      this.$store.dispatch('auth/SYNC').then(() => {
+      this.$store.dispatch('auth/sync').then(() => {
         this.email = this.$store.state.auth.email;
       }).catch(() => {
         console.log('! Авторизация провалена');

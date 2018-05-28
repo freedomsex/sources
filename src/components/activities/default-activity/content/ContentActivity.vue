@@ -1,5 +1,6 @@
 <script>
 import axios from 'axios';
+import ReviewList from '~modules/ReviewList';
 import ActivityActions from '../../ActivityActions';
 
 export default {
@@ -18,13 +19,14 @@ export default {
       preview: null,
 
       enableReview: false,
-      reviews: [],
-      batch: 7,
     };
   },
   computed: {
     ready() {
       return !this.loader && !this.error;
+    },
+    reviewsUrl() {
+      return null;
     },
   },
   methods: {
@@ -56,6 +58,9 @@ export default {
     show(index) {
       this.preview = this.galery[index];
     },
+  },
+  components: {
+    ReviewList,
   },
 };
 </script>
@@ -108,24 +113,7 @@ export default {
           </a>
         </div>
 
-        <div v-if="ready && enableReview">
-          <div class="content-reviews" v-if="reviews.length">
-            <div class="content-reviews__caption">Отзывы</div>
-            <div class="content-reviews__item" :class="item.sex" v-for="(item, index) in reviews">
-              <b>{{item.name}}:</b>
-              {{item.text}}
-              <div class="reply" v-show="item.reply">{{item.reply}}</div>
-            </div>
-          </div>
-
-          <div>
-            <button class="btn btn-default" v-if="0"
-             @click=""> Следующие </button>
-            <button class="btn btn-default"
-             @click="$router.push('/settings/reviews')"> Оставить отзыв </button>
-          </div>
-        </div>
-
+        <ReviewList :link="reviewsUrl" v-if="ready && enableReview"/>
       </div>
     </div>
   </div>
@@ -185,40 +173,5 @@ export default {
     }
   }
 
-  .content-reviews {
-    margin: 20px 0 20px;
-
-    &__caption {
-      font-size: 24px;
-      font-weight: bold;
-      margin-bottom: 15px;
-      padding: 10px 0px;
-      border-bottom: 1px solid @gray;
-    }
-
-    &__item {
-      border-radius: 0px;
-      border-top: 0px solid #cccccc;
-      margin: 15px 0 0 0px;
-      text-align: left;
-      font-size: 16px;
-
-      &.man b {
-        border-top: 0px solid #669933;
-        color: #669933;
-      }
-      &.woman b {
-        border-top: 0px solid #c082c0;
-        color: #c082c0;
-      }
-      .reply {
-        background: @light;
-        border-left: 3px solid @gray-dark;
-        margin: 10px 10px 0px;
-        padding: 10px 15px;
-        font-size: 14px;
-      }
-    }
-  }
 }
 </style>

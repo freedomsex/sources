@@ -24,27 +24,28 @@ export default {
   },
   mounted() {
     this.preload();
-    //        setTimeout(this.reload, 1000*3);
+    this.$store.dispatch('search/load');
     this.reload();
     this.visitedSync();
     this.$store.dispatch('desires/PICK');
   },
   computed: {
     items() {
-      return this.$store.state.search.list;
+      return this.$store.state.results.list;
     },
     more() {
-      return this.$store.getters['search/more'];
+      return this.$store.getters['results/more'];
     },
     compact() {
-      const {city, any} = this.$store.state.user;
+      const {city} = this.$store.state.user;
+      const {any} = this.$store.state.search;
       return city && !any;
     },
     visited() {
       return this.$store.state.visited.list;
     },
     accept() {
-      const {next, batch} = this.$store.state.search;
+      const {next, batch} = this.$store.state.results;
       const accept = this.$store.state.accepts.search;
       return !this.ignore && !accept && next > batch;
     },
@@ -71,13 +72,13 @@ export default {
       return this.$store.state.user.age;
     },
     up() {
-      return this.$store.state.user.search.up || 0;
+      return this.$store.state.search.up || 0;
     },
     to() {
-      return this.$store.state.user.search.to || 0;
+      return this.$store.state.search.to || 0;
     },
     who() {
-      return this.$store.state.user.search.who || null;
+      return this.$store.state.search.who || null;
     },
     userId() {
       return this.$store.state.user.uid || 0;
@@ -87,16 +88,16 @@ export default {
   methods: {
     reload() {
       this.$store.commit('ready', false);
-      this.$store.commit('search/reset', false);
+      this.$store.commit('results/reset', false);
       this.load();
     },
     visitedSync() {
-      this.$store.dispatch('visited/SYNC').catch(() => {
+      this.$store.dispatch('visited/sync').catch(() => {
         console.log('! Ошибка визита');
       });
     },
     preload() {
-      this.$store.commit('search/results', this.defaults);
+      this.$store.commit('results/results', this.defaults);
       this.onLoad();
     },
     load() {
@@ -108,7 +109,7 @@ export default {
         to: this.to,
       };
       this.$store
-        .dispatch('search/LOAD', params)
+        .dispatch('results/load', params)
         .then(() => {
           this.onLoad();
         })

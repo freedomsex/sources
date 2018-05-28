@@ -5,10 +5,12 @@ import cookies from '~assets/legacy/utils/cookies'; // TODO: remove
 import CONFIG from '~config/';
 import api from '~config/api';
 
-import user from './user/';
+import user from './user';
 import auth from './auth';
-import about from './about';
 import search from './search';
+import human from './human';
+import about from './about';
+import results from './results';
 import contacts from './contacts';
 import desires from './desires';
 import visited from './visited';
@@ -22,8 +24,10 @@ const store = new Vuex.Store({
   modules: {
     user,
     auth,
-    about,
     search,
+    human,
+    about,
+    results,
     contacts,
     desires,
     visited,
@@ -43,7 +47,6 @@ const store = new Vuex.Store({
     LOAD_API_TOKEN({commit}) {
       const token = cookies.get('jwt');
       commit('setApiToken', {apiToken: token});
-      console.log('apiToken', token);
       api.contacts.initial.setAuthKey(token); // TODO: Переписать API
       api.contacts.intimate.setAuthKey(token);
     },
@@ -73,9 +76,5 @@ const store = new Vuex.Store({
     },
   },
 });
-
-store.dispatch('LOAD_API_TOKEN');
-store.dispatch('accepts/LOAD');
-store.dispatch('LOAD_USER');
 
 export {Vue, store};

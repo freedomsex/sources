@@ -1,13 +1,17 @@
 <script>
+import _ from 'underscore';
 import axios from 'axios';
 
 export default {
+  props: ['progress'],
+  data() {
+    return {
+      busy: false,
+    };
+  },
   computed: {
     input() {
       return this.$refs.file;
-    },
-    file() {
-      return this.input.files[0];
     },
     url() {
       const server = this.$store.state.photoServer;
@@ -20,18 +24,25 @@ export default {
     add() {
       this.input.click();
     },
+    file() {
+      // computed кэширует ввод,
+      // files[] READ_ONLY, берется последнее
+      return _.last(this.input.files);
+    },
     upload(formData) {
+      this.busy = true;
       axios.post(this.url, formData, {
         headers: {'Content-Type': 'multipart/form-data'},
       }).then(({data}) => {
         this.preview(data.photo);
       }).catch(() => {
         this.$emit('failed');
+        this.busy = false;
       });
     },
     submit() {
       const formData = new FormData();
-      formData.append('file', this.file);
+      formData.append('file', this.file());
       this.upload(formData);
     },
 
@@ -39,6 +50,7 @@ export default {
       // const photo = AdaptPhotoData(data);
       // console.log('AdaptPhotoData', photo);
       this.$emit('loaded', data);
+      this.busy = false;
     },
   },
 };
@@ -51,6 +63,9 @@ export default {
     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
     Добавить
   </button>
+  <div class="btn btn-link" v-if="progress">
+    {{busy ? 'Загружаю...' : 'Выберите фото'}}
+  </div>
 </div>
 </template>
 

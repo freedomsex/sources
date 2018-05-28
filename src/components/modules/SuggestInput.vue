@@ -19,8 +19,8 @@ export default {
   },
   methods: {
     load() {
-      api.user.get({q: this.query}, 'tag/suggest').then((response) => {
-        this.loaded(response.data);
+      api.user.get({q: this.query}, 'tag/suggest').then(({data}) => {
+        this.loaded(data);
       });
     },
     reset() {
@@ -30,7 +30,7 @@ export default {
     clear() {
       this.items = [];
     },
-    suggest: _.debounce(() => {
+    suggest: _.debounce(function () {
       this.init = false;
       this.load();
     }, 500),

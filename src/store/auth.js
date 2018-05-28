@@ -21,7 +21,7 @@ export default {
     error: '',
   },
   actions: {
-    SYNC({commit}) {
+    sync({commit}) {
       return api.user.syncAuth().then((response) => {
         commit('update', response.data);
       });

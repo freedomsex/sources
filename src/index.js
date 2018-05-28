@@ -29,6 +29,10 @@ moment.locale('ru');
 
 Vue.prototype.$moment = moment;
 
+store.dispatch('LOAD_API_TOKEN');
+store.dispatch('accepts/LOAD');
+store.dispatch('LOAD_USER');
+
 const App = new Vue({
   data: {
     alert: '',
@@ -44,7 +48,7 @@ const App = new Vue({
     const humanId = parseInt(window.location.pathname.split('/')[1], 10);
     this.humanId = humanId || null;
     if (this.humanId) {
-      this.$store.dispatch('search/HUMAN', this.humanId);
+      this.$store.dispatch('human/load', this.humanId);
     }
   },
   computed: {
@@ -59,10 +63,10 @@ const App = new Vue({
       return !promt || promt == 'no';
     },
     tags() {
-      return this.$store.getters['search/tags'];
+      return this.$store.getters['results/tags'];
     },
     human() {
-      return this.$store.state.search.human;
+      return this.$store.state.human;
     },
   },
   methods: {
@@ -134,7 +138,7 @@ const Layer = new Vue({
 });
 
 // defaultSettings - GLOBAL var
-store.commit('search/restore', global.defaultSettings || {});
-store.commit('personal', global.defaultSettings || {}); // TODO: to NS
+// store.commit('search/restore', global.defaultSettings || {});
+// store.commit('personal', global.defaultSettings || {}); // TODO: to NS
 
 export {App, Layer};

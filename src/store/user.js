@@ -2,11 +2,9 @@ import _ from 'underscore';
 import lscache from 'lscache';
 import api from '~config/api';
 
-import search from './search';
 // import contacts from './contacts';
 
 export default {
-  modules: {search},
   state: {
     uid: 0,
     sex: 0,

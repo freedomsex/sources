@@ -2,7 +2,7 @@
 import axios from 'axios';
 import hasher from '~legacy/utils/simple-hash';
 import ClosedActivity from '~closed-activity/ClosedActivity';
-import ModalDialog from '~dialogs/ModalDialog';
+import InfoDialog from '~dialogs/InfoDialog';
 import AdaptPhotoData from '~assets/AdaptPhotoData';
 
 import FileUploadButton from './FileUploadButton';
@@ -67,7 +67,7 @@ export default {
   },
   components: {
     ClosedActivity,
-    ModalDialog,
+    InfoDialog,
     FileUploadButton,
   },
 };
@@ -87,25 +87,18 @@ export default {
 
     <div class="activity-section">
       <div class="upload_photo__add">
-        <FileUploadButton @loaded="preview"/>
-
+        <FileUploadButton
+         :progress="true"
+         @loaded="preview"
+         @failed="failed"/>
         <input id="fileupload" type="file" name="file" data-form-data='{"script": "true"}'>
       </div>
     </div>
 
-    <ModalDialog @close="photoAlert = false" v-if="photoAlert">
-      <div class="modal-dialog__wrapper">
-        <div class="modal-dialog__body">
-          Загрузите новое фото. Для предупреждения использования чужих фото,
-          загрузить повторно может не получиться, даже если фото ваше.
-        </div>
-        <div class="modal-dialog__footer">
-          <button class="btn btn-primary btn-flat" @click="photoAlert = false">
-            Хорошо
-          </button>
-        </div>
-      </div>
-    </ModalDialog>
+    <InfoDialog @close="photoAlert = false" v-if="photoAlert">
+      Загрузите новое фото. Для предупреждения использования чужих фото,
+      загрузить повторно может не получиться, даже если фото ваше.
+    </InfoDialog>
 
   </ClosedActivity>
 </template>

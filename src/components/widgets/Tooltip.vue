@@ -21,16 +21,23 @@ export default {
 </script>
 
 <template>
-  <span>
+  <span class="question-tooltip">
     <span class="glyphicon glyphicon-question-sign question-tooltip" @click="show = true"></span>
-    <InfoDialog @close="close" :text="text" v-if="show || force"/>
+    <InfoDialog @close="close" v-if="show || force" :text="text">
+      <slot></slot>
+    </InfoDialog>
   </span>
 </template>
 
 <style lang="less">
 .question-tooltip {
-  vertical-align: text-top;
-  color: @gray;
-  padding: 0 @indent-xs;
+  vertical-align: middle;
+
+  .glyphicon {
+    vertical-align: text-top;
+    color: @gray;
+    padding: 0 @indent-xs;
+    font-size: 16px;
+  }
 }
 </style>

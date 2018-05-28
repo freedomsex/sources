@@ -8,7 +8,7 @@ export default {
     list: [],
   },
   actions: {
-    SYNC({rootState, state, commit}) {
+    sync({rootState, state, commit}) {
       const index = `visited-${rootState.user.uid}`;
       commit('update', lscache.get(index));
       return api.user.visitedList().then((response) => {

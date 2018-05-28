@@ -1,6 +1,6 @@
 const config = {
   development: {
-    NET_DELAY: 0,
+    NET_DELAY: 3,
     API_PHOTO: '127.0.0.1:8008',
     API_SEARCH: '127.0.0.1:9000',
     API_CONTACT: '127.0.0.1:8000',

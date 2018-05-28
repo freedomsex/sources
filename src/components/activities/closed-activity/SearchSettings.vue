@@ -1,6 +1,6 @@
 <script>
-import Vuex from 'vuex';
 import _ from 'underscore';
+import lscache from 'lscache';
 import Tooltip from '~widgets/Tooltip';
 import ClosedActivity from './ClosedActivity';
 
@@ -21,41 +21,52 @@ export default {
       },
     };
   },
-  computed: Vuex.mapState({
-    userSex: state => Number(state.user.sex), // GLOBAL
+  created() {
+    const {city, up, to} = global.defaultSettings; // GLOBAL
+    this.selectCity = this.city ? this.city : city;
+    this.selectUp = this.up ? this.up : this.age(up);
+    this.selectTo = this.to ? this.to : this.age(to);
+    this.checkedAny = this.any;
+    this.checkedVirt = this.virt;
+    console.log('created', this.$store.state.search);
+    console.log('lscache', lscache.get('user.search'));
+  },
+  computed: {
+    userSex() {
+      return Number(this.$store.state.user.sex);
+    },
     who() {
       if (this.userSex) {
         return this.userSex == 1 ? 2 : 1;
       } // [~!!!~] READ_ONLY
       return 0;
     },
-    city(state) {
-      /* globals defaultSettings:false */
-      const {city} = defaultSettings; // TODO: GLOBAL defaultSettings var
-      return state.user.city ? state.user.city : city; // [~!!!~] READ_ONLY
+    city() {
+      const {city} = global.defaultSettings; // TODO: GLOBAL defaultSettings var
+      return this.$store.state.user.city ? this.$store.state.user.city : city; // [~!!!~] READ_ONLY
     },
-    up(state) {
-      return this.age(state.user.up);
+    up() {
+      return this.age(this.$store.state.search.up);
     },
-    to(state) {
-      return this.age(state.user.to);
+    to() {
+      return this.age(this.$store.state.search.to);
     },
-    any(state) {
-      return state.user.any;
+    any() {
+      return this.$store.state.search.any;
     },
-    virt(state) {
-      return state.user.virt == true;
+    virt() {
+      return this.$store.state.search.virt == true;
     },
-    virgin(state) {
+    virgin() {
       // Хак для пустых настроек
-      if (state.user.city != this.city) {
+      if (this.$store.state.user.city != this.city) {
         return false;
       }
       // Хак для старых настроек NOT Range
-      if (state.user.up != this.up) {
+      if (this.$store.state.search.up != this.up) {
         return false;
       }
-      if (state.user.to != this.to) {
+      if (this.$store.state.search.to != this.to) {
         return false;
       }
       return (
@@ -66,14 +77,6 @@ export default {
         this.checkedVirt == this.virt
       );
     },
-  }),
-  created() {
-    const {city, up, to} = defaultSettings; // GLOBAL
-    this.selectCity = this.city ? this.city : city;
-    this.selectUp = this.up ? this.up : this.age(up);
-    this.selectTo = this.to ? this.to : this.age(to);
-    this.checkedAny = this.any;
-    this.checkedVirt = this.virt;
   },
   methods: {
     age(age) {
@@ -105,10 +108,9 @@ export default {
         any: this.checkedAny,
         virt: this.checkedVirt,
       };
-      console.log(data);
       if (!this.virgin) {
         this.$store.dispatch('SAVE_SEARCH', data);
-        console.log(this.$store.state.user);
+        this.$store.commit('search/restore', data);
       }
     },
     close() {
@@ -152,19 +154,21 @@ export default {
           <input type="checkbox" v-model="checkedAny" @change="tooltipAnyForce()">
           Искать в любом городе
         </label>
-        <Tooltip :force="tooltip.any" @close="tooltip.any = false"
-          text="Мы находим для вас подходящие анкеты в вашем городе.
-          Если вы хотите искать по всем городам, отметьте эту настройку."/>
+        <Tooltip :force="tooltip.any" @close="tooltip.any = false">
+          Мы находим для вас подходящие анкеты в вашем городе.
+          Если вы хотите искать по всем городам, отметьте эту настройку.
+        </Tooltip>
       </div>
       <div>
         <label>
           <input type="checkbox" v-model="checkedVirt" @change="tooltipVirtForce()">
           Виртуальный секс
         </label>
-        <Tooltip :force="tooltip.virt" @close="tooltip.virt = false"
-          text="Наш сайт для реальных знакомств. Отметьте опцию,
+        <Tooltip :force="tooltip.virt" @close="tooltip.virt = false">
+          Наш сайт для реальных знакомств. Отметьте опцию,
           если хотите попробовать виртуальный секс.
-          Предлагать вирт всем подряд запрещено."/>
+          Предлагать вирт всем подряд запрещено.
+        </Tooltip>
       </div>
     </div>
 

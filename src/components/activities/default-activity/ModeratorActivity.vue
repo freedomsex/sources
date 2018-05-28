@@ -23,7 +23,7 @@ export default {
   },
   computed: {
     human() {
-      return this.$store.state.search.human;
+      return this.$store.state.human;
     },
     accept() {
       return this.$store.state.accepts.moderator;

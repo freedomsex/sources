@@ -1,5 +1,4 @@
 <script>
-import axios from 'axios';
 import ContentActivity from './ContentActivity';
 
 export default {
@@ -12,16 +11,15 @@ export default {
   mounted() {
     this.title = 'Справка';
     this.load(`/content/help/${this.link}`);
-    this.loadReviews();
+  },
+  computed: {
+    reviewsUrl() {
+      return `/docs/blog/rev/${this.link}.json`;
+    },
   },
   methods: {
     show(index) {
       this.preview = this.galery[index];
-    },
-    loadReviews() {
-      axios.get(`/docs/blog/rev/${this.link}.json`).then(({data}) => {
-        this.reviews = data;
-      });
     },
   },
 };

@@ -23,13 +23,7 @@ export default {
     social() {
       const {em, vk, ok, fb, go} = this.human;
       if (em || vk || ok || fb || go) {
-        return {
-          em,
-          vk,
-          ok,
-          fb,
-          go,
-        };
+        return {em, vk, ok, fb, go};
       }
       return null;
     },
