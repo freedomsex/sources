@@ -18,7 +18,6 @@ export default {
   .widget();
   background: #dc4e41;
   color: @white;
-  padding: @indent-sm @indent-md;
   cursor: pointer;
   &__wrapper {
     &.compact {

@@ -16,14 +16,22 @@
 .widget {
   .split-top();
   background: @white;
+  &__caption {
+    padding: @indent-sm @indent-md;
+    text-align: center;
+    font-size: @font-md;
+    color: @dark-light;
+    min-height: 30px;
+    border-bottom: 2px solid @gray-light;
+  }
+
+  &__wrapper {
+    margin: 10px 15px;
+  }
 }
 
 .content {
   background: @white;
-}
-
-.desires-widget {
-  .widget();
 }
 
 .search-results {

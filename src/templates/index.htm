@@ -23,9 +23,12 @@ ${require('./head.htm')}
 
   ${require('~templates/search-results.htm')}
 
+  <city-widget v-if="!$store.state.user.city"></city-widget>
+
   <div v-show="!simple">
     <!-- SLIDER_FOOTER -->
   </div>
+
   ${require('~templates/footer.htm')}
 
   <div id="router-view">

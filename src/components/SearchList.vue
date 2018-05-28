@@ -65,17 +65,20 @@ export default {
     loader() {
       return this.$store.state.ready && (!this.response || !this.items.length);
     },
-    city() {
-      return this.$store.state.user.city;
-    },
     age() {
       return this.$store.state.user.age;
     },
+    city() {
+      const {city} = global.defaultSettings;
+      return this.$store.state.user.city || city || null;
+    },
     up() {
-      return this.$store.state.search.up || 0;
+      const {up} = global.defaultSettings;
+      return this.$store.state.search.up || up || 0;
     },
     to() {
-      return this.$store.state.search.to || 0;
+      const {to} = global.defaultSettings;
+      return this.$store.state.search.to || to || 0;
     },
     who() {
       return this.$store.state.search.who || null;

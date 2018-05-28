@@ -21,6 +21,9 @@ import DesiresWidget from '~widgets/DesiresWidget';
 import Snackbar from '~widgets/Snackbar';
 import Toast from '~widgets/Toast';
 
+import CityWidget from '~widgets/CityWidget';
+import RegistrationPromo from '~widgets/RegistrationPromo';
+
 import 'styles/core/body.less';
 
 import moment from 'moment';
@@ -110,10 +113,12 @@ const App = new Vue({
     SearchWizard,
     AdTop,
     SearchList,
-    AlertWidget,
     ApiKeyUpdate,
     SliderFooter,
     DesiresWidget,
+    AlertWidget,
+    CityWidget,
+    RegistrationPromo,
     Snackbar,
     Toast,
   },

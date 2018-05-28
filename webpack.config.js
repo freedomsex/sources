@@ -64,8 +64,6 @@ module.exports = {
         loader: 'eslint-loader',
         enforce: 'pre',
         options: {
-          // emitWarning: true,
-          // emitError: true,
           quiet: true,
           // cache: true, // <-- THIS
           // configFile: './.eslintrc.js',
@@ -181,12 +179,7 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: '[name].[chunkhash:5].css',
     }),
-    new CleanWebpackPlugin([
-      path.resolve(__dirname, 'dist'),
-      // path.resolve(__dirname, `${rootPath}${publicPath}`),
-      // '../../web/static/js',
-    ],
-    {allowExternal: true}),
+    new CleanWebpackPlugin([path.resolve(__dirname, 'dist')]),
     // new CopyWebpackPlugin([
     //   {from: './dist/app.*', to: `${rootPath}${publicPath}`, flatten: true},
     //   {from: './dist/vendors*', to: `${rootPath}${publicPath}`, flatten: true},

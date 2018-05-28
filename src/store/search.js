@@ -11,7 +11,8 @@ export default {
   },
   actions: {
     load({commit}) {
-      commit('restore', lscache.get('user.search'));
+      const data = lscache.get('user.search') || {};
+      commit('restore', data);
     },
   },
   mutations: {

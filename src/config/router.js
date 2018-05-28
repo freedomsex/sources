@@ -1,4 +1,3 @@
-
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import {store} from '~store';
@@ -216,7 +215,7 @@ const routes = [
       back: '/settings/account',
     },
     component: CityWizard,
-    beforeEnter: (to, from, next) => (store.state.user.sex ? next() : next('/confirm-sex/city')),
+    beforeEnter: (to, from, next) => (store.state.user.sex ? next() : next('/confirm-sex/search')),
   },
   // { path: '/', name: 'search', component: SearchActivity,
   // beforeEnter: (to, from, next) => store.state.user.sex ? next() :

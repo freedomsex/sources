@@ -12,6 +12,9 @@ export default {
     };
   },
   mounted() {
+    if (this.$el.offsetWidth < 700) {
+      this.batch = 20;
+    }
     this.reload();
   },
   updated() {
@@ -59,11 +62,12 @@ export default {
 <template>
   <div class="container desires-widget">
     <div class="row">
-      <div class="desires-widget__caption">Желания и фантазии</div>
-      <div class="desires-widget__wrapper">
+      <div class="widget__caption">Желания и фантазии</div>
+      <div class="widget__wrapper">
         <DesireList :tags="list"/>
         <div class="desires-widget__next" v-show="more">
           <span class="btn btn-default btn-sm" @click="load">
+            <span aria-hidden="true" class="glyphicon glyphicon-flash"></span>
             Ещё
           </span>
         </div>
@@ -73,18 +77,10 @@ export default {
 </template>
 
 <style lang="less">
+@import './widget.less';
+
 .desires-widget {
-  &__caption {
-    padding: 10px 15px;
-    text-align: center;
-    font-size: 16px;
-    color: #666666;
-    min-height: 30px;
-    border-bottom: 2px solid #e5e5e5;
-  }
-  &__wrapper {
-    margin: 10px 15px;
-  }
+  .widget();
   &__next {
     text-align: center;
   }
