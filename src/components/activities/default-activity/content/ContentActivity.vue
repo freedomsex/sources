@@ -1,6 +1,7 @@
 <script>
 import axios from 'axios';
 import ReviewList from '~modules/ReviewList';
+import PhotoSend from '~modules/PhotoSend';
 import ActivityActions from '../../ActivityActions';
 
 export default {
@@ -61,6 +62,7 @@ export default {
   },
   components: {
     ReviewList,
+    PhotoSend,
   },
 };
 </script>
@@ -96,7 +98,7 @@ export default {
              v-for="(item, index) in galery"
              @click="show(index)"></span>
 
-            <photo-send v-if="preview"
+            <PhotoSend v-if="preview"
              :photo="{photo: preview}"
              @close="preview = null"/>
           </div>
@@ -137,7 +139,7 @@ export default {
   z-index: 1;
 
   .activity__container {
-    height: calc(~"100% - 50px");
+    height: calc(~'100% - 50px');
   }
   .activity__content {
     padding-bottom: @indent-xl;
@@ -155,13 +157,13 @@ export default {
       // 20*2 от края, 2*4 между, 2 костыль
       @media (max-width: 500px) {
         @indent: (20 * 2 + 2 * 4 + 2) / 3;
-        width: ~"calc(33.33vmin - @{indent}px)";
-        height: ~"calc(33.33vmin - @{indent}px)";
+        width: ~'calc(33.33vmin - @{indent}px)';
+        height: ~'calc(33.33vmin - @{indent}px)';
       }
       @media (max-width: 700px) and (min-width: 500px) {
         @indent: (20 * 2 + 2 * 4 + 2) / 4;
-        width: ~"calc(25vmin - @{indent}px)";
-        height: ~"calc(25vmin - @{indent}px)";
+        width: ~'calc(25vmin - @{indent}px)';
+        height: ~'calc(25vmin - @{indent}px)';
       }
       border: 5px solid @white;
       position: relative;
@@ -172,6 +174,5 @@ export default {
       margin: 0 2px 2px 0;
     }
   }
-
 }
 </style>
