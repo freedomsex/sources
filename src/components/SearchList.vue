@@ -81,7 +81,8 @@ export default {
       return this.$store.state.search.to || to || 0;
     },
     who() {
-      return this.$store.state.search.who || null;
+      const {who} = global.defaultSettings;
+      return this.$store.state.search.who || who || null;
     },
     userId() {
       return this.$store.state.user.uid || 0;

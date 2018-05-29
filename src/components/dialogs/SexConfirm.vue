@@ -2,6 +2,7 @@
 import ModalDialog from '~dialogs/ModalDialog';
 import Recaptcha from '~modules/Recaptcha';
 
+// Автоматически сохраняет город. Отправляет пол пользователя вместе с кодом капчи
 export default {
   extends: ModalDialog,
   props: ['show'],
@@ -37,6 +38,9 @@ export default {
     };
     content.city = content.contacts;
     return {content, sex: null};
+  },
+  mounted() {
+    this.autoAge();
   },
   computed: {
     variant() {
@@ -88,11 +92,30 @@ export default {
       this.$refs.recaptcha.render(this.save);
       this.$refs.recaptcha.execute();
     },
+    autoCity() {
+      const {city} = global.defaultSettings;
+      if (city) {
+        this.$store.dispatch('SAVE_CITY', city);
+      }
+    },
+    autoAge() {
+      const {up, to} = global.defaultSettings;
+      let age;
+      if (up && to) {
+        age = Math.round((up + to) / 2);
+      } else {
+        age = Math.max(up, to);
+      }
+      console.log('age', age);
+      this.$store.dispatch('SAVE_AGE', age);
+    },
     save(token) {
       this.process = true;
       if (this.sex) {
         this.$store.dispatch('SAVE_SEX', {sex: this.sex, token}).then(() => {
           // TODO: $root APP dep refresh() / reload()
+          this.autoCity();
+          this.autoAge();
           this.$root.refresh();
         });
         this.$root.reload();
