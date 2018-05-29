@@ -1,5 +1,5 @@
 <search-wizard inline-template>
-  <div id="search-wizard">
+  <nav id="search-wizard">
     <div @click="$router.push('/settings/search')" style="display: none;" v-show="say">
       <i class="material-icons">&#xE8B4;</i>
       Вы ищете: {{say}} &nbsp;
@@ -16,5 +16,5 @@
     <div v-show="!say">
       Почти готово...
     </div>
-  </div>
+  </nav>
 </search-wizard>

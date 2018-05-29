@@ -1,5 +1,6 @@
 <script>
 import axios from 'axios';
+import AppSettings from '~widgets/AppSettings';
 
 export default {
   data() {
@@ -109,6 +110,9 @@ export default {
       console.log('recaptcha начало проверки');
     },
   },
+  components: {
+    AppSettings,
+  },
 };
 </script>
 
@@ -116,13 +120,7 @@ export default {
   <nav id="menu-user" class="navbar navbar-inverse navbar-fixed-top">
     <div class="menu-user">
       <div class="menu-user__wrapper">
-        <div class="menu-user__logo">
-          <a id="home_page" href="/">
-            <img src="~static/img/logo.png"
-              style="width: 27px; height: 20px; border-width: 0;"
-              border="0" >
-          </a>
-        </div>
+        <AppSettings/>
         <div class="menu-user__navbar" v-show="authorized">
           <div class="navbar-button" @click="search()">
             <i class="material-icons">&#xE8B6;</i>

@@ -1,16 +1,16 @@
   <div class="container content">
-    <div class="row">
+    <aside class="row">
       <auth-board v-if="promt"></auth-board>
       ${require('~templates/search-wizard.htm')}
-    </div>
+    </aside>
     <div class="row">
-      <div class="preloader" v-show="!ready">
+      <nav class="preloader" v-show="!ready">
         <!-- <div class="preloader__img"></div> -->
         ${require('~templates/preloader-raw-svg.htm')}
         <div class="preloader__hint">
           Поиск анкет, всегда бесплатно
         </div>
-      </div>
+      </nav>
 
       <ad-top></ad-top>
 

@@ -5,7 +5,6 @@ import '~assets/directives/resized'; // TODO: оформить директив�
 import {router, settingsRouter} from '~config/router';
 
 import MenuUser from '~modules/MenuUser';
-import TitleMail from '~modules/TitleMail';
 import AccountComponent from '~components/AccountComponent';
 import AdTop from '~modules/AdTop';
 
@@ -106,7 +105,6 @@ const App = new Vue({
   router,
   components: {
     MenuUser,
-    TitleMail,
     AccountComponent,
     InfoWidget,
     AuthBoard,

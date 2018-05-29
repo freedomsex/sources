@@ -251,6 +251,8 @@ export default {
 .preloader {
   margin: @indent-xs auto @indent-lg;
   text-align: center;
+  margin-top: 70px;
+  margin-bottom: 100px;
   &__img {
     margin: 0 auto;
     width: 100px;

@@ -24,7 +24,6 @@ ${require('./head.htm')}
           <div class="row" style="display: none;" v-show="human.id">
             <div class="col-sm-8">
               <account-component :human="human" :key="human.id" v-if="human.id"></account-component>
-              <title-mail :human="human" v-if="human.id"></title-mail>
             </div>
             <div class="col-sm-4">
               ${require('~templates/sidebar.htm')}

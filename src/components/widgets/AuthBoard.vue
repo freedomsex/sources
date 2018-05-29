@@ -13,11 +13,14 @@ export default {
   },
   mounted() {
     _.delay(() => {
-      this.$store.dispatch('auth/sync').then(() => {
-        this.email = this.$store.state.auth.email;
-      }).catch(() => {
-        console.log('! Авторизация провалена');
-      });
+      this.$store
+        .dispatch('auth/sync')
+        .then(() => {
+          this.email = this.$store.state.auth.email;
+        })
+        .catch(() => {
+          console.log('! Авторизация провалена');
+        });
     }, 2500);
   },
   computed: {
@@ -58,7 +61,7 @@ export default {
 </script>
 
 <template>
-  <div>
+  <nav>
     <div class="auth-board">
       <div v-show="!loaded">
         Запомните или запишите ваш пароль.
@@ -104,7 +107,7 @@ export default {
         </div>
       </div>
     </ModalDialog>
-  </div>
+  </nav>
 </template>
 
 <style lang="less">
