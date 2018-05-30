@@ -4,6 +4,7 @@ import _ from 'underscore';
 import ClosedActivity from '~closed-activity/ClosedActivity';
 import InfoDialog from '~dialogs/InfoDialog';
 import CitySuggest from '~modules/CitySuggest';
+import SuggestInput from '~modules/SuggestInput';
 
 export default {
   extends: ClosedActivity,
@@ -72,8 +73,9 @@ export default {
         this.$store.dispatch('SAVE_AGE', this.selectAge);
       }
     },
-    saveName() {
-      this.$store.dispatch('SAVE_NAME', this.selectName).catch(() => {
+    saveName(name) {
+      this.selectName = name;
+      this.$store.dispatch('SAVE_NAME', name).catch(() => {
         this.resetName();
         this.nameAlert = true;
       });
@@ -99,6 +101,7 @@ export default {
     ClosedActivity,
     InfoDialog,
     CitySuggest,
+    SuggestInput,
   },
 };
 </script>
@@ -144,14 +147,10 @@ export default {
     <div class="activity-section">
       <div class="activity-section__title">Имя:</div>
       <div class="form-inline">
-        <input class="form-control" type="text"
-         v-model="selectName" @blur="saveName" placeholder="Ваше имя">
-
         <SuggestInput url="name/suggest"
+         :default="selectName"
          title="Ваше имя"
-         @select="add"
-         :tags="saved"
-         :disabled="process"/>
+         @select="saveName"/>
       </div>
 
       <InfoDialog @close="nameAlert = false" v-if="nameAlert">

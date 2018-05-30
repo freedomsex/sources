@@ -3,7 +3,7 @@ import _ from 'underscore';
 import api from '~config/api';
 
 export default {
-  props: ['url', 'disabled', 'tags', 'title'],
+  props: ['url', 'disabled', 'tags', 'title', 'default'],
   data() {
     return {
       query: '',
@@ -11,6 +11,9 @@ export default {
       enable: true,
       init: true,
     };
+  },
+  mounted() {
+    this.query = this.default;
   },
   computed: {
     suggested() {
@@ -24,7 +27,9 @@ export default {
       });
     },
     reset() {
-      this.query = '';
+      if (!this.default) {
+        this.query = '';
+      }
       this.items = [];
     },
     clear() {
@@ -37,6 +42,7 @@ export default {
     select(item) {
       if (!this.saved(item)) {
         this.$emit('select', item);
+        this.query = item;
       }
       this.reset();
     },
