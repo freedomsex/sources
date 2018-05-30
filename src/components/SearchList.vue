@@ -4,9 +4,11 @@ import json from '~legacy/utils/json';
 import ModalDialog from '~dialogs/ModalDialog';
 import Snackbar from '~widgets/Snackbar';
 import QuickMessage from '~dialogs/quick-message/QuickMessage';
+import AutoRegistration from '~assets/mixins/AutoRegistration';
 import SearchItem from './SearchItem';
 
 export default {
+  mixins: [AutoRegistration],
   data() {
     return {
       loading: false,
@@ -121,6 +123,9 @@ export default {
           this.response = 200;
           this.toSlow = false;
         });
+
+      this.autoCity();
+      this.autoAge();
     },
     loadNext() {
       // this.skipScroll = true;

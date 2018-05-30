@@ -1,4 +1,5 @@
 <script>
+import _ from 'underscore';
 import Vuex from 'vuex';
 import ClosedActivity from '~closed-activity/ClosedActivity';
 import ModalDialog from '~dialogs/ModalDialog';
@@ -21,6 +22,9 @@ export default {
   computed: Vuex.mapState({
     tags(state) {
       return state.desires.list;
+    },
+    saved() {
+      return _.pluck(this.tags, 'tag');
     },
   }),
   mounted() {
@@ -60,7 +64,11 @@ export default {
       <div class="activity-section__title">
         Желания и фантазии
       </div>
-      <SuggestInput @select="add" :tags="tags" :disabled="process"/>
+      <SuggestInput url="tag/suggest"
+       title="Ваше желание"
+       @select="add"
+       :tags="saved"
+       :disabled="process"/>
     </div>
 
     <div class="activity-section">

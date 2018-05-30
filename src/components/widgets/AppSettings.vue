@@ -4,35 +4,74 @@ export default {
   data: () => ({
     open: false,
   }),
+  computed: {
+    muted() {
+      return this.$store.state.mute;
+    },
+  },
   methods: {
     toggle() {
+      this.open = this.open != true;
+    },
+    refresh() {
       this.$root.redirectHome();
-      // this.open = this.open != true;
+    },
+    mute() {
+      this.$store.commit('mute');
     },
   },
 };
 </script>
 
 <template>
-  <div class="menu-user__logo" @click="toggle">
-    <div id="home_page" class="dropdown open">
-      <img src="~static/img/logo.png"
-        style="width: 27px; height: 20px; border-width: 0;"
-        border="0" >
-        <ul class="dropdown-menu" v-show="open">
-          <li><a href="#">Action</a></li>
-          <li><a href="#">Another action</a></li>
-          <li><a href="#">Something else here</a></li>
-          <li role="separator" class="divider"></li>
-          <li><a href="#">Separated link</a></li>
-        </ul>
+  <div class="app-settings" @click="toggle">
+    <img src="~static/img/logo.png"
+      style="width: 27px; height: 20px; border-width: 0;"
+      border="0" >
+    <div class="app-settings__menu" v-show="open">
+      <div class="app-settings__menu-item" @click="refresh">
+        <span aria-hidden="true" class="glyphicon glyphicon-refresh"></span>
+        <span>Обновить</span>
+      </div>
+        <div class="app-settings__menu-item">
+          <span aria-hidden="true" class="glyphicon glyphicon-bell"></span>
+          <span>Уведомлений нет</span>
+        </div>
+      <div class="app-settings__menu-item" @click="mute">
+        <span aria-hidden="true"
+         :class="!muted ? 'glyphicon-volume-up' : 'glyphicon-volume-off'"
+         class="glyphicon"></span>
+        <span>Звук {{!muted ? 'включен' : 'отключен'}}</span>
+      </div>
     </div>
   </div>
 </template>
 
 <style lang="less">
-.menu-user__logo {
-  cursor: pointer;
+.app-settings {
+  position: relative;
+  &__menu {
+    min-width: 200px;
+    background-color: @white;
+    border: 1px solid @gray;
+    position: absolute;
+    margin-top: 12px;
+    margin-left: -10px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    &-item {
+      color: @dark-light;
+      vertical-align: middle;
+      font-size: 14px;
+      padding: @indent-sm @indent-md;
+      position: relative;
+      span {
+        display: inline-block;
+      }
+      .glyphicon {
+        font-size: 16px;
+      }
+    }
+  }
 }
 // .dropdown-menu {
 //   display: inline-block;

@@ -1,163 +1,170 @@
-
 .hide {
-    display: none;
+  display: none;
+}
+
+.fixed-dialog-mask {
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+  transition: opacity 0.3s ease;
 }
 
 .bg_wht {
-    background: @white;
+  background: @white;
 }
 .bg_red {
-    background: @red-light;
+  background: @red-light;
 }
 .bg_grn {
-    background: @green-light;
+  background: @green-light;
 }
 .bg_mgn {
-    background: @violet-light;
+  background: @violet-light;
 }
 .bg_yel {
-    background: @yellow;
+  background: @yellow;
 }
 .bg_gra {
-    background: @light;
+  background: @light;
 }
 .bg_blu {
-    background: @purpur-light;
+  background: @purpur-light;
 }
 .bg_bla {
-    border-color: @dark;
+  border-color: @dark;
 }
 
 .bg_ored {
-    background: @red-light !important;
+  background: @red-light !important;
 }
 .bg_ogrn {
-    background: @green-light !important;
+  background: @green-light !important;
 }
 .bg_omgn {
-    background: @alert-sand !important;
+  background: @alert-sand !important;
 }
 .bg_oyel {
-    background: @yellow-light !important;
+  background: @yellow-light !important;
 }
 .bg_ogra {
-    background: @light !important;
+  background: @light !important;
 }
 .bg_oblu {
-    background: @purpur-light !important;
+  background: @purpur-light !important;
 }
 
 .br_red {
-    border-color: @red !important;
+  border-color: @red !important;
 }
 .br_grn {
-    border-color: @green !important;
+  border-color: @green !important;
 }
 .br_mgn {
-    border-color: @violet !important;
+  border-color: @violet !important;
 }
 .br_yel {
-    border-color: @orange-light !important;
+  border-color: @orange-light !important;
 }
 .br_blu {
-    border-color: @purpur !important;
+  border-color: @purpur !important;
 }
 .br_gra {
-    border-color: @gray !important;
+  border-color: @gray !important;
 }
 .br_drk {
-    border-color: @dark !important;
+  border-color: @dark !important;
 }
 .br_ogra {
-    border-color: @gray-light;
+  border-color: @gray-light;
 }
 .br_bla {
-    border-color: @gray-dark;
+  border-color: @gray-dark;
 }
 .bg_dblu {
-    background: @purpur-dark;
+  background: @purpur-dark;
 }
 .bg_dgrn {
-    background: @green;
+  background: @green;
 }
 .bg_dgra {
-    background: @gray;
+  background: @gray;
 }
 .bg_dred {
-    background: @red;
+  background: @red;
 }
 .bg_dyel {
-    background: @orange-light;
+  background: @orange-light;
 }
 .bg_dbla {
-    background: @dark-light;
+  background: @dark-light;
 }
 
 .cl_red {
-    color: @pink;
+  color: @pink;
 }
 .cl_grn {
-    color: @green;
+  color: @green;
 }
 .cl_mgn {
-    color: @violet;
+  color: @violet;
 }
 .cl_yel {
-    color: @orange-light;
+  color: @orange-light;
 }
 .cl_blu {
-    color: @purpur;
+  color: @purpur;
 }
 .cl_gra {
-    color: @gray;
+  color: @gray;
 }
 
 .color_gray {
-    color: @gray-dark;
+  color: @gray-dark;
 }
 
 .link {
-    cursor: pointer;
-    text-decoration: none;
+  cursor: pointer;
+  text-decoration: none;
 }
 
 .link_simple {
-    color: @link-color;
-    .link;
+  color: @link-color;
+  .link;
 }
 .link_dashed {
-    border-bottom: 1px dashed @link-color;
-    .link_simple;
+  border-bottom: 1px dashed @link-color;
+  .link_simple;
 }
 .link_underline {
-    text-decoration: underline;
-    .link_simple;
+  text-decoration: underline;
+  .link_simple;
 }
 .gray_link {
-    color: @gray-dark;
-    .link;
+  color: @gray-dark;
+  .link;
 }
 .red_link {
-    color: red;
-    .link;
+  color: red;
+  .link;
 }
 
 .right {
-	text-align: right;
+  text-align: right;
 }
 
 .radius {
-    border-radius: 3px;
+  border-radius: 3px;
 }
-
-
 
 .clear-fix {
   content: '';
   display: block;
   clear: both;
 }
-
 
 .btn-circle {
   .link;
@@ -169,18 +176,17 @@
 }
 
 .list-view {
-    padding: 0 @indent-sm;
-    &:last-child {
-        border-bottom-width: 0px;
-    }
-    &__item {
-        padding: @indent-sm @indent-sm;
-        border-bottom: 1px solid @light;
-        position: relative;
-        background: @white;
-        overflow: hidden;
-        font-size: 14px;
-        cursor: pointer;
-    }
+  padding: 0 @indent-sm;
+  &:last-child {
+    border-bottom-width: 0px;
+  }
+  &__item {
+    padding: @indent-sm @indent-sm;
+    border-bottom: 1px solid @light;
+    position: relative;
+    background: @white;
+    overflow: hidden;
+    font-size: 14px;
+    cursor: pointer;
+  }
 }
-

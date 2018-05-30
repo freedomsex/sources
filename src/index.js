@@ -34,6 +34,7 @@ Vue.prototype.$moment = moment;
 store.dispatch('LOAD_API_TOKEN');
 store.dispatch('accepts/LOAD');
 store.dispatch('LOAD_USER');
+store.commit('load');
 
 const App = new Vue({
   data: {

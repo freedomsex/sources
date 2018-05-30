@@ -1,10 +1,12 @@
 <script>
 import ModalDialog from '~dialogs/ModalDialog';
 import Recaptcha from '~modules/Recaptcha';
+import AutoRegistration from '~assets/mixins/AutoRegistration';
 
 // Автоматически сохраняет город. Отправляет пол пользователя вместе с кодом капчи
 export default {
   extends: ModalDialog,
+  mixins: [AutoRegistration],
   props: ['show'],
   data() {
     const content = {
@@ -38,9 +40,6 @@ export default {
     };
     content.city = content.contacts;
     return {content, sex: null};
-  },
-  mounted() {
-    this.autoAge();
   },
   computed: {
     variant() {
@@ -91,23 +90,6 @@ export default {
       this.processTimeout();
       this.$refs.recaptcha.render(this.save);
       this.$refs.recaptcha.execute();
-    },
-    autoCity() {
-      const {city} = global.defaultSettings;
-      if (city) {
-        this.$store.dispatch('SAVE_CITY', city);
-      }
-    },
-    autoAge() {
-      const {up, to} = global.defaultSettings;
-      let age;
-      if (up && to) {
-        age = Math.round((up + to) / 2);
-      } else {
-        age = Math.max(up, to);
-      }
-      console.log('age', age);
-      this.$store.dispatch('SAVE_AGE', age);
     },
     save(token) {
       this.process = true;

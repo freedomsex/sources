@@ -1,4 +1,5 @@
 import _ from 'underscore';
+import lscache from 'lscache';
 import Vue from 'vue';
 import Vuex from 'vuex';
 import cookies from '~assets/legacy/utils/cookies'; // TODO: remove
@@ -42,6 +43,7 @@ const store = new Vuex.Store({
     grecaptchaToken: null,
     photoServer: CONFIG.API_PHOTO,
     simple: false,
+    mute: false,
   },
   actions: {
     LOAD_API_TOKEN({commit}) {
@@ -52,6 +54,11 @@ const store = new Vuex.Store({
     },
   },
   mutations: {
+    load(state) {
+      const mute = lscache.get('app.mute');
+      console.log({mute});
+      _.assign(state, {mute});
+    },
     setApiToken(state, data) {
       if (data) {
         _.assign(state, data);
@@ -59,10 +66,15 @@ const store = new Vuex.Store({
       // console.log(state)
     },
     simple(state, data) {
-      state.simple = (data == true);
+      state.simple = data == true;
     },
     ready(state, data) {
-      state.ready = (data == true);
+      state.ready = data == true;
+    },
+
+    mute(state) {
+      state.mute = state.mute !== true;
+      lscache.set('app.mute', state.mute);
     },
     grecaptchaTokenUpdate(state, token) {
       if (token) {

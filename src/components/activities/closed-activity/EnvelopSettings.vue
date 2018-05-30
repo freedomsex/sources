@@ -3,6 +3,9 @@ import ClosedActivity from '~closed-activity/ClosedActivity';
 
 export default {
   extends: ClosedActivity,
+  components: {
+    ClosedActivity,
+  },
 };
 </script>
 
@@ -32,7 +35,6 @@ export default {
       такие как: устройство, с которого вы используете сайт и браузер
       в котором открываете.
     </div>
-
 
   </ClosedActivity>
 </template>

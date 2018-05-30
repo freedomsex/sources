@@ -2,7 +2,7 @@
 import Vuex from 'vuex';
 import _ from 'underscore';
 import ClosedActivity from '~closed-activity/ClosedActivity';
-import ModalDialog from '~dialogs/ModalDialog';
+import InfoDialog from '~dialogs/InfoDialog';
 import CitySuggest from '~modules/CitySuggest';
 
 export default {
@@ -49,24 +49,8 @@ export default {
   methods: {
     autoName() {
       const variant = [];
-      variant[1] = [
-        'Саша',
-        'Дима',
-        'Сергей',
-        'Иван',
-        'Максим',
-        'Валера',
-        'Николай',
-      ];
-      variant[2] = [
-        'Оля',
-        'Юля',
-        'Настя',
-        'Алена',
-        'Катя',
-        'Маргарита',
-        'Татьяна',
-      ];
+      variant[1] = ['Саша', 'Дима', 'Сергей', 'Иван', 'Максим', 'Валера', 'Николай'];
+      variant[2] = ['Оля', 'Юля', 'Настя', 'Алена', 'Катя', 'Маргарита', 'Татьяна'];
       const x = Math.floor(Math.random() * 7);
       return this.sex ? variant[this.sex][x] : '';
     },
@@ -113,7 +97,7 @@ export default {
   },
   components: {
     ClosedActivity,
-    ModalDialog,
+    InfoDialog,
     CitySuggest,
   },
 };
@@ -162,22 +146,19 @@ export default {
       <div class="form-inline">
         <input class="form-control" type="text"
          v-model="selectName" @blur="saveName" placeholder="Ваше имя">
+
+        <SuggestInput url="name/suggest"
+         title="Ваше имя"
+         @select="add"
+         :tags="saved"
+         :disabled="process"/>
       </div>
 
-      <ModalDialog @close="nameAlert = false" v-if="nameAlert">
-        <div class="modal-dialog__wrapper">
-          <div class="modal-dialog__body">
-            Есть ограничение, вы можете указать простое, обычное имя.
-            Некоторые могут не сохраниться и это нормально.
-            Можно указать не своё, любое.
-          </div>
-          <div class="modal-dialog__footer">
-            <button class="btn btn-primary btn-flat" @click="nameAlert = false">
-              Хорошо
-            </button>
-          </div>
-        </div>
-      </ModalDialog>
+      <InfoDialog @close="nameAlert = false" v-if="nameAlert">
+        Есть ограничение, вы можете указать простое, обычное имя.
+        Некоторые могут не сохраниться и это нормально.
+        Можно указать не своё, любое.
+      </InfoDialog>
 
     </div>
 

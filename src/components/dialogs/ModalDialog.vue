@@ -31,14 +31,7 @@ export default {
 
 <style lang="less">
 .modal-dialog__mask {
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.2);
-  transition: opacity 0.3s ease;
+  .fixed-dialog-mask;
   display: flex;
   align-items: center;
   justify-content: center;

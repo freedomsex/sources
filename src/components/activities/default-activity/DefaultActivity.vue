@@ -7,29 +7,32 @@ export default {
 </script>
 
 <template>
-  <div class="default-activity" @click.self="close">
-    <div class="activity__wrapper">
-      <nav id="menu-user" class="navbar navbar-inverse">
-        <div class="menu-user">
-          <div class="menu-user__wrapper">
-            <div class="menu-user__logo">
-              <span id="home_page" class="" style="padding: 10px 0px;" @click="close">
-                <img src="~static/img/icon/arrow_back.png"
-                 width="30" height="30"
-                 alt="" border="0" >
-              </span>
-            </div>
-            <div class="menu-user__navbar" >
-              <div class="navbar-title" @click="$emit('close')">
-                <slot name="caption">Заголовок</slot>
+  <div>
+    <div class="activity__mask" @click.self="close"></div>
+    <div class="default-activity" @click.self="close">
+      <div class="activity__wrapper">
+        <nav id="menu-user" class="navbar navbar-inverse">
+          <div class="menu-user">
+            <div class="menu-user__wrapper">
+              <div class="menu-user__logo">
+                <span id="home_page" class="" style="padding: 10px 0px;" @click="close">
+                  <img src="~static/img/icon/arrow_back.png"
+                   width="30" height="30"
+                   alt="" border="0" >
+                </span>
               </div>
+              <div class="menu-user__navbar" >
+                <div class="navbar-title" @click="$emit('close')">
+                  <slot name="caption">Заголовок</slot>
+                </div>
+              </div>
+              <slot name="option"></slot>
             </div>
-            <slot name="option"></slot>
           </div>
+        </nav>
+        <div class="activity__container">
+          <slot></slot>
         </div>
-      </nav>
-      <div class="activity__container">
-        <slot></slot>
       </div>
     </div>
   </div>
@@ -45,6 +48,10 @@ export default {
 }
 
 .activity {
+  &__mask {
+    .fixed-dialog-mask;
+  }
+
   &__title {
     font-weight: bolder;
     line-height: 20px;
@@ -138,27 +145,25 @@ export default {
 }
 
 .default-activity {
+  max-width: @document-width;
+  position: fixed;
+  right: 0;
+  left: 0;
+  top: 0px;
+  bottom: 0;
+
+  overflow: hidden;
+  z-index: 1;
+
+  margin-right: auto;
+  margin-left: auto;
+
+  //border: 3px solid #CCC;
+  //border-width: 0 3px;
   .menu-user {
     max-width: @activity-width;
     margin-left: 0;
     margin-right: auto;
   }
-
-  position: fixed;
-  background: rgba(0, 0, 0, 0.2);
-
-  right: 0;
-  left: 0;
-  margin-right: auto;
-  margin-left: auto;
-
-  top: 0px;
-  bottom: 0;
-  max-width: 750px;
-  overflow: hidden;
-  z-index: 1;
-
-  //border: 3px solid #CCC;
-  //border-width: 0 3px;
 }
 </style>

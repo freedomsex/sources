@@ -2,8 +2,11 @@
 import _ from 'underscore';
 
 export default {
-  props: ['callback', 'action', 'play'],
+  props: ['callback', 'action'],
   computed: {
+    muted() {
+      return this.$store.state.mute;
+    },
     time() {
       return this.callback ? 5000 : 3000;
     },
@@ -19,7 +22,7 @@ export default {
       this.callback();
     },
     autoplay() {
-      if (this.play) {
+      if (!this.muted) {
         this.$refs.autoplay.play();
       }
     },
@@ -42,7 +45,7 @@ export default {
           <button class="btn btn-primary btn-sm" @click="approve">{{title}}</button>
         </div>
       </div>
-        <audio v-if="play" ref="autoplay" preload>
+        <audio v-if="!muted" ref="autoplay" preload>
           <source src="/static/sound/incoming.mp3" type="audio/mpeg">
           <source src="/static/sound/incoming.ogg" type="audio/ogg; codecs=vorbis">
         </audio>

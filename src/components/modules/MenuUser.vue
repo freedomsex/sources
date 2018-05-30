@@ -120,7 +120,9 @@ export default {
   <nav id="menu-user" class="navbar navbar-inverse navbar-fixed-top">
     <div class="menu-user">
       <div class="menu-user__wrapper">
-        <AppSettings/>
+        <div class="menu-user__logo">
+          <AppSettings/>
+        </div>
         <div class="menu-user__navbar" v-show="authorized">
           <div class="navbar-button" @click="search()">
             <i class="material-icons">&#xE8B6;</i>
@@ -208,13 +210,15 @@ export default {
     flex: 0 0 auto;
     display: flex;
     margin: auto;
+    cursor: pointer;
   }
 
   &__logo {
     flex: 0 0 auto;
     font-size: 18px;
     margin: auto;
-    margin-right: 15px;
+    margin-right: 10px;
+    cursor: pointer;
   }
 
   &__account {

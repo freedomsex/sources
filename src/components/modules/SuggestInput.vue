@@ -3,7 +3,7 @@ import _ from 'underscore';
 import api from '~config/api';
 
 export default {
-  props: ['url', 'disabled', 'tags'],
+  props: ['url', 'disabled', 'tags', 'title'],
   data() {
     return {
       query: '',
@@ -19,7 +19,7 @@ export default {
   },
   methods: {
     load() {
-      api.user.get({q: this.query}, 'tag/suggest').then(({data}) => {
+      api.user.get({q: this.query}, this.url).then(({data}) => {
         this.loaded(data);
       });
     },
@@ -41,14 +41,14 @@ export default {
       this.reset();
     },
     loaded(data) {
-      if (data && data.length) {
+      if (data && Array.isArray(data) && data.length) {
         this.items = data;
       } else {
         // this.clear();
       }
     },
     saved(tag) {
-      return !!_.findWhere(this.tags, {tag});
+      return this.tags && !!_.findWhere(this.tags, {tag});
     },
   },
 };
@@ -57,14 +57,13 @@ export default {
 <template>
   <div>
     <div class="dropdown suggest-input form-inline">
-      <input class="form-control"
-       type="text"
+      <input class="form-control" type="text"
        autocomplete="off"
        v-model="query"
        :disabled="disabled"
        @focus="load"
        @keyup="suggest"
-       placeholder="Ваше текст">
+       :placeholder="title || 'Введите текст'">
 
       <ul class="dropdown-menu" v-show="suggested">
         <li v-for="(item, index) in items"
