@@ -149,6 +149,7 @@ export default {
       <div class="form-inline">
         <SuggestInput url="name/suggest"
          :default="selectName"
+         :params="{sex}"
          title="Ваше имя"
          @select="saveName"/>
       </div>

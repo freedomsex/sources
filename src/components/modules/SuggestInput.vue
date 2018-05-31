@@ -3,7 +3,7 @@ import _ from 'underscore';
 import api from '~config/api';
 
 export default {
-  props: ['url', 'disabled', 'tags', 'title', 'default'],
+  props: ['url', 'disabled', 'tags', 'title', 'default', 'params'],
   data() {
     return {
       query: '',
@@ -22,7 +22,9 @@ export default {
   },
   methods: {
     load() {
-      api.user.get({q: this.query}, this.url).then(({data}) => {
+      const query = this.$refs.text.value || this.query;
+      const params = _.assign({q: query}, this.params);
+      api.user.get(params, this.url).then(({data}) => {
         this.loaded(data);
       });
     },
@@ -68,12 +70,12 @@ export default {
 <template>
   <div>
     <div class="dropdown suggest-input form-inline">
-      <input class="form-control" type="text"
+      <input class="form-control" type="text" ref="text"
        autocomplete="off"
        v-model="query"
        :disabled="disabled"
        @focus="load()"
-       @input="suggest()"
+       @keyup="suggest()"
        :placeholder="title || 'Введите текст'">
 
       <ul class="dropdown-menu" v-show="suggested">
