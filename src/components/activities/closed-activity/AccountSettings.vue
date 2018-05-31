@@ -90,7 +90,7 @@ export default {
     save() {
       this.saveCity();
       this.saveAge();
-      this.saveName();
+      this.saveName(this.selectName);
     },
     close() {
       this.save();

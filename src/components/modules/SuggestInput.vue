@@ -39,6 +39,11 @@ export default {
       this.init = false;
       this.load();
     }, 500),
+    // suggest(event) {
+    //   this.init = false;
+    //   console.log({query: this.query, event});
+    //   this.load();
+    // },
     select(item) {
       if (!this.saved(item)) {
         this.$emit('select', item);
@@ -67,13 +72,14 @@ export default {
        autocomplete="off"
        v-model="query"
        :disabled="disabled"
-       @focus="load"
-       @keyup="suggest"
+       @focus="load()"
+       @input="suggest()"
        :placeholder="title || 'Введите текст'">
 
       <ul class="dropdown-menu" v-show="suggested">
         <li v-for="(item, index) in items"
-         :key="index" :class="{disabled: saved(item)}"
+         :key="index"
+         :class="{disabled: saved(item)}"
          @click="select(item)">
           <a href="#" @click.prevent>
             {{item}}
