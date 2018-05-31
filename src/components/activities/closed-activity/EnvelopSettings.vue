@@ -9,7 +9,7 @@ export default {
 </script>
 
 <template>
-  <ActivityActions :closed="true" @close="$emit('close')">
+  <ActivityActions type="closed" @close="$emit('close')">
     <span slot="caption">Написать разработчикам</span>
     <div class="activity-section">
       Обсудить развитие можно на
@@ -22,10 +22,16 @@ export default {
 
     <div class="activity-section">
       <div class="activity-section__title">Поддержка</div>
-      <span class="activity-section__link" @click="$router.push('reviews')">
-        Оставить отзыв или мнение о сайте</span>
-      <span class="activity-section__link" @click="$router.push('question')">
-        Задать вопрос, если нужна помощь</span>
+      <div class="activity-section__tile">
+        <span class="activity-section__link" @click="$router.push('reviews')">
+          Оставить отзыв или мнение о сайте
+        </span>
+      </div>
+      <div class="activity-section__tile">
+        <span class="activity-section__link" @click="$router.push('question')">
+          Задать вопрос, если нужна помощь
+        </span>
+      </div>
     </div>
 
     <div class="activity-section__title">Обнаружив неполадку</div>

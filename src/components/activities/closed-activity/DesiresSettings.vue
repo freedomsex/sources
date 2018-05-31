@@ -59,7 +59,7 @@ export default {
 </script>
 
 <template>
-  <ActivityActions :closed="true" @close="close">
+  <ActivityActions type="closed" @close="close">
     <div class="activity-section">
       <div class="activity-section__title">
         Желания и фантазии

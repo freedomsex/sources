@@ -1,9 +1,27 @@
 <script>
 export default {
-  props: ['closed'],
+  props: ['type'],
   beforeRouteLeave(to, from, next) {
     console.log('Leave:', [to, from]);
     next();
+  },
+  computed: {
+    closed() {
+      return this.type === 'closed';
+    },
+    content() {
+      const type = ['content', 'closed'];
+      return type.indexOf(this.type) >= 0;
+    },
+    style() {
+      if (this.type === 'closed') {
+        return 'closed-activity';
+      }
+      if (this.type === 'content') {
+        return 'content-activity';
+      }
+      return 'default-activity';
+    },
   },
 };
 </script>
@@ -11,7 +29,7 @@ export default {
 <template>
   <div>
     <div class="activity__mask" @click.self="$emit('close')"></div>
-    <div :class="closed ? 'closed-activity' : 'default-activity'"
+    <div :class="style"
      @click.self="$emit('close')">
       <div class="activity__wrapper">
         <nav id="menu-user" class="navbar navbar-inverse">
@@ -26,7 +44,7 @@ export default {
               </div>
               <div class="menu-user__navbar" >
                 <div class="navbar-title" @click="$emit('close')">
-                  <slot name="caption">Заголовок</slot>
+                  <slot name="caption"></slot>
                 </div>
               </div>
               <slot name="option"></slot>
@@ -39,7 +57,7 @@ export default {
           </div>
         </nav>
         <div class="activity__container">
-          <div :class="{'activity__content': closed}">
+          <div :class="{'activity__content': content}">
             <slot></slot>
           </div>
         </div>
@@ -49,19 +67,10 @@ export default {
 </template>
 
 <style lang="less">
-.hint-info {
-  background: @light;
-  //border: 1px solid @gray-light;
-  color: @dark;
-  margin-bottom: 10px;
-  padding: 10px 15px;
-}
-
 .activity {
   &__mask {
     .fixed-dialog-mask;
   }
-
   &__title {
     font-weight: bolder;
     line-height: 20px;
@@ -78,7 +87,6 @@ export default {
     flex-direction: column;
     overflow: hidden;
   }
-
   &__container {
     display: flex;
     flex-direction: column;
@@ -88,114 +96,46 @@ export default {
     border: 1px solid @gray;
     border-width: 0px 1px 1px 1px;
   }
-
   &__content {
     padding: @indent-md @indent-lg @indent-md;
   }
-
   &__loader {
     color: @gray-dark;
   }
-
   &__splitter {
     height: @indent-sm;
   }
 }
 
-.activity-loader {
-  text-align: center;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: @indent-xs;
-
-  .circle-label() {
-    padding: 2px;
-    margin-top: 1px;
-    font-size: 12px;
-    border-radius: 10px;
-    width: 22px;
-    height: 22px;
-    border: 1px solid @gray;
-    box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.1);
-    display: inline-block;
-    background-color: @white;
-    background-position: center center;
-    background-repeat: no-repeat;
-    position: relative;
-    z-index: 1000;
-  }
-
-  &__label {
-    .circle-label;
-    background-image: url('~static/img/loader.gif');
-  }
-  &__alert {
-    .circle-label;
-    border: 0px solid @gray;
-    background-image: url('~static/img/icon/error-outline.png');
-  }
-}
-
-.activity-subsection {
-  margin-bottom: @indent-md;
-  display: block;
-}
-
-.activity-section {
-  margin-bottom: @indent-lg;
-  &__title {
-    margin-bottom: @indent-sm;
-    font-size: @font-lg;
-  }
-  &__link {
-    .link_simple;
-    .activity-subsection;
-  }
-}
-
-.default-activity {
+.activity-mixin() {
   max-width: @document-width;
   position: fixed;
-  right: 0;
-  left: 0;
   top: 0px;
   bottom: 0;
-
-  overflow: hidden;
-  z-index: 1;
+  right: 0;
+  left: 0;
 
   margin-right: auto;
   margin-left: auto;
+  overflow: hidden;
+  z-index: 1;
 
-  //border: 3px solid #CCC;
-  //border-width: 0 3px;
+  .menu-closed {
+    margin-left: auto;
+    margin-right: 0;
+  }
   .menu-user {
-    max-width: @activity-width;
     margin-left: 0;
     margin-right: auto;
   }
 }
 
+.default-activity {
+  .activity-mixin;
+}
+
 .closed-activity {
-  max-width: @document-width;
-  position: fixed;
-  top: 0px;
-  bottom: 0;
-  right: 0;
-  left: 0;
-
-  overflow: hidden;
-  z-index: 1;
-
-  margin-right: auto;
-  margin-left: auto;
-
-  .menu-closed {
-    max-width: @activity-width;
-    margin-left: auto;
-    margin-right: 0;
-  }
+  .activity-mixin;
 
   .btn-close {
     color: @white;
@@ -211,5 +151,82 @@ export default {
   }
 }
 
+.content-activity {
+  .activity-mixin;
 
+  .activity {
+    &__wrapper {
+      max-width: 100%;
+      max-height: 100%;
+    }
+    &__container {
+      height: calc(~'100% - 50px');
+    }
+    &__content {
+      padding-bottom: @indent-xl;
+      h1 {
+        margin-top: @indent-xs;
+      }
+    }
+  }
+}
+
+.hint-info {
+  background: @light;
+  //border: 1px solid @gray-light;
+  color: @dark;
+  margin-bottom: 10px;
+  padding: 10px 15px;
+}
+
+.activity-section {
+  margin-bottom: @indent-lg;
+  &__title {
+    margin-bottom: @indent-sm;
+    font-size: @font-lg;
+  }
+  &__tile {
+    margin-bottom: @indent-xs;
+  }
+  &__link {
+    display: inline-block;
+    padding: @indent-xs 0;
+    .link_simple;
+  }
+}
+
+// .activity-loader {
+//   text-align: center;
+//   position: absolute;
+//   left: 0;
+//   right: 0;
+//   top: @indent-xs;
+//
+//   .circle-label() {
+//     padding: 2px;
+//     margin-top: 1px;
+//     font-size: 12px;
+//     border-radius: 10px;
+//     width: 22px;
+//     height: 22px;
+//     border: 1px solid @gray;
+//     box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.1);
+//     display: inline-block;
+//     background-color: @white;
+//     background-position: center center;
+//     background-repeat: no-repeat;
+//     position: relative;
+//     z-index: 1000;
+//   }
+//
+//   &__label {
+//     .circle-label;
+//     background-image: url('~static/img/loader.gif');
+//   }
+//   &__alert {
+//     .circle-label;
+//     border: 0px solid @gray;
+//     background-image: url('~static/img/icon/error-outline.png');
+//   }
+// }
 </style>

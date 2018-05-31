@@ -217,7 +217,7 @@ export default {
     flex: 0 0 auto;
     font-size: 18px;
     margin: auto;
-    margin-right: 10px;
+    margin-right: 5px;
     cursor: pointer;
   }
 

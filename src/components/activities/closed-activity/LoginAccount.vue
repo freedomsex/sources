@@ -58,7 +58,7 @@ export default {
 </script>
 
 <template>
-  <ActivityActions :closed="true" @close="$emit('close')">
+  <ActivityActions type="closed" @close="$emit('close')">
     <div class="activity-section">
       <div class="activity-section__title">Ваш логин</div>
       <div class="form-inline">

@@ -29,7 +29,7 @@ export default {
 </script>
 
 <template>
-  <ActivityActions :closed="true" @close="close">
+  <ActivityActions type="closed" @close="close">
     <span slot="caption">Мой город</span>
     <div class="activity-section">
       <div class="form-inline">

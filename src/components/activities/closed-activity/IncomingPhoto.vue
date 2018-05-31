@@ -68,7 +68,7 @@ export default {
 </script>
 
 <template>
-  <ActivityActions :closed="true" @close="close">
+  <ActivityActions type="closed" @close="close">
     <span slot="caption">Галерея</span>
     <div class="activity-section">
       <div class="incoming-photo__list" v-if="photos.length">

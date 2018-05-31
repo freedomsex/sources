@@ -1,7 +1,7 @@
 <script>
 import Vuex from 'vuex';
 import ModalDialog from '~dialogs/ModalDialog';
-import ActivityActions from '../ActivityActions';
+import ActivityActions from '~activities/ActivityActions';
 
 export default {
   props: [],
@@ -136,7 +136,7 @@ export default {
 </script>
 
 <template>
-  <ClosedActivity :closed="true" @close="close">
+  <ActivityActions type="closed" @close="close">
     <div class="activity-section">
       <div class="activity-section__title">Логин:</div>
       <div class="form-inline">
@@ -216,7 +216,7 @@ export default {
         </div>
       </div>
     </ModalDialog>
-  </ClosedActivity>
+  </ActivityActions>
 </template>
 
 <style lang="less">

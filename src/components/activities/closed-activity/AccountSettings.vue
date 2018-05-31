@@ -106,7 +106,7 @@ export default {
 </script>
 
 <template>
-  <ActivityActions :closed="true" @close="close">
+  <ActivityActions type="closed" @close="close">
     <div class="activity-section">
       <div class="activity-section__title">Мой город:</div>
       <div class="form-inline">
@@ -162,10 +162,16 @@ export default {
     </div>
 
     <div class="activity-section">
-      <span class="activity-section__link" @click="$router.push('other')">
-        Другие настройки</span>
-      <span class="activity-section__link" @click="$router.push('/login')">
-        Уже есть анкета?</span>
+      <div class="activity-section__tile">
+        <span class="activity-section__link" @click="$router.push('other')">
+          Другие настройки
+        </span>
+      </div>
+      <div class="activity-section__tile">
+        <span class="activity-section__link" @click="$router.push('/login')">
+          Уже есть анкета?
+        </span>
+      </div>
     </div>
 
   </ActivityActions>

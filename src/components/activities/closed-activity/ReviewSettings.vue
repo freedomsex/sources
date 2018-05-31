@@ -76,7 +76,7 @@ export default {
 </script>
 
 <template>
-  <ActivityActions :closed="true" @close="$emit('close')">
+  <ActivityActions type="closed" @close="$emit('close')">
     <div class="activity-section">
       Пожалуйста, оставьте отзыв о сайте. Для нас важно каждое мнение и в любой форме.
       Будет ещё приятнее, если вы выскажитесь максимально подробно.

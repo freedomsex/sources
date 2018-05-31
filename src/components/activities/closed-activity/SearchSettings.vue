@@ -136,7 +136,7 @@ export default {
 </script>
 
 <template>
-  <ActivityActions :closed="true" @close="close">
+  <ActivityActions type="closed" @close="close">
     <span slot="caption">Настроить поиск</span>
     <div class="activity-section">
       <div class="activity-section__title">Мой город:</div>
@@ -191,10 +191,16 @@ export default {
     </div>
 
     <div class="activity-section">
-      <span class="activity-section__link"
-       @click="$router.push('/help/heterosexual')">Парни находят девушек</span>
-      <span class="activity-section__link"
-       @click="$router.push('/help/how-it-works')">Больше возможностей</span>
+      <div class="activity-section__tile">
+        <span class="activity-section__link" @click="$router.push('/help/heterosexual')">
+          Парни находят девушек
+        </span>
+      </div>
+      <div class="activity-section__tile">
+        <span class="activity-section__link" @click="$router.push('/help/how-it-works')">
+          Больше возможностей
+        </span>
+      </div>
     </div>
 
   </ActivityActions>

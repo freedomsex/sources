@@ -67,7 +67,7 @@ export default {
 </script>
 
 <template>
-  <ActivityActions :closed="true" @close="close">
+  <ActivityActions type="closed" @close="close">
     <div class="activity-section">
       <div class="activity-section__title">Ваш рост</div>
       <div class="form-inline">
