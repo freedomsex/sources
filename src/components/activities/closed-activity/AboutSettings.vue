@@ -1,6 +1,6 @@
 <script>
 import Vuex from 'vuex';
-import ClosedActivity from '~closed-activity/ClosedActivity';
+import ActivityActions from '../ActivityActions';
 
 export default {
   props: [],
@@ -61,13 +61,13 @@ export default {
     },
   },
   components: {
-    ClosedActivity,
+    ActivityActions,
   },
 };
 </script>
 
 <template>
-  <ClosedActivity @close="close">
+  <ActivityActions :closed="true" @close="close">
     <div class="activity-section">
       <div class="activity-section__title">Ваш рост</div>
       <div class="form-inline">
@@ -127,7 +127,7 @@ export default {
       </div>
     </div>
 
-  </ClosedActivity>
+  </ActivityActions>
 </template>
 
 <style lang="less">

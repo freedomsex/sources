@@ -1,5 +1,5 @@
 <script>
-import DefaultActivity from '~default-activity/DefaultActivity';
+import ActivityActions from '~activities/ActivityActions';
 import ContactDialog from './ContactDialog';
 import SettingsInform from './SettingsInform';
 import ContactItem from './ContactItem';
@@ -69,7 +69,7 @@ export default {
     },
   },
   components: {
-    DefaultActivity,
+    ActivityActions,
     ContactItem,
     SettingsInform,
   },
@@ -78,7 +78,7 @@ export default {
 
 <template>
   <div>
-    <DefaultActivity @close="close">
+    <ActivityActions @close="close">
       <span slot="caption">Знакомства</span>
 
       <div class="menu-user__navbar-right" slot="option">
@@ -120,7 +120,7 @@ export default {
       <SettingsInform v-if="modals.acceptSettings"
        @close="modals.acceptSettings = false"
        @confirm="accept"/>
-    </DefaultActivity>
+    </ActivityActions>
     <router-view @sended="splice"/>
   </div>
 </template>

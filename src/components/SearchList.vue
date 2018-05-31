@@ -4,7 +4,7 @@ import json from '~legacy/utils/json';
 import ModalDialog from '~dialogs/ModalDialog';
 import Snackbar from '~widgets/Snackbar';
 import QuickMessage from '~dialogs/quick-message/QuickMessage';
-import AutoRegistration from '~assets/mixins/AutoRegistration';
+import AutoRegistration from '~mixins/AutoRegistration';
 import SearchItem from './SearchItem';
 
 export default {

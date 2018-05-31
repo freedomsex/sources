@@ -1,9 +1,9 @@
 <script>
 import Vuex from 'vuex';
 import api from '~config/api';
-import ClosedActivity from '~closed-activity/ClosedActivity';
 import RemindLogin from '~dialogs/RemindLogin';
 import SimpleCaptcha from '~dialogs/SimpleCaptcha';
+import ActivityActions from '../ActivityActions';
 
 export default {
   props: [],
@@ -25,9 +25,6 @@ export default {
   }),
   mounted() {},
   methods: {
-    close() {
-      this.$emit('close');
-    },
     send() {
       const data = {
         login: this.login,
@@ -53,7 +50,7 @@ export default {
     },
   },
   components: {
-    ClosedActivity,
+    ActivityActions,
     SimpleCaptcha,
     RemindLogin,
   },
@@ -61,7 +58,7 @@ export default {
 </script>
 
 <template>
-  <ClosedActivity @close="close">
+  <ActivityActions :closed="true" @close="$emit('close')">
     <div class="activity-section">
       <div class="activity-section__title">Ваш логин</div>
       <div class="form-inline">
@@ -90,7 +87,7 @@ export default {
       {{hint}}
     </div>
     <RemindLogin v-if="remind" @close="remind = false"/>
-  </ClosedActivity>
+  </ActivityActions>
 </template>
 
 <style lang="less">

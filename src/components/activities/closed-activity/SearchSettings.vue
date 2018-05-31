@@ -2,10 +2,9 @@
 import _ from 'underscore';
 import lscache from 'lscache';
 import Tooltip from '~widgets/Tooltip';
-import ClosedActivity from './ClosedActivity';
+import ActivityActions from '../ActivityActions';
 
 export default {
-  extends: ClosedActivity,
   props: ['root'],
   data() {
     return {
@@ -115,7 +114,7 @@ export default {
     },
     close() {
       this.save();
-      this.back();
+      this.$emit('close');
       this.$root.reload();
     },
     tooltipAnyForce() {
@@ -130,14 +129,14 @@ export default {
     },
   },
   components: {
-    ClosedActivity,
+    ActivityActions,
     Tooltip,
   },
 };
 </script>
 
 <template>
-  <ClosedActivity @close="close">
+  <ActivityActions :closed="true" @close="close">
     <span slot="caption">Настроить поиск</span>
     <div class="activity-section">
       <div class="activity-section__title">Мой город:</div>
@@ -198,7 +197,7 @@ export default {
        @click="$router.push('/help/how-it-works')">Больше возможностей</span>
     </div>
 
-  </ClosedActivity>
+  </ActivityActions>
 </template>
 
 <style lang="less">

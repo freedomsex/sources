@@ -1,12 +1,13 @@
 <script>
 import ModalDialog from '~dialogs/ModalDialog';
 import Recaptcha from '~modules/Recaptcha';
-import AutoRegistration from '~assets/mixins/AutoRegistration';
+import AutoRegistration from '~mixins/AutoRegistration';
+import Loadable from '~mixins/Loadable';
 
 // Автоматически сохраняет город. Отправляет пол пользователя вместе с кодом капчи
 export default {
   extends: ModalDialog,
-  mixins: [AutoRegistration],
+  mixins: [AutoRegistration, Loadable],
   props: ['show'],
   data() {
     const content = {

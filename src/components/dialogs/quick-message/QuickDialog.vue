@@ -12,7 +12,10 @@ import MessagesCliche from '~default-activity/MessagesCliche';
 import ContactWizard from '~dialogs/ContactWizard';
 import InfoDialog from '~dialogs/InfoDialog';
 
+import Loadable from '~mixins/Loadable';
+
 export default {
+  mixins: [Loadable],
   extends: ModalDialog,
   props: ['humanId', 'message', 'index'],
   data() {
@@ -178,7 +181,7 @@ export default {
       this.$store.dispatch('visited/ADD', this.humanId);
     },
     close() {
-      this.back();
+      this.$emit('close');
       // this.$emit('close');
     },
     setText(text) {

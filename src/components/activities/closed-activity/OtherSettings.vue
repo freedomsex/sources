@@ -1,6 +1,6 @@
 <script>
 import Vuex from 'vuex';
-import ClosedActivity from '~closed-activity/ClosedActivity';
+import ActivityActions from '../ActivityActions';
 
 export default {
   props: [],
@@ -21,13 +21,13 @@ export default {
     },
   },
   components: {
-    ClosedActivity,
+    ActivityActions,
   },
 };
 </script>
 
 <template>
-  <ClosedActivity @close="close">
+  <ActivityActions :closed="true" @close="$emit('close')">
 <!--
     <div class="activity-section">
       <div class="activity-section__title">Статус анкеты</div>
@@ -77,7 +77,7 @@ export default {
        target="_blank">Удалить аккаунт</a>
     </div>
 
-  </ClosedActivity>
+  </ActivityActions>
 </template>
 
 <style lang="less">

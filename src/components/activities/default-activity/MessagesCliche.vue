@@ -1,11 +1,9 @@
 <script>
 import lscache from 'lscache';
 import api from '~config/api';
-import DefaultActivity from './DefaultActivity';
+import ActivityActions from '../ActivityActions';
 
 export default {
-  extends: DefaultActivity,
-  props: [],
   data() {
     return {
       texts: [],
@@ -23,19 +21,14 @@ export default {
     const active = lscache.get('cliche-active');
     this.load(active);
   },
-  computed: {
-    // ...
-  },
   methods: {
     load(value) {
       const result = value || this.default.tab;
-      api.raw
-        .load(null, `static/json/cliche/${result}.json?v=${this.version}`)
-        .then(({data}) => {
-          this.texts = data;
-          this.active = result;
-          lscache.set('cliche-active', this.active, 3 * 24 * 60 * 60);
-        });
+      api.raw.load(null, `static/json/cliche/${result}.json?v=${this.version}`).then(({data}) => {
+        this.texts = data;
+        this.active = result;
+        lscache.set('cliche-active', this.active, 3 * 24 * 60 * 60);
+      });
     },
     size(value) {
       const result = value ? this.default.size + value : this.default.size;
@@ -56,17 +49,17 @@ export default {
     },
     select(text) {
       this.$emit('select', text);
-      this.close();
+      this.$emit('close');
     },
   },
   components: {
-    DefaultActivity,
+    ActivityActions,
   },
 };
 </script>
 
 <template>
-  <DefaultActivity @close="close">
+  <ActivityActions @close="$emit('close')">
     <span slot="caption">Готовые сообщения</span>
     <div class="activity__content">
       <div class="activity-section">
@@ -83,7 +76,7 @@ export default {
       </div>
       <div class="activity__loader" v-else>Загружаю...</div>
     </div>
-  </DefaultActivity>
+  </ActivityActions>
 </template>
 
 <style lang="less">

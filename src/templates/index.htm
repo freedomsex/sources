@@ -34,7 +34,7 @@ ${require('./head.htm')}
       ${require('~templates/footer.htm')}
 
       <div id="router-view">
-        <router-view @close="$router.go(-1)" @warning="showSnackbar" @alert="toast"></router-view>
+        <router-view @close="goBack" @warning="showSnackbar" @alert="toast"></router-view>
       </div>
       <api-key-update ref="api-key"></api-key-update>
       <snackbar v-if="snackbar.text"
@@ -50,7 +50,7 @@ ${require('./head.htm')}
   <aside>
     <!-- SETTINGS layer -->
     <div id="settings">
-      <router-view @close="$router.go(-1)" @warning="snackbar" @alert="toast"></router-view>
+      <router-view @close="goBack" @warning="snackbar" @alert="toast"></router-view>
 
       <snackbar v-if="warning" @close="warning = null">{{warning}}</snackbar>
       <toast v-if="alert" @close="alert = null">{{alert}}</toast>

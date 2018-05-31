@@ -100,6 +100,13 @@ const App = new Vue({
       console.log('Hard reload mail page to home');
       window.location = '/';
     },
+    goBack() {
+      if (window.history.length > 1) {
+        this.$router.go(-1);
+      } else {
+        this.$router.push('/');
+      }
+    },
   },
   el: '#app',
   store,
@@ -134,6 +141,13 @@ const Layer = new Vue({
     },
     toast(text) {
       this.alert = text;
+    },
+    goBack() {
+      if (window.history.length > 1) {
+        this.$router.go(-1);
+      } else {
+        this.$router.push('/');
+      }
     },
   },
   el: '#settings',

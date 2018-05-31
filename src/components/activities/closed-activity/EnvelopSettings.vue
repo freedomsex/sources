@@ -1,16 +1,15 @@
 <script>
-import ClosedActivity from '~closed-activity/ClosedActivity';
+import ActivityActions from '../ActivityActions';
 
 export default {
-  extends: ClosedActivity,
   components: {
-    ClosedActivity,
+    ActivityActions,
   },
 };
 </script>
 
 <template>
-  <ClosedActivity @close="close">
+  <ActivityActions :closed="true" @close="$emit('close')">
     <span slot="caption">Написать разработчикам</span>
     <div class="activity-section">
       Обсудить развитие можно на
@@ -36,7 +35,7 @@ export default {
       в котором открываете.
     </div>
 
-  </ClosedActivity>
+  </ActivityActions>
 </template>
 
 <style lang="less">

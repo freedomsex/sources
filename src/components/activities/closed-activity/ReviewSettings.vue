@@ -4,11 +4,11 @@ import api from '~config/api';
 import hasher from '~legacy/utils/simple-hash';
 import InfoDialog from '~dialogs/InfoDialog';
 import ConfirmDialog from '~dialogs/ConfirmDialog';
-import ClosedActivity from './ClosedActivity';
+import Loadable from '~mixins/Loadable';
+import ActivityActions from '../ActivityActions';
 
 export default {
-  extends: ClosedActivity,
-  props: [],
+  mixins: [Loadable],
   data() {
     return {
       text: '',
@@ -23,7 +23,7 @@ export default {
   },
   computed: {
     short() {
-      return (this.text.length <= 25);
+      return this.text.length <= 25;
     },
   },
   methods: {
@@ -68,7 +68,7 @@ export default {
     },
   },
   components: {
-    ClosedActivity,
+    ActivityActions,
     ConfirmDialog,
     InfoDialog,
   },
@@ -76,7 +76,7 @@ export default {
 </script>
 
 <template>
-  <ClosedActivity @close="close">
+  <ActivityActions :closed="true" @close="$emit('close')">
     <div class="activity-section">
       Пожалуйста, оставьте отзыв о сайте. Для нас важно каждое мнение и в любой форме.
       Будет ещё приятнее, если вы выскажитесь максимально подробно.
@@ -126,16 +126,15 @@ export default {
       когда ответ не обязателен.
     </ConfirmDialog>
 
-    <ConfirmDialog @close="close()" :simple="true" v-if="sended">
+    <ConfirmDialog @close="$emit('close')" :simple="true" v-if="sended">
       <span slot="title">Спасибо за отзыв</span>
       Для нас важно каждое мнение и в любой форме.
       Ориентируясь на отзывы Пользователей, разработчики стараются
       делать сайт ещё приятнее и удобнее.
     </ConfirmDialog>
 
-  </ClosedActivity>
+  </ActivityActions>
 </template>
 
 <style lang="less">
-
 </style>

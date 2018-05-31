@@ -1,11 +1,10 @@
 <script>
 import axios from 'axios';
 import hasher from '~legacy/utils/simple-hash';
-import ClosedActivity from '~closed-activity/ClosedActivity';
 import PhotoSend from '~modules/PhotoSend';
+import ActivityActions from '../ActivityActions';
 
 export default {
-  extends: ClosedActivity,
   props: ['humanId'],
   data() {
     return {
@@ -57,19 +56,19 @@ export default {
       }
     },
     close() {
-      this.back();
+      this.$emit('close');
       // this.$emit('close');
     },
   },
   components: {
-    ClosedActivity,
+    ActivityActions,
     PhotoSend,
   },
 };
 </script>
 
 <template>
-  <ClosedActivity @close="close">
+  <ActivityActions :closed="true" @close="close">
     <span slot="caption">Галерея</span>
     <div class="activity-section">
       <div class="incoming-photo__list" v-if="photos.length">
@@ -83,7 +82,7 @@ export default {
       </div>
     </div>
     <PhotoSend v-if="preview" :photo="preview" @close="preview = null"/>
-  </ClosedActivity>
+  </ActivityActions>
 </template>
 
 <style lang="less">
@@ -106,13 +105,13 @@ export default {
   height: 100px;
   @media (max-width: 400px) {
     @indent: (20 * 2 + 2 - 5 * 2) / 3;
-    width: ~"calc(33.33vmin - @{indent}px)";
-    height: ~"calc(33.33vmin - @{indent}px)";
+    width: ~'calc(33.33vmin - @{indent}px)';
+    height: ~'calc(33.33vmin - @{indent}px)';
   }
   @media (max-width: 540px) and (min-width: 400px) {
     @indent: (20 * 2 + 2 - 5 * 2) / 4;
-    width: ~"calc(25vmin - @{indent}px)";
-    height: ~"calc(25vmin - @{indent}px)";
+    width: ~'calc(25vmin - @{indent}px)';
+    height: ~'calc(25vmin - @{indent}px)';
   }
   border: 5px solid @white;
   position: relative;
@@ -131,13 +130,13 @@ export default {
     height: 100px;
     @media (max-width: 400px) {
       @indent: (20 * 2 + 2 - 5 * 2) / 3;
-      width: ~"calc(33.33vmin - @{indent}px)";
-      height: ~"calc(33.33vmin - @{indent}px)";
+      width: ~'calc(33.33vmin - @{indent}px)';
+      height: ~'calc(33.33vmin - @{indent}px)';
     }
     @media (max-width: 540px) and (min-width: 400px) {
       @indent: (20 * 2 + 2 - 5 * 2) / 4;
-      width: ~"calc(25vmin - @{indent}px)";
-      height: ~"calc(25vmin - @{indent}px)";
+      width: ~'calc(25vmin - @{indent}px)';
+      height: ~'calc(25vmin - @{indent}px)';
     }
     border: 5px solid @white;
     position: relative;

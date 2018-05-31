@@ -1,11 +1,11 @@
 <script>
 import _ from 'underscore';
 import Vuex from 'vuex';
-import ClosedActivity from '~closed-activity/ClosedActivity';
 import ModalDialog from '~dialogs/ModalDialog';
 import DesireItem from '~modules/DesireList/DesireItem';
 import SuggestInput from '~modules/SuggestInput';
 import Tooltip from '~widgets/Tooltip';
+import ActivityActions from '../ActivityActions';
 
 export default {
   props: [],
@@ -49,7 +49,7 @@ export default {
     },
   },
   components: {
-    ClosedActivity,
+    ActivityActions,
     ModalDialog,
     SuggestInput,
     DesireItem,
@@ -59,7 +59,7 @@ export default {
 </script>
 
 <template>
-  <ClosedActivity @close="close">
+  <ActivityActions :closed="true" @close="close">
     <div class="activity-section">
       <div class="activity-section__title">
         Желания и фантазии
@@ -110,7 +110,7 @@ export default {
       </div>
     </ModalDialog>
 
-  </ClosedActivity>
+  </ActivityActions>
 </template>
 
 <style lang="less">

@@ -13,14 +13,14 @@ export default {
   },
   methods: {
     load() {
-      this.$store.dispatch('sends/LOAD', this.next).then((response) => {
+      this.$store.dispatch('sends/LOAD', this.next).then(() => {
         this.loaded();
       });
       this.amount = this.count;
       this.hope();
     },
     next() {
-      this.$store.dispatch('sends/NEXT', this.offset).then((response) => {
+      this.$store.dispatch('sends/NEXT', this.offset).then(() => {
         this.loaded();
       });
       this.reset();

@@ -2,10 +2,8 @@
 import axios from 'axios';
 import ReviewList from '~modules/ReviewList';
 import PhotoSend from '~modules/PhotoSend';
-import ActivityActions from '../../ActivityActions';
 
 export default {
-  extends: ActivityActions,
   props: ['link', 'locale'],
   data() {
     return {
@@ -68,12 +66,12 @@ export default {
 </script>
 
 <template>
-  <div class="content-activity" @click.self="close">
+  <div class="content-activity" @click.self="$emit('close')">
     <nav id="menu-user" class="navbar navbar-inverse">
       <div class="menu-user">
         <div class="menu-user__wrapper">
           <div class="menu-user__logo">
-            <span id="home_page" class="" style="padding: 10px 0px;" @click="close">
+            <span id="home_page" class="" style="padding: 10px 0px;" @click="$emit('close')">
               <img src="~static/img/icon/arrow_back.png" width="30" height="30" alt="" border="0" >
             </span>
           </div>

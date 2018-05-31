@@ -1,8 +1,8 @@
 <script>
-import ClosedActivity from '~closed-activity/ClosedActivity';
 import CitySuggest from '~modules/CitySuggest';
 import CityDefaultList from '~assets/CityDefaultList';
 import AccountSettings from './AccountSettings';
+import ActivityActions from '../ActivityActions';
 
 export default {
   extends: AccountSettings,
@@ -14,22 +14,22 @@ export default {
   methods: {
     select(city) {
       this.saveCity(city);
-      this.back();
+      this.$emit('close');
     },
     close() {
       this.saveCity();
-      this.back();
+      this.$emit('close');
     },
   },
   components: {
-    ClosedActivity,
+    ActivityActions,
     CitySuggest,
   },
 };
 </script>
 
 <template>
-  <ClosedActivity @close="close">
+  <ActivityActions :closed="true" @close="close">
     <span slot="caption">Мой город</span>
     <div class="activity-section">
       <div class="form-inline">
@@ -41,7 +41,7 @@ export default {
        v-for="item in cities"
        @click="select(item)"> {{item}} </span>
     </div>
-  </ClosedActivity>
+  </ActivityActions>
 </template>
 
 <style lang="less">

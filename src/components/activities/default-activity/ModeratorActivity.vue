@@ -1,7 +1,7 @@
 <script>
 import api from '~config/api';
 import ModalDialog from '~dialogs/ModalDialog';
-import DefaultActivity from './DefaultActivity';
+import ActivityActions from '../ActivityActions';
 
 export default {
   data() {
@@ -82,12 +82,9 @@ export default {
         this.load();
       });
     },
-    close() {
-      this.$emit('close');
-    },
   },
   components: {
-    DefaultActivity,
+    ActivityActions,
     ModalDialog,
   },
 };
@@ -95,7 +92,7 @@ export default {
 
 <template>
   <div>
-    <DefaultActivity @close="close">
+    <ActivityActions @close="$emit('close')">
       <span slot="caption">Защитить</span>
       <div class="menu-user__navbar-right" slot="option">
         <div class="navbar-button">
@@ -172,7 +169,7 @@ export default {
         </div>
 
       </div>
-    </DefaultActivity>
+    </ActivityActions>
 
     <ModalDialog @close="close" v-if="!accept">
       <div class="modal-dialog__wrapper">

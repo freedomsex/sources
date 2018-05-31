@@ -2,7 +2,6 @@
 import ModalDialog from '~dialogs/ModalDialog';
 
 export default {
-  extends: ModalDialog,
   props: ['simple', 'title', 'yesText', 'noText'],
   computed: {
     yes() {
@@ -15,11 +14,11 @@ export default {
   methods: {
     cancel() {
       this.$emit('cancel');
-      this.close();
+      this.$emit('close');
     },
     confirm() {
       this.$emit('confirm');
-      this.close();
+      this.$emit('close');
     },
   },
   components: {
@@ -29,7 +28,7 @@ export default {
 </script>
 
 <template>
-  <ModalDialog @close="close">
+  <ModalDialog @close="$emit('close')">
     <div class="modal-dialog__wrapper">
       <div class="modal-dialog__caption" v-if="this.title !== true">
         <slot name="title"></slot>

@@ -1,6 +1,6 @@
 <script>
-import ClosedActivity from '~closed-activity/ClosedActivity';
 import AccountComponent from '~components/AccountComponent';
+import ActivityActions from '../ActivityActions';
 
 export default {
   props: ['humanId'],
@@ -19,9 +19,6 @@ export default {
     this.load();
   },
   methods: {
-    close() {
-      this.$emit('close');
-    },
     loaded() {
       this.loading = false;
       console.log(this.human);
@@ -34,29 +31,32 @@ export default {
     load() {
       this.loading = true;
       this.hope();
-      this.$store.dispatch('human/load', this.humanId).then(() => {
-        this.loaded();
-      }).catch((error) => {
-        console.log(error);
-        this.loading = false;
-      });
+      this.$store
+        .dispatch('human/load', this.humanId)
+        .then(() => {
+          this.loaded();
+        })
+        .catch((error) => {
+          console.log(error);
+          this.loading = false;
+        });
     },
   },
   components: {
-    ClosedActivity,
+    ActivityActions,
     AccountComponent,
   },
 };
 </script>
 
 <template>
-  <ClosedActivity @close="close">
+  <ActivityActions :closed="true" @close="$emit('close')">
     <span slot="caption">Анкета</span>
     <AccountComponent
      :human="human"
      key="humanId"
      v-if="human"/>
-  </ClosedActivity>
+  </ActivityActions>
 </template>
 
 <style lang="less">

@@ -1,7 +1,7 @@
 <script>
 import _ from 'underscore';
 import api from '~config/api';
-import DefaultActivity from '~default-activity/DefaultActivity';
+import ActivityActions from '~activities/ActivityActions';
 import Recaptcha from '~modules/Recaptcha';
 import Toast from '~widgets/Toast';
 import CaptchaDialog from '~dialogs/CaptchaDialog';
@@ -9,7 +9,6 @@ import PhotoSend from '~modules/PhotoSend';
 import MessageList from './MessageList';
 
 export default {
-  extends: DefaultActivity,
   props: ['humanId', 'title'],
   data() {
     return {
@@ -62,8 +61,7 @@ export default {
       }
     },
     close() {
-      // this.$emit('close');
-      this.back();
+      this.$emit('close');
     },
     cancel() {
       this.captcha = false;
@@ -149,7 +147,7 @@ export default {
     },
   },
   components: {
-    DefaultActivity,
+    ActivityActions,
     MessageList,
     PhotoSend,
     CaptchaDialog,
@@ -161,7 +159,7 @@ export default {
 
 <template>
   <div>
-    <DefaultActivity @close="close">
+    <ActivityActions @close="close">
       <span slot="caption">{{caption}}</span>
 
       <div class="menu-user__navbar-right" slot="option">
@@ -220,7 +218,7 @@ export default {
       <Toast v-if="photoIsRemoved" @close="photoIsRemoved = false">Фото удалено</toast>
 
       <router-view @select="select"/>
-    </DefaultActivity>
+    </ActivityActions>
     <Recaptcha ref="recaptcha" @cancel="close"/>
   </div>
 </template>

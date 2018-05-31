@@ -1,9 +1,7 @@
 <script>
 import api from '~config/api';
-import DefaultActivity from '~default-activity/DefaultActivity';
 
 export default {
-  extends: DefaultActivity,
   props: ['quick'],
   data() {
     return {

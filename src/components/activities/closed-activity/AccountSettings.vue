@@ -1,13 +1,12 @@
 <script>
 import Vuex from 'vuex';
 import _ from 'underscore';
-import ClosedActivity from '~closed-activity/ClosedActivity';
 import InfoDialog from '~dialogs/InfoDialog';
 import CitySuggest from '~modules/CitySuggest';
 import SuggestInput from '~modules/SuggestInput';
+import ActivityActions from '../ActivityActions';
 
 export default {
-  extends: ClosedActivity,
   props: ['root'],
   data() {
     return {
@@ -94,11 +93,11 @@ export default {
     },
     close() {
       this.save();
-      this.back();
+      this.$emit('close');
     },
   },
   components: {
-    ClosedActivity,
+    ActivityActions,
     InfoDialog,
     CitySuggest,
     SuggestInput,
@@ -107,7 +106,7 @@ export default {
 </script>
 
 <template>
-  <ClosedActivity @close="close">
+  <ActivityActions :closed="true" @close="close">
     <div class="activity-section">
       <div class="activity-section__title">Мой город:</div>
       <div class="form-inline">
@@ -169,7 +168,7 @@ export default {
         Уже есть анкета?</span>
     </div>
 
-  </ClosedActivity>
+  </ActivityActions>
 </template>
 
 <style lang="less">

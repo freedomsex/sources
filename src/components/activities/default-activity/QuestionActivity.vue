@@ -5,11 +5,11 @@ import api from '~config/api';
 import hasher from '~legacy/utils/simple-hash';
 import InfoDialog from '~dialogs/InfoDialog';
 import ConfirmDialog from '~dialogs/ConfirmDialog';
-import DefaultActivity from './DefaultActivity';
+import Loadable from '~mixins/Loadable';
+import ActivityActions from '../ActivityActions';
 
 export default {
-  extends: DefaultActivity,
-  props: [],
+  mixins: [Loadable],
   data() {
     return {
       queries: [],
@@ -27,7 +27,7 @@ export default {
   },
   computed: {
     short() {
-      return (this.text.length <= 25);
+      return this.text.length <= 25;
     },
   },
   methods: {
@@ -64,13 +64,10 @@ export default {
       }
     },
     send() {
-      api.raw
-        .post({
-          text: this.text,
-          hash: hasher.random(),
-        },
-        null,
-        'security/askme')
+      api.raw.post({
+        text: this.text,
+        hash: hasher.random(),
+      }, null, 'security/askme')
         .then(() => {
           this.process = false;
           this.text = '';
@@ -89,7 +86,7 @@ export default {
     },
   },
   components: {
-    DefaultActivity,
+    ActivityActions,
     ConfirmDialog,
     InfoDialog,
   },
@@ -97,7 +94,7 @@ export default {
 </script>
 
 <template>
-  <DefaultActivity @close="close">
+  <ActivityActions @close="$emit('close')">
       <span slot="caption">Помощь</span>
 
       <div class="activity__content">
@@ -176,7 +173,7 @@ export default {
         Отвечают быстро, но это не точно...
       </ConfirmDialog>
 
-  </DefaultActivity>
+  </ActivityActions>
 </template>
 
 <style lang="less">

@@ -1,8 +1,5 @@
 <script>
-import ActivityActions from '~components/activities/ActivityActions';
-
 export default {
-  extends: ActivityActions,
   methods: {
     onEsc(event) {
       if (event.keyCode === 27) {
@@ -22,7 +19,7 @@ export default {
 </script>
 
 <template>
-  <div class="modal-dialog__mask" transition="modal" @click="close">
+  <div class="modal-dialog__mask" transition="modal" @click="$emit('close')">
     <div class="modal-dialog__container" @click.stop>
       <slot></slot>
     </div>

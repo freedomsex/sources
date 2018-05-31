@@ -1,6 +1,6 @@
 <script>
+// TODO: REMOVE ???
 export default {
-  template: '#upload-dialog',
   data() {
     return {
       photos: [],
@@ -28,17 +28,8 @@ export default {
         // console.log('sendPhoto');
         // console.log(data);
       }
-      this.close();
+      this.$emit('close');
     },
   },
 };
 </script>
-
-<template>
-  <div class="">
-
-  </div>
-</template>
-
-<style lang="less">
-</style>

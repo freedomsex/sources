@@ -39,6 +39,7 @@ module.exports = {
     alias: {
       vue$: 'vue/dist/vue.esm.js',
       '~store': path.resolve(__dirname, './src/store/'),
+      '~activities': path.resolve(__dirname, './src/components/activities/'),
       '~closed-activity': path.resolve(__dirname, './src/components/activities/closed-activity/'),
       '~default-activity': path.resolve(__dirname, './src/components/activities/default-activity/'),
       '~dialogs': path.resolve(__dirname, './src/components/dialogs/'),

@@ -1,21 +1,24 @@
 <script>
-import ActivityActions from '../ActivityActions';
-
 export default {
-  extends: ActivityActions,
+  props: ['closed'],
+  beforeRouteLeave(to, from, next) {
+    console.log('Leave:', [to, from]);
+    next();
+  },
 };
 </script>
 
 <template>
   <div>
-    <div class="activity__mask" @click.self="close"></div>
-    <div class="default-activity" @click.self="close">
+    <div class="activity__mask" @click.self="$emit('close')"></div>
+    <div :class="closed ? 'closed-activity' : 'default-activity'"
+     @click.self="$emit('close')">
       <div class="activity__wrapper">
         <nav id="menu-user" class="navbar navbar-inverse">
           <div class="menu-user">
             <div class="menu-user__wrapper">
-              <div class="menu-user__logo">
-                <span id="home_page" class="" style="padding: 10px 0px;" @click="close">
+              <div class="menu-user__logo" v-if="!closed">
+                <span style="padding: 10px 0px;" @click="$emit('close')">
                   <img src="~static/img/icon/arrow_back.png"
                    width="30" height="30"
                    alt="" border="0" >
@@ -27,11 +30,18 @@ export default {
                 </div>
               </div>
               <slot name="option"></slot>
+              <div class="menu-user__navbar-right"
+               v-if="closed"
+               @click="$emit('close')">
+                <i class="btn-close material-icons">&#xE14C;</i>
+              </div>
             </div>
           </div>
         </nav>
         <div class="activity__container">
-          <slot></slot>
+          <div :class="{'activity__content': closed}">
+            <slot></slot>
+          </div>
         </div>
       </div>
     </div>
@@ -166,4 +176,40 @@ export default {
     margin-right: auto;
   }
 }
+
+.closed-activity {
+  max-width: @document-width;
+  position: fixed;
+  top: 0px;
+  bottom: 0;
+  right: 0;
+  left: 0;
+
+  overflow: hidden;
+  z-index: 1;
+
+  margin-right: auto;
+  margin-left: auto;
+
+  .menu-closed {
+    max-width: @activity-width;
+    margin-left: auto;
+    margin-right: 0;
+  }
+
+  .btn-close {
+    color: @white;
+    padding: 10px 0;
+    font-size: 30px;
+    cursor: pointer;
+  }
+
+  .activity {
+    &__wrapper {
+      right: 0;
+    }
+  }
+}
+
+
 </style>

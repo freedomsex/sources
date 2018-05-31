@@ -1,9 +1,7 @@
 <script>
-import DefaultActivity from './DefaultActivity';
+import ActivityActions from '../ActivityActions';
 
 export default {
-  extends: DefaultActivity,
-  props: [],
   data() {
     return {
       writes: [],
@@ -13,9 +11,6 @@ export default {
     this.$store.dispatch('notes/WRITES').then((data) => {
       this.writes = data;
     });
-  },
-  computed: {
-    // ...
   },
   methods: {
     cliche() {
@@ -27,17 +22,17 @@ export default {
       // })
       // this.$store.dispatch('notes/UPDATE', {id, count: item.count});
       this.$emit('select', text);
-      this.close();
+      this.$emit('close');
     },
   },
   components: {
-    DefaultActivity,
+    ActivityActions,
   },
 };
 </script>
 
 <template>
-  <DefaultActivity @close="close">
+  <ActivityActions @close="$emit('close')">
     <span slot="caption">Блокнот</span>
     <div class="menu-user__navbar-right" slot="option">
       <div class="navbar-button" @click="cliche()">
@@ -51,7 +46,7 @@ export default {
          @click="select(item.text)">{{item.text}}</div>
       </div>
     </div>
-  </DefaultActivity>
+  </ActivityActions>
 </template>
 
 <style lang="less">

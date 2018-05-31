@@ -1,14 +1,13 @@
 <script>
 import axios from 'axios';
 import hasher from '~legacy/utils/simple-hash';
-import ClosedActivity from '~closed-activity/ClosedActivity';
 import InfoDialog from '~dialogs/InfoDialog';
 import AdaptPhotoData from '~assets/AdaptPhotoData';
 
+import ActivityActions from '../../ActivityActions';
 import FileUploadButton from './FileUploadButton';
 
 export default {
-  extends: ClosedActivity,
   props: ['humanId'],
   data() {
     return {
@@ -21,7 +20,7 @@ export default {
   },
   methods: {
     close() {
-      this.back();
+      this.$emit('close');
     },
     loadPhoto() {
       const server = this.$store.state.photoServer;
@@ -66,7 +65,7 @@ export default {
     },
   },
   components: {
-    ClosedActivity,
+    ActivityActions,
     InfoDialog,
     FileUploadButton,
   },
@@ -74,7 +73,7 @@ export default {
 </script>
 
 <template>
-  <ClosedActivity @close="close">
+  <ActivityActions @close="close" :closed="true">
     <span slot="caption">Отправить фото</span>
     <div class="activity-section">
       <div class="galery-photo" v-show="photos.length" style="display: none;">
@@ -100,7 +99,7 @@ export default {
       загрузить повторно может не получиться, даже если фото ваше.
     </InfoDialog>
 
-  </ClosedActivity>
+  </ActivityActions>
 </template>
 
 <style lang="less">
