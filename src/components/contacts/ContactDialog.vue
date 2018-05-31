@@ -41,7 +41,7 @@ export default {
   methods: {
     close() {
       // this.$emit('close');
-      this.back();
+      this.$emit('close');
     },
     reset() {
       this.response = false;

@@ -217,7 +217,7 @@ export default {
        @send="setCode"/>
       <Toast v-if="photoIsRemoved" @close="photoIsRemoved = false">Фото удалено</toast>
 
-      <router-view @select="select"/>
+      <router-view @close="$root.goBack()" @select="select"/>
     </ActivityActions>
     <Recaptcha ref="recaptcha" @cancel="close"/>
   </div>

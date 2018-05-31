@@ -12,7 +12,7 @@ export default {
       this.$store.commit('accepts/photo');
     },
     close() {
-      this.back();
+      this.$emit('close');
     },
   },
   computed: {

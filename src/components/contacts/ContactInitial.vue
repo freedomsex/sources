@@ -121,7 +121,7 @@ export default {
        @close="modals.acceptSettings = false"
        @confirm="accept"/>
     </ActivityActions>
-    <router-view @sended="splice"/>
+    <router-view @close="$root.goBack()" @sended="splice"/>
   </div>
 </template>
 

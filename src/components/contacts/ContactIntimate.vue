@@ -108,7 +108,7 @@ export default {
        :title="title"
        v-if="dialog"/>
 
-      <router-view @sended="splice"/>
+      <router-view @close="$root.goBack()" @sended="splice"/>
     </ActivityActions>
   </div>
 </template>

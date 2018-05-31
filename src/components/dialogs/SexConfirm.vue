@@ -81,7 +81,7 @@ export default {
   // },
   methods: {
     close() {
-      this.back();
+      this.$emit('close');
     },
     index(val) {
       return val == this.variant;
