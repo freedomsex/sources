@@ -1,7 +1,7 @@
 <script>
 import _ from 'underscore';
 import Vuex from 'vuex';
-import ModalDialog from '~dialogs/ModalDialog';
+import InfoDialog from '~dialogs/InfoDialog';
 import DesireItem from '~modules/DesireList/DesireItem';
 import SuggestInput from '~modules/SuggestInput';
 import Tooltip from '~widgets/Tooltip';
@@ -50,7 +50,7 @@ export default {
   },
   components: {
     ActivityActions,
-    ModalDialog,
+    InfoDialog,
     SuggestInput,
     DesireItem,
     Tooltip,
@@ -95,20 +95,14 @@ export default {
       и ваши совпадут, его анкета будет выделена в Поиске.
     </div>
 
-    <ModalDialog @close="confirmRemove = null" v-if="confirmRemove !== null">
-      <div class="modal-dialog__wrapper">
-        <div class="modal-dialog__body">
-          Удалить желание? Всегда можно будет добавить заново здесь,
-          или кликнув по понравившемуся в любой анкете.
-        </div>
-        <div class="modal-dialog__footer">
-          <button class="btn btn-danger" @click="remove">
-            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-            Удалить
-          </button>
-        </div>
-      </div>
-    </ModalDialog>
+
+    <InfoDialog v-if="confirmRemove !== null"
+     yesText="Удалить" @confirm="remove"
+     @close="confirmRemove = null">
+      Удалить желание? Всегда можно будет добавить заново здесь,
+      или кликнув по понравившемуся в любой анкете.
+      <span slot="yesIcon" class="glyphicon glyphicon-remove"></span>
+    </InfoDialog>
 
   </ActivityActions>
 </template>

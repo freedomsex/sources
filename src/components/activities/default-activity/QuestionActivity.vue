@@ -165,13 +165,13 @@ export default {
         или сообщить информацию.
       </ConfirmDialog>
 
-      <ConfirmDialog @close="close()" :simple="true" v-if="sended">
+      <InfoDialog @close="close()" v-if="sended">
         <span slot="title">Скоро ответим</span>
         Ответ будет отправлен в анкету на сайте или на почту.
         Чем выше важность вопроса, тем больше шансов скоро получить ответ.
         Некоторые вопросы могут остаться без ответа.
         Отвечают быстро, но это не точно...
-      </ConfirmDialog>
+      </InfoDialog>
 
   </ActivityActions>
 </template>

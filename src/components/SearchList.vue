@@ -1,7 +1,7 @@
 <script>
 import _ from 'underscore';
 import json from '~legacy/utils/json';
-import ModalDialog from '~dialogs/ModalDialog';
+import InfoDialog from '~dialogs/InfoDialog';
 import Snackbar from '~widgets/Snackbar';
 import QuickMessage from '~dialogs/quick-message/QuickMessage';
 import AutoRegistration from '~mixins/AutoRegistration';
@@ -153,7 +153,7 @@ export default {
   },
   components: {
     SearchItem,
-    ModalDialog,
+    InfoDialog,
     QuickMessage,
     Snackbar,
   },
@@ -210,23 +210,13 @@ export default {
      v-if="sended"
      @close="sended = false">Сообщение отправлено.</Snackbar>
 
-    <ModalDialog @close="ignore = true" v-if="accept">
-      <div class="modal-dialog__wrapper">
-        <div class="modal-dialog__caption">
-          Поднятие в ТОП Бесплатно!
-        </div>
-        <div class="modal-dialog__body">
-          Онлайн анкеты всегда наверху. Все самые активные пользователи
-          на первой странице. Просто пишите тем, с кем ещё не общались.
-          Отдельный поиск онлайн анкет отсутствует, да он и не нужен.
-        </div>
-        <div class="modal-dialog__footer">
-          <button class="btn btn-primary btn-fat" @click="approve">
-            OK
-          </button>
-        </div>
-      </div>
-    </ModalDialog>
+    <InfoDialog v-if="accept" @confirm="approve"
+     @close="ignore = true">
+       <slot name="title">Поднятие в ТОП Бесплатно!</slot>
+       Онлайн анкеты всегда наверху. Все самые активные пользователи
+       на первой странице. Просто пишите тем, с кем ещё не общались.
+       Отдельный поиск онлайн анкет отсутствует, да он и не нужен.
+    </InfoDialog>
 
   </div>
 </template>

@@ -1,6 +1,6 @@
 <script>
 import api from '~config/api';
-import ModalDialog from '~dialogs/ModalDialog';
+import ConfirmDialog from '~dialogs/ConfirmDialog';
 import ActivityActions from '../ActivityActions';
 
 export default {
@@ -82,17 +82,20 @@ export default {
         this.load();
       });
     },
+    close() {
+      this.$emit('close');
+    },
   },
   components: {
     ActivityActions,
-    ModalDialog,
+    ConfirmDialog,
   },
 };
 </script>
 
 <template>
   <div>
-    <ActivityActions @close="$emit('close')">
+    <ActivityActions @close="close">
       <span slot="caption">Защитить</span>
       <div class="menu-user__navbar-right" slot="option">
         <div class="navbar-button">
@@ -152,6 +155,7 @@ export default {
               <option>Грубые намеренные оскорбления</option>
             </select>-->
           </div>
+
           <div id="" class="" style="font-size: 14px; margin-bottom: 10px; color: #777;">
               Просто ответьте, соответствует ли текст сообщения нарушению или нет.
               Нарушитель получит новую порцию наказания, если вы подтвердите это.
@@ -171,32 +175,21 @@ export default {
       </div>
     </ActivityActions>
 
-    <ModalDialog @close="close" v-if="!accept">
-      <div class="modal-dialog__wrapper">
-        <div class="modal-dialog__caption">
-          Защитить ресурс
-        </div>
-        <div class="modal-dialog__body">
-          Присоединяйтесь к группе модераторов сайта,
-          сделайте жизнь троллей и фейков ещё сложнее,
-          испортите им настроение и весь день на сегодня, это просто.
-        </div>
-        <div class="modal-dialog__section">
-          <button class="btn btn-primary" @click="approve">
-            <span aria-hidden="true" class="glyphicon glyphicon-ok"></span>
-            Стать модератором
-          </button>
-          <button class="btn btn-default" @click="close">
-            Попробую позже
-          </button>
-        </div>
-        <div style="font-size: 10px; color: #999;">
-          Модератором может стать любой совершеннолетний пользоватеть.
-          Нажимая кнопку "Стать модератором"
-          вы подтверждаете что вам 18 лет или более.
-        </div>
+
+    <ConfirmDialog v-if="accept"
+     @confirm="approve()" @close="close()"
+     yesText="Стать модератором" noText="Попробую позже">
+      <span slot="title">Защитить ресурс</span>
+      Присоединяйтесь к группе модераторов сайта,
+      сделайте жизнь троллей и фейков ещё сложнее,
+      испортите им настроение и весь день на сегодня, это просто.
+      <div slot="notation">
+        Модератором может стать любой совершеннолетний пользоватеть.
+        Нажимая кнопку "Стать модератором"
+        вы подтверждаете что вам 18 лет или более.
       </div>
-    </ModalDialog>
+    </ConfirmDialog>
+
   </div>
 </template>
 

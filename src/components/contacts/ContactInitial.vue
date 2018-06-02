@@ -1,7 +1,7 @@
 <script>
 import ActivityActions from '~activities/ActivityActions';
+import InfoDialog from '~dialogs/InfoDialog';
 import ContactDialog from './ContactDialog';
-import SettingsInform from './SettingsInform';
 import ContactItem from './ContactItem';
 
 export default {
@@ -71,7 +71,7 @@ export default {
   components: {
     ActivityActions,
     ContactItem,
-    SettingsInform,
+    InfoDialog,
   },
 };
 </script>
@@ -117,9 +117,17 @@ export default {
           Следующие
         </div>
       </div>
-      <SettingsInform v-if="modals.acceptSettings"
+
+      <InfoDialog v-if="modals.acceptSettings"
        @close="modals.acceptSettings = false"
-       @confirm="accept"/>
+       @confirm="accept">
+        <span slot="title">Удобные знакомства</span>
+        Настройте знакомства для более комфортного общения.
+        Нажмите "Настройки" или "Настроить поиск" чтобы
+        уточнить ваши параметры.
+        Неподходящие знакомства отмечаются особым образом.
+      </InfoDialog>
+
     </ActivityActions>
     <router-view @close="$root.goBack()" @sended="splice"/>
   </div>

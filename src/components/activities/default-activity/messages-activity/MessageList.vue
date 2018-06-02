@@ -4,7 +4,7 @@ import axios from 'axios';
 import hasher from '~legacy/utils/simple-hash';
 
 import AbuseDialog from '~components/abuses/AbuseWidget';
-import ClaimNeeded from '~components/abuses/ClaimNeeded';
+import InfoDialog from '~dialogs/InfoDialog';
 import MessageItem from './MessageItem';
 import ListDate from './ListDate';
 
@@ -141,7 +141,7 @@ export default {
   components: {
     MessageItem,
     AbuseDialog,
-    ClaimNeeded,
+    InfoDialog,
     ListDate,
   },
 };
@@ -162,7 +162,16 @@ export default {
       @needed="dialog.claim = true"
       @success="abuseSuccessHint = true"
       @close="dialog.abuse = false"/>
-    <ClaimNeeded  v-if="dialog.claim" @close="dialog.claim = false"/>
+
+
+    <InfoDialog v-if="dialog.claim"
+     @close="dialog.claim = false">
+      <div slot="title">Наказывайте всегда</div>
+      Нажмите «Наказать и удалить» у сообщения,
+      которое является причиной замечания. Можно несколько.
+      Это необходимо, и поможет быстрее определить истину,
+      а также степень вины.
+    </InfoDialog>
 
     <div class="messages__new" v-show="newCount" @click="load">
       <span class="messages__new-lamp">Новые

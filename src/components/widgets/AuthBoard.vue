@@ -1,6 +1,6 @@
 <script>
 import _ from 'underscore';
-import ModalDialog from '~dialogs/ModalDialog';
+import ConfirmDialog from '~dialogs/ConfirmDialog';
 
 export default {
   data() {
@@ -55,7 +55,7 @@ export default {
     },
   },
   components: {
-    ModalDialog,
+    ConfirmDialog,
   },
 };
 </script>
@@ -76,37 +76,26 @@ export default {
       </transition>
     </div>
 
-    <ModalDialog @close="confirmSend = false" v-if="confirmSend">
-      <div class="modal-dialog__wrapper">
-        <div class="modal-dialog__body">
-          <div class="modal-dialog__section">
-          Логин и пароль будут отправлены на этот адрес. Подсказака с логином будет убрана.
-          </div>
-          <div class="modal-dialog__section">
-            <div class="form-inline">
-              <input class="form-control"
-               type="email"
-               name="email"
-               v-model="email"
-               placeholder="Ваш емайл адрес">
-            </div>
-          </div>
-          <div class="modal-dialog__section">
-            {{hint}}
-          </div>
-        </div>
-        <div class="modal-dialog__footer">
-          <button class="btn btn-default" @click="confirmSend = false">
-            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-            Закрыть
-          </button>
-          <button class="btn btn-primary" @click="send()">
-            <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-            Отправить
-          </button>
+    <ConfirmDialog v-if="confirmSend" yesText="Отправить"
+     @confirm="send()" @close="confirmSend = false">
+      <div class="modal-dialog__section">
+       Логин и пароль будут отправлены на этот адрес.
+       Подсказака с логином будет убрана.
+      </div>
+      <div class="modal-dialog__section">
+        <div class="form-inline">
+          <input class="form-control"
+           type="email"
+           name="email"
+           v-model="email"
+           placeholder="Ваш емайл адрес">
         </div>
       </div>
-    </ModalDialog>
+      <div class="modal-dialog__section">
+        {{hint}}
+      </div>
+      <span slot="yesIcon" class="glyphicon glyphicon-ok"></span>
+    </ConfirmDialog>
   </nav>
 </template>
 

@@ -1,8 +1,8 @@
 <script>
 import _ from 'underscore';
 import AccountSettings from '~closed-activity/AccountSettings';
+import InfoDialog from '~dialogs/InfoDialog';
 import CitySuggest from '~modules/CitySuggest';
-import ModalDialog from './ModalDialog';
 
 export default {
   extends: AccountSettings,
@@ -29,40 +29,33 @@ export default {
     range: () => _.range(16, 81),
   },
   components: {
-    ModalDialog,
+    InfoDialog,
     CitySuggest,
   },
 };
 </script>
 
 <template>
-  <ModalDialog @close="close">
-    <div class="modal-dialog__wrapper">
-      <div class="modal-dialog__section">
-        Ваше имя:<br>
-        <input class="form-control"
-         type="text"
-         v-model="selectName"
-         @blur="saveName"
-         placeholder="Ваше имя">
-      </div>
-      <div class="modal-dialog__section">
-        Город:<br>
-        <CitySuggest :city="selectCity" @select="saveCity"/>
-      </div>
-      <div class="modal-dialog__section">
-        Возраст:<br>
-        <select class="form-control" v-model.number="selectAge" @change="saveAge">
-          <option v-for="(item, index) in range"
-           :value="item" >{{item ? item : ''}}</option>
-        </select>
-      </div>
-      <div class="human-dialog__footer">
-        <button class="btn btn-primary" @click="approve">Продолжить</button>
-      </div>
+  <InfoDialog yesText="Продолжить"
+   @close="close" @confirm="approve">
+    <div class="modal-dialog__section">
+      Ваше имя:<br>
+      <input class="form-control"
+       type="text"
+       v-model="selectName"
+       @blur="saveName"
+       placeholder="Ваше имя">
     </div>
-  </ModalDialog>
+    <div class="modal-dialog__section">
+      Город:<br>
+      <CitySuggest :city="selectCity" @select="saveCity"/>
+    </div>
+    <div class="modal-dialog__section">
+      Возраст:<br>
+      <select class="form-control" v-model.number="selectAge" @change="saveAge">
+        <option v-for="(item, index) in range"
+         :value="item" >{{item ? item : ''}}</option>
+      </select>
+    </div>
+  </InfoDialog>
 </template>
-
-<style lang="less">
-</style>

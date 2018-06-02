@@ -2,7 +2,28 @@
 import ModalDialog from '~dialogs/ModalDialog';
 
 export default {
-  props: ['text'],
+  props: ['type', 'yesText'],
+  computed: {
+    style() {
+      const btn = {
+        default: 'btn-default',
+        success: 'btn-success',
+        warning: 'btn-warning',
+        danger: 'btn-danger',
+        info: 'btn-info',
+      };
+      return this.type ? btn[this.type] : 'btn-primary';
+    },
+    yes() {
+      return this.yesText || 'Хорошо';
+    },
+  },
+  methods: {
+    confirm() {
+      this.$emit('confirm');
+      this.$emit('close');
+    },
+  },
   components: {
     ModalDialog,
   },
@@ -12,13 +33,17 @@ export default {
 <template>
   <ModalDialog @close="$emit('close')">
     <div class="modal-dialog__wrapper">
+      <div class="modal-dialog__caption">
+        <slot name="title"></slot>
+      </div>
       <div class="modal-dialog__body">
         <slot></slot>
-        {{text}}
       </div>
       <div class="modal-dialog__footer">
-        <button class="btn btn-primary btn-flat" @click="$emit('close')">
-          Хорошо
+        <button class="btn btn-flat" :class="style"
+         @click="confirm">
+          <slot name="yesIcon"></slot>
+          {{yes}}
         </button>
       </div>
     </div>

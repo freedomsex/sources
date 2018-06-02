@@ -1,8 +1,7 @@
 <script>
-import ModalDialog from '~dialogs/ModalDialog';
+import InfoDialog from '~dialogs/InfoDialog';
 
 export default {
-  extends: ModalDialog,
   props: ['photo', 'thumb', 'maxWidth', 'bypass'],
   mounted() {
     console.log('background', this.background);
@@ -24,31 +23,22 @@ export default {
     },
   },
   components: {
-    ModalDialog,
+    InfoDialog,
   },
 };
 </script>
 
 <template>
   <div class="photo-view" :style="background">
-    <ModalDialog @close="close" v-if="!accept">
-      <div class="modal-dialog__wrapper">
-        <div class="modal-dialog__caption">
-          Контроль содержания отсутствует
-        </div>
-        <div class="modal-dialog__body">
-          У администраторов нет доступа к загружаемым фото.
-          Внимание! Изображения могут иметь возрастные ограничения.
-          Пожалуйста, подтвердите что вы имеете право продолжить просмотр.
-        </div>
-        <div class="modal-dialog__footer">
-          <button class="btn btn-success" @click="approve">
-            <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-            Подтверждаю
-          </button>
-        </div>
-      </div>
-    </ModalDialog>
+    <InfoDialog yesText="Подтверждаю" type="success" v-if="!accept"
+     @close="close" @confirm="approve">
+      <slot name="title">Контроль содержания отсутствует</slot>
+      У администраторов нет доступа к загружаемым фото.
+      Внимание! Изображения могут иметь возрастные ограничения.
+      Пожалуйста, подтвердите что вы имеете право продолжить просмотр.
+      <span slot="yesIcon" class="glyphicon glyphicon-ok"></span>
+    </InfoDialog>
+
     <div v-else>
       <img :src="photo" :style="{ maxWidth: maxWidth +'px' }">
     </div>

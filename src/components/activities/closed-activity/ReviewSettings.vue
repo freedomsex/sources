@@ -126,12 +126,12 @@ export default {
       когда ответ не обязателен.
     </ConfirmDialog>
 
-    <ConfirmDialog @close="$emit('close')" :simple="true" v-if="sended">
+    <InfoDialog @close="$emit('close')" v-if="sended">
       <span slot="title">Спасибо за отзыв</span>
       Для нас важно каждое мнение и в любой форме.
       Ориентируясь на отзывы Пользователей, разработчики стараются
       делать сайт ещё приятнее и удобнее.
-    </ConfirmDialog>
+    </InfoDialog>
 
   </ActivityActions>
 </template>

@@ -2,7 +2,7 @@
 import InfoDialog from '~dialogs/InfoDialog';
 
 export default {
-  props: ['text', 'force'],
+  props: ['force'],
   data() {
     return {
       show: false,
@@ -22,8 +22,9 @@ export default {
 
 <template>
   <span class="question-tooltip">
-    <span class="glyphicon glyphicon-question-sign question-tooltip" @click="show = true"></span>
-    <InfoDialog @close="close" v-if="show || force" :text="text">
+    <span class="glyphicon glyphicon-question-sign question-tooltip"
+     @click="show = true"></span>
+    <InfoDialog @close="close" v-if="show || force">
       <slot></slot>
     </InfoDialog>
   </span>

@@ -1,6 +1,6 @@
 <script>
 import axios from 'axios';
-import ModalDialog from '~dialogs/ModalDialog';
+import InfoDialog from '~dialogs/InfoDialog';
 import PhotoView from './PhotoView';
 
 export default {
@@ -41,7 +41,7 @@ export default {
     },
   },
   components: {
-    ModalDialog,
+    InfoDialog,
     PhotoView,
   },
 };
@@ -67,26 +67,13 @@ export default {
       </div>
       <!-- <toast v-if="remove" @close="remove = false">Временно недоступно</toast> -->
 
-      <ModalDialog @close="close" v-if="remove">
-        <div class="modal-dialog__wrapper">
-          <div class="modal-dialog__caption">
-            Удалить фото?
-          </div>
-          <div class="modal-dialog__body">
-            Восстановить фото будет невозможно.
-            Вы действительно хотите удалить фотографию?
-          </div>
-          <div class="modal-dialog__footer">
-            <button class="btn btn-default" @click="remove = false">
-              Отмена
-            </button>
-            <button class="btn btn-primary" @click="removePhoto()">
-              <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-              Удалить
-            </button>
-          </div>
-        </div>
-      </ModalDialog>
+      <InfoDialog v-if="remove" yesText="Удалить"
+       @confirm="removePhoto()" @close="remove = false">
+        <slot name="title">Удалить фото?</slot>
+        Восстановить фото будет невозможно.
+        Вы действительно хотите удалить фотографию?
+        <span slot="yesIcon" class="glyphicon glyphicon-remove"></span>
+      </InfoDialog>
 
       <slot></slot>
     </div>

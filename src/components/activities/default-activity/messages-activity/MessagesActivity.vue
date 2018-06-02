@@ -215,7 +215,10 @@ export default {
        @close="close"
        @cancel="cancel"
        @send="setCode"/>
-      <Toast v-if="photoIsRemoved" @close="photoIsRemoved = false">Фото удалено</toast>
+      <Toast v-if="photoIsRemoved"
+       @close="photoIsRemoved = false">
+        Фото удалено
+      </toast>
 
       <router-view @close="$root.goBack()" @select="select"/>
     </ActivityActions>

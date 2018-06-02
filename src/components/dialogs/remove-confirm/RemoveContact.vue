@@ -19,7 +19,7 @@ export default {
   methods: {
     remove() {
       this.$emit('remove');
-      this.close();
+      this.$emit('close');
     },
   },
   components: {
@@ -29,7 +29,7 @@ export default {
 </script>
 
 <template>
-  <ModalDialog @close="close">
+  <ModalDialog @close="$emit('close')">
     <div class="modal-dialog__wrapper">
       <div class="modal-dialog__caption">
         {{caption}}

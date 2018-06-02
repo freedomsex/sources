@@ -109,7 +109,7 @@ export default {
     },
     login() {
       this.$emit('login');
-      this.$emit('close');
+      this.close();
     },
     redirect() {
       if (this.index('search')) {

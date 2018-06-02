@@ -2,7 +2,12 @@
 import ModalDialog from '~dialogs/ModalDialog';
 
 export default {
-  props: ['simple', 'title', 'yesText', 'noText'],
+  props: [
+    'simple', // without NO btn
+    'yesText',
+    'noText',
+    'notation',
+  ],
   computed: {
     yes() {
       return this.yesText || 'Хорошо';
@@ -30,7 +35,7 @@ export default {
 <template>
   <ModalDialog @close="$emit('close')">
     <div class="modal-dialog__wrapper">
-      <div class="modal-dialog__caption" v-if="this.title !== true">
+      <div class="modal-dialog__caption">
         <slot name="title"></slot>
       </div>
       <div class="modal-dialog__body">
@@ -39,9 +44,18 @@ export default {
       <div class="modal-dialog__footer">
         <button class="btn btn-default"
          @click="cancel"
-         v-if="simple !== true"> {{no}} </button>
+         v-if="simple !== true">
+          <slot name="noIcon"></slot>
+          {{no}}
+        </button>
         <button class="btn btn-primary btn-flat"
-         @click="confirm"> {{yes}} </button>
+         @click="confirm">
+          <slot name="yesIcon"></slot>
+          {{yes}}
+        </button>
+      </div>
+      <div style="font-size: 10px; color: #999;">
+        <slot name="notation"></slot>
       </div>
     </div>
   </ModalDialog>

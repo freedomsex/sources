@@ -2,7 +2,6 @@
 import ActivityActions from '~activities/ActivityActions';
 import MessagesActivity from '~default-activity/messages-activity/MessagesActivity';
 import ContactDialog from './ContactDialog';
-import SettingsInform from './SettingsInform';
 import ContactItem from './ContactItem';
 
 export default {
@@ -57,7 +56,6 @@ export default {
     ActivityActions,
     ContactItem,
     MessagesActivity,
-    SettingsInform,
   },
 };
 </script>
