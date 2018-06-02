@@ -86,6 +86,7 @@ const App = new Vue({
     refresh() {
       // TODO: without $root and $refs
       this.$refs['api-key'].load();
+      this.$store.dispatch('auth/sync');
     },
     reload() {
       const home = this.$refs.results;

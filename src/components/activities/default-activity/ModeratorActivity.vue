@@ -176,7 +176,7 @@ export default {
     </ActivityActions>
 
 
-    <ConfirmDialog v-if="accept"
+    <ConfirmDialog v-if="!accept"
      @confirm="approve()" @close="close()"
      yesText="Стать модератором" noText="Попробую позже">
       <span slot="title">Защитить ресурс</span>

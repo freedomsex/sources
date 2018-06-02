@@ -8,19 +8,11 @@ export default {
       confirmSend: false,
       hint: 'Введите ваш емаил.',
       process: false,
-      email: '',
     };
   },
   mounted() {
     _.delay(() => {
-      this.$store
-        .dispatch('auth/sync')
-        .then(() => {
-          this.email = this.$store.state.auth.email;
-        })
-        .catch(() => {
-          console.log('! Авторизация провалена');
-        });
+      this.load();
     }, 2500);
   },
   computed: {
@@ -33,8 +25,14 @@ export default {
     loaded() {
       return this.login && this.password;
     },
+    email() {
+      return this.$store.state.auth.email;
+    },
   },
   methods: {
+    load() {
+      this.$store.dispatch('auth/sync');
+    },
     send() {
       if (!this.email) {
         return;

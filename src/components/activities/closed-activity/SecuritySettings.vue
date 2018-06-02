@@ -38,15 +38,12 @@ export default {
   }),
   mounted() {
     console.log('auth/sync');
-    this.$store
-      .dispatch('auth/sync')
-      .then(() => {
-        this.init();
-        this.process = false;
-      })
-      .catch(() => {
-        this.process = false;
-      });
+    this.$store.dispatch('auth/sync').then(() => {
+      this.init();
+      this.process = false;
+    }).catch(() => {
+      this.process = false;
+    });
     this.process = true;
     this.init();
   },

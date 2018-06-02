@@ -22,8 +22,10 @@ export default {
   },
   actions: {
     sync({commit}) {
-      return api.user.syncAuth().then((response) => {
-        commit('update', response.data);
+      return api.user.syncAuth().then(({data}) => {
+        commit('update', data);
+      }).catch(() => {
+        console.log('! Синхронизация авторизации провалена');
       });
     },
     SAVE_LOGIN(context, data) {
