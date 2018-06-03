@@ -94,7 +94,7 @@ export default {
 </script>
 
 <template>
-  <ActivityActions @close="$emit('close')">
+  <ActivityActions type="wrapped" @close="$emit('close')">
       <span slot="caption">Помощь</span>
 
       <div class="activity__content">

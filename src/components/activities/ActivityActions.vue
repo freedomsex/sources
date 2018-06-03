@@ -9,13 +9,12 @@ export default {
     closed() {
       return this.type === 'closed';
     },
-    content() {
-      const type = ['content', 'closed'];
-      return type.indexOf(this.type) >= 0;
-    },
     style() {
       if (this.type === 'closed') {
         return 'closed-activity';
+      }
+      if (this.type === 'wrapped') {
+        return 'wrapped-activity';
       }
       if (this.type === 'content') {
         return 'content-activity';
@@ -57,9 +56,7 @@ export default {
           </div>
         </nav>
         <div class="activity__container">
-          <div :class="{'activity__content': content}">
-            <slot></slot>
-          </div>
+          <slot></slot>
         </div>
       </div>
     </div>
@@ -95,8 +92,6 @@ export default {
     overflow-y: auto;
     border: 1px solid @gray;
     border-width: 0px 1px 1px 1px;
-  }
-  &__content {
     padding: @indent-md @indent-lg @indent-md;
   }
   &__loader {
@@ -130,8 +125,17 @@ export default {
   }
 }
 
+.wrapped-activity {
+  .activity-mixin;
+}
+
 .default-activity {
   .activity-mixin;
+    .activity {
+      &__container {
+        padding: 0;
+      }
+    }
 }
 
 .closed-activity {
@@ -161,8 +165,6 @@ export default {
     }
     &__container {
       height: calc(~'100% - 50px');
-    }
-    &__content {
       padding-bottom: @indent-xl;
       h1 {
         margin-top: @indent-xs;

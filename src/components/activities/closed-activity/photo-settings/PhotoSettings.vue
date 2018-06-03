@@ -73,7 +73,7 @@ export default {
 </script>
 
 <template>
-  <ActivityActions @close="close" type="closed">
+  <ActivityActions type="closed" @close="close">
     <span slot="caption">Отправить фото</span>
     <div class="activity-section">
       <div class="galery-photo" v-show="photos.length" style="display: none;">

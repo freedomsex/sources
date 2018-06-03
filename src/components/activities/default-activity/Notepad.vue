@@ -32,7 +32,7 @@ export default {
 </script>
 
 <template>
-  <ActivityActions @close="$emit('close')">
+  <ActivityActions type="wrapped" @close="$emit('close')">
     <span slot="caption">Блокнот</span>
     <div class="menu-user__navbar-right" slot="option">
       <div class="navbar-button" @click="cliche()">

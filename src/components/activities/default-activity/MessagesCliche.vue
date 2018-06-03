@@ -59,23 +59,21 @@ export default {
 </script>
 
 <template>
-  <ActivityActions @close="$emit('close')">
+  <ActivityActions type="wrapped" @close="$emit('close')">
     <span slot="caption">Готовые сообщения</span>
-    <div class="activity__content">
-      <div class="activity-section">
-        <button class="btn btn-sm" :class="buttonStyle('public')"
-         @click="load('public')">Познакомиться</button>
-        <button class="btn btn-sm" :class="buttonStyle('virt')"
-         @click="load('virt')">Вирт</button>
-        <button class="btn btn-sm" :class="buttonStyle('sex')"
-         @click="load('sex')">Секс</button>
-      </div>
-      <div class="activity-section" v-if="texts && texts.length">
-        <span class="cliche-item" :style="style(item)" @click="select(item.text)"
-         v-for="item in texts" >{{item.text}}</span> &nbsp;
-      </div>
-      <div class="activity__loader" v-else>Загружаю...</div>
+    <div class="activity-section">
+      <button class="btn btn-sm" :class="buttonStyle('public')"
+       @click="load('public')">Познакомиться</button>
+      <button class="btn btn-sm" :class="buttonStyle('virt')"
+       @click="load('virt')">Вирт</button>
+      <button class="btn btn-sm" :class="buttonStyle('sex')"
+       @click="load('sex')">Секс</button>
     </div>
+    <div class="activity-section" v-if="texts && texts.length">
+      <span class="cliche-item" :style="style(item)" @click="select(item.text)"
+       v-for="item in texts" >{{item.text}}</span> &nbsp;
+    </div>
+    <div class="activity__loader" v-else>Загружаю...</div>
   </ActivityActions>
 </template>
 

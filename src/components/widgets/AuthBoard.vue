@@ -8,12 +8,11 @@ export default {
       confirmSend: false,
       hint: 'Введите ваш емаил.',
       process: false,
+      email: null,
     };
   },
   mounted() {
-    _.delay(() => {
-      this.load();
-    }, 2500);
+    _.delay(() => { this.$store.dispatch('auth/sync'); }, 2500);
   },
   computed: {
     login() {
@@ -25,14 +24,8 @@ export default {
     loaded() {
       return this.login && this.password;
     },
-    email() {
-      return this.$store.state.auth.email;
-    },
   },
   methods: {
-    load() {
-      this.$store.dispatch('auth/sync');
-    },
     send() {
       if (!this.email) {
         return;
@@ -51,6 +44,10 @@ export default {
         this.emit('close');
       }
     },
+    dialog() {
+      this.email = this.$store.state.auth.email;
+      this.confirmSend = true;
+    },
   },
   components: {
     ConfirmDialog,
@@ -67,7 +64,7 @@ export default {
       <transition name="auth-board">
         <div v-show="loaded">
           Ваш логин: <b>{{login}}</b> пароль: <b>{{password}}</b>
-          <button class="btn btn-default btn-sm" @click="confirmSend = true">
+          <button class="btn btn-default btn-sm" @click="dialog()">
             Отправить на почту
           </button>
         </div>
@@ -89,9 +86,8 @@ export default {
            placeholder="Ваш емайл адрес">
         </div>
       </div>
-      <div class="modal-dialog__section">
-        {{hint}}
-      </div>
+      <div class="modal-dialog__section" v-html="hint"></div>
+
       <span slot="yesIcon" class="glyphicon glyphicon-ok"></span>
     </ConfirmDialog>
   </nav>

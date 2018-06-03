@@ -79,10 +79,6 @@ export default {
     </div>
 
     <div class="activity-section">
-    </div>
-
-
-    <div class="activity-section">
       <div class="activity-section__title">Аккаунт</div>
       ID: {{uid}}
     </div>

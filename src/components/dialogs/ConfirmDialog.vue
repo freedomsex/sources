@@ -23,7 +23,6 @@ export default {
     },
     confirm() {
       this.$emit('confirm');
-      this.$emit('close');
     },
   },
   components: {

@@ -95,7 +95,7 @@ export default {
 
 <template>
   <div>
-    <ActivityActions @close="close">
+    <ActivityActions type="wrapped" @close="close">
       <span slot="caption">Защитить</span>
       <div class="menu-user__navbar-right" slot="option">
         <div class="navbar-button">
