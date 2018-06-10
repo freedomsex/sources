@@ -63,6 +63,7 @@ module.exports = {
       "array": false,
       "object": true
     }],
+    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
   },
   globals: {}
 }

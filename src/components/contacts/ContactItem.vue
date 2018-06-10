@@ -1,5 +1,6 @@
 <script>
 import RemoveContact from '~dialogs/remove-confirm/RemoveContact';
+import CensoredText from '~components/CensoredText';
 
 export default {
   props: ['item', 'index', 'idle', 'quick'],
@@ -116,6 +117,7 @@ export default {
   },
   components: {
     RemoveContact,
+    CensoredText,
   },
 };
 </script>
@@ -135,7 +137,10 @@ export default {
          class="glyphicon glyphicon-chevron-left contact-item__status-send"
          v-else v-show="sent"></span>
 
-        <span class="contact-item__message" :class="{idle: idle}" v-html="message"></span>
+        <span class="contact-item__message" :class="{idle: idle}">
+          <CensoredText :text="message"
+           :bypass="sent" :passive="true"/>
+        </span>
       </div>
     </div>
     <div class="contact-item__option">

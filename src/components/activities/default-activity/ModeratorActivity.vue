@@ -105,31 +105,30 @@ export default {
         </div>
       </div>
 
-      <div class="activity__content">
-        <div v-if="error == 'count'">
-          <div class="activity-section__title">Спасибо. Сообщения скоро будут.</div>
-          <div id="" class="" style="font-size: 14px; margin-bottom: 10px; color: #777;">
-            Мы благодарны вам за вашу подержку.
-            С вами сайт становится ещё сильнее.
-            Благодаря вам анкеты мошенников, троллей, фейков
-            и обнаглевших жриц любви блокируются практически моментально.
-          </div>
+      <div v-if="error == 'count'">
+        <div class="activity-section__title">Спасибо. Сообщения скоро будут.</div>
+        <div id="" class="" style="font-size: 14px; margin-bottom: 10px; color: #777;">
+          Мы благодарны вам за вашу подержку.
+          С вами сайт становится ещё сильнее.
+          Благодаря вам анкеты мошенников, троллей, фейков
+          и обнаглевших жриц любви блокируются практически моментально.
         </div>
+      </div>
 
-        <div v-if="error == 'other'">
-          <div class="activity-section__title">Что-то пошло не так ;(</div>
-          <div id="" class="" style="font-size: 14px; margin-bottom: 10px; color: #777;">
-            Время ожидания истекло, данные сессии устарели.
-            Возможно вариант сообщения уже был рассмотрен.
-            Обновите данные. Спасибо.
-          </div>
-          <button class="btn btn-primary btn-block" @click="load" :disabled="process">
-            <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
-            Обновить
-          </button>
+      <div v-if="error == 'other'">
+        <div class="activity-section__title">Что-то пошло не так ;(</div>
+        <div id="" class="" style="font-size: 14px; margin-bottom: 10px; color: #777;">
+          Время ожидания истекло, данные сессии устарели.
+          Возможно вариант сообщения уже был рассмотрен.
+          Обновите данные. Спасибо.
         </div>
+        <button class="btn btn-primary btn-block" @click="load" :disabled="process">
+          <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
+          Обновить
+        </button>
+      </div>
 
-        <div v-if="accept && !error">
+      <div v-if="accept && !error">
           <div class="activity-section">
             <div class="activity-section__title">Нужно ли наказать за это?</div>
             <div class="hint-info" style="font-size: 14px; ">
@@ -172,7 +171,6 @@ export default {
           </div>
         </div>
 
-      </div>
     </ActivityActions>
 
 

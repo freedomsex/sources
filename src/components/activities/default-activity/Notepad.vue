@@ -15,7 +15,7 @@ export default {
   methods: {
     cliche() {
       this.$emit('cliche');
-      this.close();
+      this.$emit('close');
     },
     select(text) {
       // this.$store.dispatch('notes/ITEM', id).then((item) => {
@@ -32,7 +32,7 @@ export default {
 </script>
 
 <template>
-  <ActivityActions type="wrapped" @close="$emit('close')">
+  <ActivityActions @close="$emit('close')">
     <span slot="caption">Блокнот</span>
     <div class="menu-user__navbar-right" slot="option">
       <div class="navbar-button" @click="cliche()">

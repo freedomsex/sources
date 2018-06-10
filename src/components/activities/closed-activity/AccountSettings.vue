@@ -15,6 +15,10 @@ export default {
       selectAge: 0,
       selectName: '',
       nameAlert: false,
+      sexAlert: {
+        show: false,
+        ignore: false,
+      },
     };
   },
   computed: Vuex.mapState({
@@ -58,6 +62,11 @@ export default {
       this.$store.dispatch('SAVE_SEX', {sex: this.selectSex, token: null});
       this.resetName();
     },
+    sexPrerequisites() {
+      if (!this.sexAlert.ignore) {
+        this.sexAlert.show = true;
+      }
+    },
     saveCity(city) {
       if (city) {
         this.selectCity = city;
@@ -94,6 +103,7 @@ export default {
     close() {
       this.save();
       this.$emit('close');
+      // --
     },
   },
   components: {
@@ -116,19 +126,32 @@ export default {
 
     <div class="activity-section">
       <div class="activity-section__title">Кто вы:</div>
-      <div class="radio">
+      <div class="radio" @click="sexPrerequisites">
         <label class="radio-inline">
           <input type="radio" v-model.number="selectSex"
-           :value="2" @change="saveSex">
+           @change.prevent="saveSex"
+           :disabled="!sexAlert.ignore"
+           :value="2">
           Девушка
         </label>
         <label class="radio-inline">
           <input type="radio" v-model.number="selectSex"
-           :value="1" @change="saveSex">
+           @change.prevent="saveSex"
+           :disabled="!sexAlert.ignore"
+           :value="1">
           Парень
         </label>
       </div>
     </div>
+
+    <InfoDialog v-if="sexAlert.show && !sexAlert.ignore"
+     @close="sexAlert.show = false"
+     @confirm="sexAlert.ignore = true">
+     <div slot="title">Не меняйте ваш пол</div>
+      Вы сможете изменить пол, но это может привести
+      к блокированию анкеты в будущем. Заведите новую анкету
+      если указан не ваш пол.
+    </InfoDialog>
 
     <div class="activity-section">
       <div class="activity-section__title">Возраст:</div>

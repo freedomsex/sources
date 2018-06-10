@@ -38,6 +38,7 @@ export default {
   &__wrapper {
     padding: @indent-md;
     text-align: left;
+    white-space: normal;
     &.capped {
       padding-top: @indent-sm;
     }
@@ -49,7 +50,6 @@ export default {
     background: @white;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
     transition: all 0.3s ease;
-    overflow: auto;
     border-radius: 4px;
     position: relative;
     margin: 10px;

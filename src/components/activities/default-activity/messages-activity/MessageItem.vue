@@ -4,6 +4,8 @@ import RemoveConfirm from '~dialogs/remove-confirm/RemoveConfirm';
 import PhotoSend from '~modules/PhotoSend';
 import Toast from '~widgets/Toast';
 
+import CensoredText from '~components/CensoredText';
+
 let prev = null;
 
 export default {
@@ -166,6 +168,7 @@ export default {
     },
   },
   components: {
+    CensoredText,
     RemoveConfirm,
     Toast,
     PhotoSend,
@@ -188,7 +191,7 @@ export default {
           </span>
         </div>
         <span v-else>
-          <span v-html="item.mess"></span>
+          <CensoredText :text="item.mess" :bypass="sent"/>
           <span class="message-info">
             <span class="message-info__status" v-show="!read"></span>
             <span class="message-info__time">{{time}}</span>

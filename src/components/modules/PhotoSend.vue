@@ -54,7 +54,11 @@ export default {
       <div class="close-self-button">
         <i class="material-icons" @click="close"></i>
       </div>
-      <PhotoView :photo="photo.photo" :thumb="photo.thumb" :maxWidth="600" @close="close"/>
+      <PhotoView
+       :photo="photo.photo"
+       :thumb="photo.thumb"
+       :maxWidth="600"
+       @close="close"/>
       <div class="photo-send__options" v-show="options">
         <button class="btn btn-default" @click="remove = true">
           <span aria-hidden="true" class="glyphicon glyphicon-trash"></span>

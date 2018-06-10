@@ -94,6 +94,9 @@ export default {
     border-width: 0px 1px 1px 1px;
     padding: @indent-md @indent-lg @indent-md;
   }
+  &__content {
+    padding: @indent-md @indent-lg @indent-md;
+  }
   &__loader {
     color: @gray-dark;
   }
@@ -151,6 +154,9 @@ export default {
   .activity {
     &__wrapper {
       right: 0;
+    }
+    &__container {
+      padding: @indent-md @indent-lg @indent-md;
     }
   }
 }

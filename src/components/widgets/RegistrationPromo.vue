@@ -1,16 +1,20 @@
 <script>
+import CensoredText from '~components/CensoredText';
+
 export default {
   data: () => ({}),
+  components: {
+    CensoredText,
+  },
 };
 </script>
 
 <template>
   <div class="registration-promo"
-   @click="$router.push('/confirm-sex/search')">
+   @click.self="$router.push('/confirm-sex/search')">
     <button class="btn btn-primary">  Начать  </button>
     <span class="registration-promo__tagline">
-      В один клик,
-      без регистрации
+      В один клик, без регистрации
     </span>
   </div>
 </template>

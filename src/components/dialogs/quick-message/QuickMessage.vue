@@ -39,19 +39,6 @@ export default {
         this.$router.push('settings/account');
       }
     },
-    proxy() {
-      if (this.added) {
-        this.addition = true;
-      } else if (this.information && !this.interests.ignore) {
-        this.interests.show = true;
-      } else if (this.isDirt() && !this.dirt.ignore) {
-        this.dirt.show = true;
-      } else if (this.isSpam() && !this.spam.ignore) {
-        this.spam.show = true;
-      } else {
-        this.send();
-      }
-    },
   },
 };
 </script>
