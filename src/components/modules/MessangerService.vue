@@ -4,17 +4,20 @@ import CaptchaDialog from '~dialogs/CaptchaDialog';
 import Recaptcha from '~modules/Recaptcha';
 
 export default {
-  props: ['id', 'reply', 'photo'],
+  props: ['id', 'reply'],
   data() {
     return {
       captcha: false,
+      text: null,
+      photo: null,
     };
   },
   mounted() {
-    this.$parent.$on('send', this.listen);
+    this.$parent.$on('sendMessage', this.sendMessage);
+    this.$parent.$on('sendPhoto', this.sendPhoto);
   },
   methods: {
-    listen(text) {
+    sendMessage(text) {
       if (text) {
         this.text = text;
         this.send();
@@ -66,8 +69,8 @@ export default {
     sended() {
       this.$emit('sended');
       this.$emit('process', false);
-      this.$refs.recaptcha.reset();
       this.$store.dispatch('notes/UPDATE', this.text);
+      this.$refs.recaptcha.reset();
     },
     setCode(code) {
       this.code = code;

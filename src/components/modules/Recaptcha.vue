@@ -14,13 +14,15 @@ export default {
       window.grecaptcha.execute(this.widgetId);
     },
     reset() {
-      window.grecaptcha.reset(this.widgetId);
-      this.show = false;
+      if (window.grecaptcha) {
+        window.grecaptcha.reset(this.widgetId);
+        this.show = false;
+      }
     },
     verify(token) {
       this.$store.commit('grecaptchaTokenUpdate', token);
-      this.$emit('verify');
       this.reset();
+      this.$emit('verify');
     },
     render(callback) {
       this.show = true;
@@ -40,8 +42,8 @@ export default {
 </script>
 
 <template>
-  <div>
-    <div id="g-recaptcha" class="g-recaptcha" v-show="show"></div>
+  <div v-show="show">
+    <div id="g-recaptcha" class="g-recaptcha"></div>
   </div>
 </template>
 

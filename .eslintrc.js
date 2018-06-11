@@ -43,7 +43,8 @@ module.exports = {
         vue: "never"
       }
     ],
-    eqeqeq: "warn",
+    "eqeqeq": "warn",
+    "max-len": "warn",
     "no-shadow": [2, {allow: ["state"]}],
     "no-param-reassign": [2, {props: false}],
     "import/no-unresolved": "off",

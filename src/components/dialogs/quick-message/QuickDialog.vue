@@ -26,7 +26,6 @@ export default {
   // },
   mounted() {
     this.reload();
-    console.log('reply', this.reply);
   },
   computed: {
     reply: () => false,
@@ -125,7 +124,7 @@ export default {
 
         <DialogSendForm
         :human="human"
-        :reply="reply"
+        :reply="message"
         :excess="information"
         @sended="sended"
         @close="close"/>

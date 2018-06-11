@@ -7,15 +7,15 @@ import InfoDialog from '~dialogs/InfoDialog';
 import MessangerService from '~modules/MessangerService';
 
 export default {
-  props: ['human', 'count'],
+  props: ['humanId', 'count', 'reply'],
   mixins: [NegativeDetection],
   data() {
     return {
       message: '',
-      reply: '',
       process: false,
       preview: false,
       photo: false,
+      photoIsRemoved: false,
     };
   },
   computed: {
@@ -24,23 +24,29 @@ export default {
     },
   },
   methods: {
-    reset() {
+    // reset() {
+    // },
+    sendPhoto() {
+      this.preview = null;
+      this.$emit('sendPhoto', this.photo);
+    },
+    sendMessage() {
+      this.$emit('sendMessage', this.message);
+    },
+    sended() {
+      // this.reset();
       // this.cancelPhoto();
       this.message = '';
       this.photo = null;
-    },
-    sendPhoto() {
-      this.$emit('sendPhoto', this.photo);
-    },
-    send() {
-      this.preview = null;
-      this.process = true;
-      this.reset();
+      this.$emit('sended');
     },
     select(data) { // select-photo
       console.log('select photo', data);
       this.photo = data;
       this.preview = data;
+    },
+    close() {
+      this.$emit('close');
     },
 
     busy(value = false) {
@@ -64,7 +70,7 @@ export default {
   <div>
     <div class="send-form">
       <div class="send-form__button-account"
-       @click="$router.push(`${this.humanId}/detail`)">
+       @click="$router.push(`${humanId}/detail`)">
         <i class="material-icons">&#xE853;</i>
       </div>
       <div class="send-form__textarea">
@@ -79,15 +85,16 @@ export default {
         <i class="material-icons">&#xE163;</i>
       </div>
       <div class="send-form__button-send" v-else
-       @click="$router.push(`${this.humanId}/uploads`)">
+       @click="$router.push(`${humanId}/uploads`)">
         <i class="material-icons">&#xE3B0;</i>
       </div>
     </div>
 
     <MessangerService
-     :id="human.id"
-     @sended="$emit('sended')"
-     @close="$emit('close')"
+     :id="humanId"
+     :reply="reply"
+     @sended="sended"
+     @close="close"
      @process="busy"/>
 
     <router-view @close="$root.goBack()" @select="select"/>
@@ -105,38 +112,6 @@ export default {
       Фото удалено
     </toast>
 
-    <div>
-      <InfoDialog v-if="negative.interest.show"
-       @close="ignore('interest')">
-       <div slot="title">Учитывайте интересы</div>
-        Потребуется подтверждение, если не совпадает
-        желаемый город, возраст или пол.
-        Вирт интересен далеко не всем.
-      </InfoDialog>
-
-      <InfoDialog v-if="negative.dirt.show"
-        @close="ignore('dirt')">
-        <div slot="title">Поступят жалобы</div>
-        Оскорбления в любой форме запрещены. На вас поступят жалобы,
-        что грозит блокировкой анкеты.
-        Возможно потребуется подтверждение.
-      </InfoDialog>
-
-      <InfoDialog v-if="negative.spam.show"
-       @close="ignore('spam')">
-        <div slot="title">Не сейчас</div>
-        Не отправляйте номера телефонов, ссылки, мессенджеры в начале знакомства.
-        Так поступают мошенники, потребуется подтверждение.
-      </InfoDialog>
-
-      <InfoDialog v-if="0">
-       <div slot="title">Комфортное начало</div>
-        Используйте шаблоны из блокнота, простые фразы
-        или текст менее 140 символов для начала общения.
-        Исключите цифры в первых сообщениях.
-      </InfoDialog>
-
-    </div>
   </div>
 </template>
 

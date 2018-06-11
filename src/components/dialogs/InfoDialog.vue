@@ -2,7 +2,7 @@
 import ModalDialog from '~dialogs/ModalDialog';
 
 export default {
-  props: ['type', 'yesText'],
+  props: ['type', 'strict', 'yesText'],
   computed: {
     style() {
       const btn = {
@@ -21,7 +21,9 @@ export default {
   methods: {
     confirm() {
       this.$emit('confirm');
-      this.$emit('close');
+      if (!this.strict) {
+        this.$emit('close');
+      }
     },
   },
   components: {

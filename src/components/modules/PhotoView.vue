@@ -30,8 +30,12 @@ export default {
 
 <template>
   <div class="photo-view" :style="background">
-    <InfoDialog yesText="Подтверждаю" type="success" v-if="!accept"
-     @close="close" @confirm="approve">
+    <InfoDialog v-if="!accept"
+     type="success"
+     yesText="Подтверждаю"
+     :strict="true"
+     @close="close"
+     @confirm="approve">
       <slot name="title">Контроль содержания отсутствует</slot>
       У администраторов нет доступа к загружаемым фото.
       Внимание! Изображения могут иметь возрастные ограничения.

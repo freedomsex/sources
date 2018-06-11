@@ -21,7 +21,10 @@ export default {
         notepad: false,
       },
       negative: {
-        contacts: false,
+        contacts: {
+          show: false,
+          ignore: false,
+        },
         interest: {
           show: false,
           ignore: false,
@@ -59,7 +62,7 @@ export default {
       } else if (this.isSpam(this.message) && this.isNegative('spam')) {
         this.problem('spam');
       } else {
-        this.$emit('send', this.message);
+        this.$emit('sendMessage', this.message);
       }
     },
     problem(type) {
@@ -124,6 +127,7 @@ export default {
 
     <MessangerService
      :id="human.id"
+     :reply="reply"
      @sended="$emit('sended')"
      @close="$emit('close')"
      @process="busy"/>
@@ -139,11 +143,11 @@ export default {
        @select="setText"
        @close="modals.cliche = false"/>
 
-      <ContactWizard v-if="negative.contacts"
+      <ContactWizard v-if="negative.contacts.show"
         :humanCity = "human.city"
         :humanAge = "human.age"
         @approve=""
-        @close="negative.contacts = false"/>
+        @close="negative.contacts.show = false"/>
 
       <InfoDialog v-if="negative.interest.show"
        @close="ignore('interest')">

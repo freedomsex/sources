@@ -18,7 +18,6 @@ export default {
       alert: false,
       captcha: false,
       virification: false,
-      photoIsRemoved: false,
     };
   },
   // beforeRouteUpdate(to, from, next) {
@@ -36,7 +35,6 @@ export default {
       this.$store.commit('intimate/notifi', false);
       // MessList.messages.unshift(data.message);
       this.$refs.messages.reload();
-      this.$refs.recaptcha.reset();
     },
     attention(count) {
       if (count < 3) {
@@ -84,7 +82,7 @@ export default {
         </div>
         <div class="navbar-button">
           <i class="material-icons"
-           @click="$router.push(`${this.humanId}/incoming`)">&#xE3B6;</i>
+           @click="$router.push(`${humanId}/incoming`)">&#xE3B6;</i>
         </div>
       </div>
 
@@ -102,7 +100,7 @@ export default {
         </div>
         <div class="message-dialog__tools">
           <SendForm
-           :human="human"
+           :humanId="humanId"
            @sended="sended"
            @close="close"/>
         </div>
