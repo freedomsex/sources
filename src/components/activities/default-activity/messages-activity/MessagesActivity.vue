@@ -13,6 +13,7 @@ export default {
       caption: '',
       reply: '',
       show: true,
+      count: 0,
 
       dirt: false,
       alert: false,
@@ -37,6 +38,7 @@ export default {
       this.$refs.messages.reload();
     },
     attention(count) {
+      this.count = count;
       if (count < 3) {
         this.alert = true;
       } else {
@@ -101,6 +103,7 @@ export default {
         <div class="message-dialog__tools">
           <SendForm
            :humanId="humanId"
+           :count="count"
            @sended="sended"
            @close="close"/>
         </div>

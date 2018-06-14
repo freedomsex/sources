@@ -6,3 +6,24 @@ a {
     color: @link-color;
     transition: color 0.2s ease;
 }
+
+
+.link_simple {
+  .link_simple;
+}
+.link_dashed {
+  border-bottom: 1px dashed @link-color;
+  .link_simple;
+}
+.link_underline {
+  text-decoration: underline;
+  .link_simple;
+}
+.gray_link {
+  color: @gray-dark;
+  .link;
+}
+.red_link {
+  color: red;
+  .link;
+}

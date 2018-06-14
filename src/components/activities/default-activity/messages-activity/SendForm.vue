@@ -5,6 +5,7 @@ import PhotoSend from '~modules/PhotoSend';
 
 import InfoDialog from '~dialogs/InfoDialog';
 import MessangerService from '~modules/MessangerService';
+import HornMessageProblem from '~modules/HornMessageProblem';
 
 export default {
   props: ['humanId', 'count', 'reply'],
@@ -16,11 +17,15 @@ export default {
       preview: false,
       photo: false,
       photoIsRemoved: false,
+      ignores: {},
     };
   },
   computed: {
     user() {
       return this.$store.state.user;
+    },
+    begin() {
+      return this.count < 5;
     },
   },
   methods: {
@@ -31,7 +36,15 @@ export default {
       this.$emit('sendPhoto', this.photo);
     },
     sendMessage() {
-      this.$emit('sendMessage', this.message);
+      if (this.message.length > 500) {
+        this.problem('exceed');
+      } else if (this.begin && this.isDirt(this.message) && !this.ignores.dirt) {
+        this.problem('dirt');
+      } else if (this.begin && this.isSpam(this.message) && !this.ignores.spam) {
+        this.problem('spam');
+      } else {
+        this.$emit('sendMessage', this.message);
+      }
     },
     sended() {
       // this.reset();
@@ -48,6 +61,12 @@ export default {
     close() {
       this.$emit('close');
     },
+    problem(type) {
+      this.$emit('problem', type);
+    },
+    ignore(type) {
+      this.ignores[type] = true;
+    },
 
     busy(value = false) {
       this.process = value;
@@ -61,6 +80,7 @@ export default {
   components: {
     InfoDialog,
     MessangerService,
+    HornMessageProblem,
     PhotoSend,
   },
 };
@@ -96,6 +116,10 @@ export default {
      @sended="sended"
      @close="close"
      @process="busy"/>
+
+    <HornMessageProblem
+     @ignore="ignore"
+     @solve="sendMessage"/>
 
     <router-view @close="$root.goBack()" @select="select"/>
 

@@ -11,6 +11,7 @@ const formatter = require('eslint-friendly-formatter');
 // const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const WriteFilePlugin = require('write-file-webpack-plugin');
+// const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 let styleLoader = 'style-loader';
 if (process.env.NODE_ENV === 'production') {
@@ -203,8 +204,16 @@ module.exports = {
   externals: {moment: 'moment'},
 
   optimization: {
+    // minimizer: [
+    //   new OptimizeCSSAssetsPlugin({
+    //     assetNameRegExp: /\.optimize\.css$/g,
+    //     cssProcessor: require('cssnano'),
+    //     cssProcessorOptions: {discardComments: {removeAll: true}},
+    //     canPrint: true,
+    //   }),
+    // ],
     splitChunks: {
-      // chunks: 'async',
+      chunks: 'async',
       minSize: 30000,
       minChunks: 1,
       name: true,
@@ -218,8 +227,8 @@ module.exports = {
         styles: {
           name: 'styles',
           test: /\.css$/,
-          chunks: 'all',
-          enforce: true,
+          // chunks: 'all',
+          // enforce: true,
         },
       },
     },

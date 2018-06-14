@@ -29,7 +29,6 @@ export default {
   },
   computed: {
     reply: () => false,
-    information: () => '',
     caption() {
       return this.reply ? 'Быстрый ответ' : 'Написать сообщение';
     },
@@ -47,6 +46,7 @@ export default {
     },
   },
   methods: {
+    information: () => '',
     reload() {
       this.loading = true;
       setTimeout(() => {
@@ -116,9 +116,9 @@ export default {
           <div class="human-dialog__text message" v-if="message">
             <CensoredText :text="message" :passive="true"/>
           </div>
-          <div class="human-dialog__text warning" v-if="information"
+          <div class="human-dialog__text warning" v-if="information()"
            @click="action()">
-            {{information}}
+            {{information()}}
           </div>
         </div>
 

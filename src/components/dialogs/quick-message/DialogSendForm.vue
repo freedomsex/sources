@@ -3,10 +3,9 @@ import NegativeDetection from '~mixins/NegativeDetection';
 
 import Notepad from '~default-activity/Notepad';
 import MessagesCliche from '~default-activity/MessagesCliche';
-import ContactWizard from '~dialogs/ContactWizard';
-import InfoDialog from '~dialogs/InfoDialog';
 import LoadingCover from '~dialogs/LoadingCover';
 import MessangerService from '~modules/MessangerService';
+import HornMessageProblem from '~modules/HornMessageProblem';
 
 export default {
   props: ['human', 'reply', 'excess'],
@@ -14,30 +13,12 @@ export default {
   data() {
     return {
       message: '',
-      captcha: false,
       process: false,
       modals: {
         cliche: false,
         notepad: false,
       },
-      negative: {
-        contacts: {
-          show: false,
-          ignore: false,
-        },
-        interest: {
-          show: false,
-          ignore: false,
-        },
-        dirt: {
-          show: false,
-          ignore: false,
-        },
-        spam: {
-          show: false,
-          ignore: false,
-        },
-      },
+      ignores: {},
     };
   },
   computed: {
@@ -49,28 +30,30 @@ export default {
     },
   },
   methods: {
-    isNegative(type) {
-      return this.negative[type].ignore == false;
-    },
     proxy() {
-      if (this.added) {
+      if (this.message.length > 500) {
+        this.problem('exceed');
+      } else if (!this.reply && this.message.length > 140 && !this.ignores.twitter) {
+        this.problem('twitter');
+      } else if (this.added) {
         this.problem('contacts');
-      } else if (this.excess && this.isNegative('interest')) {
+      } else
+      if (!this.reply && this.excess && !this.ignores.interest) {
         this.problem('interest');
-      } else if (this.isDirt(this.message) && this.isNegative('dirt')) {
+      } else
+      if (this.isDirt(this.message) && !this.ignores.dirt) {
         this.problem('dirt');
-      } else if (this.isSpam(this.message) && this.isNegative('spam')) {
+      } else if (this.isSpam(this.message) && !this.ignores.spam) {
         this.problem('spam');
       } else {
         this.$emit('sendMessage', this.message);
       }
     },
     problem(type) {
-      this.negative[type].show = true;
+      this.$emit('problem', type);
     },
     ignore(type) {
-      this.negative[type].ignore = true;
-      this.negative[type].show = false;
+      this.ignores[type] = true;
     },
     setText(text) {
       this.message = text;
@@ -82,9 +65,8 @@ export default {
   components: {
     Notepad,
     MessagesCliche,
-    ContactWizard,
-    InfoDialog,
     MessangerService,
+    HornMessageProblem,
     LoadingCover,
   },
 };
@@ -134,52 +116,18 @@ export default {
 
     <LoadingCover :show="process"/>
 
-    <div>
-      <Notepad v-if="modals.notepad"
-       @select="setText"
-       @cliche="modals.cliche = true"
-       @close="modals.notepad = false"/>
-      <MessagesCliche v-if="modals.cliche"
-       @select="setText"
-       @close="modals.cliche = false"/>
+    <Notepad v-if="modals.notepad"
+      @select="setText"
+      @cliche="modals.cliche = true"
+      @close="modals.notepad = false"/>
+    <MessagesCliche v-if="modals.cliche"
+      @select="setText"
+      @close="modals.cliche = false"/>
 
-      <ContactWizard v-if="negative.contacts.show"
-        :humanCity = "human.city"
-        :humanAge = "human.age"
-        @approve=""
-        @close="negative.contacts.show = false"/>
-
-      <InfoDialog v-if="negative.interest.show"
-       @close="ignore('interest')">
-       <div slot="title">Учитывайте интересы</div>
-        Потребуется подтверждение, если не совпадает
-        желаемый город, возраст или пол.
-        Вирт интересен далеко не всем.
-      </InfoDialog>
-
-      <InfoDialog v-if="negative.dirt.show"
-        @close="ignore('dirt')">
-        <div slot="title">Поступят жалобы</div>
-        Оскорбления в любой форме запрещены. На вас поступят жалобы,
-        что грозит блокировкой анкеты.
-        Возможно потребуется подтверждение.
-      </InfoDialog>
-
-      <InfoDialog v-if="negative.spam.show"
-       @close="ignore('spam')">
-        <div slot="title">Не сейчас</div>
-        Не отправляйте номера телефонов, ссылки, мессенджеры в начале знакомства.
-        Так поступают мошенники, потребуется подтверждение.
-      </InfoDialog>
-
-      <InfoDialog v-if="0">
-       <div slot="title">Комфортное начало</div>
-        Используйте шаблоны из блокнота, простые фразы
-        или текст менее 140 символов для начала общения.
-        Исключите цифры в первых сообщениях.
-      </InfoDialog>
-
-    </div>
+    <HornMessageProblem
+     :human="human"
+     @ignore="ignore"
+     @solve="proxy"/>
   </div>
 </template>
 
