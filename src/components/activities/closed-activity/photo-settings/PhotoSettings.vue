@@ -3,6 +3,7 @@ import axios from 'axios';
 import hasher from '~legacy/utils/simple-hash';
 import InfoDialog from '~dialogs/InfoDialog';
 import AdaptPhotoData from '~assets/AdaptPhotoData';
+import PhotoGalery from '~widgets/PhotoGalery';
 
 import ActivityActions from '../../ActivityActions';
 import FileUploadButton from './FileUploadButton';
@@ -68,6 +69,7 @@ export default {
     ActivityActions,
     InfoDialog,
     FileUploadButton,
+    PhotoGalery,
   },
 };
 </script>
@@ -76,12 +78,7 @@ export default {
   <ActivityActions type="closed" @close="close">
     <span slot="caption">Отправить фото</span>
     <div class="activity-section">
-      <div class="galery-photo" v-show="photos.length" style="display: none;">
-        <img class="galery-photo__item"
-         :src="item._links.galery.href"
-         v-for="(item, index) in photos"
-         @click="show(index)">
-      </div>
+      <PhotoGalery :list="photos" @show="show"/>
     </div>
 
     <div class="activity-section">
@@ -103,4 +100,24 @@ export default {
 </template>
 
 <style lang="less">
+
+#fileupload {
+  position: absolute;
+  left: -99999px;
+}
+
+.upload_photo__add {
+  margin-bottom: @indent-lg;
+}
+
+.upload_photo__rules {
+  color: #5c5c5c;
+  font-size: 12px;
+  max-width: 500px;
+  margin-top: @indent-lg;
+  p {
+    padding: 0;
+    margin: 4px 0;
+  }
+}
 </style>

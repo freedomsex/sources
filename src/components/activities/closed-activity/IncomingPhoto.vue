@@ -2,6 +2,7 @@
 import axios from 'axios';
 import hasher from '~legacy/utils/simple-hash';
 import PhotoSend from '~modules/PhotoSend';
+import PhotoGalery from '~widgets/PhotoGalery';
 import ActivityActions from '../ActivityActions';
 
 export default {
@@ -63,6 +64,7 @@ export default {
   components: {
     ActivityActions,
     PhotoSend,
+    PhotoGalery,
   },
 };
 </script>
@@ -71,12 +73,7 @@ export default {
   <ActivityActions type="closed" @close="close">
     <span slot="caption">Галерея</span>
     <div class="activity-section">
-      <div class="incoming-photo__list" v-if="photos.length">
-        <img class="incoming-photo__item-photo"
-         :src="item._links.thumb.href"
-         v-for="(item, index) in photos"
-         @click="show(index)">
-      </div>
+      <PhotoGalery :list="photos" @show="show" :private="true"/>
       <div class="incoming-photo__placeholder" v-else>
         Присланные  фотографии будут здесь
       </div>
@@ -84,77 +81,3 @@ export default {
     <PhotoSend v-if="preview" :photo="preview" @close="preview = null"/>
   </ActivityActions>
 </template>
-
-<style lang="less">
-#incoming-photo {
-  margin-bottom: @indent-sm;
-}
-
-.incoming-photo__placeholder {
-  color: @gray-dark;
-  background: @light;
-  padding: @indent-md @indent-md;
-}
-
-.incoming-photo__list {
-  margin: 0 -5px;
-}
-
-.incoming-photo__item-photo {
-  width: 100px;
-  height: 100px;
-  @media (max-width: 400px) {
-    @indent: (20 * 2 + 2 - 5 * 2) / 3;
-    width: ~'calc(33.33vmin - @{indent}px)';
-    height: ~'calc(33.33vmin - @{indent}px)';
-  }
-  @media (max-width: 540px) and (min-width: 400px) {
-    @indent: (20 * 2 + 2 - 5 * 2) / 4;
-    width: ~'calc(25vmin - @{indent}px)';
-    height: ~'calc(25vmin - @{indent}px)';
-  }
-  border: 5px solid @white;
-  position: relative;
-}
-
-#fileupload {
-  position: absolute;
-  left: -99999px;
-}
-
-.galery-photo {
-  margin: 0 -5px;
-  //background: @gray;
-  &__item {
-    width: 100px;
-    height: 100px;
-    @media (max-width: 400px) {
-      @indent: (20 * 2 + 2 - 5 * 2) / 3;
-      width: ~'calc(33.33vmin - @{indent}px)';
-      height: ~'calc(33.33vmin - @{indent}px)';
-    }
-    @media (max-width: 540px) and (min-width: 400px) {
-      @indent: (20 * 2 + 2 - 5 * 2) / 4;
-      width: ~'calc(25vmin - @{indent}px)';
-      height: ~'calc(25vmin - @{indent}px)';
-    }
-    border: 5px solid @white;
-    position: relative;
-  }
-}
-
-.upload_photo__add {
-  margin-bottom: @indent-lg;
-}
-
-.upload_photo__rules {
-  color: #5c5c5c;
-  font-size: 12px;
-  max-width: 500px;
-  margin-top: @indent-lg;
-  p {
-    padding: 0;
-    margin: 4px 0;
-  }
-}
-</style>

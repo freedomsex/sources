@@ -97,7 +97,6 @@ export default {
   <ActivityActions type="wrapped" @close="$emit('close')">
       <span slot="caption">Помощь</span>
 
-      <div class="activity__content">
         <div class="activity-section">
           На вопросы отвечают администраторы Сообщества,
           такие же Пользователи как и вы. Их много.
@@ -148,7 +147,7 @@ export default {
           <button class="btn btn-primary" @click="expand()">Продолжить</button>
         </div>
         <div v-show="labels.load">Загружаю...</div>
-      </div>
+
 
       <InfoDialog @close="isShort = false" v-if="isShort">
         Пожалуйста, сообщите больше информации.

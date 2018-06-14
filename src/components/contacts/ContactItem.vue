@@ -162,4 +162,130 @@ export default {
 </template>
 
 <style lang="less">
+
+.contact-item {
+  &:last-child {
+    border-bottom-width: 0px;
+  }
+  display: flex;
+  border-bottom: 1px solid @light;
+  position: relative;
+  background: @white;
+  overflow: hidden;
+  font-size: 14px;
+
+  &__content {
+    .link;
+    display: flex;
+    flex-direction: column;
+    flex: 1 2 auto;
+    padding: 7px @indent-sm;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  &__option {
+    flex: 0 0 90px;
+    align-self: center;
+    text-align: right;
+    // width: 100px;
+  }
+
+  &__info {
+    flex: 1 1 auto;
+    .user-list__name {
+      color: @dark;
+    }
+    .user-list__age {
+      color: @red;
+    }
+    .user-list__city {
+      color: @link-color;
+    }
+    .idle {
+      color: @gray-dark;
+    }
+  }
+
+  &__preview {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    //padding-top: @indent-xs;
+  }
+
+  &.idle {
+    background: @light;
+    border-color: @white;
+  }
+
+  &__message {
+    flex: 1 1 auto;
+    color: @gray-dark;
+    overflow: hidden;
+    display: inline-block;
+    font-style: italic;
+    white-space: nowrap;
+    margin-left: @indent-xs;
+    vertical-align: middle;
+    text-overflow: ellipsis;
+
+    &.idle {
+      color: @gray-light;
+    }
+  }
+
+  &__status {
+    &-send {
+      flex: 0 0 10px;
+      color: @gray;
+      font-size: 12px;
+    }
+
+    &-read {
+      flex: 0 0 8px;
+      background-color: @purpur-dark;
+      width: 8px;
+      height: 8px;
+      display: inline-block;
+      border-radius: 10px;
+      vertical-align: middle;
+
+      &.idle {
+        background-color: @gray-light;
+      }
+    }
+  }
+}
+
+.message-item {
+  &__bunn {
+    .btn-circle;
+    background-color: #337ab7;
+    margin: @indent-xs @indent-sm;
+    margin-right: 1px;
+
+    &.idle {
+      background-color: @gray;
+    }
+  }
+
+  &__bunn-alert {
+    .btn-circle;
+    background-color: #d9534f;
+    margin: @indent-xs @indent-sm;
+    margin-right: 1px;
+  }
+
+  &__remove {
+    .btn-circle;
+    background-color: @gray-light;
+    margin: @indent-xs @indent-sm;
+    margin-left: 1px;
+
+    &.idle {
+      background-color: @gray-light;
+    }
+  }
+}
 </style>

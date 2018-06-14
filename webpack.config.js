@@ -12,6 +12,7 @@ const formatter = require('eslint-friendly-formatter');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 // const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 let styleLoader = 'style-loader';
 if (process.env.NODE_ENV === 'production') {
@@ -27,10 +28,11 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = {
   entry: {
-    app: ['babel-polyfill', './src/index.js'],
+    app: ['./src/index.js'],
   },
   output: {
     filename: '[name].[chunkhash:5].js',
+    chunkFilename: 'scripts/[name].[chunkhash:5].js',
     path: path.resolve(__dirname, 'dist'),
     // publicPath: 'http://localhost:8080/build/',
     publicPath,
@@ -137,6 +139,9 @@ module.exports = {
             },
           },
           {
+            loader: 'postcss-loader',
+          },
+          {
             loader: 'less-loader',
             options: {
               sourceMap: true,
@@ -180,6 +185,7 @@ module.exports = {
     }),
     new MiniCssExtractPlugin({
       filename: '[name].[chunkhash:5].css',
+      chunkFilename: 'styles/[name].[chunkhash:5].css',
     }),
     new CleanWebpackPlugin([path.resolve(__dirname, 'dist')]),
     // new CopyWebpackPlugin([
@@ -198,6 +204,8 @@ module.exports = {
         {name: 'dexie', var: 'Dexie', path: 'dist/dexie.min.js'},
       ],
     }),
+
+    new BundleAnalyzerPlugin(),
   ],
   mode: process.env.NODE_ENV,
 
