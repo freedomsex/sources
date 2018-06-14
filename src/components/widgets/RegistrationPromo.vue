@@ -11,7 +11,7 @@ export default {
 
 <template>
   <div class="registration-promo"
-   @click.self="$router.push('/confirm-sex/search')">
+   @click="$router.push('/confirm-sex/search')">
     <button class="btn btn-primary">  Начать  </button>
     <span class="registration-promo__tagline">
       В один клик, без регистрации

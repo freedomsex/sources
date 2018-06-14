@@ -125,7 +125,7 @@ export default {
         <DialogSendForm
         :human="human"
         :reply="message"
-        :excess="information"
+        :excess="information()"
         @sended="sended"
         @close="close"/>
 

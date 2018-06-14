@@ -205,7 +205,10 @@ module.exports = {
       ],
     }),
 
-    new BundleAnalyzerPlugin(),
+    new BundleAnalyzerPlugin({
+      openAnalyzer: false,
+      analyzerMode: 'disabled',
+    }),
   ],
   mode: process.env.NODE_ENV,
 
