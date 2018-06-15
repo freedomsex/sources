@@ -73,11 +73,22 @@ export default {
   <ActivityActions type="closed" @close="close">
     <span slot="caption">Галерея</span>
     <div class="activity-section">
-      <PhotoGalery :list="photos" @show="show" :private="true"/>
-      <div class="incoming-photo__placeholder" v-else>
+      <PhotoGalery
+       :list="photos"
+       :private="true"
+       @show="show" />
+      <div class="incoming-photo__placeholder" v-if="!photos.length">
         Присланные  фотографии будут здесь
       </div>
     </div>
     <PhotoSend v-if="preview" :photo="preview" @close="preview = null"/>
   </ActivityActions>
 </template>
+
+<style lang="less">
+.incoming-photo__placeholder {
+  color: @gray-dark;
+  background: @light;
+  padding: @indent-md @indent-md;
+}
+</style>

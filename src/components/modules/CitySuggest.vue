@@ -46,6 +46,12 @@ export default {
         this.reset();
       }
     },
+    fallback() {
+      // Если не работают подсказки и нельзя выбрать
+      if (!this.cities || !this.suggested) {
+        this.$emit('select', this.query);
+      }
+    },
   },
 };
 </script>
@@ -54,7 +60,9 @@ export default {
   <div class="city-suggest-ed">
     <input class="city-suggest-ed__input form-control"
       type="text" autocomplete="off" placeholder="Введите название"
-      v-model="query" @keyup="load()">
+      v-model="query"
+      @keyup="load()"
+      @blur="fallback()">
     <ul class="dropdown-menu" v-show="suggested">
       <li v-for="(item, index) in cities"
         :key="index" @click="select(item)">

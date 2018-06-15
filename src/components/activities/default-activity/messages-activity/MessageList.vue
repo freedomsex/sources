@@ -3,7 +3,7 @@ import _ from 'underscore';
 import axios from 'axios';
 import hasher from '~legacy/utils/simple-hash';
 
-import AbuseDialog from '~components/abuses/AbuseWidget';
+import AbuseWidget from '~components/abuses/AbuseWidget';
 import InfoDialog from '~dialogs/InfoDialog';
 import MessageItem from './MessageItem';
 import ListDate from './ListDate';
@@ -27,10 +27,6 @@ export default {
       date: null,
       toSlow: false,
       skipScroll: false,
-      dialog: {
-        abuse: false,
-        claim: false,
-      },
       abuseSuccessHint: false,
     };
   },
@@ -139,8 +135,8 @@ export default {
     },
   },
   components: {
+    AbuseWidget,
     MessageItem,
-    AbuseDialog,
     InfoDialog,
     ListDate,
   },
@@ -149,29 +145,7 @@ export default {
 
 <template>
   <div class="message-list" v-show="!error">
-    <div class="abuse-widget">
-      <button class="btn" @click="dialog.abuse = true">
-        Замечаний нет
-      </button>
-      <div class="abuse-widget__hint" v-if="abuseSuccessHint" @click="abuseSuccessHint = false">
-        Спасибо, замечание скоро появится в списке
-      </div>
-    </div>
-
-    <AbuseDialog :humanId="humanId" v-if="dialog.abuse"
-      @needed="dialog.claim = true"
-      @success="abuseSuccessHint = true"
-      @close="dialog.abuse = false"/>
-
-
-    <InfoDialog v-if="dialog.claim"
-     @close="dialog.claim = false">
-      <div slot="title">Наказывайте всегда</div>
-      Нажмите «Наказать и удалить» у сообщения,
-      которое является причиной замечания. Можно несколько.
-      Это необходимо, и поможет быстрее определить истину,
-      а также степень вины.
-    </InfoDialog>
+    <AbuseWidget :humanId="humanId"/>
 
     <div class="messages__new" v-show="newCount" @click="load">
       <span class="messages__new-lamp">Новые
@@ -253,10 +227,6 @@ export default {
     background-color: @alert-sand;
     padding: @indent-xs @indent-md;
   }
-}
-
-.abuse-widget {
-  text-align: center;
 }
 
 .form-message__buttons {

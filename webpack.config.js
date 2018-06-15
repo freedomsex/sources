@@ -113,6 +113,7 @@ module.exports = {
           extractCSS: true,
           loaders: {
             // less: 'style!css!less',
+            // i18n: '@kazupon/vue-i18n-loader',
           },
           // other vue-loader options go here
         },
@@ -198,6 +199,7 @@ module.exports = {
         {name: 'vue', var: 'Vue', path: 'dist/vue.js'},
         {name: 'vuex', var: 'Vuex', path: 'dist/vuex.min.js'},
         {name: 'vue-router', var: 'VueRouter', path: 'dist/vue-router.min.js'},
+        {name: 'vue-i18n', var: 'VueI18n', path: 'dist/vue-i18n.min.js'},
         {name: 'axios', path: 'dist/axios.min.js'},
         {name: 'underscore', var: '_', path: 'underscore-min.js'},
         {name: 'lscache'},

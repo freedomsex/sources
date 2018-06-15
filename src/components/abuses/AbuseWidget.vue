@@ -1,121 +1,86 @@
 <script>
 import api from '~config/api';
-import hasher from '~legacy/utils/simple-hash';
-import ModalDialog from '~dialogs/ModalDialog';
-import LoadingCover from '~dialogs/LoadingCover';
+import AbuseList from '~default-activity/AbuseList';
+import AbuseDialog from '~components/abuses/AbuseDialog';
+import InfoDialog from '~dialogs/InfoDialog';
 
 export default {
   props: ['humanId'],
-  data() {
-    return {
-      items: [
-        {
-          title: 'Предложение оплаты услуг',
-          text: 'вирт за деньги, проституция',
-        },
-        {
-          title: 'Развод на деньги',
-          text: 'мошенничество, шантаж, вымогательство',
-        },
-        {title: 'Фото из интернета', text: 'вымышленные данные, обман, фейк'},
-        {title: 'Оскорбления, хамство', text: 'троллинг, грубые сообщения'},
-        {title: 'Рассылает интим фото', text: 'спамит или провоцирует'},
-      ],
-      selected: null,
-      comment: '',
-      process: false,
-    };
+  data: () => ({
+    list: [],
+    show: false,
+    dialog: false,
+    claim: false,
+    success: false,
+  }),
+  mounted() {
+    api.raw.get({id: this.humanId}, 'abuse/load').then(({data}) => {
+      this.list = data;
+    });
+  },
+  computed: {
+    alert() {
+      return this.count > 0;
+    },
+    count() {
+      return this.list.length;
+    },
   },
   methods: {
-    select(item) {
-      this.selected = item;
-    },
-    send() {
-      const hash = hasher.random();
-      let text = `${this.selected.title}, ${this.selected.text}`;
-      text = this.comment ? `${text} [${this.comment}]` : text;
-      const params = {
-        id: this.humanId,
-        captcha: '',
-        text,
-        hash,
-      };
-      this.process = true;
-      api.raw.save(params, null, 'abuse/send').then(({data}) => {
-        if (data.error) {
-          this.$emit('needed');
-        } else {
-          this.$emit('success');
-        }
-        this.process = false;
-        this.$emit('close');
-      });
-    },
+
   },
   components: {
-    ModalDialog,
-    LoadingCover,
+    AbuseList,
+    AbuseDialog,
+    InfoDialog,
   },
 };
 </script>
 
 <template>
   <div>
-    <ModalDialog @close="$emit('close')">
-      <div class="dialog-caption warning">
-        <div class="dialog-caption__title">Опубликовать замечание</div>
-        <div class="dialog-caption__option">
-          <a href="/блог/анонимное-замечание-к-анкете/" target="_blank">
-            <i class="material-icons" @click="">&#xE88F;</i>
-          </a>
-        </div>
-      </div>
-      <div class="list-view abuse-list" v-if="!selected">
-        <div class="list-view__item abuse-list__item" v-for="item in items" @click="select(item)">
-          <b>{{item.title}}</b>, {{item.text}}
-        </div>
-      </div>
-      <div class="modal-dialog__wrapper capped" v-else>
-        <div class="modal-dialog__section">
-          <b>{{selected.title}}</b>, {{selected.text}}
-        </div>
-        <div class="modal-dialog__section">
-          <div class="dialog-form">
-            <div class="dialog-form__textarea">
-              <textarea class="dialog-form__message-text"
-               placeholder="Ваш комментарий, по желанию"
-               rows="1" v-model="comment" v-resized
-               @keyup.ctrl.enter.prevent="send()"></textarea>
-            </div>
-          </div>
-        </div>
-        <div class="modal-dialog__option">
-          <button class="btn btn-warning" @click="send()">
-            Отправить
-          </button>
-          <a href="/блог/анонимное-замечание-к-анкете/" target="_blank"  class="btn btn-link">
-            Это анонимно...
-          </a>
-        </div>
-      </div>
+    <div class="abuse-widget">
+      <button class="btn btn-danger" v-if="alert"
+       @click="show = true">
+        Есть замечания ({{count}})
+      </button>
+      <button class="btn" v-else
+       @click="dialog = true">
+        Замечаний нет
+      </button>
 
-      <LoadingCover :show="process"/>
-    </ModalDialog>
+      <div class="abuse-widget__hint" v-if="success"
+       @click="success = false">
+        Спасибо, замечание скоро появится в списке
+      </div>
+    </div>
+
+    <AbuseList v-if="show"
+     @close="show = false"
+     :list="list"/>
+
+    <AbuseDialog v-if="dialog"
+      :humanId="humanId"
+      @needed="claim = true"
+      @success="success = true"
+      @close="dialog = false"/>
+
+    <InfoDialog v-if="claim"
+     @close="claim = false">
+      <div slot="title">Наказывайте всегда</div>
+      Нажмите «Наказать и удалить» у сообщения,
+      которое является причиной замечания. Можно несколько.
+      Это необходимо, и поможет быстрее определить истину,
+      а также степень вины.
+    </InfoDialog>
+
   </div>
 </template>
 
 <style lang="less">
-.abuse-list {
-  display: flex;
-  flex-direction: column;
-  &__item {
-    flex: 0 0 auto;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-}
 
 .abuse-widget {
+  text-align: center;
   &__hint {
     color: @gray-dark;
     padding: @indent-xs;
