@@ -2,7 +2,6 @@
 import Vuex from 'vuex';
 import _ from 'underscore';
 import InfoDialog from '~dialogs/InfoDialog';
-import CitySuggest from '~modules/CitySuggest';
 import SuggestInput from '~modules/SuggestInput';
 import ActivityActions from '../ActivityActions';
 
@@ -20,6 +19,11 @@ export default {
         ignore: false,
       },
     };
+  },
+  mounted() {
+    // do something after mounting vue instance
+    console.log(this.$store.state.user.sex);
+    console.log(this.sex);
   },
   computed: Vuex.mapState({
     sex(state) {
@@ -109,7 +113,6 @@ export default {
   components: {
     ActivityActions,
     InfoDialog,
-    CitySuggest,
     SuggestInput,
   },
 };
@@ -120,7 +123,10 @@ export default {
     <div class="activity-section">
       <div class="activity-section__title">Мой город:</div>
       <div class="form-inline">
-        <CitySuggest :city="selectCity" @select="saveCity"/>
+        <SuggestInput url="town/suggest"
+         title="Введите название"
+         :default="selectCity"
+         @select="saveCity"/>
       </div>
     </div>
 

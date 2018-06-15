@@ -1,4 +1,5 @@
 import {Vue, store} from '~store';
+import VueI18n from 'vue-i18n';
 import '~assets/directives/resized'; // TODO: оформить директивы
 // import '~legacy/navigate'; // TODO: проверить/переписать навигацию клавиатуры
 
@@ -35,6 +36,15 @@ store.dispatch('LOAD_API_TOKEN');
 store.dispatch('accepts/LOAD');
 store.dispatch('LOAD_USER');
 store.commit('load');
+
+Vue.use(VueI18n);
+
+// Create VueI18n instance with options
+const i18n = new VueI18n({
+  locale: 'ru', // set locale
+  // fallbackLocale: 'ru',
+  messages: {ru: {hello: 'hEll'}},
+});
 
 const App = new Vue({
   data: {
@@ -112,6 +122,7 @@ const App = new Vue({
   el: '#app',
   store,
   router,
+  i18n,
   components: {
     MenuUser,
     AccountComponent,

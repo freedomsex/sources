@@ -63,6 +63,12 @@ export default {
     saved(tag) {
       return this.tags && !!_.findWhere(this.tags, {tag});
     },
+    fallback() {
+      // Если не работают подсказки и нельзя выбрать
+      if (!this.cities || !this.suggested) {
+        this.$emit('select', this.query);
+      }
+    },
   },
 };
 </script>
@@ -76,6 +82,7 @@ export default {
        :disabled="disabled"
        @focus="load()"
        @keyup="suggest()"
+       @blur="fallback()"
        :placeholder="title || 'Введите текст'">
 
       <ul class="dropdown-menu" v-show="suggested">

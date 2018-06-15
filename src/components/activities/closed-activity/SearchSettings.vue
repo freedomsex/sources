@@ -1,6 +1,5 @@
 <script>
 import _ from 'underscore';
-import lscache from 'lscache';
 import Tooltip from '~widgets/Tooltip';
 import ActivityActions from '../ActivityActions';
 
@@ -27,8 +26,6 @@ export default {
     this.selectTo = this.to ? this.to : this.age(to);
     this.checkedAny = this.any;
     this.checkedVirt = this.virt;
-    console.log('created', this.$store.state.search);
-    console.log('lscache', lscache.get('user.search'));
   },
   computed: {
     userSex() {

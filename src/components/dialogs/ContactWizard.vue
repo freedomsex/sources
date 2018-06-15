@@ -2,7 +2,7 @@
 import _ from 'underscore';
 import AccountSettings from '~closed-activity/AccountSettings';
 import InfoDialog from '~dialogs/InfoDialog';
-import CitySuggest from '~modules/CitySuggest';
+import SuggestInput from '~modules/SuggestInput';
 
 export default {
   extends: AccountSettings,
@@ -30,7 +30,7 @@ export default {
   },
   components: {
     InfoDialog,
-    CitySuggest,
+    SuggestInput,
   },
 };
 </script>
@@ -40,15 +40,18 @@ export default {
    @close="close" @confirm="approve">
     <div class="modal-dialog__section">
       Ваше имя:<br>
-      <input class="form-control"
-       type="text"
-       v-model="selectName"
-       @blur="saveName"
-       placeholder="Ваше имя">
+      <SuggestInput url="name/suggest"
+       :default="selectName"
+       :params="{sex}"
+       title="Ваше имя"
+       @select="saveName"/>
     </div>
     <div class="modal-dialog__section">
       Город:<br>
-      <CitySuggest :city="selectCity" @select="saveCity"/>
+      <SuggestInput url="town/suggest"
+       title="Введите название"
+       :default="selectCity"
+       @select="saveCity"/>
     </div>
     <div class="modal-dialog__section">
       Возраст:<br>
