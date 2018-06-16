@@ -114,36 +114,6 @@ export default {
   }
 }
 
-#captcha-dialog {
-  max-width: 400px;
-}
-
-.captcha-dialog__caption {
-  background: @orange;
-  color: @white;
-  font-weight: bold;
-  font-size: 16px;
-  padding: @indent-sm @indent-md;
-  .glyphicon {
-    float: right;
-    color: @white;
-  }
-}
-
-.captcha-dialog__body {
-  padding: @indent-md @indent-md 0;
-}
-
-.captcha-dialog__option {
-  padding: @indent-md @indent-md 0;
-  text-align: right;
-}
-
-.captcha-dialog__addon {
-  padding: 2px @indent-md;
-  background: @white;
-}
-
 .message-input {
   min-height: 40px;
   table {
