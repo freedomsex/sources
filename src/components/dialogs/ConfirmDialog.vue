@@ -53,12 +53,22 @@ export default {
           {{yes}}
         </button>
       </div>
-      <div style="font-size: 10px; color: #999;">
-        <slot name="notation"></slot>
-      </div>
+      <div class="confirm-dialog__notation"><!-- css trick
+      --><slot name="notation"></slot></div>
     </div>
   </ModalDialog>
 </template>
 
 <style lang="less">
+.confirm-dialog {
+  &__notation {
+    font-size: 10px;
+    color: #999;
+    margin-top: @indent-sm;
+
+    &:empty {
+      display: none;
+    }
+  }
+}
 </style>

@@ -9,6 +9,8 @@ export default {
       selected: null,
     };
   },
+  computed: {
+  },
   methods: {
     select(item) {
       this.selected = this.adaptOldData(item);
@@ -16,17 +18,18 @@ export default {
     text(item) {
       return this.adaptOldData(item).title;
     },
+    moderated(item) {
+      return item.mod === '1';
+    },
     adaptOldData(data) {
-      const {title, text, comment} = data;
+      const {title, text} = data;
       if (!title) {
         const match2 = text.match(/([^[]*)\s?(.*)/m);
-        return {
-          title: match2[1],
-          text: '',
-          comment: match2[2],
-        };
+        data.title = match2[1];
+        data.text = '';
+        data.comment = match2[2];
       }
-      return {title, text, comment};
+      return data;
     },
   },
   components: {
@@ -41,16 +44,36 @@ export default {
     <span slot="caption">Замечаня к анкете</span>
     <div class="activity-section" v-if="list && list.length">
       <div class="list-view">
-        <div class="list-view__item abuse-item" v-for="item in list"
-         @click="select(item)">{{text(item)}}</div>
+        <div class="list-item" v-for="item in list"
+         :class="{'gray-item': !moderated(item)}"
+         @click="select(item)">
+          <div class="list-item__body abuse-item">
+            {{text(item)}}
+          </div>
+          <div class="list-item__options">
+            <div class="btn btn-primary btn-xs" v-if="moderated(item)">
+              Проверено
+            </div>
+            <div class="btn btn-default btn-xs" v-if="!moderated(item)">
+              Новое
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <InfoDialog v-if="selected" yesText="Закрыть"
+    <InfoDialog v-if="selected"
+     yesText="Закрыть"
      @close="selected = null">
       <div slot="title">{{selected.title}}</div>
-      <span class="abuse-capitalised">{{selected.text}}</span>:
-      {{selected.comment}}
+      <span class="abuse-capitalised">{{selected.text}}</span>
+      <span v-if="selected.mod == 1">
+        <span v-if="selected.comment">:{{selected.comment}}</span>
+      </span>
+      <span v-else>
+        Замечание ещё не проверено и может быть отклонено.
+        Ложные замечания бывают редко, но доверять лучше проверенным.
+      </span>
     </InfoDialog>
   </ActivityActions>
 </template>

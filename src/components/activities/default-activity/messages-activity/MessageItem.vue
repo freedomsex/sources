@@ -38,14 +38,11 @@ export default {
         id: this.item.id,
         tid: this.item.from,
       };
-      axios
-        .post('/mess/bun/', data, config)
-        .then(() => {
-          this.$emit('remove', this.index);
-        })
-        .catch(() => {
-          console.log('error');
-        });
+      axios.post('/mess/bun/', data, config).then(() => {
+        this.$emit('remove', this.index);
+      }).catch(() => {
+        console.log('error');
+      });
     },
     cancel() {
       this.showDialog = false;

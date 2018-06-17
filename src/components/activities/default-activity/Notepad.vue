@@ -42,8 +42,12 @@ export default {
     </div>
     <div class="activity-section" v-if="writes && writes.length">
       <div class="list-view">
-        <div class="list-view__item notepad-item" v-for="item in writes"
-         @click="select(item.text)">{{item.text}}</div>
+        <div class="list-item" v-for="item in writes"
+         @click="select(item.text)">
+         <div class="list-item__body notepad-item">
+           {{item.text}}
+         </div>
+       </div>
       </div>
     </div>
   </ActivityActions>

@@ -37,13 +37,13 @@ export default {
     },
     send() {
       const hash = hasher.random();
-      const {variant, title, text, comment} = this.selected;
+      const {variant, title, text} = this.selected;
       const params = {
         id: this.humanId,
         variant,
         title,
         text,
-        comment,
+        comment: this.comment,
         captcha: '',
         hash,
       };
@@ -77,11 +77,13 @@ export default {
           </a>
         </div>
       </div>
-      <div class="list-view abuse-list" v-if="!selected">
-        <div class="list-view__item abuse-list__item"
+      <div class="list-view" v-if="!selected">
+        <div class="list-item"
          v-for="item in items"
          @click="select(item)">
-          <b>{{item.title}}</b>, {{item.text}}
+          <div class="list-item__body abuse__item">
+            <b>{{item.title}}</b>, {{item.text}}
+          </div>
         </div>
       </div>
       <div class="modal-dialog__wrapper capped" v-else>
@@ -92,6 +94,7 @@ export default {
           <div class="dialog-form">
             <div class="dialog-form__textarea">
               <textarea class="dialog-form__message-text"
+               maxlength="200"
                placeholder="Ваш комментарий, по желанию"
                rows="1" v-model="comment" v-resized
                @keyup.ctrl.enter.prevent="send()"></textarea>
@@ -115,13 +118,7 @@ export default {
 
 <style lang="less">
 .abuse-list {
-  display: flex;
-  flex-direction: column;
-  &__item {
-    flex: 0 0 auto;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
+
 }
 
 </style>

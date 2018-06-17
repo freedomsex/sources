@@ -41,9 +41,6 @@ export default {
     tags() {
       return (this.human && 'tags' in this.human) ? this.human.tags : [];
     },
-    hold() {
-      return this.ignore ? 0 : this.human.hold;
-    },
   },
   methods: {
     information: () => '',
@@ -61,12 +58,8 @@ export default {
     loaded() {
       this.loading = false;
       this.visited();
-      // console.log('hold:', this.human.hold);
-      // console.log('tags:', this.human);
-      // this.process = false;
     },
     remove() {
-      console.log('::remove:: (!)');
       this.$emit('remove');
     },
     cancel() {
@@ -86,9 +79,6 @@ export default {
     sended() {
       this.close();
     },
-    // send(text) {
-    //   this.text = text;
-    // },
   },
   components: {
     AccentDialog,
@@ -123,6 +113,7 @@ export default {
         </div>
 
         <DialogSendForm
+        :key="humanId"
         :human="human"
         :reply="message"
         :excess="information()"
@@ -134,8 +125,8 @@ export default {
       <LoadingWall :show="loading"/>
     </AccentDialog>
 
-    <AttentionWall v-if="hold"
-     :show="hold"
+    <AttentionWall v-if="!ignore && human.hold"
+     :show="human.hold"
      @promt="cancel"
      @close="close"/>
   </div>

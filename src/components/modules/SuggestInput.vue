@@ -107,6 +107,7 @@ export default {
   }
   .dropdown-menu {
     display: inline-block;
+    z-index: 1;
     > li > a {
       padding-left: 12px;
     }

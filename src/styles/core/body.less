@@ -58,18 +58,46 @@ textarea {
 
 
 .list-view {
-  padding: 0 @indent-sm;
+  display: flex;
+  flex-direction: column;
   &:last-child {
     border-bottom-width: 0px;
   }
-  &__item {
-    padding: @indent-sm @indent-sm;
+
+  .list-item {
     border-bottom: 1px solid @light;
     position: relative;
     background: @white;
-    overflow: hidden;
-    font-size: 14px;
     cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: @indent-sm @indent-sm;
+    &__body {
+      overflow: hidden;
+      font-size: 14px;
+      flex: 1 2 auto;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    &__options {
+      flex: 0 0 auto;
+      align-self: center;
+      text-align: right;
+    }
+
+
+  }
+
+  .gray-item {
+    background: @light;
+    border-color: @white;
+
+    .list-item {
+      &__body {
+        color: @gray-light;
+      }
+    }
   }
 }
 

@@ -25,16 +25,18 @@ export default {
       }).catch(error => error);
     },
   },
-  mutations: {reset(state, tid) {
-    if (state && state.id != tid) {
-      // Сбросить предыдущие данные, если там что-то не то
-      state.reload = true;
-    }
+  mutations: {
+    reset(state, tid) {
+      if (state && state.id != tid) {
+        // Сбросить предыдущие данные, если там что-то не то
+        state.reload = true;
+      }
+    },
+    save(state, data) {
+      if (data) {
+        _.assign(state, data);
+        console.log('HUMAN', data);
+      }
+    },
   },
-  save(state, data) {
-    if (data) {
-      _.assign(state, data);
-      console.log('HUMAN', data);
-    }
-  }},
 };

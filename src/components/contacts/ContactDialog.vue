@@ -66,13 +66,13 @@ export default {
     bun(index) {
       const item = this.contacts[index];
       console.log('bun', item);
-      this.remove(index);
       api.bun.send({
         id: item.message.mess_id,
         tid: item.human_id,
         // text: this.item.message,
         // token: 'super secret token'
       });
+      this.remove(index);
     },
     splice(index) {
       this.$store.commit('delete', index);
