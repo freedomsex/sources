@@ -113,9 +113,7 @@ module.exports = {
           extractCSS: true,
           loaders: {
             // less: 'style!css!less',
-            // i18n: '@kazupon/vue-i18n-loader',
           },
-          // other vue-loader options go here
         },
       },
       // {
@@ -133,6 +131,7 @@ module.exports = {
           // {
           //   loader: 'style-loader', // creates style nodes from JS strings
           // },
+          // 'vue-style-loader',
           {
             loader: 'css-loader',
             options: {
@@ -159,6 +158,10 @@ module.exports = {
             },
           },
         ],
+      },
+      {
+        resourceQuery: /blockType=i18n/,
+        loader: '@kazupon/vue-i18n-loader',
       },
     ],
   },

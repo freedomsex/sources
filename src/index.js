@@ -42,8 +42,7 @@ Vue.use(VueI18n);
 // Create VueI18n instance with options
 const i18n = new VueI18n({
   locale: 'ru', // set locale
-  // fallbackLocale: 'ru',
-  messages: {ru: {hello: 'hEll'}},
+  fallbackLocale: 'ru',
 });
 
 const App = new Vue({

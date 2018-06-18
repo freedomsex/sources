@@ -3,6 +3,7 @@ export default {
   data() {
     return {
       attempt: 0,
+      timer: null,
     };
   },
   mounted() {
@@ -10,7 +11,8 @@ export default {
   },
   methods: {
     tick(delay) {
-      setTimeout(() => {
+      clearTimeout(this.timer);
+      this.timer = setTimeout(() => {
         this.load();
       }, 1000 * delay);
     },
@@ -32,6 +34,7 @@ export default {
           this.$store.commit('resetUser', data);
           this.$store.commit('search/restore', data);
           this.$store.dispatch('LOAD_API_TOKEN');
+          this.next();
         } else {
           this.reload();
         }
@@ -39,13 +42,18 @@ export default {
           this.noReg(data);
         }
       });
+      // console.log('KEY LOAD');
     },
     noReg() {
       console.log('зарегистрирован / не авторизован');
     },
     upKey() {
+      this.load();
+      this.next();
+    },
+    next(delay = 600) {
       this.attempt = 0;
-      this.tick(600);
+      this.tick(delay);
     },
   },
 };
@@ -54,6 +62,3 @@ export default {
 <template>
   <div></div>
 </template>
-
-<style lang="less">
-</style>

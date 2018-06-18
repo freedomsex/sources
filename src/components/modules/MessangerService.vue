@@ -17,6 +17,11 @@ export default {
     this.$parent.$on('sendPhoto', this.sendPhoto);
   },
   methods: {
+    reset() {
+      this.text = null;
+      this.photo = null;
+      this.captcha = false;
+    },
     sendMessage(text) {
       if (text) {
         this.text = text;
@@ -70,6 +75,7 @@ export default {
       this.$emit('sended');
       this.$emit('process', false);
       this.$store.dispatch('notes/UPDATE', this.text);
+      this.reset();
       this.$refs.recaptcha.reset();
     },
     setCode(code) {
@@ -81,6 +87,7 @@ export default {
       this.captcha = false;
     },
     close() {
+      this.reset();
       this.$emit('close');
     },
   },

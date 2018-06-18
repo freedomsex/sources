@@ -28,16 +28,13 @@ export default {
         // params: { uid: this.uid, hash }
       };
       const url = `http://${this.server}/api/v1/users/${this.uid}/photos/${this.photo.alias}.jpg`;
-      axios
-        .delete(url, config)
-        .then(() => {
-          this.$emit('removed');
-          this.close();
-          // console.log(this.photos);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      axios.delete(url, config).then(() => {
+        this.$emit('removed');
+        this.close();
+        // console.log(this.photos);
+      }).catch((error) => {
+        console.log(error);
+      });
     },
   },
   components: {

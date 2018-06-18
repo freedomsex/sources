@@ -4,6 +4,7 @@ import NegativeDetection from '~mixins/NegativeDetection';
 import PhotoSend from '~modules/PhotoSend';
 
 import InfoDialog from '~dialogs/InfoDialog';
+import Toast from '~widgets/Toast';
 import MessangerService from '~modules/MessangerService';
 import HornMessageProblem from '~modules/HornMessageProblem';
 
@@ -82,9 +83,23 @@ export default {
     MessangerService,
     HornMessageProblem,
     PhotoSend,
+    Toast,
   },
 };
 </script>
+
+<i18n>
+{
+  "ru": {
+    "sending": "Отправляю...",
+    "placeholder": "Введите текст"
+  },
+  "en": {
+    "sending": "Sending...",
+    "placeholder": "Enter text"
+  }
+}
+</i18n>
 
 <template>
   <div>
@@ -97,7 +112,7 @@ export default {
         <textarea class="send-form__message-text"
          v-model="message" v-resized
          :disabled="process == true"
-         :placeholder="process ? 'Отправляю...' : 'Введите текст'"
+         :placeholder="process ? $t('sending') : $t('placeholder')"
          @keyup.ctrl.enter.prevent="sendMessage"></textarea>
       </div>
       <div class="send-form__button-send"
