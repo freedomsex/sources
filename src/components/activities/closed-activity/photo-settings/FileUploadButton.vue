@@ -42,7 +42,7 @@ export default {
     },
     submit() {
       const formData = new FormData();
-      formData.set('file', this.file());
+      formData.append('file', this.file());
       this.upload(formData);
     },
 
