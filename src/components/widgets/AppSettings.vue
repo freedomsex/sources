@@ -8,6 +8,9 @@ export default {
     muted() {
       return this.$store.state.mute;
     },
+    lang() {
+      return this.$store.state.locale;
+    },
   },
   methods: {
     toggle() {
@@ -19,9 +22,38 @@ export default {
     mute() {
       this.$store.commit('mute');
     },
+    switchLang() {
+      if (this.lang == 'ru') {
+        this.$store.commit('lang', 'en');
+      } else {
+        this.$store.commit('lang', 'ru');
+      }
+      this.$root.updateLocale();
+    },
   },
 };
 </script>
+
+<i18n>
+{
+  "ru": {
+    "refresh": "Обновить",
+    "notifications": "Уведомлений нет",
+    "sound": "Звук",
+    "on": "включен",
+    "off": "отключен",
+    "lang": "Язык"
+  },
+  "en": {
+    "refresh": "Refresh",
+    "notifications": "No notifications",
+    "sound": "Sound",
+    "on": "on",
+    "off": "off",
+    "lang": "Language"
+  }
+}
+</i18n>
 
 <template>
   <div class="app-settings" @click="toggle">
@@ -31,17 +63,21 @@ export default {
     <div class="app-settings__menu" v-show="open">
       <div class="app-settings__menu-item" @click="refresh">
         <span aria-hidden="true" class="glyphicon glyphicon-refresh"></span>
-        <span>Обновить</span>
+        <span>{{$t('refresh')}}</span>
       </div>
         <div class="app-settings__menu-item">
           <span aria-hidden="true" class="glyphicon glyphicon-bell"></span>
-          <span>Уведомлений нет</span>
+          <span>{{$t('notifications')}}</span>
         </div>
       <div class="app-settings__menu-item" @click="mute">
         <span aria-hidden="true"
          :class="!muted ? 'glyphicon-volume-up' : 'glyphicon-volume-off'"
          class="glyphicon"></span>
-        <span>Звук {{!muted ? 'включен' : 'отключен'}}</span>
+        <span>{{$t('sound')}} {{!muted ? $t('on') : $t('off')}}</span>
+      </div>
+      <div class="app-settings__menu-item" @click="switchLang">
+        <span aria-hidden="true" class="glyphicon glyphicon-globe"></span>
+        <span>{{$t('lang')}}</span>: {{lang}}
       </div>
     </div>
   </div>

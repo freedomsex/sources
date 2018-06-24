@@ -31,7 +31,7 @@ export default {
         return;
       }
       this.process = true;
-      this.hint = 'Отправляю...';
+      this.hint = this.$t('sending');
       this.$store.dispatch('auth/SAVE_EMAIL', this.email).then((response) => {
         this.hint = response.data.say;
         this.error = response.data.err;
@@ -55,17 +55,43 @@ export default {
 };
 </script>
 
+<i18n>
+{
+  "ru": {
+    "important": "Запомните или запишите ваш пароль.",
+    "login": "Ваш логин",
+    "password": "пароль",
+    "send": "Отправить на почту",
+    "confirm": "Логин и пароль будут отправлены на этот адрес. Подсказка с логином будет убрана.",
+    "email": "Ваш емайл адрес",
+    "hint": "Введите ваш емаил.",
+    "sending": "Отправляю..."
+  },
+  "en": {
+    "important": "Remember or write down your password.",
+    "login": "Your login",
+    "password": "password",
+    "send": "Send to email",
+    "confirm": "Login and password will be sent to this address. The login prompt will be removed.",
+    "email": "Your email address",
+    "hint": "Enter your email address.",
+    "sending": "Sending..."
+  }
+}
+</i18n>
+
 <template>
   <nav>
     <div class="auth-board">
       <div v-show="!loaded">
-        Запомните или запишите ваш пароль.
+        {{$t('important')}}
       </div>
       <transition name="auth-board">
         <div v-show="loaded">
-          Ваш логин: <b>{{login}}</b> пароль: <b>{{password}}</b>
+          {{$t('login')}}: <b>{{login}}</b>
+          {{$t('password')}}: <b>{{password}}</b>
           <button class="btn btn-default btn-sm" @click="dialog()">
-            Отправить на почту
+            {{$t('send')}}
           </button>
         </div>
       </transition>
@@ -74,8 +100,7 @@ export default {
     <ConfirmDialog v-if="confirmSend" yesText="Отправить"
      @confirm="send()" @close="confirmSend = false">
       <div class="modal-dialog__section">
-       Логин и пароль будут отправлены на этот адрес.
-       Подсказака с логином будет убрана.
+       {{$t('confirm')}}
       </div>
       <div class="modal-dialog__section">
         <div class="form-inline">
@@ -83,10 +108,10 @@ export default {
            type="email"
            name="email"
            v-model="email"
-           placeholder="Ваш емайл адрес">
+           :placeholder="$t('email')">
         </div>
       </div>
-      <div class="modal-dialog__section" v-html="hint"></div>
+      <div class="modal-dialog__section" v-html="$t('hint')"></div>
 
       <span slot="yesIcon" class="glyphicon glyphicon-ok"></span>
     </ConfirmDialog>

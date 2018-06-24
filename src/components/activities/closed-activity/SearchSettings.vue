@@ -132,14 +132,47 @@ export default {
 };
 </script>
 
+<i18n>
+{
+  "ru": {
+    "settings": "Настроить поиск",
+    "myCity": "Мой город",
+    "change": "Изменить",
+    "anyCity": "Искать в любом городе",
+    "anyHint": "Мы находим для вас подходящие анкеты в вашем городе. Если вы хотите искать по всем городам, отметьте эту настройку.",
+    "virt": "Виртуальный секс",
+    "virtHint": "Наш сайт для реальных знакомств. Отметьте опцию, если хотите попробовать виртуальный секс. Предлагать вирт всем подряд запрещено.",
+    "age": "Возраст",
+    "up": "От",
+    "to": "До",
+    "hetero": "Парни находят девушек",
+    "more": "Больше возможностей"
+  },
+  "en": {
+    "settings": "Customize search",
+    "myCity": "My city",
+    "change": "Change",
+    "anyCity": "Search in any city",
+    "anyHint": "We find suitable profiles for you in your city. If you want to search in all cities, check this box.",
+    "virt": "Virtual sex",
+    "virtHint": "Our site for real dating. Check the box if you want to try virtual sex. It is forbidden to offer Wirth all to one.",
+    "age": "Age",
+    "up": "Up",
+    "to": "To",
+    "hetero": "Guys find girls",
+    "more": "More possibilities"
+  }
+}
+</i18n>
+
 <template>
   <ActivityActions type="closed" @close="close">
-    <span slot="caption">Настроить поиск</span>
+    <span slot="caption">{{$t('settings')}}</span>
     <div class="activity-section">
-      <div class="activity-section__title">Мой город:</div>
+      <div class="activity-section__title">{{$t('myCity')}}:</div>
       <div class="form-inline" @click="$router.push({path: 'account', query: {back: 'search'}})">
         <input class="form-control" type="text" :value.trim="city" disabled>
-        <button class="btn btn-default"> Изменить </button>
+        <button class="btn btn-default"> {{$t('change')}} </button>
       </div>
     </div>
 
@@ -147,39 +180,40 @@ export default {
     <div class="activity-section">
       <div>
         <label>
-          <input type="checkbox" v-model="checkedAny" @change="tooltipAnyForce()">
-          Искать в любом городе
+          <input type="checkbox" v-model="checkedAny"
+           @change="tooltipAnyForce()">
+          {{$t('anyCity')}}
         </label>
-        <Tooltip :force="tooltip.any" @close="tooltip.any = false">
-          Мы находим для вас подходящие анкеты в вашем городе.
-          Если вы хотите искать по всем городам, отметьте эту настройку.
+        <Tooltip :force="tooltip.any"
+         @close="tooltip.any = false">
+          {{$t('anyHint')}}
         </Tooltip>
       </div>
       <div>
         <label>
-          <input type="checkbox" v-model="checkedVirt" @change="tooltipVirtForce()">
-          Виртуальный секс
+          <input type="checkbox" v-model="checkedVirt"
+           @change="tooltipVirtForce()">
+          {{$t('virt')}}
         </label>
-        <Tooltip :force="tooltip.virt" @close="tooltip.virt = false">
-          Наш сайт для реальных знакомств. Отметьте опцию,
-          если хотите попробовать виртуальный секс.
-          Предлагать вирт всем подряд запрещено.
+        <Tooltip :force="tooltip.virt"
+         @close="tooltip.virt = false">
+          {{$t('virtHint')}}
         </Tooltip>
       </div>
     </div>
 
     <div class="activity-section">
-      <div class="activity-section__title">Возраст:</div>
+      <div class="activity-section__title">{{$t('age')}}:</div>
       <div class="form-inline">
         <div class="input-group">
-          <div class="input-group-addon">От</div>
+          <div class="input-group-addon">{{$t('up')}}</div>
           <select class="form-control" v-model.number="selectUp">
             <option v-for="(item, index) in ageRange" :value="item" >{{item ? item : ''}}</option>
           </select>
         </div> &nbsp; - &nbsp;
 
         <div class="input-group">
-          <div class="input-group-addon">До</div>
+          <div class="input-group-addon">{{$t('to')}}</div>
           <select class="form-control" v-model.number="selectTo">
             <option v-for="(item, index) in ageRange" :value="item" >{{item ? item : ''}}</option>
           </select>
@@ -189,13 +223,15 @@ export default {
 
     <div class="activity-section">
       <div class="activity-section__tile">
-        <span class="activity-section__link" @click="$router.push('/help/heterosexual')">
-          Парни находят девушек
+        <span class="activity-section__link"
+         @click="$router.push('/help/heterosexual')">
+          {{$t('hetero')}}
         </span>
       </div>
       <div class="activity-section__tile">
-        <span class="activity-section__link" @click="$router.push('/help/how-it-works')">
-          Больше возможностей
+        <span class="activity-section__link"
+         @click="$router.push('/help/how-it-works')">
+          {{$t('more')}}
         </span>
       </div>
     </div>

@@ -43,6 +43,16 @@ Vue.use(VueI18n);
 const i18n = new VueI18n({
   locale: 'ru', // set locale
   fallbackLocale: 'ru',
+  messages: {
+    ru: {
+      almostDone: 'Почти готово',
+      preloader: 'Поиск анкет, всегда бесплатно',
+    },
+    en: {
+      almostDone: 'Almost done',
+      preloader: 'Search for profiles, always free',
+    },
+  },
 });
 
 const App = new Vue({
@@ -62,6 +72,7 @@ const App = new Vue({
     if (this.humanId) {
       this.$store.dispatch('human/load', this.humanId);
     }
+    this.updateLocale();
   },
   computed: {
     simple() {
@@ -109,6 +120,12 @@ const App = new Vue({
     redirectHome() {
       console.log('Hard reload mail page to home');
       window.location = '/';
+    },
+    updateLocale() {
+      if (!this.$store.state.locale) {
+        this.$store.commit('lang', this.$i18n.fallbackLocale);
+      }
+      this.$i18n.locale = this.$store.state.locale;
     },
     goBack() {
       if (window.history.length > 1) {

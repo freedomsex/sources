@@ -55,9 +55,8 @@ const store = new Vuex.Store({
   },
   mutations: {
     load(state) {
-      const mute = lscache.get('app.mute');
-      console.log({mute});
-      _.assign(state, {mute});
+      state.mute = lscache.get('app.mute');
+      state.locale = lscache.get('app.locale');
     },
     setApiToken(state, data) {
       if (data) {
@@ -75,6 +74,10 @@ const store = new Vuex.Store({
     mute(state) {
       state.mute = state.mute !== true;
       lscache.set('app.mute', state.mute);
+    },
+    lang(state, lang) {
+      state.locale = lang;
+      lscache.set('app.locale', lang);
     },
     grecaptchaTokenUpdate(state, token) {
       if (token) {

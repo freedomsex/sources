@@ -14,22 +14,22 @@ export default {
       if (up && to) {
         range = `${up} - ${to}`;
       } else if (up && !to) {
-        range = ` от ${up}`;
+        range = ` ${this.$t('up')} ${up}`;
       } else if (!up && to) {
-        range = ` до ${to}`;
+        range = ` ${this.$t('to')} ${to}`;
       }
-      return range ? ` в возрасте ${range} лет ` : '';
+      return range ? this.$t('ageRange', range) : '';
     },
     who(state) {
       const {sex} = state.user;
-      let who = ' знакомства с кем угодно ';
+      let who = this.$t('anyBody');
       if (sex) {
-        who = sex == 2 ? ' знакомства с парнем ' : ' знакомства с девушкой ';
+        who = sex == 2 ? this.$t('guy') : this.$t('girl');
       }
       return who;
     },
     say(state) {
-      const where = state.user.city ? '' : ', из любого города ';
+      const where = state.user.city ? '' : this.$t('anyCity');
       return this.who + this.range + where;
     },
     desires() {
@@ -40,6 +40,53 @@ export default {
   mounted() {},
 };
 </script>
+
+<i18n>
+{
+  "ru": {
+    "search": "Вы ищете",
+    "settings": "Настроить поиск",
+    "desires": "Желания",
+    "anyBody": " знакомства с кем угодно ",
+    "ageRange": " в возрасте {range} лет ",
+    "up": "от",
+    "to": "до",
+    "guy": " знакомства с парнем ",
+    "girl": " знакомства с девушкой ",
+    "anyCity": ", из любого города "
+  },
+  "en": {
+    "search": "Your search",
+    "settings": "Customize search",
+    "desires": "Desires",
+    "anyBody": " dating anyone ",
+    "ageRange": " at the age of {range} years ",
+    "up": "up",
+    "to": "to",
+    "guy": " dating with a guy ",
+    "girl": " dating with a girl ",
+    "anyCity": ", from any city "
+  }
+}
+</i18n>
+
+<template>
+  <nav id="search-wizard">
+    <div @click="$router.push('/settings/search')" style="display: none;" v-show="say">
+      <i class="material-icons">&#xE8B4;</i>
+      {{$t('search')}}: {{say}} &nbsp;
+      <div class="clearfix visible-xs"></div>
+      <button class="btn btn-primary btn-sm">
+        <span aria-hidden="true" class="glyphicon glyphicon-cog"></span>
+        {{$t('settings')}}
+      </button>
+      <button class="btn btn-default btn-sm" @click.stop="$router.push('/settings/desires')">
+        <span aria-hidden="true" class="glyphicon glyphicon-flash"></span>
+        {{$t('desires')}} ({{desires}})
+      </button>
+    </div>
+  </nav>
+</template>
 
 <style lang="less">
 #search-wizard {

@@ -1,13 +1,17 @@
   <div class="container content">
     <aside class="row">
       <auth-board v-if="promt"></auth-board>
-      ${require('~templates/search-wizard.htm')}
+      <search-wizard>
+        <div v-html="$t('almostDone')">
+          Почти готово...
+        </div>
+      </search-wizard>
     </aside>
     <div class="row">
       <nav class="preloader" v-show="!ready">
         <!-- <div class="preloader__img"></div> -->
         ${require('~templates/preloader-raw-svg.htm')}
-        <div class="preloader__hint">
+        <div class="preloader__hint" v-html="$t('preloader')">
           Поиск анкет, всегда бесплатно
         </div>
       </nav>

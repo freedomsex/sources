@@ -116,6 +116,31 @@ export default {
 };
 </script>
 
+<i18n>
+{
+  "ru": {
+    "search": "Поиск",
+    "messages": "Общение",
+    "liking": "Знакомства",
+    "begin": {
+      "more": "Получить логин и пароль прямо сейчас",
+      "less": "Получить логин сейчас"
+    },
+    "login": "Войти"
+  },
+  "en": {
+    "search": "Search",
+    "messages": "Messages",
+    "liking": "Liking",
+    "begin": {
+      "more": "Get your login and password right now",
+      "less": "Get your login now"
+    },
+    "login": "Sign in"
+  }
+}
+</i18n>
+
 <template>
   <nav id="menu-user" class="navbar navbar-inverse navbar-fixed-top">
     <div class="menu-user">
@@ -126,26 +151,26 @@ export default {
         <div class="menu-user__navbar" v-show="authorized">
           <div class="navbar-button" @click="search()">
             <i class="material-icons">&#xE8B6;</i>
-            <span class="navbar-button__title button-search">Поиск</span>
+            <span class="navbar-button__title button-search">{{$t('search')}}</span>
           </div>
           <div class="navbar-button" @click="intimate()">
             <i class="material-icons">&#xE0BE;</i>
-            <span class="navbar-button__title button-messages">Общение</span>
+            <span class="navbar-button__title button-messages">{{$t('messages')}}</span>
             <span class="menu-user__status" :class="{ active: newMessage }"></span>
           </div>
           <div class="navbar-button" @click="initial()">
             <i class="material-icons">&#xE87E;</i>
-            <span class="navbar-button__title button-contacts">Знакомства</span>
+            <span class="navbar-button__title button-contacts">{{$t('liking')}}</span>
             <span class="menu-user__status" :class="{ active: newContact }"></span>
           </div>
         </div>
         <div class="menu-user__getlogin" v-show="!authorized" style="display: none;">
           <div class="navbar-button" @click="$router.push('/confirm-sex/register')">
             <div class="hidden-xs">
-              Получить логин и пароль прямо сейчас
+              {{$t('begin.more')}}
             </div>
             <div class="visible-xs-inline">
-              Получить логин сейчас
+              {{$t('begin.less')}}
             </div>
           </div>
         </div>
@@ -159,7 +184,7 @@ export default {
         <div class="menu-user__login"
          @click="$router.push('/login')"
          v-show="!authorized">
-          Войти
+          {{$t('login')}}
         </div>
       </div>
     </div>
