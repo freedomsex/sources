@@ -5,11 +5,12 @@
   </div>
 
   <div class="account-section">
-    <a class="btn btn-xs btn-link" href="/">Быстрые знакомства</a><br>
-    <a class="btn btn-xs btn-link" :href="'/' + human.city">Секс знакомства {{human.city}}</a><br>
+    <a class="btn btn-xs btn-link" href="/">Секс знакомства</a><br>
+    <a class="btn btn-xs btn-link" href="/%%CITY%%">Секс знакомства %%CITY%%</a><br>
     <a class="btn btn-xs btn-link" href="/Девушки">Девушки для секса</a><br>
-    <a class="btn btn-xs btn-link" :href="'/' + human.city + '/Девушки'">Девушки {{human.city}}</a><br>
+    <a class="btn btn-xs btn-link" href="/%%CITY%%/Девушки">Девушки %%CITY%%</a><br>
     <a class="btn btn-xs btn-link" href="/Парни">Парни для секса</a><br>
+    <a class="btn btn-xs btn-link" href="/%%CITY%%/Парни">Парни %%CITY%%</a><br>
 
     <span class="btn btn-xs btn-link" @click="$router.push('/settings/envelop')">Написать разработчикам</span><br>
     <span class="btn btn-xs btn-link" @click="$router.push('/content/rules/ru')">Правила сайта</span><br>

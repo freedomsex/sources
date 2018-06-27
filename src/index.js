@@ -23,6 +23,7 @@ import Toast from '~widgets/Toast';
 
 import CityWidget from '~widgets/CityWidget';
 import RegistrationPromo from '~widgets/RegistrationPromo';
+import Language from '~widgets/Language';
 
 import 'styles/core/body.less';
 
@@ -141,6 +142,7 @@ const App = new Vue({
   i18n,
   components: {
     MenuUser,
+    Language,
     AccountComponent,
     InfoWidget,
     AuthBoard,

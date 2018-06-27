@@ -37,7 +37,7 @@ export default {
     clear() {
       this.items = [];
     },
-    suggest: _.debounce(function () {
+    suggest: _.debounce(function f() {
       this.init = false;
       this.load();
     }, 500),
@@ -63,12 +63,12 @@ export default {
     saved(tag) {
       return this.tags && !!_.findWhere(this.tags, {tag});
     },
-    fallback() {
+    fallback: _.debounce(function f() {
       // Если не работают подсказки и нельзя выбрать
-      if (!this.cities || !this.suggested) {
+      if (this.query && (!this.cities || !this.suggested)) {
         this.$emit('select', this.query);
       }
-    },
+    }, 400),
   },
 };
 </script>

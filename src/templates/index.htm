@@ -12,6 +12,7 @@ ${require('./head.htm')}
       <div class="container content split-bottom" v-show="!simple">
         <div class="row" style="position: relative;">
           <!-- HERO_INFO -->
+          ${require('~templates/head-settings.htm')}
           ${require('~templates/ad-button.htm')}
         </div>
       </div>
@@ -23,7 +24,9 @@ ${require('./head.htm')}
     </article>
 
     <section>
-      <city-widget v-if="!$store.state.user.city"></city-widget>
+      <city-widget v-if="!$store.state.user.city">
+        ${require('~templates/cities-stub.htm')}
+      </city-widget>
     </section>
 
     <footer>

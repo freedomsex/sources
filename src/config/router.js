@@ -200,6 +200,10 @@ const routes = [
   // meta: {back: '/search'}, component: QuickMessage, props: true },
   //     ]
   // },
+  {
+    path: '/languages',
+    component: () => import('~default-activity/LaguagesActivity'),
+  },
 ];
 
 const router = new VueRouter({

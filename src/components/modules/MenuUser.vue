@@ -116,31 +116,6 @@ export default {
 };
 </script>
 
-<i18n>
-{
-  "ru": {
-    "search": "Поиск",
-    "messages": "Общение",
-    "liking": "Знакомства",
-    "begin": {
-      "more": "Получить логин и пароль прямо сейчас",
-      "less": "Получить логин сейчас"
-    },
-    "login": "Войти"
-  },
-  "en": {
-    "search": "Search",
-    "messages": "Messages",
-    "liking": "Liking",
-    "begin": {
-      "more": "Get your login and password right now",
-      "less": "Get your login now"
-    },
-    "login": "Sign in"
-  }
-}
-</i18n>
-
 <template>
   <nav id="menu-user" class="navbar navbar-inverse navbar-fixed-top">
     <div class="menu-user">
@@ -151,16 +126,19 @@ export default {
         <div class="menu-user__navbar" v-show="authorized">
           <div class="navbar-button" @click="search()">
             <i class="material-icons">&#xE8B6;</i>
-            <span class="navbar-button__title button-search">{{$t('search')}}</span>
+            <span class="navbar-button__title button-search"
+              >{{$t('Поиск')}}</span>
           </div>
           <div class="navbar-button" @click="intimate()">
             <i class="material-icons">&#xE0BE;</i>
-            <span class="navbar-button__title button-messages">{{$t('messages')}}</span>
+            <span class="navbar-button__title button-messages"
+              >{{$t('Общение')}}</span>
             <span class="menu-user__status" :class="{ active: newMessage }"></span>
           </div>
           <div class="navbar-button" @click="initial()">
             <i class="material-icons">&#xE87E;</i>
-            <span class="navbar-button__title button-contacts">{{$t('liking')}}</span>
+            <span class="navbar-button__title button-contacts"
+              >{{$t('Знакомства')}}</span>
             <span class="menu-user__status" :class="{ active: newContact }"></span>
           </div>
         </div>
@@ -190,6 +168,47 @@ export default {
     </div>
   </nav>
 </template>
+
+<i18n>
+{
+  "ru": {
+    "begin": {
+      "more": "Получить логин и пароль прямо сейчас",
+      "less": "Получить логин сейчас"
+    }
+  },
+  "en": {
+    "Войти": "Sign in",
+    "Поиск": "Search",
+    "Общение": "Messages",
+    "Знакомства": "Dating",
+    "begin": {
+      "more": "Get your login and password right now",
+      "less": "Get your login now"
+    }
+  },
+  "kz": {
+    "Войти": "Кіру",
+    "Поиск": "Іздеу",
+    "Общение": "Байланыс",
+    "Знакомства": "Танысу",
+    "begin": {
+      "more": "Енді сіздің логиніңізді және құпия сөзіңізді алыңыз",
+      "less": "Енді сіздің логиніңізді алыңыз"
+    }
+  },
+  "ua": {
+    "Войти": "Увійти",
+    "Поиск": "Пошук",
+    "Общение": "Спілкування",
+    "Знакомства": "Знайомства",
+    "begin": {
+      "more": "Отримати логін і пароль прямо зараз",
+      "less": "Отримати логін зараз"
+    }
+  }
+}
+</i18n>
 
 <style lang="less">
 .navbar-fixed-top {

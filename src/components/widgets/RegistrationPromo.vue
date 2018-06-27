@@ -9,12 +9,29 @@ export default {
 };
 </script>
 
+<i18n>
+{
+  "en": {
+    "Начать": "Start now",
+    "В один клик, без регистрации": "In one click, without registration"
+  },
+  "ua": {
+    "Начать": "Start now",
+    "В один клик, без регистрации": "В один клік, без реєстрації"
+  },
+  "kz": {
+    "Начать": "Бастау",
+    "В один клик, без регистрации": "Бір рет басып, тіркеусіз"
+  }
+}
+</i18n>
+
 <template>
   <div class="registration-promo"
    @click="$router.push('/confirm-sex/search')">
-    <button class="btn btn-primary">  Начать  </button>
+    <button class="btn btn-primary"> {{$t('Начать')}} </button>
     <span class="registration-promo__tagline">
-      В один клик, без регистрации
+      {{$t('В один клик, без регистрации')}}
     </span>
   </div>
 </template>

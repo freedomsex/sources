@@ -8,9 +8,6 @@ export default {
     muted() {
       return this.$store.state.mute;
     },
-    lang() {
-      return this.$store.state.locale;
-    },
   },
   methods: {
     toggle() {
@@ -21,14 +18,6 @@ export default {
     },
     mute() {
       this.$store.commit('mute');
-    },
-    switchLang() {
-      if (this.lang == 'ru') {
-        this.$store.commit('lang', 'en');
-      } else {
-        this.$store.commit('lang', 'ru');
-      }
-      this.$root.updateLocale();
     },
   },
 };
@@ -41,16 +30,14 @@ export default {
     "notifications": "Уведомлений нет",
     "sound": "Звук",
     "on": "включен",
-    "off": "отключен",
-    "lang": "Язык"
+    "off": "отключен"
   },
   "en": {
     "refresh": "Refresh",
     "notifications": "No notifications",
     "sound": "Sound",
     "on": "on",
-    "off": "off",
-    "lang": "Language"
+    "off": "off"
   }
 }
 </i18n>
@@ -74,10 +61,6 @@ export default {
          :class="!muted ? 'glyphicon-volume-up' : 'glyphicon-volume-off'"
          class="glyphicon"></span>
         <span>{{$t('sound')}} {{!muted ? $t('on') : $t('off')}}</span>
-      </div>
-      <div class="app-settings__menu-item" @click="switchLang">
-        <span aria-hidden="true" class="glyphicon glyphicon-globe"></span>
-        <span>{{$t('lang')}}</span>: {{lang}}
       </div>
     </div>
   </div>

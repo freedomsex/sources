@@ -18,7 +18,7 @@ export default {
       } else if (!up && to) {
         range = ` ${this.$t('to')} ${to}`;
       }
-      return range ? this.$t('ageRange', range) : '';
+      return range ? this.$t('ageRange', {range}) : '';
     },
     who(state) {
       const {sex} = state.user;
@@ -71,8 +71,9 @@ export default {
 </i18n>
 
 <template>
-  <nav id="search-wizard">
-    <div @click="$router.push('/settings/search')" style="display: none;" v-show="say">
+  <nav class="search-wizard">
+    <div @click="$router.push('/settings/search')"
+      style="display: none;" v-show="say">
       <i class="material-icons">&#xE8B4;</i>
       {{$t('search')}}: {{say}} &nbsp;
       <div class="clearfix visible-xs"></div>
@@ -89,19 +90,19 @@ export default {
 </template>
 
 <style lang="less">
-#search-wizard {
+.search-wizard {
   padding: @indent-sm @indent-md;
   text-align: center;
   margin-top: 0px;
+  color: @dark-light;
+  min-height: 30px;
+  border-bottom: 2px solid @gray-light;
+
   .material-icons {
     vertical-align: middle;
     position: relative;
     top: -3px;
   }
-  color: @dark-light;
-  min-height: 30px;
-  border-bottom: 2px solid @gray-light;
-
   .clearfix {
     margin-bottom: @indent-xs;
   }
