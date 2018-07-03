@@ -48,6 +48,7 @@ export default {
       return this.active == value ? 'btn-primary' : 'btn-default';
     },
     select(text) {
+      this.$store.commit('message/saveFirst', text);
       this.$emit('select', text);
       this.$emit('close');
     },

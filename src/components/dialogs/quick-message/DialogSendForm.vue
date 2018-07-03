@@ -21,6 +21,9 @@ export default {
       ignores: {},
     };
   },
+  mounted() {
+    this.setText(this.$store.state.message.first);
+  },
   computed: {
     user() {
       return this.$store.state.user;
@@ -47,6 +50,7 @@ export default {
         this.problem('spam');
       } else {
         this.$emit('sendMessage', this.message);
+        this.$store.commit('message/saveFirst', this.message);
       }
     },
     problem(type) {
@@ -84,7 +88,7 @@ export default {
            @keyup.ctrl.enter.prevent="proxy()"></textarea>
         </div>
         <div class="dialog-form__button-paste"
-         @click="modals.cliche = true" v-if="!reply">
+         @click="$router.push('/cliche')" v-if="!reply">
           <i class="material-icons">&#xE02F;</i>
         </div>
       </div>
@@ -101,7 +105,7 @@ export default {
       </button>
 
       <button class="btn btn-default"
-       @click="modals.notepad = true">
+       @click="$router.push('/notepad')">
         <i class="material-icons">&#xE14F;</i>
         Блокнот
       </button>
@@ -116,13 +120,13 @@ export default {
 
     <LoadingCover :show="process"/>
 
-    <Notepad v-if="modals.notepad"
+    <!-- <Notepad v-if="modals.notepad"
       @select="setText"
       @cliche="modals.cliche = true"
-      @close="modals.notepad = false"/>
-    <MessagesCliche v-if="modals.cliche"
+      @close="modals.notepad = false"/> -->
+    <!-- <MessagesCliche v-if="modals.cliche"
       @select="setText"
-      @close="modals.cliche = false"/>
+      @close="modals.cliche = false"/> -->
 
     <HornMessageProblem
      :human="human"

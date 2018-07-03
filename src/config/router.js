@@ -241,6 +241,11 @@ const settingsRouter = new VueRouter({
       component: () => import('~default-activity/Notepad'),
       props: true,
     },
+    {
+      path: '(.*)?/cliche',
+      component: () => import('~default-activity/MessagesCliche'),
+      props: true,
+    },
     // { path: '(.*)?/uploads', component: PhotoSettings },
     // { path: '(.*)?/preview', name: 'preview', component: PhotoViewer, props: true },
 

@@ -14,13 +14,11 @@ export default {
   },
   methods: {
     cliche() {
-      this.$emit('cliche');
+      this.$router.push('/cliche');
       this.$emit('close');
     },
     select(text) {
-      // this.$store.dispatch('notes/ITEM', id).then((item) => {
-      // })
-      // this.$store.dispatch('notes/UPDATE', {id, count: item.count});
+      this.$store.commit('message/saveFirst', text);
       this.$emit('select', text);
       this.$emit('close');
     },

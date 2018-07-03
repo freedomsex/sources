@@ -18,6 +18,7 @@ import visited from './visited';
 import accepts from './accepts';
 import modals from './modals';
 import notes from './notes';
+import message from './message';
 
 Vue.use(Vuex);
 
@@ -35,6 +36,7 @@ const store = new Vuex.Store({
     accepts,
     modals,
     notes,
+    message,
   },
   state: {
     ready: false,
