@@ -1,3 +1,114 @@
+<i18n>
+{
+  "ru": {
+    "dialogs": {
+      "search": {
+        "caption": "Легко начать",
+        "text": "Для правильного отображения результатов поиска необходимо указать пол. Вы парень или девушка?"
+      },
+      "contacts": {
+        "caption": "Вы девушка?",
+        "text": "Начало быстрого общения в один клик. Хотите получать сообщения и новые знакомства? Достаточно подтвердить, парень вы или девушка."
+      },
+      "message": {
+        "caption": "Общение в один клик",
+        "text": "Начать общение просто. Хотите получать сообщения и новые знакомства? Достаточно подтвердить, парень вы или девушка."
+
+      },
+      "account": {
+        "caption": "Кто вы?",
+        "text": "Приватная анкета в один клик. Самое быстрое общение. Достаточно указать кто вы, парень или девушка. И начинайте общаться."
+      },
+      "register": {
+        "caption": "Очень легко!",
+        "text": "Самое быстрое общение. Приватная анкета в один клик. Достаточно указать, парень вы или девушка. И начинайте общаться."
+      }
+    }
+  },
+  "en": {
+    "Девушка": "Girl",
+    "Парень": "Guy",
+    "Уже есть анкета?": "Already have a profile?",
+    "dialogs": {
+      "search": {
+        "caption": "It's easy to start",
+        "text": "To correctly display the search results, you must specify the gender. Are you a guy or a girl?"
+      },
+      "contacts": {
+        "caption": "You're a girl?",
+        "text": "Start a quick communication in one click. Do you want to receive messages and new acquaintances? It's enough to confirm whether you are a guy or a girl."
+      },
+      "message": {
+        "caption": "Communication in one click",
+        "text": "It's easy to start a conversation. Do you want to receive messages and new acquaintances? It's enough to confirm whether you are a guy or a girl."
+      },
+      "account": {
+        "caption": "Who you are?",
+        "text": "Private profile in one click. The fastest communication. It is enough to indicate who you are, a guy or a girl. And start to communicate."
+      },
+      "register": {
+        "caption": "Very easy!",
+        "text": "The fastest communication. Private profile in one click. It is enough to indicate whether you are a boy or a girl. And start to communicate."
+      }
+    }
+  },
+  "kz": {
+    "Девушка": "Қыз",
+    "Парень": "Жігіт",
+    "Уже есть анкета?": "Сізде профиль бар ма?",
+    "dialogs": {
+      "search": {
+        "caption": "Бастау оңай",
+        "text": "Іздеу нәтижелерін дұрыс көрсету үшін жынысты көрсету керек. Сіз жігіт немесе қыз болдыңыз ба?"
+      },
+      "contacts": {
+        "caption": "Сіз қыз боласыз ба?",
+        "text": "Бір рет нұқыңыз жылдам байланыс. Хабарламалар мен жаңа таныстыруды алғыңыз келе ме? Бұл жігіттің немесе қыздың екендігін растау жеткілікті."
+      },
+      "message": {
+        "caption": "Бір рет басу",
+        "text": "Әңгімелесу оңай. Хабарламалар мен жаңа таныстыруды алғыңыз келе ме? Бұл жігіттің немесе қыздың екендігін растау жеткілікті."
+      },
+      "account": {
+        "caption": "Сіз кімсіз?",
+        "text": "Жеке профиль бір рет басу. Ең жылдам байланыс. Сіз кім екеніңізді көрсетуіңіз жеткілікті, жігіт немесе қыз. Және қарым-қатынас бастаңыз."
+      },
+      "register": {
+        "caption": "Өте жеңіл!",
+        "text": "Ең жылдам байланыс. Жеке профиль бір рет басу. Сіз балаңыз немесе қызыңыз бар ма екенін көрсету жеткілікті. Және қарым-қатынас бастаңыз."
+      }
+    }
+  },
+  "ua": {
+    "Девушка": "Дівчина",
+    "Парень": "Хлопець",
+    "Уже есть анкета?": "Вже є анкета?",
+    "dialogs": {
+      "search": {
+        "caption": "Легко почати",
+        "text": "Для правильного відображення результатів пошуку необхідно вказати стать. Ви хлопець чи дівчина?"
+      },
+      "contacts": {
+        "caption": "Ви дівчина?",
+        "text": "Початок швидкого спілкування в один клік. Хочете отримувати повідомлення і нові знайомства? Досить підтвердити, хлопець ви або дівчина."
+      },
+      "message": {
+        "caption": "Спілкування в один клік",
+        "text": "Почати спілкування просто. Хочете отримувати повідомлення і нові знайомства? Досить підтвердити, хлопець ви або дівчина."
+      },
+      "account": {
+        "caption": "Хто ви?",
+        "text": "Приватна анкета в один клік. Найшвидше спілкування. Досить вказати хто ви, хлопець або дівчина. І починайте спілкуватися."
+      },
+      "register": {
+        "caption": "Дуже легко!",
+        "text": "Найшвидше спілкування. Приватна анкета в один клік. Досить вказати, хлопець ви або дівчина. І починайте спілкуватися."
+      }
+    }
+  }
+}
+</i18n>
+
 <script>
 import ModalDialog from '~dialogs/ModalDialog';
 import Recaptcha from '~modules/Recaptcha';
@@ -10,75 +121,21 @@ export default {
   mixins: [AutoRegistration, Loadable],
   props: ['show'],
   data() {
-    const content = {
-      search: {
-        caption: 'Легко начать',
-        text:
-          'Для правильного отображения результатов поиска необходимо указать пол. Вы парень или девушка?',
-      },
-      contacts: {
-        caption: 'Вы девушка?',
-        text:
-          'Начало быстрого общения в один клик. Хотите получать сообщения и новые знакомства? Достаточно подтвердить, парень вы или девушка.',
-      },
-      message: {
-        caption: 'Общение в один клик',
-        text:
-          'Начать общение просто. Хотите получать сообщения и новые знакомства? Достаточно подтвердить, парень вы или девушка.',
-        // text: 'Все пользователи желают знать с кем будут общаться.
-        // Чтобы продолжить укажите, парень вы или девушка.'
-      },
-      account: {
-        caption: 'Кто вы?',
-        text:
-          'Приватная анкета в один клик. Самое быстрое общение. Достаточно указать кто вы, парень или девушка. И начинайте общаться.',
-      },
-      register: {
-        caption: 'Очень легко!',
-        text:
-          'Самое быстрое общение. Приватная анкета в один клик. Достаточно указать, парень вы или девушка. И начинайте общаться.',
-      },
+    return {
+      sex: null,
     };
-    content.city = content.contacts;
-    return {content, sex: null};
   },
   computed: {
     variant() {
       return this.show ? this.show : 'message';
     },
     caption() {
-      return this.content[this.variant].caption;
+      return this.$t(`dialogs.${this.variant}.caption`);
     },
     text() {
-      return this.content[this.variant].text;
+      return this.$t(`dialogs.${this.variant}.text`);
     },
   },
-  // beforeRouteLeave(to, from, next) {
-  //     if (this.$store.state.user.sex) {
-  //         if (this.index('search')) {
-  //             console.log('leave-search', [this.$store.state.user.sex,
-  // store.state.user.sex, to]);
-  //             next({name: 'search-settings'});
-  //         }
-  //         if (this.index('contacts')) {
-  //             console.log('leave', 'contacts');
-  //             next({name: 'search-settings'});
-  //         }
-  //         if (this.index('account')) {
-  //             console.log('leave', 'account');
-  //             next({name: 'search-settings'});
-  //         }
-  //         if (this.index('message')) {
-  //             console.log('leave', 'message');
-  //             next({name: 'search-settings'});
-  //         }
-  //     }
-  //     console.log('leave', 'close');
-  //     next();
-  // },
-  // mounted() {
-  //     console.log('confirm', this.variant);
-  // },
   methods: {
     close() {
       this.$emit('close');
@@ -147,13 +204,13 @@ export default {
       </div>
       <div class="modal-dialog__centred" style="margin-bottom: 10px;">
         <button class="btn btn-primary btn-fat"
-         @click="verify(2)" :disabled="process">   Девушка   </button>
+         @click="verify(2)" :disabled="process">   {{$t('Девушка')}}   </button>
         <button class="btn btn-primary btn-fat"
-         @click="verify(1)" :disabled="process">   Парень   </button>
+         @click="verify(1)" :disabled="process">   {{$t('Парень')}}   </button>
       </div>
       <div class="modal-dialog__centred">
         <button class="btn btn-link btn-fat"
-         @click="$router.push('/login')">  Уже есть анкета?  </button>
+         @click="$router.push('/login')">  {{$t('Уже есть анкета?')}}  </button>
       </div>
     </div>
 

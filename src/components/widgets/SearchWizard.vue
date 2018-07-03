@@ -44,9 +44,7 @@ export default {
 <i18n>
 {
   "ru": {
-    "search": "Вы ищете",
     "settings": "Настроить поиск",
-    "desires": "Желания",
     "anyBody": " знакомства с кем угодно ",
     "ageRange": " в возрасте {range} лет ",
     "up": "от",
@@ -56,9 +54,9 @@ export default {
     "anyCity": ", из любого города "
   },
   "en": {
-    "search": "Your search",
+    "Вы ищете": "Your search",
     "settings": "Customize search",
-    "desires": "Desires",
+    "Желания": "Desires",
     "anyBody": " dating anyone ",
     "ageRange": " at the age of {range} years ",
     "up": "up",
@@ -66,6 +64,30 @@ export default {
     "guy": " dating with a guy ",
     "girl": " dating with a girl ",
     "anyCity": ", from any city "
+  },
+  "kz": {
+    "Вы ищете": "Сіз іздейсіз",
+    "settings": "Іздеуді теңшеу",
+    "Желания": "Қалаулар",
+    "anyBody": " кез келген адаммен танысу ",
+    "ageRange": " жастағы {range} жыл ",
+    "up": "бастап",
+    "to": "дейін",
+    "guy": " жігітпен танысу ",
+    "girl": " қызбен танысу ",
+    "anyCity": ", кез келген қаладан "
+  },
+  "ua": {
+    "Вы ищете": "Ви шукаєте",
+    "settings": "Налаштувати пошук",
+    "Желания": "Бажання",
+    "anyBody": " знайомства з ким завгодно ",
+    "ageRange": " у віці {range} років ",
+    "up": "від",
+    "to": "до",
+    "guy": " знайомства з хлопцем ",
+    "girl": " знайомства з дівчиною ",
+    "anyCity": ", з будь-якого міста "
   }
 }
 </i18n>
@@ -75,7 +97,7 @@ export default {
     <div @click="$router.push('/settings/search')"
       style="display: none;" v-show="say">
       <i class="material-icons">&#xE8B4;</i>
-      {{$t('search')}}: {{say}} &nbsp;
+      {{$t('Вы ищете')}}: {{say}} &nbsp;
       <div class="clearfix visible-xs"></div>
       <button class="btn btn-primary btn-sm">
         <span aria-hidden="true" class="glyphicon glyphicon-cog"></span>
@@ -83,7 +105,7 @@ export default {
       </button>
       <button class="btn btn-default btn-sm" @click.stop="$router.push('/settings/desires')">
         <span aria-hidden="true" class="glyphicon glyphicon-flash"></span>
-        {{$t('desires')}} ({{desires}})
+        {{$t('Желания')}} ({{desires}})
       </button>
     </div>
   </nav>

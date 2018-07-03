@@ -162,7 +162,7 @@ export default {
         <div class="menu-user__login"
          @click="$router.push('/login')"
          v-show="!authorized">
-          {{$t('login')}}
+          {{$t('Войти')}}
         </div>
       </div>
     </div>

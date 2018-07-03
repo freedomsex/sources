@@ -47,6 +47,7 @@ export default {
     min-width: 200px;
     max-width: 400px;
     max-height: 100%;
+    overflow: auto;
     background: @white;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
     transition: all 0.3s ease;

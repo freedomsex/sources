@@ -31,7 +31,7 @@ export default {
         return;
       }
       this.process = true;
-      this.hint = this.$t('sending');
+      this.hint = this.$t('Отправляю...');
       this.$store.dispatch('auth/SAVE_EMAIL', this.email).then((response) => {
         this.hint = response.data.say;
         this.error = response.data.err;
@@ -64,8 +64,7 @@ export default {
     "send": "Отправить на почту",
     "confirm": "Логин и пароль будут отправлены на этот адрес. Подсказка с логином будет убрана.",
     "email": "Ваш емайл адрес",
-    "hint": "Введите ваш емаил.",
-    "sending": "Отправляю..."
+    "hint": "Введите ваш емаил."
   },
   "en": {
     "important": "Remember or write down your password.",
@@ -75,7 +74,27 @@ export default {
     "confirm": "Login and password will be sent to this address. The login prompt will be removed.",
     "email": "Your email address",
     "hint": "Enter your email address.",
-    "sending": "Sending..."
+    "Отправляю...": "Sending..."
+  },
+  "kz": {
+    "important": "Құпия сөзіңізді есте сақтаңыз немесе жазыңыз.",
+    "login": "Сіздің логиніңіз",
+    "password": "құпия сөз",
+    "send": "Хатқа жіберу",
+    "confirm": "Бұл мекен-жайға логин мен пароль жіберіледі. Кіру сұрауы жойылады.",
+    "email": "Электрондық пошта",
+    "hint": "Электрондық пошта енгізіңіз.",
+    "Отправляю...": "Жіберу..."
+  },
+  "ua": {
+    "important": "Запам'ятайте або запишіть ваш пароль.",
+    "login": "Ваш логін",
+    "password": "пароль",
+    "send": "Надіслати на пошту",
+    "confirm": "Логін і пароль будуть відправлені на цю адресу. Підказка з логіном буде прибрана.",
+    "email": "Ваш емайл адресу",
+    "hint": "Введіть ваш емаил.",
+    "Отправляю...": "Відправляю..."
   }
 }
 </i18n>

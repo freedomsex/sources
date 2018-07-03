@@ -187,15 +187,15 @@ export default {
       <div class="search-list__next" v-show="more">
         <span class="btn btn-default btn-sm"
          @click="loadNext" v-show="more && !loader" :disabled="!response">
-          Следующие
+          {{$t('Следующие')}}
         </span>
         <span class="btn btn-default btn-sm" v-show="loader" disabled>
-          Загружаю...
+          {{$t('Загружаю')}}...
         </span>
 
         <span class="btn btn-link btn-sm"
          @click="$router.push('/help/how-it-works')">
-          Узнать больше...
+          {{$t('Узнать больше')}}...
         </span>
       </div>
     </div>
@@ -212,14 +212,50 @@ export default {
 
     <InfoDialog v-if="accept" @confirm="approve"
      @close="ignore = true">
-       <slot name="title">Поднятие в ТОП Бесплатно!</slot>
-       Онлайн анкеты всегда наверху. Все самые активные пользователи
-       на первой странице. Просто пишите тем, с кем ещё не общались.
-       Отдельный поиск онлайн анкет отсутствует, да он и не нужен.
+       <slot name="title">{{$t('toTop.title')}}</slot>
+       {{$t('toTop.text')}}
     </InfoDialog>
 
   </div>
 </template>
+
+<i18n>
+{
+  "ru": {
+    "toTop": {
+      "title": "Поднятие в ТОП Бесплатно!",
+      "text": "Онлайн анкеты всегда наверху. Все самые активные пользователи на первой странице. Просто пишите тем, с кем ещё не общались. Отдельный поиск онлайн анкет отсутствует, да он и не нужен"
+    }
+  },
+  "en": {
+    "Следующие": "Next",
+    "Загружаю": "Loading",
+    "Узнать больше": "To learn more",
+    "toTop": {
+      "title": "Upgrade to the TOP Free!",
+      "text": "Online profiles are always on top. All the most active users on the first page. Just write to those who have not spoken to anyone yet. A separate search for online profiles is missing, and it is not needed"
+    }
+  },
+  "kz": {
+    "Следующие": "Келесі",
+    "Загружаю": "Жүктеу",
+    "Узнать больше": "Көбірек біліңіз",
+    "toTop": {
+      "title": "ТОП-ке тегін көтеріңіз!",
+      "text": "Онлайн профильдер әрдайым үстінде. Бірінші беттегі ең белсенді пайдаланушылар. Тек әлі ешкімге сөйлемегендерге жазыңыз. Интернеттегі профильдерді бөлек іздестіру жоқ және қажет емес"
+    }
+  },
+  "ua": {
+    "Следующие": "Наступні",
+    "Загружаю": "Завантажую",
+    "Узнать больше": "Дізнатися більше",
+    "toTop": {
+      "title": "Підняття в ТОП Безкоштовно!",
+      "text": "Онлайн анкети завжди нагорі. Все найактивніші користувачі на першій сторінці. Просто пишіть тим, з ким ще не спілкувалися. Окремий пошук онлайн анкет відсутня, та він і не потрібен"
+    }
+  }
+}
+</i18n>
 
 <style lang="less">
 .search-list {

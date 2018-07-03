@@ -40,9 +40,11 @@ store.commit('load');
 
 Vue.use(VueI18n);
 
+const {locale} = global.defaultSettings || 'ru';
+
 // Create VueI18n instance with options
 const i18n = new VueI18n({
-  locale: 'ru', // set locale
+  locale, // set locale
   fallbackLocale: 'ru',
   messages: {
     ru: {
@@ -124,7 +126,7 @@ const App = new Vue({
     },
     updateLocale() {
       if (!this.$store.state.locale) {
-        this.$store.commit('lang', this.$i18n.fallbackLocale);
+        this.$store.commit('lang', this.$i18n.locale);
       }
       this.$i18n.locale = this.$store.state.locale;
     },
