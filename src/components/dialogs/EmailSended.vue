@@ -21,7 +21,7 @@ export default {
           если ваша почта на «Gmail».
         </div>
         <div class="modal-dialog__section">
-          <a href="/блог/восстановление-пароля/"
+          <a href="http://docs.freedomsex.info/blog/#/Как-пользоваться/Настройки?id=Восстановление-пароля"
            target="_blank">Что делать если писимо не пришло &raquo;</a>
         </div>
       </div>

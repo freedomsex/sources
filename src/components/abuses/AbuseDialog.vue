@@ -72,7 +72,7 @@ export default {
       <div class="dialog-caption warning">
         <div class="dialog-caption__title">Опубликовать замечание</div>
         <div class="dialog-caption__option">
-          <a href="/блог/анонимное-замечание-к-анкете/" target="_blank">
+          <a href="http://docs.freedomsex.info/blog/#/Как-пользоваться/?id=Замечания-к-анкетам" target="_blank">
             <i class="material-icons" @click="">&#xE88F;</i>
           </a>
         </div>
@@ -105,7 +105,7 @@ export default {
           <button class="btn btn-warning" @click="send()">
             Отправить
           </button>
-          <a href="/блог/анонимное-замечание-к-анкете/" target="_blank"  class="btn btn-link">
+          <a href="http://docs.freedomsex.info/blog/#/Как-пользоваться/?id=Замечания-к-анкетам" target="_blank"  class="btn btn-link">
             Это анонимно...
           </a>
         </div>

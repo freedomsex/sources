@@ -88,7 +88,7 @@ export default {
            @keyup.ctrl.enter.prevent="proxy()"></textarea>
         </div>
         <div class="dialog-form__button-paste"
-         @click="$router.push('/cliche')" v-if="!reply">
+         @click="modals.cliche = true" v-if="!reply">
           <i class="material-icons">&#xE02F;</i>
         </div>
       </div>
@@ -105,7 +105,7 @@ export default {
       </button>
 
       <button class="btn btn-default"
-       @click="$router.push('/notepad')">
+       @click="modals.notepad = true">
         <i class="material-icons">&#xE14F;</i>
         Блокнот
       </button>
@@ -120,13 +120,13 @@ export default {
 
     <LoadingCover :show="process"/>
 
-    <!-- <Notepad v-if="modals.notepad"
+    <Notepad v-if="modals.notepad"
       @select="setText"
       @cliche="modals.cliche = true"
-      @close="modals.notepad = false"/> -->
-    <!-- <MessagesCliche v-if="modals.cliche"
+      @close="modals.notepad = false"/>
+    <MessagesCliche v-if="modals.cliche"
       @select="setText"
-      @close="modals.cliche = false"/> -->
+      @close="modals.cliche = false"/>
 
     <HornMessageProblem
      :human="human"

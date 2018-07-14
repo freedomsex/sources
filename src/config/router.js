@@ -101,6 +101,11 @@ const routes = [
     props: true,
   },
   {
+    path: '/agreement/:locale?',
+    component: () => import('~default-activity/content/Agreement'),
+    props: true,
+  },
+  {
     path: '/content/careers/:locale?',
     component: () => import('~default-activity/content/CareersPage'),
     props: true,

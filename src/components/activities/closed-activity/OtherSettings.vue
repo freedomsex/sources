@@ -88,7 +88,7 @@ export default {
     <div class="activity-section">
       <div class="activity-section__tile">
         <a class="activity-section__link"
-        href="/блог/удаление-анкет-автоматическое/"
+        href="http://docs.freedomsex.info/blog/#/Как-пользоваться/?id=Удаление-анкеты"
         target="_blank">Удалить аккаунт</a>
       </div>
     </div>

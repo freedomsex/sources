@@ -98,7 +98,7 @@ export default {
         <div class="messages__alert" v-show="alert" @click.self="alert = false">
           Игнорируйте номера телефонов, ссылки и мессенджеры.
           Наказывайте мошенников. Узнайте о том, как избежать обмана.
-          <a href="/блог/как-не-попасть-на-уловки-мошенников/" target="_blank">Подробнее...</a>
+          <a href="http://docs.freedomsex.info/blog/#/Как-пользоваться/Осторожно-мошенники" target="_blank">Подробнее...</a>
         </div>
         <div class="message-dialog__tools">
           <SendForm

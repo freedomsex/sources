@@ -37,7 +37,7 @@ export default {
   <ModalDialog @close="close">
     <div class="captcha-dialog__caption">
       Низкий кредит доверия
-      <a href="/блог/простые-проверки/" target="_blank"
+      <a href="http://docs.freedomsex.info/blog/#/Как-пользоваться/?id=Простая-проверка" target="_blank"
        aria-hidden="true" class="glyphicon glyphicon-info-sign"></a>
     </div>
     <div class="captcha-dialog__body">
