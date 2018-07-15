@@ -193,10 +193,10 @@ export default {
           {{$t('Загружаю')}}...
         </span>
 
-        <span class="btn btn-link btn-sm"
-         @click="$router.push('/help/how-it-works')">
+        <a class="btn btn-link btn-sm" target="_blank"
+         href="http://docs.freedomsex.info/blog/#/Способ-знакомства/">
           {{$t('Узнать больше')}}...
-        </span>
+        </a>
       </div>
     </div>
 
