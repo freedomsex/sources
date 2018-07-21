@@ -67,6 +67,7 @@ const App = new Vue({
       callback: null,
       action: '',
     },
+    scrollbarWidth: 15,
   },
   mounted() {
     this.$store.dispatch('notes/LOAD');
@@ -76,6 +77,8 @@ const App = new Vue({
       this.$store.dispatch('human/load', this.humanId);
     }
     this.updateLocale();
+
+    this.scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
   },
   computed: {
     simple() {

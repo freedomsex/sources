@@ -103,6 +103,12 @@ export default {
   &__splitter {
     height: @indent-sm;
   }
+  &__footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
 }
 
 .activity-mixin() {
@@ -183,7 +189,7 @@ export default {
   background: @light;
   //border: 1px solid @gray-light;
   color: @dark;
-  margin-bottom: 10px;
+  // margin-bottom: 10px;
   padding: 10px 15px;
 }
 

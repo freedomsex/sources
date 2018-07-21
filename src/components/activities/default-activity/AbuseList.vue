@@ -31,6 +31,10 @@ export default {
       }
       return data;
     },
+    add() {
+      this.$emit('add');
+      this.$emit('close');
+    },
   },
   components: {
     ActivityActions,
@@ -42,6 +46,12 @@ export default {
 <template>
   <ActivityActions @close="$emit('close')">
     <span slot="caption">Замечаня к анкете</span>
+    <div class="menu-user__navbar-right" slot="option">
+      <div class="navbar-button" @click="add()">
+        <i class="material-icons">&#xE145;</i>
+        <div class="navbar-button__title accent">Добавить</div>
+      </div>
+    </div>
     <div class="activity-section" v-if="list && list.length">
       <div class="list-view">
         <div class="list-item" v-for="item in list"
@@ -59,6 +69,15 @@ export default {
             </div>
           </div>
         </div>
+      </div>
+    </div>
+    <div class="activity__footer">
+      <div class="hint-info">
+        Замечания к анкете предупреждают о нарушении правил Пользователем,
+        эта анкета может быть удалена в любой момент.
+        <a href="http://docs.freedomsex.info/blog/#/Как-пользоваться/?id=Замечания-к-анкетам" target="_blank">
+          Подробнее...
+        </a>
       </div>
     </div>
 

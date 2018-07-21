@@ -22,10 +22,11 @@ export default {
 
   &__item {
     .link_simple();
+    overflow-wrap: normal;
     &:after {
-      content: '•';
+      content: '• ';
       color: @gray;
-      padding: 0 @indent-xs;
+      padding: 0 2px 0 5px;
       position: relative;
       top: 1px;
     }

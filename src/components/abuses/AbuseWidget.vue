@@ -56,8 +56,9 @@ export default {
     </div>
 
     <AbuseList v-if="show"
+     :list="list"
      @close="show = false"
-     :list="list"/>
+     @add="dialog = true"/>
 
     <AbuseDialog v-if="dialog"
       :humanId="humanId"

@@ -11,17 +11,26 @@ export default {
     // Close the modal when the escape key is pressed.
     // const self = this;
     document.addEventListener('keydown', this.onEsc);
+    document.body.style.overflow = 'hidden';
   },
   beforeDestroy() {
     document.removeEventListener('keydown', this.onEsc);
+  },
+  destroyed() {
+    const exists = document.getElementsByClassName('modal-dialog__mask').length;
+    if (!exists) {
+      document.body.removeAttribute('style');
+    }
   },
 };
 </script>
 
 <template>
-  <div class="modal-dialog__mask" transition="modal" @click="$emit('close')">
-    <div class="modal-dialog__container" @click.stop>
-      <slot></slot>
+  <div class="modal-dialog__mask" transition="modal">
+    <div class="modal-dialog__overlay" @click="$emit('close')">
+      <div class="modal-dialog__container" @click.stop>
+        <slot></slot>
+      </div>
     </div>
   </div>
 </template>
@@ -29,12 +38,18 @@ export default {
 <style lang="less">
 .modal-dialog__mask {
   .fixed-dialog-mask;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  overflow-y: scroll;
 }
 
 .modal-dialog {
+  &__overlay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    min-height: 100%;
+  }
+
   &__wrapper {
     padding: @indent-md;
     text-align: left;
@@ -46,7 +61,7 @@ export default {
   &__container {
     min-width: 200px;
     max-width: 400px;
-    max-height: 100%;
+    // max-height: 100%;
     // overflow: auto;
     background: @white;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
