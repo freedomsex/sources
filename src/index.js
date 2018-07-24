@@ -70,7 +70,6 @@ const App = new Vue({
     scrollbarWidth: 15,
   },
   mounted() {
-    this.$store.dispatch('notes/LOAD');
     const humanId = parseInt(window.location.pathname.split('/')[1], 10);
     this.humanId = humanId || null;
     if (this.humanId) {

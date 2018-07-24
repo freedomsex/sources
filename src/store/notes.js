@@ -7,10 +7,11 @@ export default {
   namespaced: true,
   state: {
     db: null,
+    list: [],
   },
   actions: {
     INIT({state, commit, rootState}) {
-      api.raw.load(null, `static/json/notes/${rootState.locale}.json`).then(({data}) => {
+      return api.raw.load(null, `static/json/notes/${rootState.locale}.json`).then(({data}) => {
         state.db.transaction('rw', state.db.writes, () => {
           _.each(data.reverse(), (element) => {
             commit('add', element);
@@ -21,26 +22,32 @@ export default {
       });
     },
     LOAD({state, dispatch, rootState}) {
-      const {uid} = rootState.user;
-      state.db = new Dexie(`DataBaseFS__${uid}`);
-      state.db.version(1).stores({
-        writes: '++id, &text, count, updated',
-      });
-      state.db.on('ready', () => {
-        state.db.writes.count((count) => {
-          if (!count) {
-            dispatch('INIT');
-          }
+      if (!state.db) {
+        const {uid} = rootState.user;
+        state.db = new Dexie(`DataBaseFS__${uid}`);
+        state.db.version(1).stores({
+          writes: '++id, &text, count, updated',
         });
+      }
+      return state.db.writes.count().then((count) => {
+        if (!count) {
+          dispatch('INIT').then(() => {
+            dispatch('WRITES');
+          });
+        } else {
+          dispatch('WRITES');
+        }
       });
-      state.db.open();
     },
-    WRITES({state}) {
+    WRITES({state, commit}) {
       return state.db.writes
         .orderBy('updated')
         .reverse()
         .limit(100)
-        .sortBy('count');
+        .sortBy('count')
+        .then((data) => {
+          commit('load', data);
+        });
     },
     ITEM({state}, id) {
       return state.db.writes.get(id);
@@ -57,11 +64,18 @@ export default {
         }
       });
     },
+    DELETE({state}, id) {
+      state.db.writes.delete(id);
+    },
   },
   mutations: {
     add(state, text) {
       const updated = hasher.random();
       state.db.writes.add({text, count: 0, updated});
+    },
+    load(state, list) {
+      const sorted = _.sortBy(list, item => item.updated + item.count + item.text);
+      state.list = sorted.reverse();
     },
   },
 };

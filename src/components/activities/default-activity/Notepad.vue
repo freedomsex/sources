@@ -4,15 +4,21 @@ import ActivityActions from '../ActivityActions';
 export default {
   data() {
     return {
-      writes: [],
+      edited: false,
     };
   },
   mounted() {
-    this.$store.dispatch('notes/WRITES').then((data) => {
-      this.writes = data;
-    });
+    this.$store.dispatch('notes/LOAD');
+  },
+  computed: {
+    writes() {
+      return this.$store.state.notes.list;
+    },
   },
   methods: {
+    refresh() {
+      this.$store.dispatch('notes/WRITES');
+    },
     cliche() {
       this.$router.push('/cliche');
       this.$emit('close');
@@ -21,6 +27,10 @@ export default {
       this.$store.commit('message/saveFirst', text);
       this.$emit('select', text);
       this.$emit('close');
+    },
+    remove(id) {
+      this.$store.dispatch('notes/DELETE', id);
+      this.refresh();
     },
   },
   components: {
@@ -34,8 +44,10 @@ export default {
     <span slot="caption">Блокнот</span>
     <div class="menu-user__navbar-right" slot="option">
       <div class="navbar-button" @click="cliche()">
-        <div class="navbar-button__title accent">Шаблоны</div>
         <i class="material-icons">&#xE02F;</i>
+      </div>
+      <div class="navbar-button" @click="edited = (edited !== true)">
+        <i class="material-icons">&#xE254;</i>
       </div>
     </div>
     <div class="activity-section" v-if="writes && writes.length">
@@ -44,6 +56,9 @@ export default {
          @click="select(item.text)">
          <div class="list-item__body notepad-item">
            {{item.text}}
+         </div>
+         <div class="notepad-edit" @click.stop="remove(item.id)" v-show="edited">
+           <i class="material-icons">&#xE14C;</i>
          </div>
        </div>
       </div>
@@ -56,4 +71,15 @@ export default {
   font-style: italic;
   font-size: 14px;
 }
+
+.notepad-edit {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 8px;
+  font-size: 0px;
+  color: @gray-dark;
+  background: @white;
+}
+
 </style>
