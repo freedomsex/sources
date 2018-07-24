@@ -19,10 +19,6 @@ export default {
     refresh() {
       this.$store.dispatch('notes/WRITES');
     },
-    cliche() {
-      this.$router.push('/cliche');
-      this.$emit('close');
-    },
     select(text) {
       this.$store.commit('message/saveFirst', text);
       this.$emit('select', text);
@@ -43,11 +39,9 @@ export default {
   <ActivityActions @close="$emit('close')">
     <span slot="caption">Блокнот</span>
     <div class="menu-user__navbar-right" slot="option">
-      <div class="navbar-button" @click="cliche()">
-        <i class="material-icons">&#xE02F;</i>
-      </div>
       <div class="navbar-button" @click="edited = (edited !== true)">
-        <i class="material-icons">&#xE254;</i>
+        <i class="material-icons" v-if="!edited">&#xE254;</i>
+        <i class="material-icons" v-else>&#xE876;</i>
       </div>
     </div>
     <div class="activity-section" v-if="writes && writes.length">
