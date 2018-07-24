@@ -199,6 +199,7 @@ module.exports = {
     // ]),
     new WebpackCdnPlugin({
       modules: [
+        {name: 'babel-polyfill', path: 'dist/polyfill.min.js'},
         {name: 'vue', var: 'Vue', path: 'dist/vue.js'},
         {name: 'vuex', var: 'Vuex', path: 'dist/vuex.min.js'},
         {name: 'vue-router', var: 'VueRouter', path: 'dist/vue-router.min.js'},

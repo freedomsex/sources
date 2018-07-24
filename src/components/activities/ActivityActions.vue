@@ -1,4 +1,6 @@
 <script>
+import ScrollBodyPrevent from '~modules/ScrollBodyPrevent';
+
 export default {
   props: ['type'],
   beforeRouteLeave(to, from, next) {
@@ -21,6 +23,9 @@ export default {
       }
       return 'default-activity';
     },
+  },
+  components: {
+    ScrollBodyPrevent,
   },
 };
 </script>
@@ -60,6 +65,7 @@ export default {
         </div>
       </div>
     </div>
+    <ScrollBodyPrevent/>
   </div>
 </template>
 

@@ -1,4 +1,6 @@
 <script>
+import ScrollBodyPrevent from '~modules/ScrollBodyPrevent';
+
 export default {
   methods: {
     onEsc(event) {
@@ -11,16 +13,12 @@ export default {
     // Close the modal when the escape key is pressed.
     // const self = this;
     document.addEventListener('keydown', this.onEsc);
-    document.body.style.overflow = 'hidden';
   },
   beforeDestroy() {
     document.removeEventListener('keydown', this.onEsc);
   },
-  destroyed() {
-    const exists = document.getElementsByClassName('modal-dialog__mask').length;
-    if (!exists) {
-      document.body.removeAttribute('style');
-    }
+  components: {
+    ScrollBodyPrevent,
   },
 };
 </script>
@@ -32,13 +30,14 @@ export default {
         <slot></slot>
       </div>
     </div>
+    <ScrollBodyPrevent/>
   </div>
 </template>
 
 <style lang="less">
 .modal-dialog__mask {
   .fixed-dialog-mask;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .modal-dialog {

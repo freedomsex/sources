@@ -133,58 +133,6 @@ export default {
 </template>
 
 <style lang="less">
-
-.dialog-form {
-  position: relative;
-  display: flex;
-  width: 100%;
-  // min-height: 64px;
-  border: 0px solid red;
-  align-items: flex-end;
-  &__textarea {
-    flex: 1 1 auto;
-    border: 0px solid gray;
-    // padding: 7px 0;
-    margin-bottom: @indent-xs;
-    line-height: 1;
-    align-self: center;
-  }
-  &__message-text {
-    height: 0;
-    overflow: auto;
-    min-height: 36px;
-    max-height: 100px;
-    padding: 10px 5px;
-    font-size: 14px;
-    margin: auto;
-    overflow-y: auto;
-    resize: vertical;
-  }
-
-  &__button {
-    &-paste {
-      cursor: pointer;
-      flex: 0 0 auto;
-      color: @dark-light;
-      padding: 0 0 12px 5px;
-    }
-  }
-
-  i {
-    vertical-align: bottom;
-  }
-
-  &__hint {
-    font-size: @font-sm;
-    color: @gray-dark;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    cursor: pointer;
-    // margin-bottom: @indent-xs;
-  }
-}
-
 .human-dialog {
   &__input {
     border-width: 0px;
