@@ -64,6 +64,7 @@ module.exports = {
       "array": false,
       "object": true
     }],
+    "prefer-const": ["warn", {"destructuring": "all"}],
     "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
   },
   globals: {}

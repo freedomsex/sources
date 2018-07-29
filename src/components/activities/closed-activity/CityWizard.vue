@@ -1,5 +1,5 @@
 <script>
-import CitySuggest from '~modules/CitySuggest';
+import SuggestInput from '~modules/SuggestInput';
 import CityDefaultList from '~assets/CityDefaultList';
 import AccountSettings from './AccountSettings';
 import ActivityActions from '../ActivityActions';
@@ -23,7 +23,7 @@ export default {
   },
   components: {
     ActivityActions,
-    CitySuggest,
+    SuggestInput,
   },
 };
 </script>
@@ -33,7 +33,10 @@ export default {
     <span slot="caption">Мой город</span>
     <div class="activity-section">
       <div class="form-inline">
-        <CitySuggest :city="selectCity" @select="select"/>
+        <SuggestInput url="town/suggest"
+         title="Введите название"
+         :default="selectCity"
+         @select="select"/>
       </div>
     </div>
     <div class="activity-section">

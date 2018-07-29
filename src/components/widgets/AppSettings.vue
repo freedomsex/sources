@@ -1,8 +1,12 @@
 <script>
+import ConfirmDialog from '~dialogs/ConfirmDialog';
+
 export default {
   props: [],
   data: () => ({
     open: false,
+    write: false,
+    humanId: null,
   }),
   computed: {
     muted() {
@@ -11,6 +15,7 @@ export default {
   },
   methods: {
     toggle() {
+      console.log('toggle');
       this.open = this.open != true;
     },
     refresh() {
@@ -19,6 +24,16 @@ export default {
     mute() {
       this.$store.commit('mute');
     },
+    search(id) {
+      this.$router.push({
+        name: 'quickWrite',
+        params: {humanId: id},
+      });
+      this.write = false;
+    },
+  },
+  components: {
+    ConfirmDialog,
   },
 };
 </script>
@@ -27,14 +42,12 @@ export default {
 {
   "ru": {
     "refresh": "Обновить",
-    "notifications": "Уведомлений нет",
     "sound": "Звук",
     "on": "включен",
     "off": "отключен"
   },
   "en": {
     "refresh": "Refresh",
-    "notifications": "No notifications",
     "sound": "Sound",
     "on": "on",
     "off": "off"
@@ -52,10 +65,10 @@ export default {
         <span aria-hidden="true" class="glyphicon glyphicon-refresh"></span>
         <span>{{$t('refresh')}}</span>
       </div>
-        <div class="app-settings__menu-item">
-          <span aria-hidden="true" class="glyphicon glyphicon-bell"></span>
-          <span>{{$t('notifications')}}</span>
-        </div>
+      <div class="app-settings__menu-item" @click="write = true">
+        <span aria-hidden="true" class="glyphicon glyphicon-comment"></span>
+        <span>{{$t('Найти контакт')}}</span>
+      </div>
       <div class="app-settings__menu-item" @click="mute">
         <span aria-hidden="true"
          :class="!muted ? 'glyphicon-volume-up' : 'glyphicon-volume-off'"
@@ -63,6 +76,25 @@ export default {
         <span>{{$t('sound')}} {{!muted ? $t('on') : $t('off')}}</span>
       </div>
     </div>
+
+
+    <ConfirmDialog v-if="write" :yesText="$t('Найти')"
+      @confirm="search(humanId)"
+      @close="write = false">
+      <div slot="title">{{$t('Найти контакт')}}</div>
+      <div class="modal-dialog__section">
+        <div class="form-inline">
+          <input class="form-control"
+           type="tel"
+           name="number"
+           v-model="humanId"
+           :placeholder="$t('Номер анкеты')">
+        </div>
+      </div>
+        Можно написать сразу, если вы помните номер анкеты
+        собеседника. Введите номер, чтобы найти анкету.
+    </ConfirmDialog>
+
   </div>
 </template>
 

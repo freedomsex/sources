@@ -63,6 +63,7 @@ export default {
     // max-height: 100%;
     // overflow: auto;
     background: @white;
+    color: @dark;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
     transition: all 0.3s ease;
     border-radius: 4px;

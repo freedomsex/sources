@@ -55,7 +55,6 @@ ${require('./head.htm')}
     <div id="settings">
       <router-view @close="goBack" @warning="snackbar" @alert="toast"></router-view>
 
-      <snackbar v-if="warning" @close="warning = null">{{warning}}</snackbar>
       <toast v-if="alert" @close="alert = null">{{alert}}</toast>
     </div>
     <!-- end of SETTINGS layer -->

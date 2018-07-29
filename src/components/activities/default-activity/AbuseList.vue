@@ -46,12 +46,16 @@ export default {
 <template>
   <ActivityActions @close="$emit('close')">
     <span slot="caption">Замечаня к анкете</span>
-    <div class="menu-user__navbar-right" slot="option">
-      <div class="navbar-button" @click="add()">
+
+    <template slot="option">
+      <div class="menu-button" @click="add()">
         <i class="material-icons">&#xE145;</i>
-        <div class="navbar-button__title accent">Добавить</div>
+        <span class="menu-button__title">
+          Добавить
+        </span>
       </div>
-    </div>
+    </template>
+
     <div class="activity-section" v-if="list && list.length">
       <div class="list-view">
         <div class="list-item" v-for="item in list"

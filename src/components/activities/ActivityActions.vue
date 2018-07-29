@@ -1,4 +1,5 @@
 <script>
+import HeaderBar from '~widgets/HeaderBar';
 import ScrollBodyPrevent from '~modules/ScrollBodyPrevent';
 
 export default {
@@ -25,6 +26,7 @@ export default {
     },
   },
   components: {
+    HeaderBar,
     ScrollBodyPrevent,
   },
 };
@@ -36,30 +38,26 @@ export default {
     <div :class="style"
      @click.self="$emit('close')">
       <div class="activity__wrapper">
-        <nav id="menu-user" class="navbar navbar-inverse">
-          <div class="menu-user">
-            <div class="menu-user__wrapper">
-              <div class="menu-user__logo" v-if="!closed">
-                <span style="padding: 10px 0px;" @click="$emit('close')">
-                  <img src="~static/img/icon/arrow_back.png"
-                   width="30" height="30"
-                   alt="" border="0" >
-                </span>
-              </div>
-              <div class="menu-user__navbar" >
-                <div class="navbar-title" @click="$emit('close')">
-                  <slot name="caption"></slot>
-                </div>
-              </div>
-              <slot name="option"></slot>
-              <div class="menu-user__navbar-right"
-               v-if="closed"
-               @click="$emit('close')">
-                <i class="btn-close material-icons">&#xE14C;</i>
-              </div>
+        <div class="menu-user">
+          <div class="menu-button"
+           @click="$emit('close')">
+            <i v-if="!closed" class="material-icons">&#xE5C4;</i>
+            <span class="menu-button__title">
+              <slot name="caption"></slot>
+            </span>
+          </div>
+
+
+          <div class="menu-user__navbar">
+            <slot name="option"></slot>
+            <div class="menu-button" v-if="closed"
+             @click="$emit('close')">
+              <i class="material-icons">&#xE14C;</i>
             </div>
           </div>
-        </nav>
+
+
+        </div>
         <div class="activity__container">
           <slot></slot>
         </div>

@@ -38,12 +38,14 @@ export default {
 <template>
   <ActivityActions @close="$emit('close')">
     <span slot="caption">Блокнот</span>
-    <div class="menu-user__navbar-right" slot="option">
-      <div class="navbar-button" @click="edited = (edited !== true)">
+
+    <template slot="option">
+      <div class="menu-button" @click="edited = (edited !== true)">
         <i class="material-icons" v-if="!edited">&#xE254;</i>
         <i class="material-icons" v-else>&#xE876;</i>
       </div>
-    </div>
+    </template>
+
     <div class="activity-section" v-if="writes && writes.length">
       <div class="list-view">
         <div class="list-item" v-for="item in writes"

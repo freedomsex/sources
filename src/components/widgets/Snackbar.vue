@@ -2,24 +2,21 @@
 import _ from 'underscore';
 
 export default {
-  props: ['callback', 'action'],
+  props: ['button', 'yesText'],
   computed: {
     muted() {
       return this.$store.state.mute;
     },
     time() {
-      return this.callback ? 5000 : 3000;
+      return this.button ? 5000 : 3000;
     },
     title() {
-      return this.action ? this.action : 'Ok';
+      return this.yesText || 'Ok';
     },
   },
   methods: {
     close() {
       this.$emit('close');
-    },
-    approve() {
-      this.callback();
     },
     autoplay() {
       if (!this.muted) {
@@ -41,8 +38,11 @@ export default {
         <div class="snackbar__message">
           <slot></slot>
         </div>
-        <div class="snackbar__button" v-if="callback">
-          <button class="btn btn-primary btn-sm" @click="approve">{{title}}</button>
+        <div class="snackbar__button" v-if="button">
+          <button class="btn btn-primary btn-sm"
+           @click="$emit('confirm')">
+            {{title}}
+          </button>
         </div>
       </div>
         <audio v-if="!muted" ref="autoplay" preload>

@@ -78,15 +78,14 @@ export default {
     <ActivityActions @close="close">
       <span slot="caption">{{caption}}</span>
 
-      <div class="menu-user__navbar-right" slot="option">
-        <div class="navbar-button">
-          <i class="material-icons" @click="videochat">&#xE04B;</i>
+      <template slot="option">
+        <div class="menu-button" @click="videochat">
+          <i class="material-icons">&#xE04B;</i>
         </div>
-        <div class="navbar-button">
-          <i class="material-icons"
-           @click="$router.push(`${humanId}/incoming`)">&#xE3B6;</i>
+        <div class="menu-button" @click="$router.push(`${humanId}/incoming`)">
+          <i class="material-icons">&#xE3B6;</i>
         </div>
-      </div>
+      </template>
 
       <div class="message-dialog" key="humanId">
         <div id="dialog-history" class="message-dialog__history">

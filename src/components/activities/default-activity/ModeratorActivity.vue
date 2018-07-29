@@ -97,13 +97,14 @@ export default {
   <div>
     <ActivityActions type="wrapped" @close="close">
       <span slot="caption">Защитить</span>
-      <div class="menu-user__navbar-right" slot="option">
-        <div class="navbar-button">
+
+      <template slot="option">
+        <div class="menu-button" @click="add()">
           <a href="security/action" target="_blank">
             <i class="material-icons">&#xE895;</i>
           </a>
         </div>
-      </div>
+      </template>
 
       <div v-if="error == 'count'">
         <div class="activity-section__title">Спасибо. Сообщения скоро будут.</div>

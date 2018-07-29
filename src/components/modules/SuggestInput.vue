@@ -65,7 +65,7 @@ export default {
     },
     fallback: _.debounce(function f() {
       // Если не работают подсказки и нельзя выбрать
-      if (this.query && (!this.cities || !this.suggested)) {
+      if (this.query && !this.suggested) {
         this.$emit('select', this.query);
       }
     }, 400),

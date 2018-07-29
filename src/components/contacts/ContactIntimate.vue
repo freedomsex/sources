@@ -65,12 +65,15 @@ export default {
     <ActivityActions @close="close">
       <span slot="caption">Общение</span>
 
-      <div class="menu-user__navbar-right" slot="option">
-        <div class="navbar-button" @click="$router.push('/protect')">
+      <template slot="option">
+        <div class="menu-button" @click="$router.push('/protect')">
           <i class="material-icons">&#xE53F;</i>
-          Защитить
+          <span class="menu-button__title">
+            Защитить
+          </span>
         </div>
-      </div>
+      </template>
+
 
       <div class="contact-list" v-if="count">
         <ContactItem v-for="(item, index) in contacts"

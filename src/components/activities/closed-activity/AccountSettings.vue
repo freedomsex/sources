@@ -132,21 +132,23 @@ export default {
 
     <div class="activity-section">
       <div class="activity-section__title">Кто вы:</div>
-      <div class="radio" @click="sexPrerequisites">
-        <label class="radio-inline">
-          <input type="radio" v-model.number="selectSex"
-           @change.prevent="saveSex"
-           :disabled="!sexAlert.ignore"
-           :value="2">
-          Девушка
-        </label>
-        <label class="radio-inline">
-          <input type="radio" v-model.number="selectSex"
-           @change.prevent="saveSex"
-           :disabled="!sexAlert.ignore"
-           :value="1">
-          Парень
-        </label>
+      <div class="radio">
+        <span @click="sexPrerequisites">
+          <label class="radio-inline">
+            <input type="radio" v-model.number="selectSex"
+            @change.prevent="saveSex"
+            :disabled="!sexAlert.ignore"
+            :value="2">
+            Девушка
+          </label>
+          <label class="radio-inline">
+            <input type="radio" v-model.number="selectSex"
+            @change.prevent="saveSex"
+            :disabled="!sexAlert.ignore"
+            :value="1">
+            Парень
+          </label>
+        </span>
       </div>
     </div>
 

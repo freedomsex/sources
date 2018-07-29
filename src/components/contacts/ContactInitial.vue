@@ -81,12 +81,14 @@ export default {
     <ActivityActions @close="close">
       <span slot="caption">Знакомства</span>
 
-      <div class="menu-user__navbar-right" slot="option">
-        <div class="navbar-button" @click="$router.push('/settings/search')">
-          <i class="material-icons">&#xE8B8;</i>
-          Настроить
+      <template slot="option">
+        <div class="menu-button" @click="$router.push('/settings/search')">
+          <i class="material-icons">&#xE8B9;</i>
+          <span class="menu-button__title">
+            Настроить
+          </span>
         </div>
-      </div>
+      </template>
 
       <div class="contact-list" v-if="count">
         <ContactItem v-for="(item, index) in contacts" :key="index"

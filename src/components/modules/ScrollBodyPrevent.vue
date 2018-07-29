@@ -6,21 +6,21 @@ export default {
     top: null,
   }),
   beforeMount() {
-    this.initialized = this.exists();
-    this.top = this.getTop();
+    // this.initialized = this.exists();
+    // this.top = this.getTop();
   },
   mounted() {
     // Костыли для отключения прокрутки страницы на фоне
     if (!this.initialized) {
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${this.top}px`;
+      // document.body.style.position = 'fixed';
+      // document.body.style.top = `-${this.top}px`;
     }
   },
   destroyed() {
-    if (!this.exists()) {
-      document.body.removeAttribute('style');
-      window.scrollTo(0, this.top);
-    }
+    // if (!this.exists()) {
+    //   document.body.removeAttribute('style');
+    //   window.scrollTo(0, this.top);
+    // }
   },
   methods: {
     exists() {

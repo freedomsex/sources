@@ -18,11 +18,11 @@ import ApiKeyUpdate from '~modules/ApiKeyUpdate';
 import SearchList from '~components/SearchList';
 import SliderFooter from '~components/SliderFooter';
 import DesiresWidget from '~widgets/DesiresWidget';
-import Snackbar from '~widgets/Snackbar';
 import Toast from '~widgets/Toast';
 
 import CityWidget from '~widgets/CityWidget';
 import RegistrationPromo from '~widgets/RegistrationPromo';
+import BottomNav from '~widgets/BottomNav/NavBar';
 import Language from '~widgets/Language';
 
 import 'styles/core/body.less';
@@ -159,7 +159,7 @@ const App = new Vue({
     AlertWidget,
     CityWidget,
     RegistrationPromo,
-    Snackbar,
+    BottomNav,
     Toast,
   },
 });
