@@ -201,10 +201,11 @@ export default {
   margin-bottom: @indent-lg;
   &__title {
     margin-bottom: @indent-sm;
-    font-size: @font-lg;
+    font-size: 20px;
   }
   &__tile {
     margin-bottom: @indent-xs;
+    color: @dark-light;
   }
   &__link {
     display: inline-block;

@@ -209,6 +209,14 @@ const routes = [
     path: '/languages',
     component: () => import('~default-activity/LaguagesActivity'),
   },
+  {
+    path: '/credits',
+    component: () => import('~default-activity/Credits/Summary'),
+  },
+  {
+    path: '/trust',
+    component: () => import('~default-activity/Credits/Status'),
+  },
 ];
 
 const router = new VueRouter({

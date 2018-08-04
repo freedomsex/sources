@@ -92,14 +92,14 @@ export default {
         </div>
       </div>
 
-      <!-- <div class="nav-button" @click="$refs.status.intimate(1)">
+      <div class="nav-button" @click="$router.push('/credits')">
         <div class="nav-button__icon">
           <i class="material-icons">&#xE53F;</i>
         </div>
         <div class="nav-button__caption">
           Доверие
         </div>
-      </div> -->
+      </div>
 
     </div>
 

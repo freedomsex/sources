@@ -125,7 +125,7 @@ export default {
 
 .menu-user {
   width: 100%;
-  height: 42px;
+  min-height: 42px;
   display: flex;
   justify-content: space-between;
   align-items: center;
