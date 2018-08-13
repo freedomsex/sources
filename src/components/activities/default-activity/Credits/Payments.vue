@@ -11,8 +11,10 @@ export default {
       return `btn-${this.button || 'primary'}`;
     },
     href() {
-      const gateway = '//freedomsex.me/payments';
-      return `${gateway}/${this.action}/${this.product}?h=${this.hash()}`;
+      let {uid} = this.$store.state.user;
+      const gateway = '//xosex.me/payments';
+      // const gateway = '/payments';
+      return `${gateway}/${this.action}/${this.product}/${uid}/${this.hash()}`;
     },
   },
   methods: {

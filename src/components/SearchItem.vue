@@ -1,6 +1,7 @@
 <script>
 import api from '~config/api';
 import SocialIcons from './SocialIcons';
+import VipStatus from './VipStatus';
 
 export default {
   props: ['human', 'visited', 'gold', 'compact'],
@@ -69,6 +70,7 @@ export default {
   },
   components: {
     SocialIcons,
+    VipStatus,
   },
 };
 </script>
@@ -94,11 +96,15 @@ export default {
       </a>
     </div>
     <div class="search-item__option" :class="{visited: visited}">
-      <social-icons :human="human"/>
+      <SocialIcons :human="human"/>
       <div class="search-item__virt"
         v-if="human.virt" title="Виртуальный секс">вирт</div>
       <div class="search-item__real"
         v-if="human.close" title="Реальные знакомства">реал</div>
+
+      <div class="search-item__vip">
+        <VipStatus :human="human"/>
+      </div>
       <div class="search-item__desires"
         v-if="tagsCount" :title="tagsList">{{tagsCount}}</div>
       <div class="search-item__online" v-if="online">онлайн</div>
@@ -210,6 +216,10 @@ export default {
     color: @pink-dark;
     font-size: 11px;
     margin-left: @indent-xs;
+  }
+  &__vip {
+    font-size: 0;
+    margin-left: 3px;
   }
   &__online {
     background: #ffffff;

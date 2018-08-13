@@ -1,8 +1,9 @@
 <script>
 import axios from 'axios';
-import RemoveConfirm from '~dialogs/remove-confirm/RemoveConfirm';
 import PhotoSend from '~modules/PhotoSend';
 import Toast from '~widgets/Toast';
+import ConfirmDialog from '~dialogs/ConfirmDialog';
+import InfoDialog from '~dialogs/InfoDialog';
 
 import CensoredText from '~components/CensoredText';
 
@@ -18,93 +19,11 @@ export default {
       showDialog: false,
       photo: false,
       photoNotFound: false,
+      confirm: {
+        remove: false,
+        accept: false,
+      },
     };
-  },
-  methods: {
-    fix() {
-      this.showOption = true;
-      this.alertOption = false;
-      if (!this.alert) {
-        this.fixOption = this.alert ? false : !this.fixOption;
-      } else {
-        this.$emit('admit');
-      }
-    },
-    bun() {
-      const config = {
-        headers: {Authorization: `Bearer ${this.$store.state.apiToken}`},
-      };
-      const data = {
-        id: this.item.id,
-        tid: this.item.from,
-      };
-      axios.post('/mess/bun/', data, config).then(() => {
-        this.$emit('remove', this.index);
-      }).catch(() => {
-        console.log('error');
-      });
-    },
-    cancel() {
-      this.showDialog = false;
-      console.log('cancel');
-    },
-    remove() {
-      const config = {
-        headers: {Authorization: `Bearer ${this.$store.state.apiToken}`},
-      };
-      const data = {
-        id: this.item.id,
-      };
-      axios
-        .post('/mess/delete/', data, config)
-        .then(() => {
-          // this.$emit('remove', this.index);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      this.$emit('remove', this.index);
-    },
-    play() {
-      const config = {
-        headers: {Authorization: `Bearer ${this.$store.state.apiToken}`},
-        params: {tid: this.item.from},
-      };
-      const server = this.$store.state.photoServer;
-      const url = `http://${server}/api/v1/users/${this.uid}/sends/${
-        this.alias
-      }.jpg`;
-      axios
-        .get(url, config)
-        .then((response) => {
-          this.preview(response.data.photo);
-        })
-        .catch((error) => {
-          console.log(error);
-          if (error.response && error.response.status == '404') {
-            this.photoNotFound = true;
-          }
-        });
-    },
-    preview(photo) {
-      const {_links: links} = photo;
-      if (links.origin.href) {
-        this.photo = {
-          thumb: links.thumb.href,
-          photo: links.origin.href,
-          alias: photo.alias,
-          height: photo.height,
-          width: photo.width,
-        };
-      }
-    },
-    pathName(name) {
-      if (!name || name.length < 10) {
-        return null;
-      }
-      const path = [name.substr(0, 2), name.substr(2, 2), name.substr(4, 3)];
-      return `${path.join('/')}/${name}`;
-    },
   },
   mounted() {
     if (!this.sent && !this.index && this.count < 5) {
@@ -114,9 +33,6 @@ export default {
     if (!this.sent && !this.read) {
       this.$emit('set-new');
     }
-    // console.log('item', this.index +'+'+ this.date);
-  },
-  updated() {
     // console.log('item', this.index +'+'+ this.date);
   },
   computed: {
@@ -163,12 +79,115 @@ export default {
       prev = this.item.from;
       return !!(!p || p == prev);
     },
+    acceptRemove() {
+      return this.$store.state.accepts.removeMessages;
+    },
+  },
+  methods: {
+    fix() {
+      this.showOption = true;
+      this.alertOption = false;
+      if (!this.alert) {
+        this.fixOption = this.alert ? false : !this.fixOption;
+      } else {
+        this.$emit('admit');
+      }
+    },
+    bun() {
+      const config = {
+        headers: {Authorization: `Bearer ${this.$store.state.apiToken}`},
+      };
+      const data = {
+        id: this.item.id,
+        tid: this.item.from,
+      };
+      axios.post('/mess/bun/', data, config).then(() => {
+        this.$emit('remove', this.index);
+      }).catch(() => {
+        console.log('error');
+      });
+    },
+    cancel() {
+      this.confirm.remove = false;
+      console.log('cancel');
+    },
+    remove() {
+      const config = {
+        headers: {Authorization: `Bearer ${this.$store.state.apiToken}`},
+      };
+      const data = {
+        id: this.item.id,
+      };
+      axios
+        .post('/mess/delete/', data, config)
+        .then(() => {
+          // this.$emit('remove', this.index);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      this.$emit('remove', this.index);
+    },
+    confirmRemove(confirm) {
+      if (!this.acceptRemove) {
+        this.confirm.accept = true;
+      } else if (!confirm) {
+        this.confirm.remove = true;
+      } else {
+        this.remove();
+      }
+    },
+    play() {
+      const config = {
+        headers: {Authorization: `Bearer ${this.$store.state.apiToken}`},
+        params: {tid: this.item.from},
+      };
+      const server = this.$store.state.photoServer;
+      const url = `http://${server}/api/v1/users/${this.uid}/sends/${
+        this.alias
+      }.jpg`;
+      axios
+        .get(url, config)
+        .then((response) => {
+          this.preview(response.data.photo);
+        })
+        .catch((error) => {
+          console.log(error);
+          if (error.response && error.response.status == '404') {
+            this.photoNotFound = true;
+          }
+        });
+    },
+    preview(photo) {
+      const {_links: links} = photo;
+      if (links.origin.href) {
+        this.photo = {
+          thumb: links.thumb.href,
+          photo: links.origin.href,
+          alias: photo.alias,
+          height: photo.height,
+          width: photo.width,
+        };
+      }
+    },
+    pathName(name) {
+      if (!name || name.length < 10) {
+        return null;
+      }
+      const path = [name.substr(0, 2), name.substr(2, 2), name.substr(4, 3)];
+      return `${path.join('/')}/${name}`;
+    },
+    accept() {
+      this.$store.commit('accepts/confirm', 'removeMessages');
+      this.confirm.accept = false;
+    },
   },
   components: {
     CensoredText,
-    RemoveConfirm,
     Toast,
     PhotoSend,
+    ConfirmDialog,
+    InfoDialog,
   },
 };
 </script>
@@ -195,24 +214,47 @@ export default {
           </span>
 
         </span>
-
-
       </div>
-      <span :class="attention ? 'message-item__bunn-alert' : 'message-item__bunn'"
-        v-show="!sent && option" @click="showDialog = sent ? 'some' : 'doit'">
-        <span aria-hidden="true" class="glyphicon glyphicon-thumbs-down"></span>
-      </span>
-      <span class="message-item__remove"
+      <span class="message-item__remove" :class="attention ? 'message-item__bunn-alert' : 'message-item__remove'"
        v-show="option"
-       @click="showDialog = sent ? 'some' : 'must'">
+       @click="confirmRemove(false)">
         <span aria-hidden="true" class="glyphicon glyphicon-remove"></span>
       </span>
     </div>
-    <RemoveConfirm v-show="showDialog" :show="showDialog"
-      :data="item"
-      @bun="bun"
-      @close="cancel"
-      @remove="remove"/>
+
+    <span v-if="confirm.remove">
+      <ConfirmDialog v-if="sent"
+        yesText="Удалить сообщение"
+        @confirm="remove()"
+        @close="confirm.remove = false">
+        <span slot="title">Автоочистка</span>
+        Все сообщения из переписки удаляются автоматически
+        в течении недели. Удалять сообщение
+        на которые уже поступила жалоба бессмысленно.
+      </ConfirmDialog>
+
+      <ConfirmDialog v-else
+        yesText="Наказать и удалить"
+        noText="Удалить"
+        @confirm="bun()"
+        @cancel="remove()"
+        @close="confirm.remove = false">
+        <span slot="title">Очень важно</span>
+        Мы никогда не узнаем о нарушениях, если удалить без наказания.
+        Нажмите "Наказать и удалить" у всех сообщений
+        которые вызывают негатив.
+      </ConfirmDialog>
+    </span>
+
+    <InfoDialog v-if="confirm.accept"
+      @close="confirm.accept = false"
+      @confirm="accept()">
+      <span slot="title">Удаляем отовсюду</span>
+      Сообщение пропадет как из вашей истории переписки,
+      так и из переписки вашего собеседника.
+      Сообщения удаляются без возможности восстановить.
+    </InfoDialog>
+
 
     <PhotoSend v-if="photo" :photo="photo" @close="photo = false"/>
     <Toast v-if="photoNotFound" @close="photoNotFound = false">Фото не найдено</Toast>

@@ -1,5 +1,6 @@
 <script>
 import DesireList from '~modules/DesireList/DesireList';
+import VipStatus from './VipStatus';
 
 export default {
   props: ['human'],
@@ -109,6 +110,7 @@ export default {
   },
   components: {
     DesireList,
+    VipStatus,
   },
 };
 </script>
@@ -124,6 +126,10 @@ export default {
       <div>
         <span class="human-info__city">{{human.city}}</span>
       </div>
+    </div>
+
+    <div class="account-section">
+      <VipStatus :human="human" :text="true"/>
     </div>
 
     <div class="account-section" v-if="who">

@@ -12,7 +12,7 @@ const formatter = require('eslint-friendly-formatter');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 // const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer');
 
 let styleLoader = 'style-loader';
 if (process.env.NODE_ENV === 'production') {

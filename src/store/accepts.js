@@ -8,6 +8,8 @@ export default {
     search: false,
     moderator: false,
     settings: false,
+    removeContacts: false,
+    removeMessages: false,
   },
   actions: {
     LOAD({state}) {
@@ -18,6 +20,10 @@ export default {
     },
   },
   mutations: {
+    confirm(state, name) {
+      state[name] = true;
+      lscache.set('accepts', state);
+    },
     photo(state) {
       state.photo = true;
       lscache.set('accepts', state);

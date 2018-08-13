@@ -1,6 +1,7 @@
 <script>
-import RemoveContact from '~dialogs/remove-confirm/RemoveContact';
 import CensoredText from '~components/CensoredText';
+import ConfirmDialog from '~dialogs/ConfirmDialog';
+import InfoDialog from '~dialogs/InfoDialog';
 
 export default {
   props: ['item', 'index', 'idle', 'quick'],
@@ -8,7 +9,10 @@ export default {
     return {
       account: false,
       detail: false,
-      confirm: false,
+      confirm: {
+        remove: false,
+        accept: false,
+      },
     };
   },
   computed: {
@@ -47,6 +51,9 @@ export default {
     },
     acceptSettings() {
       return this.$store.state.accepts.settings;
+    },
+    acceptRemove() {
+      return this.$store.state.accepts.removeContacts;
     },
   },
   methods: {
@@ -87,28 +94,26 @@ export default {
     },
     confirmBun() {
       this.confirm = 'doit';
-      console.log('confirmBun');
-    },
-    confirmRemove() {
-      // this.$emit('remove');
-      // console.log('initial-item REMOVE');
-      this.confirm = !this.quick ? 'some' : 'must';
     },
     close() {
       this.detail = false;
       console.log('close');
     },
+    accept() {
+      this.$store.commit('accepts/confirm', 'removeContacts');
+      this.confirm.accept = false;
+    },
     bun() {
-      console.log('bun1', this.index);
       this.$emit('bun', this.index);
     },
-    remove() {
-      console.log('remove=remove', this.index);
-      this.$emit('remove', this.index);
-    },
-    cancel() {
-      this.confirm = false;
-      console.log('cancel');
+    remove(confirm) {
+      if (!this.acceptRemove) {
+        this.confirm.accept = true;
+      } else if (!confirm) {
+        this.confirm.remove = true;
+      } else {
+        this.$emit('remove', this.index);
+      }
     },
     sended() {
       this.$emit('sended', this.index);
@@ -116,7 +121,8 @@ export default {
     },
   },
   components: {
-    RemoveContact,
+    ConfirmDialog,
+    InfoDialog,
     CensoredText,
   },
 };
@@ -144,20 +150,33 @@ export default {
       </div>
     </div>
     <div class="contact-item__option">
-      <span class="message-item__bunn" :class="{idle: idle}"
-        v-show="!sent" @click="confirmBun">
-        <span aria-hidden="true" class="glyphicon glyphicon-thumbs-down"></span>
-      </span>
-      <span class="message-item__remove" :class="{idle: idle}" @click="confirmRemove">
+      <span class="message-item__remove" :class="{idle: idle}" @click="remove(false)">
         <span aria-hidden="true" class="glyphicon glyphicon-remove"></span>
       </span>
     </div>
 
-    <RemoveContact v-show="confirm"
-      :show="confirm"
-      @bun="bun"
-      @close="cancel"
-      @remove="remove"/>
+    <ConfirmDialog v-if="confirm.remove"
+      yesText="Удалить и наказать"
+      noText="Удалить"
+      @confirm="bun()"
+      @cancel="remove(true)"
+      @close="confirm.remove = false">
+      <span slot="title">Накажите как следует</span>
+      За резкие слова, за оскорбления, хамство
+      или бессмысленные сообщения,
+      накажите всех, кого считаете нужным.
+      Наказание действует сразу.
+    </ConfirmDialog>
+
+    <InfoDialog v-if="confirm.accept"
+      @close="confirm.accept = false"
+      @confirm="accept()">
+      <span slot="title">Удаляем навсегда</span>
+      Контакты удаляются без возможности возобновить общение
+      с собеседником. Обменивайтесь реальными контактами с теми
+      кто вам интересен сразу.
+    </InfoDialog>
+
   </div>
 </template>
 
