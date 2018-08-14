@@ -4,7 +4,7 @@ export default {
   computed: {
     status() {
       let {vip} = this.human;
-      return vip ? vip.status : null;
+      return vip ? Number(vip.status) : null;
     },
     style() {
       return {

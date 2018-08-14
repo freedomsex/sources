@@ -1,20 +1,45 @@
 <script>
+import api from '~config/api';
+
 import Tooltip from '~widgets/Tooltip';
 import ConfirmDialog from '~dialogs/ConfirmDialog';
+import VipStatus from '~components/VipStatus';
+import Loadable from '~mixins/Loadable';
 import Payments from './Payments';
 import ActivityActions from '../../ActivityActions';
 
 export default {
+  mixins: [Loadable],
   data() {
     return {
       moderator: false,
+      user: {
+        vip: {
+          status: 0,
+          credits: 0,
+        },
+      },
     };
+  },
+  mounted() {
+    this.loadStart();
+    api.user.syncTrust().then(({data}) => {
+      this.user.vip.status = data.status;
+      this.user.vip.credits = data.credits;
+      this.loadStop();
+    });
+  },
+  computed: {
+    // user() {
+    //   return this.$store.state.user;
+    // },
   },
   components: {
     ActivityActions,
     ConfirmDialog,
     Payments,
     Tooltip,
+    VipStatus,
   },
 };
 </script>
@@ -40,8 +65,14 @@ export default {
         Кредиты доверия
       </div>
       <div class="activity-section__tile">
-        У вас: 0
-        <i class="material-icons credit-counter__points">&#xE83A;</i>
+        У вас:
+        <span v-if="this.labels.load">
+          <i class="material-icons credit-counter__points">&#xE627;</i>
+        </span>
+        <span v-else>
+          <b>{{user.vip.credits}}</b>
+          <i class="material-icons credit-counter__points">&#xE83A;</i>
+        </span>
       </div>
 
       <div class="activity__splitter"></div>
@@ -76,8 +107,11 @@ export default {
           Кредиты доверия пополняются каждый день бесплатно.
         </Tooltip>
       </div>
+
       <div class="activity-section__tile">
-        Ваша анкета: обычная
+        <span v-if="this.labels.load">Загружаю...</span>
+        <VipStatus v-else-if="user.vip.status" :human="user" :text="true"/>
+        <span v-else>Ваша анкета: обычная</span>
       </div>
 
       <div class="activity__splitter"></div>

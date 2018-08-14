@@ -34,6 +34,9 @@ class ApiUser extends Api {
   syncAbout() {
     return super.load(null, 'sync/anketa');
   }
+  syncTrust() {
+    return super.load(null, 'sync/trust');
+  }
   saveAbout(data) {
     return super.save(data, null, 'option/anketa');
   }
