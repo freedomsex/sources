@@ -91,7 +91,7 @@ export default {
       </template>
 
       <div class="contact-list" v-if="count">
-        <ContactItem v-for="(item, index) in contacts" :key="index"
+        <ContactItem v-for="(item, index) in contacts" :key="item.human_id"
           :item="item"
           :index="index"
           :idle="idle(item)"

@@ -15,6 +15,10 @@ export default {
     to: null,
     any: 0,
     virt: 0,
+    vip: {
+      status: 0,
+      credits: 0,
+    },
     contacts: {
       em: 0,
       vk: 0,
@@ -86,9 +90,9 @@ export default {
       lscache.set('user.data', state, 23456);
     },
     resetUser(state, data) {
-      const {uid, city, sex, age, name, contacts, apromt: promt} = data; // User module
+      const {uid, city, sex, age, name, contacts, vip, apromt: promt} = data; // User module
 
-      _.assign(state, {uid, city, sex, age, name, contacts, promt});
+      _.assign(state, {uid, city, sex, age, name, contacts, vip, promt});
       lscache.set('user.data', state, 23456);
     },
     settings(state, data) {

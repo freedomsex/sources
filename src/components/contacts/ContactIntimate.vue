@@ -41,11 +41,9 @@ export default {
       this.hope();
     },
     remove(index) {
-      console.log('imm=remove', index);
       this.$store.dispatch('intimate/DELETE', index);
     },
     read(index) {
-      console.log('intimate=read', index);
       this.$store.dispatch('intimate/READ', index);
     },
     splice(index) {
@@ -76,8 +74,7 @@ export default {
 
 
       <div class="contact-list" v-if="count">
-        <ContactItem v-for="(item, index) in contacts"
-          :key="index"
+        <ContactItem v-for="(item, index) in contacts" :key="item.human_id"
           :item="item"
           :index="index"
           :quick="quick"

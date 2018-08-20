@@ -13,6 +13,9 @@ export default {
     this.$moment().locale('ru');
     console.log(this.$moment.locale());
   },
+  updated() {
+    console.log('ACCOUNT', this.human);
+  },
   computed: {
     age() {
       const ago = this.$moment.duration(this.human.age, 'years').humanize();
@@ -20,6 +23,9 @@ export default {
     },
     tags() {
       return 'tags' in this.human ? this.human.tags : [];
+    },
+    city2() {
+      return this.human.age;
     },
     social() {
       const {em, vk, ok, fb, go} = this.human;
@@ -62,8 +68,9 @@ export default {
     },
     who() {
       let result = 'Парня ';
-      if (this.human.sex) {
-        result = this.human.sex == 2 ? 'Парня ' : 'Девушку ';
+      const {sex} = this.human;
+      if (sex) {
+        result = sex == 2 ? 'Парня ' : 'Девушку ';
       }
       if (this.human.who) {
         result = this.human.who == 1 ? 'Парня ' : 'Девушку ';
@@ -79,11 +86,11 @@ export default {
     ago() {
       const {last} = this.human;
       let result = 'Онлайн';
-      if (last > 2592000) {
-        result = null;
-      } // else
       if (last > 777) {
         result = this.$moment.duration(0 - last, 'seconds').humanize(true);
+      } // else
+      if (last > 2592000) {
+        result = null;
       }
       return result;
     },
@@ -229,7 +236,7 @@ export default {
     vertical-align: middle;
     width: 16px;
     height: 11px;
-    background-image: url('/img/ajax_loader_gray.gif');
+    background-image: url("/img/ajax_loader_gray.gif");
     background-repeat: no-repeat;
     //     display: none;
   }
@@ -258,7 +265,7 @@ export default {
   }
 }
 
-@icon-path: '~static/img/icon';
+@icon-path: "~static/img/icon";
 
 .human-social {
   i {
@@ -279,19 +286,19 @@ export default {
     line-height: 1;
   }
   &__email {
-    background-image: url('@{icon-path}/ac_em.png');
+    background-image: url("@{icon-path}/ac_em.png");
   }
   &__vkontakte {
-    background-image: url('@{icon-path}/ac_vk.png');
+    background-image: url("@{icon-path}/ac_vk.png");
   }
   &__google-plus {
-    background-image: url('@{icon-path}/ac_go.png');
+    background-image: url("@{icon-path}/ac_go.png");
   }
   &__odnoklassniki {
-    background-image: url('@{icon-path}/ac_ok.png');
+    background-image: url("@{icon-path}/ac_ok.png");
   }
   &__facebook {
-    background-image: url('@{icon-path}/ac_fb.png');
+    background-image: url("@{icon-path}/ac_fb.png");
   }
 }
 
@@ -316,10 +323,10 @@ export default {
     line-height: 1;
   }
   &__phone {
-    background-image: url('@{icon-path}/ac_ph.png');
+    background-image: url("@{icon-path}/ac_ph.png");
   }
   &__skype {
-    background-image: url('@{icon-path}/ac_sk.png');
+    background-image: url("@{icon-path}/ac_sk.png");
   }
 }
 </style>

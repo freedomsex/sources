@@ -130,7 +130,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   white-space: nowrap;
-  padding: 0px 0 0 0px;
+  padding: 0px 5px 0px;
   background-color: @menu-color;
   color: @white;
 
@@ -150,7 +150,7 @@ export default {
     font-size: 0;
     display: flex;
     align-items: center;
-    padding: 5px 10px;
+    padding: 5px 5px;
     overflow: hidden;
     white-space: nowrap;
     border-radius: 3px;

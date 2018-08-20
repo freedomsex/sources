@@ -47,7 +47,6 @@ export default {
             </span>
           </div>
 
-
           <div class="menu-user__navbar">
             <slot name="option"></slot>
             <div class="menu-button" v-if="closed"
@@ -55,11 +54,12 @@ export default {
               <i class="material-icons">&#xE14C;</i>
             </div>
           </div>
-
-
         </div>
         <div class="activity__container">
           <slot></slot>
+        </div>
+        <div class="activity__footer">
+          <slot name="footer"></slot>
         </div>
       </div>
     </div>
@@ -94,8 +94,8 @@ export default {
     position: relative;
     flex: 1 1 auto;
     overflow-y: auto;
-    border: 1px solid @gray;
-    border-width: 0px 1px 1px 1px;
+    // border: 1px solid @gray;
+    // border-width: 0px 1px 1px 1px;
     padding: @indent-md @indent-lg @indent-md;
   }
   &__content {
@@ -108,10 +108,7 @@ export default {
     height: @indent-sm;
   }
   &__footer {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    flex: 0 1 auto;
   }
 }
 

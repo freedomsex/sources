@@ -1,6 +1,21 @@
 import _ from 'underscore';
 import axios from 'axios';
 
+let retryAttempt = false;
+
+axios.interceptors.response.use(response => response, (error) => {
+  // retry the request that errored out
+  if (error.response.status === 401) {
+    if (retryAttempt) {
+      global.App.$root.unauthorized();
+    } else {
+      retryAttempt = true; // now it can be retried
+      return global.App.$root.refresh().then(() => axios(error.config));
+    }
+  }
+  return Promise.reject(error);
+});
+
 export default class requests {
   get(params, url) {
     return this.delay(axios.get(this.setUrl('get', params, url), this.config), 0);
@@ -54,6 +69,9 @@ export default class requests {
       return result;
     }
     return new Promise((resolve) => {
+      // result.catch((error) => {
+      //   global.App.$root.requestError(error);
+      // });
       _.delay(resolve, msec, result);
     });
   }

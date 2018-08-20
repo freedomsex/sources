@@ -16,11 +16,6 @@ export default {
       const {status} = this.$store.state.contacts.initial;
       return status == false || status < 8;
     },
-    testVip() {
-      let {uid} = this.$store.state.user;
-      let last = String(uid).substr(-1, 1);
-      return ['1', '2', '3'].includes(last);
-    },
   },
   methods: {
     search() {
@@ -97,7 +92,7 @@ export default {
         </div>
       </div>
 
-      <div class="nav-button" v-show="testVip" @click="$router.push('/credits')">
+      <div class="nav-button" @click="$router.push('/credits')">
         <div class="nav-button__icon">
           <i class="material-icons">&#xE53F;</i>
         </div>

@@ -54,7 +54,7 @@ export default {
     <span slot="caption">Анкета</span>
     <AccountComponent
      :human="human"
-     key="humanId"
+     :key="humanId"
      v-if="human"/>
   </ActivityActions>
 </template>

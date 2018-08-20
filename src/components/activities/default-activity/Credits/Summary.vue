@@ -48,13 +48,6 @@ export default {
   <ActivityActions type="wrapped" @close="$emit('close')">
     <span slot="caption">Доверие</span>
 
-    <!-- <template slot="option">
-      <div class="menu-button" @click="edited = (edited !== true)">
-        <i class="material-icons" v-if="!edited">&#xE254;</i>
-        <i class="material-icons" v-else>&#xE876;</i>
-      </div>
-    </template> -->
-
     <div class="activity-section">
       Кредиты доверия позволяют проходить все проверки
       автоматически, без каких либо действий с вашей стороны.

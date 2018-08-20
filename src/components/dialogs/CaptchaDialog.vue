@@ -60,7 +60,7 @@ export default {
     </div>
 
     <div class="captcha-dialog__option">
-      <button class="btn btn-default" @click="$router.push('/help/credit-of-trust')">
+      <button class="btn btn-default" @click="$router.push('/credits')">
         Поднять доверие
       </button>
       <button class="btn btn-warning" @click="send">

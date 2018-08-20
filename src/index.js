@@ -58,7 +58,7 @@ const i18n = new VueI18n({
   },
 });
 
-const App = new Vue({
+global.App = new Vue({
   data: {
     alert: '',
     humanId: null,
@@ -110,8 +110,9 @@ const App = new Vue({
     },
     refresh() {
       // TODO: without $root and $refs
-      this.$refs['api-key'].load();
-      this.$store.dispatch('auth/sync');
+      return this.$refs['api-key'].load().then(() => {
+        this.$store.dispatch('auth/sync');
+      });
     },
     reload() {
       const home = this.$refs.results;
@@ -139,6 +140,9 @@ const App = new Vue({
         this.$router.push('/');
       }
     },
+    unauthorized() {
+      this.$refs['api-key'].error();
+    },
   },
   el: '#app',
   store,
@@ -164,7 +168,7 @@ const App = new Vue({
   },
 });
 
-const Layer = new Vue({
+global.Layer = new Vue({
   data: {
     warning: '',
     alert: '',
@@ -177,7 +181,7 @@ const Layer = new Vue({
       this.alert = text;
     },
     goBack() {
-      if (window.history.length > 1) {
+      if (global.history.length > 1) {
         this.$router.go(-1);
       } else {
         this.$router.push('/');
@@ -192,5 +196,3 @@ const Layer = new Vue({
 // defaultSettings - GLOBAL var
 // store.commit('search/restore', global.defaultSettings || {});
 // store.commit('personal', global.defaultSettings || {}); // TODO: to NS
-
-export {App, Layer};
