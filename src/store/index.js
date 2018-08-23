@@ -46,6 +46,7 @@ const store = new Vuex.Store({
     photoServer: CONFIG.API_PHOTO,
     simple: false,
     mute: false,
+    // scrolling: false,
   },
   actions: {
     LOAD_API_TOKEN({commit}) {
@@ -86,6 +87,9 @@ const store = new Vuex.Store({
         state.grecaptchaToken = token;
       }
     },
+    // stopScrolling(state, value) {
+    //   state.scrolling = (value === true);
+    // },
   },
   getters: {
     registered(state) {

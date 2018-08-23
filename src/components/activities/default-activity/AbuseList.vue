@@ -75,15 +75,6 @@ export default {
         </div>
       </div>
     </div>
-    <div class="activity__footer">
-      <div class="hint-info">
-        Замечания к анкете предупреждают о нарушении правил Пользователем,
-        эта анкета может быть удалена в любой момент.
-        <a href="http://docs.freedomsex.info/blog/#/Как-пользоваться/?id=Замечания-к-анкетам" target="_blank">
-          Подробнее...
-        </a>
-      </div>
-    </div>
 
     <InfoDialog v-if="selected"
      yesText="Закрыть"
@@ -98,6 +89,17 @@ export default {
         Ложные замечания бывают редко, но доверять лучше проверенным.
       </span>
     </InfoDialog>
+
+
+    <div class="hint-info" slot="footer">
+      <div class="hint-info">
+        Замечания к анкете предупреждают о нарушении правил Пользователем,
+        эта анкета может быть удалена в любой момент.
+        <a href="http://docs.freedomsex.info/blog/#/Как-пользоваться/?id=Замечания-к-анкетам" target="_blank">
+          Подробнее...
+        </a>
+      </div>
+    </div>
   </ActivityActions>
 </template>
 
