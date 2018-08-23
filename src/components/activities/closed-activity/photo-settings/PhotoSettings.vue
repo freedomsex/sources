@@ -75,19 +75,35 @@ export default {
 </script>
 
 <template>
-  <ActivityActions type="closed" @close="close">
+  <ActivityActions type="wrapped" @close="close">
     <span slot="caption">Отправить фото</span>
     <div class="activity-section">
-      <PhotoGalery :list="photos" @show="show"/>
+      <PhotoGalery :list="photos" @show="show">
+        Фотографии которые вы загрузите будут здесь
+      </PhotoGalery>
     </div>
 
     <div class="activity-section">
-      <div class="upload_photo__add">
-        <FileUploadButton
-         :progress="true"
-         @loaded="preview"
-         @failed="failed"/>
-        <input id="fileupload" type="file" name="file" data-form-data='{"script": "true"}'>
+      <FileUploadButton
+       :progress="true"
+       @loaded="preview"
+       @failed="failed"/>
+      <input id="fileupload" type="file" name="file" data-form-data='{"script": "true"}'>
+    </div>
+
+
+    <div class="activity-section" v-if="photos.length < 5">
+      <div class="activity-section__tile">
+        1. Вы можете отправлять любые фотографии. Премодерация  отсутствует. Интимные фото отправлять можно, если ваш собеседник ждёт этого от вас.
+      </div>
+      <div class="activity-section__tile">
+        2. Избегайте использования чужих фото. Это грозит блокировкой анкеты.
+      </div>
+      <div class="activity-section__tile">
+        3. Фотографии, которые долго не использовались, удалятся автоматически.
+      </div>
+      <div class="activity-section__tile">
+        <a class="activity-section__link" href="http://docs.freedomsex.info/blog/#/Как-пользоваться/Где-фотографии" target="_blank">Узнать больше о фотографиях...</a>
       </div>
     </div>
 
@@ -106,15 +122,8 @@ export default {
   left: -99999px;
 }
 
-.upload_photo__add {
-  margin-bottom: @indent-lg;
-}
-
 .upload_photo__rules {
-  color: #5c5c5c;
-  font-size: 12px;
-  max-width: 500px;
-  margin-top: @indent-lg;
+  color: @dark-light;
   p {
     padding: 0;
     margin: 4px 0;

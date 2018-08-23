@@ -77,9 +77,9 @@ export default {
     line-height: 20px;
   }
   &__wrapper {
-    position: absolute;
     width: 100%;
     height: 100%;
+    margin: 0 auto;
     max-width: @activity-width;
     max-height: @activity-height;
     background: @white;
@@ -94,8 +94,6 @@ export default {
     position: relative;
     flex: 1 1 auto;
     overflow-y: auto;
-    // border: 1px solid @gray;
-    // border-width: 0px 1px 1px 1px;
     padding: @indent-md @indent-lg @indent-md;
   }
   &__content {
@@ -120,48 +118,23 @@ export default {
   right: 0;
   left: 0;
 
-  margin-right: auto;
-  margin-left: auto;
+  margin: 0 auto;
   overflow: hidden;
   z-index: 1;
+}
 
-  .menu-closed {
-    margin-left: auto;
-    margin-right: 0;
-  }
-  .menu-user {
-    margin-left: 0;
-    margin-right: auto;
+.default-activity {
+  .activity-mixin;
+  .activity {
+    &__container {
+      padding: 0;
+    }
   }
 }
 
 .wrapped-activity {
   .activity-mixin;
-}
-
-.default-activity {
-  .activity-mixin;
-    .activity {
-      &__container {
-        padding: 0;
-      }
-    }
-}
-
-.closed-activity {
-  .activity-mixin;
-
-  .btn-close {
-    color: @white;
-    padding: 10px 0;
-    font-size: 30px;
-    cursor: pointer;
-  }
-
   .activity {
-    &__wrapper {
-      right: 0;
-    }
     &__container {
       padding: @indent-md @indent-lg @indent-md;
     }
@@ -178,7 +151,7 @@ export default {
     }
     &__container {
       height: calc(~'100% - 50px');
-      padding-bottom: @indent-xl;
+      padding: @indent-md @indent-lg @indent-xl;
       h1 {
         margin-top: @indent-xs;
       }

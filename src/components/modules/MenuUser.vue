@@ -128,14 +128,15 @@ export default {
   min-height: 42px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: stretch;
   white-space: nowrap;
-  padding: 0px 5px 0px;
   background-color: @menu-color;
   color: @white;
 
   &__logo {
-    flex: 0 0 auto;
+    // flex: 0 0 auto;
+    display: flex;
+    align-items: center;
     font-size: 18px;
     margin: 0 5px 0 10px;
     cursor: pointer;
@@ -143,14 +144,14 @@ export default {
 
   &__navbar {
     display: flex;
-    align-items: center;
+    align-items: stretch;
   }
 
   .menu-button {
     font-size: 0;
     display: flex;
     align-items: center;
-    padding: 5px 5px;
+    padding: 5px 8px;
     overflow: hidden;
     white-space: nowrap;
     border-radius: 3px;
@@ -170,6 +171,14 @@ export default {
 
       &.limit {
         max-width: 150px;
+      }
+    }
+
+    a {
+      color: #ffffff;
+
+      &:hover {
+        text-decoration: none;
       }
     }
   }

@@ -109,6 +109,7 @@ export default {
         <div v-show="loaded">
           {{$t('login')}}: <b>{{login}}</b>
           {{$t('password')}}: <b>{{password}}</b>
+          <div class="auth-board__splitter visible-xs"></div>
           <button class="btn btn-default btn-sm" @click="dialog()">
             {{$t('send')}}
           </button>
@@ -145,8 +146,10 @@ export default {
   text-align: center;
   color: #8a6d3b;
   .btn {
-    margin: -6px 0;
-    margin-left: @indent-sm;
+    margin: -6px @indent-sm;
+  }
+  &__splitter {
+    margin-bottom: @indent-sm;
   }
   .glyphicon {
     margin-right: @indent-sm;

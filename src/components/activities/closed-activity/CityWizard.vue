@@ -29,7 +29,7 @@ export default {
 </script>
 
 <template>
-  <ActivityActions type="closed" @close="close">
+  <ActivityActions type="wrapped" @close="close">
     <span slot="caption">Мой город</span>
     <div class="activity-section">
       <div class="form-inline">

@@ -166,7 +166,7 @@ export default {
 </i18n>
 
 <template>
-  <ActivityActions type="closed" @close="close">
+  <ActivityActions type="wrapped" @close="close">
     <span slot="caption">{{$t('settings')}}</span>
     <div class="activity-section">
       <div class="activity-section__title">{{$t('myCity')}}:</div>

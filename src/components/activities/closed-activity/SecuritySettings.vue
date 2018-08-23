@@ -133,7 +133,8 @@ export default {
 </script>
 
 <template>
-  <ActivityActions type="closed" @close="close">
+  <ActivityActions type="wrapped" @close="close">
+    <span slot="caption">Безопасность</span>
     <div class="activity-section">
       <div class="activity-section__title">Логин:</div>
       <div class="form-inline">

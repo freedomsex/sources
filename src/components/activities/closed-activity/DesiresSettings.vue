@@ -59,10 +59,11 @@ export default {
 </script>
 
 <template>
-  <ActivityActions type="closed" @close="close">
+  <ActivityActions type="wrapped" @close="close">
+    <span slot="caption">Желания и фантазии</span>
     <div class="activity-section">
       <div class="activity-section__title">
-        Желания и фантазии
+        Добавить желание
       </div>
       <SuggestInput url="tag/suggest"
        title="Ваше желание"

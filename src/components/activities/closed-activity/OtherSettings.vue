@@ -27,7 +27,8 @@ export default {
 </script>
 
 <template>
-  <ActivityActions type="closed" @close="$emit('close')">
+  <ActivityActions type="wrapped" @close="$emit('close')">
+    <span slot="caption">Подробнее</span>
 <!--
     <div class="activity-section">
       <div class="activity-section__title">Статус анкеты</div>

@@ -9,7 +9,7 @@ export default {
 </script>
 
 <template>
-  <ActivityActions type="closed" @close="$emit('close')">
+  <ActivityActions type="wrapped" @close="$emit('close')">
     <span slot="caption">Написать разработчикам</span>
     <div class="activity-section">
       Обсудить развитие можно на

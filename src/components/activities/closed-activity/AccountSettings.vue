@@ -119,7 +119,8 @@ export default {
 </script>
 
 <template>
-  <ActivityActions type="closed" @close="close">
+  <ActivityActions type="wrapped" @close="close">
+    <span slot="caption">Аккаунт</span>
     <div class="activity-section">
       <div class="activity-section__title">Мой город:</div>
       <div class="form-inline">

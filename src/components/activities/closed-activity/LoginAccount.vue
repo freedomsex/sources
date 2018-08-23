@@ -58,7 +58,8 @@ export default {
 </script>
 
 <template>
-  <ActivityActions type="closed" @close="$emit('close')">
+  <ActivityActions type="wrapped" @close="$emit('close')">
+    <span slot="caption">Войти</span>
     <div class="activity-section">
       <div class="activity-section__title">Ваш логин</div>
       <div class="form-inline">

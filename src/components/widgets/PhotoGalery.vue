@@ -11,10 +11,15 @@ export default {
 </script>
 
 <template>
-  <div class="galery-photo" v-if="list.length > 0">
-    <img class="galery-photo__item" v-for="(item, index) in list"
-     :src="source(item)"
-     @click="$emit('show', index)">
+  <div>
+    <div class="galery-photo" v-if="list.length > 0">
+      <img class="galery-photo__item" v-for="(item, index) in list"
+       :src="source(item)"
+       @click="$emit('show', index)">
+    </div>
+    <div class="galery-photo__placeholder">
+      <slot></slot>
+    </div>
   </div>
 </template>
 
@@ -39,5 +44,12 @@ export default {
     border: 5px solid @white;
     position: relative;
   }
+
+  &__placeholder {
+    color: @gray-dark;
+    background: @light;
+    padding: @indent-md @indent-md;
+  }
+
 }
 </style>
