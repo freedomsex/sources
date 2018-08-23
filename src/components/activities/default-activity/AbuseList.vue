@@ -45,7 +45,7 @@ export default {
 
 <template>
   <ActivityActions @close="$emit('close')">
-    <span slot="caption">Замечаня к анкете</span>
+    <span slot="caption">Замечания к анкете</span>
 
     <template slot="option">
       <div class="menu-button" @click="add()">
@@ -76,13 +76,19 @@ export default {
       </div>
     </div>
 
+    <div class="activity__content">
+      <div class="activity-section">
+        Эта анкета может быть удалена в любой момент.
+      </div>
+    </div>
+
     <InfoDialog v-if="selected"
      yesText="Закрыть"
      @close="selected = null">
       <div slot="title">{{selected.title}}</div>
-      <span class="abuse-capitalised">{{selected.text}}</span>
+      <span class="abuse-capitalised">{{selected.text}}.</span>
       <span v-if="selected.mod == 1">
-        <span v-if="selected.comment">:{{selected.comment}}</span>
+        <span v-if="selected.comment">:{{selected.comment}}.</span>
       </span>
       <span v-else>
         Замечание ещё не проверено и может быть отклонено.
@@ -92,13 +98,10 @@ export default {
 
 
     <div class="hint-info" slot="footer">
-      <div class="hint-info">
-        Замечания к анкете предупреждают о нарушении правил Пользователем,
-        эта анкета может быть удалена в любой момент.
-        <a href="http://docs.freedomsex.info/blog/#/Как-пользоваться/?id=Замечания-к-анкетам" target="_blank">
-          Подробнее...
-        </a>
-      </div>
+      Замечания предупреждают о нарушении правил Пользователем.
+      <a href="http://docs.freedomsex.info/blog/#/Как-пользоваться/?id=Замечания-к-анкетам" target="_blank">
+        Подробнее...
+      </a>
     </div>
   </ActivityActions>
 </template>

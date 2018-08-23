@@ -149,10 +149,10 @@ export default {
         </span>
       </div>
     </div>
-    <div class="contact-item__option">
-      <span class="message-item__remove" :class="{idle: idle}" @click="remove(false)">
-        <span aria-hidden="true" class="glyphicon glyphicon-remove"></span>
-      </span>
+    <div class="contact-item__edit"
+     :class="{idle: idle}"
+     @click="remove(false)">
+      <i class="material-icons">&#xE14C;</i>
     </div>
 
     <ConfirmDialog v-if="confirm.remove"
@@ -203,11 +203,13 @@ export default {
     overflow: hidden;
   }
 
-  &__option {
-    flex: 0 0 90px;
+  &__edit {
+    flex: 0 0 auto;
     align-self: center;
-    text-align: right;
-    // width: 100px;
+    padding: 5px;
+    font-size: 0px;
+    color: @gray-dark;
+    background: @white;
   }
 
   &__info {
