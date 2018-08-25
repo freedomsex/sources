@@ -61,7 +61,6 @@ export default {
         }
         if (error == 'need_verify') {
           this.$refs.recaptcha.render(this.send);
-          this.$refs.recaptcha.execute();
         }
       } else {
         this.sended();

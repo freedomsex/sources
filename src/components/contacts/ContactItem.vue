@@ -208,8 +208,7 @@ export default {
     align-self: center;
     padding: 5px;
     font-size: 0px;
-    color: @gray-dark;
-    background: @white;
+    color: @gray;
   }
 
   &__info {

@@ -147,7 +147,6 @@ export default {
       this.sex = sex;
       this.processTimeout();
       this.$refs.recaptcha.render(this.save);
-      this.$refs.recaptcha.execute();
     },
     save(token) {
       this.process = true;

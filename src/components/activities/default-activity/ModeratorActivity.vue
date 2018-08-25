@@ -107,7 +107,9 @@ export default {
       </template>
 
       <div v-if="error == 'count'">
-        <div class="activity-section__title">Спасибо. Сообщения скоро будут.</div>
+        <div class="activity-section__title">
+          Спасибо. Сообщения скоро будут.
+        </div>
         <div id="" class="" style="font-size: 14px; margin-bottom: 10px; color: #777;">
           Мы благодарны вам за вашу подержку.
           С вами сайт становится ещё сильнее.
@@ -137,10 +139,10 @@ export default {
             </div>
           </div>
           <div class="activity-section">
-            <button class="btn btn-warning"
+            <button class="btn btn-primary"
              @click="process ? null : action(1)"
              :disabled="process"> Да, наказать </button>
-            <button class="btn btn-success"
+            <button class="btn btn-default"
              @click="process ? null : action(-1)"
              :disabled="process"> Нет, отклонить </button>
             <button class="btn btn-link"
@@ -157,8 +159,7 @@ export default {
           </div>
 
           <div id="" class="" style="font-size: 14px; margin-bottom: 10px; color: #777;">
-              Просто ответьте, соответствует ли текст сообщения нарушению или нет.
-              Нарушитель получит новую порцию наказания, если вы подтвердите это.
+              Просто ответьте, соответствует ли текст сообщения нарушению или нет. Нарушитель получит новую порцию наказания, если вы подтвердите это.
           </div>
 
           <div id="" class="" style="font-size: 12px; color: #999; margin-bottom: 0px;">

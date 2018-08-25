@@ -7,13 +7,19 @@ export default {
     return {
       sitekey: '6LdxP0YUAAAAAMzR_XFTV_G5VVOhyPnXLjdudFoe',
       widgetId: null,
-      show: true,
+      show: false,
       error: false,
     };
   },
+  // watch: {
+  //   widgetId() {
+  //
+  //   },
+  // },
   methods: {
     execute() {
       this.show = true;
+      console.log('execute widgetId', this.widgetId);
       this.$nextTick(() => {
         window.grecaptcha.execute(this.widgetId);
       });
@@ -23,9 +29,7 @@ export default {
         this.show = false;
         this.error = false;
         // this.$store.commit('stopScrolling', false);
-        this.$nextTick(() => {
-          window.grecaptcha.reset(this.widgetId);
-        });
+        window.grecaptcha.reset(this.widgetId);
       }
     },
     verify(token) {
@@ -35,20 +39,17 @@ export default {
     },
     render(callback) {
       this.show = true;
-      this.$store.commit('stopScrolling', true);
-      console.log('commit stopScrolling', true);
       if (this.widgetId === null && window.grecaptcha) {
-        this.$nextTick(() => {
-          this.widgetId = window.grecaptcha.render('g-recaptcha', {
-            sitekey: this.sitekey,
-            size: 'invisible',
-            'expired-callback': this.onError(),
-            'error-callback': this.onError(),
-            callback,
-          });
-          console.log('recaptcha ready', this.widgetId);
+        this.widgetId = window.grecaptcha.render('g-recaptcha', {
+          sitekey: this.sitekey,
+          size: 'invisible',
+          'expired-callback': this.onError(),
+          'error-callback': this.onError(),
+          callback,
         });
+        console.log('recaptcha ready', this.widgetId);
       }
+      this.execute();
     },
     onError() {
       this.error = true;
