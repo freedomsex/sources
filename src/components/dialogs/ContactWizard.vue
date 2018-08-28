@@ -1,6 +1,6 @@
 <script>
 import _ from 'underscore';
-import AccountSettings from '~closed-activity/AccountSettings';
+import AccountSettings from '~activities/AccountSettings';
 import InfoDialog from '~dialogs/InfoDialog';
 import SuggestInput from '~modules/SuggestInput';
 

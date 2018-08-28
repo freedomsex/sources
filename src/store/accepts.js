@@ -7,6 +7,7 @@ export default {
     photo: false,
     search: false,
     moderator: false,
+    freeCredits: false,
     settings: false,
     removeContacts: false,
     removeMessages: false,

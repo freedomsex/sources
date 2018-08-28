@@ -12,13 +12,13 @@ export default {
   mixins: [Loadable],
   data() {
     return {
-      moderator: false,
       user: {
         vip: {
           status: 0,
           credits: 0,
         },
       },
+      confirm: false,
     };
   },
   mounted() {
@@ -33,6 +33,25 @@ export default {
     // user() {
     //   return this.$store.state.user;
     // },
+    accept() {
+      return this.$store.state.accepts.freeCredits;
+    },
+  },
+  methods: {
+    getFree() {
+      if (this.accept) {
+        this.moderate(true);
+      } else {
+        this.confirm = true;
+      }
+    },
+    moderate() {
+      if (!this.accept) {
+        this.$store.commit('accepts/confirm', 'freeCredits');
+      }
+      this.$router.push('/protect');
+      this.confirm = false;
+    },
   },
   components: {
     ActivityActions,
@@ -50,7 +69,7 @@ export default {
 
     <div class="activity-section">
       Кредиты доверия позволяют проходить все проверки
-      автоматически, без каких либо действий с вашей стороны.
+      автоматически. Имея статус, кредиты пополняются бесплатно каждый день.
     </div>
 
     <div class="activity-section">
@@ -76,42 +95,44 @@ export default {
        text="Получить за 1$">
       </Payments>
       <span class="btn btn-default"
-        @click="moderator = true">
+        @click="getFree()">
         Бесплатно
       </span>
       <!-- <span class="btn btn-primary">Получить</span> -->
     </div>
 
-    <ConfirmDialog v-if="moderator"
-     yesText="Продолжить"
-     @confirm="$router.push('/protect')"
-     @close="moderator = false">
-      Станьте модератором и получайте
-      кредиты доверия бесплатно. Кредиты начисляются
-      за правильные действия в интерфейсе безопасности.
-    </ConfirmDialog>
-
     <div class="activity-section">
       <div class="activity-section__title">
         Статус анкеты
-        <Tooltip>
-          Статус анкеты выделяет вас в результатах поиска
-          и отображается вашей анкете.
-          Кредиты доверия пополняются каждый день бесплатно.
-        </Tooltip>
       </div>
 
       <div class="activity-section__tile">
         <span v-if="this.labels.load">Загружаю...</span>
         <VipStatus v-else-if="user.vip.status" :human="user" :text="true"/>
         <span v-else>Ваша анкета: обычная</span>
+        <Tooltip>
+          Статус анкеты выделяет вас в результатах поиска и отображается вашей анкете. Кредиты доверия пополняются каждый день бесплатно.
+        </Tooltip>
       </div>
 
       <div class="activity__splitter"></div>
-      <span class="btn btn-default" @click="$router.push('/trust')">
+      <span class="btn btn-primary" @click="$router.push('/trust')">
         Поднять статус
       </span>
+      <a class="btn btn-link" href="http://docs.freedomsex.info/blog/#/Как-пользоваться/Кредиты-доверия?id=Статус-анкеты" target="_blank">
+        Подробнее...
+      </a>
     </div>
+
+    <ConfirmDialog v-if="confirm"
+     yesText="Продолжить"
+     @confirm="moderate()"
+     @close="confirm = false">
+      Станьте модератором и получайте
+      кредиты доверия бесплатно. Кредиты начисляются
+      за правильные действия в интерфейсе безопасности.
+    </ConfirmDialog>
+
 
     <div class="activity-section">
 

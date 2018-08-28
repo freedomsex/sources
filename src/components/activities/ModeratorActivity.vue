@@ -99,11 +99,12 @@ export default {
       <span slot="caption">Защитить</span>
 
       <template slot="option">
-        <div class="menu-button" @click="add()">
-          <a href="security/action" target="_blank">
-            <i class="material-icons">&#xE895;</i>
-          </a>
-        </div>
+        <a class="menu-button" href="security/action" target="_blank">
+          <span class="menu-button__title">
+            В админку
+          </span>
+          <i class="material-icons">&#xE895;</i>
+        </a>
       </template>
 
       <div v-if="error == 'count'">

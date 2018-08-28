@@ -156,6 +156,8 @@ export default {
     white-space: nowrap;
     border-radius: 3px;
     cursor: pointer;
+    color: #ffffff;
+    text-decoration: none;
     &:hover {
       background-color: @menu-hover;
     }

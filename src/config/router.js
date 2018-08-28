@@ -4,10 +4,10 @@ import {store} from '~store';
 
 import SexConfirm from '~dialogs/SexConfirm';
 
-import SearchSettings from '~closed-activity/SearchSettings';
-import AccountSettings from '~closed-activity/AccountSettings';
+import SearchSettings from '~activities/SearchSettings';
+import AccountSettings from '~activities/AccountSettings';
 
-import AccountActivity from '~default-activity/AccountActivity';
+import AccountActivity from '~activities/AccountActivity';
 
 Vue.use(VueRouter);
 
@@ -54,7 +54,7 @@ const routes = [
         meta: {
           back: '/intimate',
         },
-        component: () => import('~default-activity/messages-activity/MessagesActivity'),
+        component: () => import('~activities/messages-activity/MessagesActivity'),
         props: true,
         children: [
           {
@@ -63,7 +63,7 @@ const routes = [
             meta: {
               back: '.',
             },
-            component: () => import('~closed-activity/photo-settings/PhotoSettings'),
+            component: () => import('~activities/photo-settings/PhotoSettings'),
             props: true,
           },
           {
@@ -72,7 +72,7 @@ const routes = [
             meta: {
               back: '.',
             },
-            component: () => import('~closed-activity/IncomingPhoto'),
+            component: () => import('~activities/IncomingPhoto'),
             props: true,
           },
           // { path: 'preview', name: 'preview', component: PhotoViewer, props: true },
@@ -87,37 +87,37 @@ const routes = [
   },
   {
     path: '/protect',
-    component: () => import('~default-activity/ModeratorActivity'),
+    component: () => import('~activities/ModeratorActivity'),
   },
 
   {
     path: '/content/deal/:link/:locale?',
-    component: () => import('~default-activity/content/DealPage'),
+    component: () => import('~activities/content/DealPage'),
     props: true,
   },
   {
     path: '/content/rules/:locale?',
-    component: () => import('~default-activity/content/RulesPage'),
+    component: () => import('~activities/content/RulesPage'),
     props: true,
   },
   {
     path: '/agreement/:locale?',
-    component: () => import('~default-activity/content/Agreement'),
+    component: () => import('~activities/content/Agreement'),
     props: true,
   },
   {
     path: '/content/careers/:locale?',
-    component: () => import('~default-activity/content/CareersPage'),
+    component: () => import('~activities/content/CareersPage'),
     props: true,
   },
   {
     path: '/help/:link/:locale?',
-    component: () => import('~default-activity/content/HelpPage'),
+    component: () => import('~activities/content/HelpPage'),
     props: true,
   },
   {
     path: '/releases/:link/:locale?',
-    component: () => import('~default-activity/content/Release'),
+    component: () => import('~activities/content/Release'),
     props: true,
   },
   // { path: '/promo/:link', component: ContentModal, props: true },
@@ -137,28 +137,28 @@ const routes = [
   },
   {
     path: '(.*)?/settings/other',
-    component: () => import('~closed-activity/OtherSettings'),
+    component: () => import('~activities/OtherSettings'),
   },
   {
     path: '(.*)?/settings/about',
     meta: {
       back: 'other',
     },
-    component: () => import('~closed-activity/AboutSettings'),
+    component: () => import('~activities/AboutSettings'),
   },
   {
     path: '(.*)?/settings/social',
     meta: {
       back: 'other',
     },
-    component: () => import('~closed-activity/SocialSettings'),
+    component: () => import('~activities/SocialSettings'),
   },
   {
     path: '(.*)?/settings/desires',
     meta: {
       back: 'other',
     },
-    component: () => import('~closed-activity/DesiresSettings'),
+    component: () => import('~activities/DesiresSettings'),
     beforeEnter: (to, from, next) => (store.state.user.sex ? next() : next('/confirm-sex/search')),
   },
   {
@@ -166,35 +166,35 @@ const routes = [
     meta: {
       back: 'other',
     },
-    component: () => import('~closed-activity/SecuritySettings'),
+    component: () => import('~activities/SecuritySettings'),
   },
   {
     path: '(.*)?/settings/reviews',
     meta: {
       back: 'other',
     },
-    component: () => import('~closed-activity/ReviewSettings.vue'),
+    component: () => import('~activities/ReviewSettings.vue'),
   },
   {
     path: '(.*)?/settings/question',
     meta: {
       back: 'other',
     },
-    component: () => import('~default-activity/QuestionActivity.vue'),
+    component: () => import('~activities/QuestionActivity.vue'),
   },
   {
     path: '(.*)?/settings/envelop',
     meta: {
       back: 'other',
     },
-    component: () => import('~closed-activity/EnvelopSettings'),
+    component: () => import('~activities/EnvelopSettings'),
   },
   {
     path: '(.*)?/wizard/city',
     meta: {
       back: '/settings/account',
     },
-    component: () => import('~closed-activity/CityWizard'),
+    component: () => import('~activities/CityWizard'),
     beforeEnter: (to, from, next) => (store.state.user.sex ? next() : next('/confirm-sex/search')),
   },
   // { path: '/', name: 'search', component: SearchActivity,
@@ -207,15 +207,15 @@ const routes = [
   // },
   {
     path: '/languages',
-    component: () => import('~default-activity/LaguagesActivity'),
+    component: () => import('~activities/LaguagesActivity'),
   },
   {
     path: '/credits',
-    component: () => import('~default-activity/Credits/Summary'),
+    component: () => import('~activities/Credits/Summary'),
   },
   {
     path: '/trust',
-    component: () => import('~default-activity/Credits/Status'),
+    component: () => import('~activities/Credits/Status'),
   },
 ];
 
@@ -251,12 +251,12 @@ const settingsRouter = new VueRouter({
     },
     {
       path: '(.*)?/notepad',
-      component: () => import('~default-activity/Notepad'),
+      component: () => import('~activities/Notepad'),
       props: true,
     },
     {
       path: '(.*)?/cliche',
-      component: () => import('~default-activity/MessagesCliche'),
+      component: () => import('~activities/MessagesCliche'),
       props: true,
     },
     // { path: '(.*)?/uploads', component: PhotoSettings },
@@ -265,7 +265,7 @@ const settingsRouter = new VueRouter({
     {
       path: '/login',
       name: 'login',
-      component: () => import('~closed-activity/LoginAccount'),
+      component: () => import('~activities/LoginAccount'),
     },
   ],
 });

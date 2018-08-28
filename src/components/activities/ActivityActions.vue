@@ -9,13 +9,7 @@ export default {
     next();
   },
   computed: {
-    closed() {
-      return this.type === 'closed';
-    },
     style() {
-      if (this.type === 'closed') {
-        return 'closed-activity';
-      }
       if (this.type === 'wrapped') {
         return 'wrapped-activity';
       }
@@ -41,7 +35,7 @@ export default {
         <div class="menu-user">
           <div class="menu-button"
            @click="$emit('close')">
-            <i v-if="!closed" class="material-icons">&#xE5C4;</i>
+            <i class="material-icons">&#xE5C4;</i>
             <span class="menu-button__title">
               <slot name="caption"></slot>
             </span>
@@ -49,10 +43,6 @@ export default {
 
           <div class="menu-user__navbar">
             <slot name="option"></slot>
-            <div class="menu-button" v-if="closed"
-             @click="$emit('close')">
-              <i class="material-icons">&#xE14C;</i>
-            </div>
           </div>
         </div>
         <div class="activity__container">
