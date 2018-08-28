@@ -1,6 +1,6 @@
 <script>
 import api from '~config/api';
-import AbuseList from '~default-activity/AbuseList';
+import AbuseList from '~activities/AbuseList';
 import AbuseDialog from '~components/abuses/AbuseDialog';
 import InfoDialog from '~dialogs/InfoDialog';
 

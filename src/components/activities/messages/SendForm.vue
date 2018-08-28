@@ -3,8 +3,8 @@
 import NegativeDetection from '~mixins/NegativeDetection';
 import PhotoSend from '~modules/PhotoSend';
 
-import Notepad from '~default-activity/Notepad';
-import MessagesCliche from '~default-activity/MessagesCliche';
+import Notepad from '~activities/Notepad';
+import MessagesCliche from '~activities/MessagesCliche';
 import InfoDialog from '~dialogs/InfoDialog';
 import Toast from '~widgets/Toast';
 import MessangerService from '~modules/MessangerService';

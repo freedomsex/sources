@@ -54,7 +54,7 @@ const routes = [
         meta: {
           back: '/intimate',
         },
-        component: () => import('~activities/messages-activity/MessagesActivity'),
+        component: () => import('~activities/messages/MessagesActivity'),
         props: true,
         children: [
           {
@@ -63,7 +63,7 @@ const routes = [
             meta: {
               back: '.',
             },
-            component: () => import('~activities/photo-settings/PhotoSettings'),
+            component: () => import('~activities/photos/PhotoSettings'),
             props: true,
           },
           {
@@ -211,11 +211,11 @@ const routes = [
   },
   {
     path: '/credits',
-    component: () => import('~activities/Credits/Summary'),
+    component: () => import('~activities/credits/Summary'),
   },
   {
     path: '/trust',
-    component: () => import('~activities/Credits/Status'),
+    component: () => import('~activities/credits/Status'),
   },
 ];
 

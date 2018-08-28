@@ -1,8 +1,8 @@
 <script>
 import NegativeDetection from '~mixins/NegativeDetection';
 
-import Notepad from '~default-activity/Notepad';
-import MessagesCliche from '~default-activity/MessagesCliche';
+import Notepad from '~activities/Notepad';
+import MessagesCliche from '~activities/MessagesCliche';
 import LoadingCover from '~dialogs/LoadingCover';
 import MessangerService from '~modules/MessangerService';
 import HornMessageProblem from '~modules/HornMessageProblem';

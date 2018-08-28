@@ -1,6 +1,6 @@
 <script>
 import ActivityActions from '~activities/ActivityActions';
-import MessagesActivity from '~default-activity/messages-activity/MessagesActivity';
+import MessagesActivity from '~activities/messages/MessagesActivity';
 import ContactDialog from './ContactDialog';
 import ContactItem from './ContactItem';
 
