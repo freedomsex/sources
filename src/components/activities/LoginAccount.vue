@@ -3,7 +3,7 @@ import Vuex from 'vuex';
 import api from '~config/api';
 import RemindLogin from '~dialogs/RemindLogin';
 import SimpleCaptcha from '~dialogs/SimpleCaptcha';
-import ActivityActions from '../ActivityActions';
+import ActivityActions from '~activities/ActivityActions';
 
 export default {
   props: [],

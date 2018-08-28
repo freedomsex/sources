@@ -3,7 +3,7 @@ import Vuex from 'vuex';
 import _ from 'underscore';
 import InfoDialog from '~dialogs/InfoDialog';
 import SuggestInput from '~modules/SuggestInput';
-import ActivityActions from '../ActivityActions';
+import ActivityActions from '~activities/ActivityActions';
 
 export default {
   props: ['root'],

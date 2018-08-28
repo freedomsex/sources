@@ -5,7 +5,7 @@ import InfoDialog from '~dialogs/InfoDialog';
 import AdaptPhotoData from '~assets/AdaptPhotoData';
 import PhotoGalery from '~widgets/PhotoGalery';
 
-import ActivityActions from '../../ActivityActions';
+import ActivityActions from '~activities/ActivityActions';
 import FileUploadButton from './FileUploadButton';
 
 export default {

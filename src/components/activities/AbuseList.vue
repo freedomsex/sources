@@ -1,6 +1,6 @@
 <script>
 import InfoDialog from '~dialogs/InfoDialog';
-import ActivityActions from '../ActivityActions';
+import ActivityActions from '~activities/ActivityActions';
 
 export default {
   props: ['list'],

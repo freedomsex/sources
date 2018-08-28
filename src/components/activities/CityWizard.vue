@@ -1,8 +1,8 @@
 <script>
 import SuggestInput from '~modules/SuggestInput';
 import CityDefaultList from '~assets/CityDefaultList';
+import ActivityActions from '~activities/ActivityActions';
 import AccountSettings from './AccountSettings';
-import ActivityActions from '../ActivityActions';
 
 export default {
   extends: AccountSettings,

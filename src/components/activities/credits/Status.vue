@@ -1,7 +1,7 @@
 <script>
+import ActivityActions from '~activities/ActivityActions';
 import Tooltip from '~widgets/Tooltip';
 import Payments from './Payments';
-import ActivityActions from '../../ActivityActions';
 
 export default {
   data() {

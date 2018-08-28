@@ -1,7 +1,7 @@
 <script>
 import api from '~config/api';
 import ConfirmDialog from '~dialogs/ConfirmDialog';
-import ActivityActions from '../ActivityActions';
+import ActivityActions from '~activities/ActivityActions';
 
 export default {
   data() {

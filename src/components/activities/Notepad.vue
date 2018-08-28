@@ -1,5 +1,5 @@
 <script>
-import ActivityActions from '../ActivityActions';
+import ActivityActions from '~activities/ActivityActions';
 
 export default {
   data() {

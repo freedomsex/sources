@@ -5,7 +5,7 @@ import hasher from '~legacy/utils/simple-hash';
 import InfoDialog from '~dialogs/InfoDialog';
 import ConfirmDialog from '~dialogs/ConfirmDialog';
 import Loadable from '~mixins/Loadable';
-import ActivityActions from '../ActivityActions';
+import ActivityActions from '~activities/ActivityActions';
 
 export default {
   mixins: [Loadable],

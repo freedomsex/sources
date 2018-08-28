@@ -1,12 +1,12 @@
 <script>
 import api from '~config/api';
 
+import ActivityActions from '~activities/ActivityActions';
 import Tooltip from '~widgets/Tooltip';
 import ConfirmDialog from '~dialogs/ConfirmDialog';
 import VipStatus from '~components/VipStatus';
 import Loadable from '~mixins/Loadable';
 import Payments from './Payments';
-import ActivityActions from '../../ActivityActions';
 
 export default {
   mixins: [Loadable],

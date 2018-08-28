@@ -1,7 +1,7 @@
 <script>
 import _ from 'underscore';
 import Tooltip from '~widgets/Tooltip';
-import ActivityActions from '../ActivityActions';
+import ActivityActions from '~activities/ActivityActions';
 
 export default {
   props: ['root'],

@@ -1,6 +1,6 @@
 <script>
 import Vuex from 'vuex';
-import ActivityActions from '../ActivityActions';
+import ActivityActions from '~activities/ActivityActions';
 
 export default {
   props: [],

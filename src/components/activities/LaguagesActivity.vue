@@ -1,7 +1,7 @@
 <script>
 import Languages from '~assets/Languages';
 import InfoDialog from '~dialogs/InfoDialog';
-import ActivityActions from '../ActivityActions';
+import ActivityActions from '~activities/ActivityActions';
 
 export default {
   data: () => ({

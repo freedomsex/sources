@@ -1,6 +1,6 @@
 <script>
 import AccountComponent from '~components/AccountComponent';
-import ActivityActions from '../ActivityActions';
+import ActivityActions from '~activities/ActivityActions';
 
 export default {
   props: ['humanId'],

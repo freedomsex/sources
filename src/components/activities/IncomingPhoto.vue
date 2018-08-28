@@ -3,7 +3,7 @@ import axios from 'axios';
 import hasher from '~legacy/utils/simple-hash';
 import PhotoSend from '~modules/PhotoSend';
 import PhotoGalery from '~widgets/PhotoGalery';
-import ActivityActions from '../ActivityActions';
+import ActivityActions from '~activities/ActivityActions';
 
 export default {
   props: ['humanId'],

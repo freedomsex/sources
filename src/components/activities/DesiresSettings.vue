@@ -5,7 +5,7 @@ import InfoDialog from '~dialogs/InfoDialog';
 import DesireItem from '~modules/DesireList/DesireItem';
 import SuggestInput from '~modules/SuggestInput';
 import Tooltip from '~widgets/Tooltip';
-import ActivityActions from '../ActivityActions';
+import ActivityActions from '~activities/ActivityActions';
 
 export default {
   props: [],

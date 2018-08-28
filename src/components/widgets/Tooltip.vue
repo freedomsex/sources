@@ -35,6 +35,7 @@ export default {
   vertical-align: middle;
 
   .glyphicon {
+    top: 0;
     vertical-align: text-top;
     color: @gray;
     padding: 0 @indent-xs;
