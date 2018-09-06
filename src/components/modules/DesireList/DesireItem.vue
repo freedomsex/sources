@@ -41,11 +41,11 @@ export default {
   color: @dark-light;
   cursor: pointer;
   display: inline-block;
-  font-size: 11px;
+  font-size: 10px;
   font-style: normal;
   margin-bottom: @indent-sm;
   margin-right: @indent-xs;
-  padding: @indent-xs+8 @indent-sm @indent-xs+1;
+  padding: 7px 5px 6px 7px;
   line-height: 1;
   text-transform: uppercase;
 
