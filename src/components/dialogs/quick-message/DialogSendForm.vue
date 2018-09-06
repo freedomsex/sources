@@ -105,13 +105,13 @@ export default {
     <div class="modal-dialog__options">
       <button class="btn btn-primary" @click="proxy()">
         <i class="material-icons">&#xE163;</i>
-        Отправить
+        ОТПРАВИТЬ
       </button>
 
       <button class="btn btn-default"
        @click="modals.notepad = true">
         <i class="material-icons">&#xE14F;</i>
-        Блокнот
+        БЛОКНОТ
       </button>
     </div>
 

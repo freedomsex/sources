@@ -163,7 +163,7 @@ export default {
           :index="index"
           :count="count"
           :alert="attention"
-          :key="index"
+          :key="item.id"
           @admit="admit"
           @remove="remove"
           @set-new="setNew"/>

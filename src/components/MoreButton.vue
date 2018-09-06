@@ -6,17 +6,17 @@ export default {
   }),
   computed: {
     sayMore() {
-      return this.moreTitle || 'Ещё';
+      return this.moreTitle || this.$t('ЕЩЁ');
     },
     sayNext() {
-      return this.nextTitle || 'Следующие';
+      return this.nextTitle || this.$t('СЛЕДУЮЩИЕ');
     },
     sayBusy() {
-      let say = this.busyTitle || 'Загружаю...';
+      let say = this.busyTitle || this.$t('ЗАГРУЖАЮ');
       if (this.less) {
-        say = '...';
+        say = '';
       }
-      return say;
+      return `${say}...`;
     },
     title() {
       let title = this.less ? this.sayMore : this.sayNext;
@@ -37,6 +37,16 @@ export default {
   },
 };
 </script>
+
+<i18n>
+{
+  "en": {
+    "ЕЩЁ": "MORE",
+    "СЛЕДУЮЩИЕ": "NEXT",
+    "ЗАГРУЖАЮ": "LOADING"
+  }
+}
+</i18n>
 
 <template>
   <button class="btn btn-default"

@@ -184,8 +184,8 @@ export default {
         </div>
       </div>
 
-      <div class="search-list__next" v-show="more">
-        <span class="btn btn-default btn-sm"
+      <div class="search-list__options" v-show="more">
+        <span class="btn btn-default btn-sm search-list__next"
          @click="loadNext" v-show="more && !loader" :disabled="!response">
           {{$t('Следующие')}}
         </span>
@@ -270,11 +270,10 @@ export default {
   }
   &__options {
     text-align: center;
-    margin-top: 15px;
+    margin-top: @indent-sm;
   }
   &__next {
-    text-align: center;
-    margin-top: @indent-sm;
+    text-transform: uppercase;
   }
   &__loader {
   }

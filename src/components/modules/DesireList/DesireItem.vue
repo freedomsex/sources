@@ -41,12 +41,14 @@ export default {
   color: @dark-light;
   cursor: pointer;
   display: inline-block;
-  font-size: @font-sm;
+  font-size: 11px;
   font-style: normal;
   margin-bottom: @indent-sm;
   margin-right: @indent-xs;
-  padding: @indent-xs+2 @indent-sm;
+  padding: @indent-xs+8 @indent-sm @indent-xs+1;
   line-height: 1;
+  text-transform: uppercase;
+
   &.deleted {
     background-color: @gray;
     text-decoration: line-through;

@@ -70,6 +70,10 @@ export default {
     position: relative;
     margin: 10px;
     z-index: 1;
+
+    .btn {
+      text-transform: uppercase;
+    }
   }
   &__caption {
     font-size: @font-lg;
@@ -89,14 +93,12 @@ export default {
     text-align: center;
   }
   &__options {
-    button {
       .material-icons {
         vertical-align: middle;
         position: relative;
         top: -1px;
         font-size: 20px;
       }
-    }
   }
 }
 

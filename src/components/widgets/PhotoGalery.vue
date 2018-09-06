@@ -17,7 +17,7 @@ export default {
        :src="source(item)"
        @click="$emit('show', index)">
     </div>
-    <div class="galery-photo__placeholder">
+    <div class="galery-photo__placeholder" v-else>
       <slot></slot>
     </div>
   </div>

@@ -58,17 +58,15 @@ export default {
        @close="close"/>
       <div class="photo-send__options" v-show="options">
         <button class="btn btn-default" @click="remove = true">
-          <span aria-hidden="true" class="glyphicon glyphicon-trash"></span>
-          Удалить
+          УДАЛИТЬ
         </button>
         <button class="btn btn-primary" @click="$emit('send')">
-          <span aria-hidden="true" class="glyphicon glyphicon-send"></span>
-          Отправить
+          ОТПРАВИТЬ
         </button>
       </div>
       <!-- <toast v-if="remove" @close="remove = false">Временно недоступно</toast> -->
 
-      <InfoDialog v-if="remove" yesText="Удалить"
+      <InfoDialog v-if="remove" yesText="УДАЛИТЬ"
        @confirm="removePhoto()" @close="remove = false">
         <slot name="title">Удалить фото?</slot>
         Восстановить фото будет невозможно.

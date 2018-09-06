@@ -10,10 +10,10 @@ export default {
   ],
   computed: {
     yes() {
-      return this.yesText || 'Хорошо';
+      return this.yesText || this.$t('ХОРОШО');
     },
     no() {
-      return this.noText || 'Отмена';
+      return this.noText || this.$t('ОТМЕНА');
     },
   },
   methods: {
@@ -30,6 +30,15 @@ export default {
   },
 };
 </script>
+
+<i18n>
+{
+  "en": {
+    "ХОРОШО": "OKAY",
+    "ОТМЕНА": "CANCEL"
+  }
+}
+</i18n>
 
 <template>
   <ModalDialog @close="$emit('close')">

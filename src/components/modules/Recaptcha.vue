@@ -7,7 +7,7 @@ export default {
     return {
       sitekey: '6LdxP0YUAAAAAMzR_XFTV_G5VVOhyPnXLjdudFoe',
       widgetId: null,
-      show: false,
+      show: true,
       error: false,
     };
   },
@@ -25,11 +25,13 @@ export default {
       });
     },
     reset() {
-      if (window.grecaptcha) {
+      if (window.grecaptcha && this.widgetId) {
         this.show = false;
         this.error = false;
         // this.$store.commit('stopScrolling', false);
-        window.grecaptcha.reset(this.widgetId);
+        this.$nextTick(() => {
+          window.grecaptcha.reset(this.widgetId);
+        });
       }
     },
     verify(token) {
@@ -43,8 +45,8 @@ export default {
         this.widgetId = window.grecaptcha.render('g-recaptcha', {
           sitekey: this.sitekey,
           size: 'invisible',
-          'expired-callback': this.onError(),
-          'error-callback': this.onError(),
+          'expired-callback': this.onError,
+          'error-callback': this.onError,
           callback,
         });
         console.log('recaptcha ready', this.widgetId);

@@ -15,7 +15,7 @@ export default {
       return this.type ? btn[this.type] : 'btn-primary';
     },
     yes() {
-      return this.yesText || 'Хорошо';
+      return this.yesText || this.$t('ХОРОШО');
     },
   },
   methods: {
@@ -31,6 +31,14 @@ export default {
   },
 };
 </script>
+
+<i18n>
+{
+  "en": {
+    "ХОРОШО": "OKAY"
+  }
+}
+</i18n>
 
 <template>
   <ModalDialog @close="$emit('close')">
