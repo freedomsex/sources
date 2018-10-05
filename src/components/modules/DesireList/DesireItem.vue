@@ -45,7 +45,7 @@ export default {
   font-style: normal;
   margin-bottom: @indent-sm;
   margin-right: @indent-xs;
-  padding: 7px 5px 6px 7px;
+  padding: 10px 5px 8px 6px;
   line-height: 1;
   text-transform: uppercase;
 

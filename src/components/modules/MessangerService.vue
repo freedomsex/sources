@@ -21,7 +21,6 @@ export default {
       this.text = null;
       this.photo = null;
       this.captcha = false;
-      console.log('сброс формы', this.photo);
     },
     sendMessage(text) {
       if (text) {
@@ -72,21 +71,19 @@ export default {
       this.$emit('process', false);
     },
     sended() {
+      const {text} = this;
       this.$emit('process', false);
       this.$emit('sended');
       this.reset();
-      console.log('reset');
       this.$refs.recaptcha.reset();
-      console.log('recaptcha reset');
-      this.$store.dispatch('notes/UPDATE', this.text);
-      console.log('notes');
+      this.$store.dispatch('notes/UPDATE', text);
     },
     setCode(code) {
       this.code = code;
       this.send();
     },
     cancel() {
-      this.$emit('process', false);
+      // this.$emit('process', false);
       this.captcha = false;
     },
     close() {

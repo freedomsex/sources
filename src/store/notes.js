@@ -10,11 +10,11 @@ export default {
     list: [],
   },
   actions: {
-    INIT({state, commit, rootState}) {
+    INIT({state, dispatch, rootState}) {
       return api.raw.load(null, `static/json/notes/${rootState.locale}.json`).then(({data}) => {
         state.db.transaction('rw', state.db.writes, () => {
-          _.each(data.reverse(), (element) => {
-            commit('add', element);
+          _.each(data.reverse(), (text) => {
+            dispatch('UPDATE', text);
           });
         });
       }).catch(() => {
@@ -30,7 +30,7 @@ export default {
         });
       }
       return state.db.writes.count().then((count) => {
-        if (!count) {
+        if (!count || (count && count < 10)) {
           dispatch('INIT').then(() => {
             dispatch('WRITES');
           });
@@ -57,7 +57,7 @@ export default {
       state.db.writes.get({text}).then((item) => {
         if (item) {
           let count = item.count ? item.count : 0;
-          count += 1; // console.log('UPDATE', [count, updated]);
+          count += 1;
           state.db.writes.update(item.id, {count, updated});
         } else {
           commit('add', text);
