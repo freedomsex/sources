@@ -31,7 +31,7 @@ export default {
         params: {hash: hasher.random()},
       };
       axios
-        .get(`http://${server}/api/v1/users/${uid}/photos`, config)
+        .get(`//${server}/api/v1/users/${uid}/photos`, config)
         .then((response) => {
           const result = response.data.photos;
           if (result && result.length) {

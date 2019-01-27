@@ -12,7 +12,7 @@ export default {
     },
     href() {
       let {uid} = this.$store.state.user;
-      const gateway = '//xosex.me/payments';
+      const gateway = 'http://xosex.me/payments';
       // const gateway = '/payments';
       return `${gateway}/${this.action}/${this.product}/${uid}/${this.hash()}`;
     },

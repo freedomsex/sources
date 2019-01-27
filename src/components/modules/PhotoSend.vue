@@ -27,7 +27,7 @@ export default {
         headers: {Authorization: `Bearer ${this.$store.state.apiToken}`},
         // params: { uid: this.uid, hash }
       };
-      const url = `http://${this.server}/api/v1/users/${this.uid}/photos/${this.photo.alias}.jpg`;
+      const url = `//${this.server}/api/v1/users/${this.uid}/photos/${this.photo.alias}.jpg`;
       axios.delete(url, config).then(() => {
         this.$emit('removed');
         this.close();

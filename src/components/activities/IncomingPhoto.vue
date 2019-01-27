@@ -33,7 +33,7 @@ export default {
         params: {tid: this.humanId, hash: hasher.random()},
       };
       axios
-        .get(`http://${this.server}/api/v1/users/${this.uid}/sends`, config)
+        .get(`//${this.server}/api/v1/users/${this.uid}/sends`, config)
         .then((response) => {
           this.photos = response.data.photos;
           // console.log(this.photos);

@@ -143,7 +143,7 @@ export default {
         params: {tid: this.item.from},
       };
       const server = this.$store.state.photoServer;
-      const url = `http://${server}/api/v1/users/${this.uid}/sends/${
+      const url = `//${server}/api/v1/users/${this.uid}/sends/${
         this.alias
       }.jpg`;
       axios

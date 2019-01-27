@@ -17,7 +17,7 @@ export default {
       const server = this.$store.state.photoServer;
       const {uid} = this.$store.state.user;
       const token = this.$store.state.apiToken;
-      return `http://${server}/api/v1/users/${uid}/photos?jwt=${token}`;
+      return `//${server}/api/v1/users/${uid}/photos?jwt=${token}`;
     },
   },
   methods: {

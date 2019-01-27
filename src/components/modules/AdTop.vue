@@ -16,7 +16,7 @@ export default {
   },
   methods: {
     random(min, max) {
-      return Math.floor(Math.random() * (max - (min + 1))) + min;
+      return Math.floor(Math.random() * ((max - min) + 1)) + min;
     },
   },
   computed: {
@@ -28,7 +28,7 @@ export default {
       return true; // this.width >= 700;
     },
     banner() {
-      return `ad-sc-${this.random(0, 2)}.gif`;
+      return `ad_sc_${this.random(1, 3)}.gif`;
     },
     source() {
       return `/static/img/ad/${this.banner}`;

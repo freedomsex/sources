@@ -44,7 +44,7 @@ class ApiModerator extends Api {
 class ApiSearch extends Api {
   constructor() {
     const key = '1234';
-    const host = `http://${CONFIG.API_SEARCH}/`;
+    const host = `//${CONFIG.API_SEARCH}/`;
     const routing = {
       route: 'users',
       get: '{tid}',
@@ -56,7 +56,7 @@ class ApiSearch extends Api {
 class ApiContact extends Api {
   constructor(routing) {
     const key = 1234;
-    const host = `http://${CONFIG.API_CONTACT}/`;
+    const host = `//${CONFIG.API_CONTACT}/`;
     super(host, key, null, routing);
   }
 
