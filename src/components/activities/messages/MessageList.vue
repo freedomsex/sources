@@ -182,7 +182,7 @@ export default {
 .message-list {
   flex: 1 0 auto;
   padding: @indent-sm @indent-md 0;
-  height: 100%;
+  min-height: 100%;
   // margin-top: @indent-sm;
 }
 
