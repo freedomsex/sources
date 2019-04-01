@@ -19,6 +19,7 @@ export default class Api extends requests {
   setDelay(sec) {
     this.wait = sec * 1000; //
   }
+
   setRouting(routing) {
     this.routing = {
       route: '',
@@ -36,6 +37,7 @@ export default class Api extends requests {
     };
     _.extend(this.routing, routing);
   }
+
   setRoot(host, version) {
     const ver = version ? `v${version}/` : '';
     this.root = host + ver;
@@ -73,6 +75,7 @@ export default class Api extends requests {
     this.config.params = params || {};
     return result;
   }
+
   setUrl(method, params, url) {
     // this.refresh();
     const {route} = this.routing;

@@ -8,6 +8,7 @@ class ApiBun extends Api {
     const host = '/';
     super(host, key);
   }
+
   send(data) {
     return this.post(data, null, 'mess/bun/');
   }
@@ -19,6 +20,7 @@ class ApiMessages extends Api {
     const host = '/';
     super(host, key);
   }
+
   send(data) {
     return this.post(data, null, 'mailer/post/');
   }
@@ -30,12 +32,15 @@ class ApiModerator extends Api {
     const host = '/';
     super(host, key);
   }
+
   promt() {
     return this.post(null, null, 'moder/promt');
   }
+
   load() {
     return this.post(null, null, 'moder/auth');
   }
+
   press(data) {
     return this.post(data, null, 'moder/press');
   }

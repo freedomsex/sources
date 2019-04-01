@@ -137,7 +137,6 @@ export default {
         <span class="user-list__city" :class="{idle: idle}" v-show="city">{{city}}</span>
       </div>
       <div class="contact-item__preview">
-
         <span class="contact-item__status-read" :class="{idle: idle}" v-if="unread"></span>
         <span aria-hidden="true"
          class="glyphicon glyphicon-chevron-left contact-item__status-send"
@@ -209,6 +208,7 @@ export default {
     padding: 5px;
     font-size: 0px;
     color: @gray;
+    cursor: pointer;
   }
 
   &__info {

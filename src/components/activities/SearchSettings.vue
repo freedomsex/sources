@@ -66,11 +66,11 @@ export default {
         return false;
       }
       return (
-        this.selectCity == this.city &&
-        this.selectUp == this.up &&
-        this.selectTo == this.to &&
-        this.checkedAny == this.any &&
-        this.checkedVirt == this.virt
+        this.selectCity == this.city
+        && this.selectUp == this.up
+        && this.selectTo == this.to
+        && this.checkedAny == this.any
+        && this.checkedVirt == this.virt
       );
     },
   },

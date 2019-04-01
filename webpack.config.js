@@ -189,7 +189,7 @@ module.exports = {
       filename: '[name].[chunkhash:5].css',
       chunkFilename: 'styles/[name].[chunkhash:5].css',
     }),
-    new CleanWebpackPlugin([path.resolve(__dirname, 'dist')]),
+    new CleanWebpackPlugin(),
     // new CopyWebpackPlugin([
     //   {from: './dist/app.*', to: `${rootPath}${publicPath}`, flatten: true},
     //   {from: './dist/vendors*', to: `${rootPath}${publicPath}`, flatten: true},

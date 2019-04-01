@@ -28,7 +28,7 @@ export default {
       return true; // this.width >= 700;
     },
     banner() {
-      return `ad_sc_${this.random(1, 3)}.gif`;
+      return 'ad_sc_4.gif'; // ${this.random(3, 3)}
     },
     source() {
       return `/static/img/ad/${this.banner}`;
