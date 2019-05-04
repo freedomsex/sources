@@ -70,6 +70,10 @@ export default {
             <span aria-hidden="true" class="glyphicon glyphicon-flash"></span>
             Ещё
           </span>
+          <a class="btn btn-danger btn-sm" rel="nofollow"
+           href="//fapbook.me/" target="_blank">
+            Смотреть фото 18+
+          </a>
         </div>
       </div>
     </div>
