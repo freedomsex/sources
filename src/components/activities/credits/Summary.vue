@@ -89,8 +89,7 @@ export default {
 
       <div class="activity__splitter"></div>
 
-      <Payments action="enpay"
-       product="credits"
+      <Payments product="credits"
        button="primary"
        text="Получить за 1$">
       </Payments>

@@ -65,8 +65,8 @@ export default {
       <div class="widget__caption">Желания и фантазии</div>
       <div class="widget__wrapper">
         <DesireList :tags="list"/>
-        <div class="desires-widget__next" v-show="more">
-          <span class="btn btn-default btn-sm" @click="load">
+        <div class="desires-widget__next">
+          <span class="btn btn-default btn-sm" v-show="more" @click="load">
             <span aria-hidden="true" class="glyphicon glyphicon-flash"></span>
             Ещё
           </span>

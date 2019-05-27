@@ -11,10 +11,10 @@ export default {
       return `btn-${this.button || 'primary'}`;
     },
     href() {
-      let {uid} = this.$store.state.user;
-      const gateway = 'http://xosex.me/payments';
+      const {uid} = this.$store.state.user;
+      const gateway = 'http://x69.me/payments';
       // const gateway = '/payments';
-      return `${gateway}/${this.action}/${this.product}/${uid}/${this.hash()}`;
+      return `${gateway}/merchant/${this.product}/${uid}/${this.hash()}`;
     },
   },
   methods: {

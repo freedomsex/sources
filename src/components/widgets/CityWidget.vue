@@ -53,7 +53,7 @@ export default {
 .city-widget {
   .widget();
 
-  .city-item {
+  a, .city-item {
     background-color: @gray-dark;
     border-radius: @radius-xs;
     border: 0px solid @gray;
@@ -71,6 +71,8 @@ export default {
       text-decoration: none;
     }
   }
+
+
   &__next {
     margin-top: 5px;
     text-align: center;

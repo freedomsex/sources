@@ -45,8 +45,7 @@ export default {
         кредитов ежедневно.
       </div>
 
-      <Payments action="enpay"
-       product="vip"
+      <Payments product="vip"
        button="danger"
        text="Получить за <s>99$</s> <b>19</b>$">
       </Payments>
@@ -63,8 +62,7 @@ export default {
         каждый день бесплатно.
       </div>
 
-      <Payments action="enpay"
-       product="gold"
+      <Payments product="gold"
        button="warning"
        text="Получить за <s>49$</s> <b>9</b>$">
       </Payments>
@@ -80,8 +78,7 @@ export default {
         пополнение доверия до 1500 кредитов ежедневно.
       </div>
 
-      <Payments action="enpay"
-       product="status"
+      <Payments product="status"
        button="default"
        text="Получить за <b>4.9</b>$">
       </Payments>
