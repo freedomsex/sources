@@ -24,6 +24,8 @@ import CityWidget from '~widgets/CityWidget';
 import RegistrationPromo from '~widgets/RegistrationPromo';
 import BottomNav from '~widgets/BottomNav/NavBar';
 import Language from '~widgets/Language';
+import Version from '~widgets/Version';
+import FailedChunk from '~dialogs/FailedChunk';
 
 import 'styles/core/body.less';
 
@@ -46,6 +48,7 @@ const {locale} = global.defaultSettings || 'ru';
 const i18n = new VueI18n({
   locale, // set locale
   fallbackLocale: 'ru',
+  silentTranslationWarn: true,
   messages: {
     ru: {
       almostDone: 'Почти готово',
@@ -58,9 +61,19 @@ const i18n = new VueI18n({
   },
 });
 
+// global.now = String(new Date().getTime()).slice(0, -3);
+// Vue.config.errorHandler = function (error, vm, info) {
+//   console.log('window.onerror', info);
+//   if (/loading chunk \d* failed./i.test(error.message)) {
+//     console.log('chunk failed', info);
+//     vm.$root.$refs['version-info'].force();
+//   }
+// };
+
 global.App = new Vue({
   data: {
     alert: '',
+    failedChunk: false,
     humanId: null,
     snackbar: {
       text: '',
@@ -145,6 +158,7 @@ global.App = new Vue({
     },
   },
   el: '#app',
+
   store,
   router,
   i18n,
@@ -165,6 +179,8 @@ global.App = new Vue({
     RegistrationPromo,
     BottomNav,
     Toast,
+    Version,
+    FailedChunk,
   },
 });
 
@@ -193,6 +209,14 @@ global.Layer = new Vue({
   router: settingsRouter,
 });
 
+
+// global.window.onerror = (message) => {
+//   console.log('window.onerror', message);
+//   if (/loading chunk \d* failed./i.test(message)) {
+//     console.log('chunk failed', message);
+//     global.App.$root.$refs['version-info'].force();
+//   }
+// };
 // defaultSettings - GLOBAL var
 // store.commit('search/restore', global.defaultSettings || {});
 // store.commit('personal', global.defaultSettings || {}); // TODO: to NS

@@ -224,6 +224,14 @@ const router = new VueRouter({
   routes,
 });
 
+function chunkFailed(error) {
+  if (/loading chunk \d* failed./i.test(error.message)) {
+    global.App.failedChunk = true;
+  }
+}
+
+router.onError(chunkFailed);
+
 // router.beforeEach((to, from, next) => {
 //     console.log('router:', [to, from]);
 //     next();
@@ -270,6 +278,7 @@ const settingsRouter = new VueRouter({
   ],
 });
 
+settingsRouter.onError(chunkFailed);
 settingsRouter.beforeEach((to, from, next) => {
   // console.log('sRouter:', [to, from]);
   if (!to.meta.back) {

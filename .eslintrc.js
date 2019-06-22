@@ -20,7 +20,7 @@ module.exports = {
   settings: {
     "import/resolver": {
       webpack: {
-        config: "webpack.config.js"
+        config: "webpack.common.js"
         // "prod": path.join(__dirname, "webpack.prod.js"),
       }
       // node: {
@@ -67,5 +67,9 @@ module.exports = {
     "prefer-const": ["warn", {"destructuring": "all"}],
     "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
   },
-  globals: {}
+  globals: {
+    DEVELOPMENT: "readonly",
+    APP_VERSION: "readonly",
+    NODE_ENV: true,
+  }
 }

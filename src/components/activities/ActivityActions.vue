@@ -174,6 +174,10 @@ export default {
   }
 }
 
+  .limited-form {
+    max-width: 220px;
+  }
+
 // .activity-loader {
 //   text-align: center;
 //   position: absolute;

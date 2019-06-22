@@ -10,6 +10,8 @@ export default {
       captcha: false,
       text: null,
       photo: null,
+      token: null,
+      code: null,
     };
   },
   mounted() {
@@ -38,7 +40,10 @@ export default {
       this.$store.commit('grecaptchaTokenUpdate', token);
       const params = {
         id: this.id,
-        captcha_code: this.code,
+        captcha: {
+          code: this.code,
+          token: this.token,
+        },
         token: this.$store.state.grecaptchaToken,
       };
       if (this.photo) {
@@ -78,7 +83,8 @@ export default {
       this.$refs.recaptcha.reset();
       this.$store.dispatch('notes/UPDATE', text);
     },
-    setCode(code) {
+    setCode({token, code}) {
+      this.token = token;
       this.code = code;
       this.send();
     },

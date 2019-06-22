@@ -13,6 +13,7 @@ export default {
       password: '',
       captcha: false,
       code: '',
+      token: null,
       error: false,
       remind: false,
       hint: 'Введите данные',
@@ -29,7 +30,8 @@ export default {
       const data = {
         login: this.login,
         pass: this.password,
-        captcha: this.code,
+        token: this.token,
+        code: this.code,
       };
       api.user.post(data, null, 'sync/login').then((response) => {
         this.hint = response.data.say;
@@ -39,11 +41,15 @@ export default {
       });
     },
     onLogin() {
-      this.$refs.captcha.update();
       if (!this.error) {
         this.hint = 'Успешно. Подождите.';
         window.location.href = '/';
+      } else {
+        this.$refs.captcha.refresh();
       }
+    },
+    setToken(token) {
+      this.token = token;
     },
     setCode(code) {
       this.code = code;
@@ -60,24 +66,28 @@ export default {
 <template>
   <ActivityActions type="wrapped" @close="$emit('close')">
     <span slot="caption">Войти</span>
-    <div class="activity-section">
-      <div class="activity-section__title">Ваш логин</div>
-      <div class="form-inline">
-        <input class="form-control" type="text" v-model="login" placeholder="Введите логин">
+    <div class="limited-form">
+      <div class="activity-section">
+        <div class="activity-section__title">Ваш логин</div>
+          <input class="form-control" type="text" v-model="login" placeholder="Введите логин">
+
+      </div>
+
+      <div class="activity-section">
+        <div class="activity-section__title">Пароль</div>
+        <div class="form-group">
+          <input class="form-control" type="text" v-model="password" placeholder="Введите пароль">
+        </div>
+      </div>
+
+      <div class="activity-section" v-show="error && captcha">
+        <div class="activity-section__title">Код</div>
+        <SimpleCaptcha ref="captcha"
+         @token="setToken"
+         @input="setCode"/>
       </div>
     </div>
 
-    <div class="activity-section">
-      <div class="activity-section__title">Пароль</div>
-      <div class="form-inline">
-        <input class="form-control" type="text" v-model="password" placeholder="Введите пароль">
-      </div>
-    </div>
-
-    <div class="activity-section" v-show="error && captcha">
-      <div class="activity-section__title">Код</div>
-      <SimpleCaptcha ref="captcha" @input="setCode"/>
-    </div>
 
     <div class="activity-section">
       <button class="btn btn-primary" @click="send"> Войти </button>

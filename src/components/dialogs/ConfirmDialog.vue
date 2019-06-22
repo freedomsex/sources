@@ -10,10 +10,10 @@ export default {
   ],
   computed: {
     yes() {
-      return this.yesText || this.$t('ХОРОШО');
+      return this.yesText || this.$t('ok');
     },
     no() {
-      return this.noText || this.$t('ОТМЕНА');
+      return this.noText || this.$t('no');
     },
   },
   methods: {
@@ -33,9 +33,21 @@ export default {
 
 <i18n>
 {
+  "ru": {
+    "ok": "ХОРОШО",
+    "no": "ОТМЕНА"
+  },
   "en": {
-    "ХОРОШО": "OKAY",
-    "ОТМЕНА": "CANCEL"
+    "ok": "OKAY",
+    "no": "CANCEL"
+  },
+  "kz": {
+    "ok": "ЖАҚСЫ",
+    "no": "ЖОЮҒА"
+  },
+  "ua": {
+    "ok": "ДОБРЕ",
+    "no": "СКАСУВАТИ"
   }
 }
 </i18n>

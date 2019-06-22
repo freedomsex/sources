@@ -1,34 +1,38 @@
 <script>
-import hasher from '~legacy/utils/simple-hash';
+import SimpleCaptcha from './SimpleCaptcha';
 import ModalDialog from '~dialogs/ModalDialog';
 
 export default {
+  components: {
+    ModalDialog,
+    SimpleCaptcha,
+  },
   data() {
     return {
       code: '',
-      inc: 0,
+      captcha: false,
+      token: null,
+      error: false,
     };
-  },
-  computed: {
-    src() {
-      return `/secret_pic.php?inc=${this.inc}&hash=${hasher.random()}`;
-    },
   },
   methods: {
     close() {
       this.$emit('cancel');
     },
     send() {
-      this.$emit('send', this.code);
-      this.update();
+      this.$emit('send', {
+        token: this.token,
+        code: this.code,
+      });
       this.close();
     },
-    update() {
-      this.inc += 1;
+
+    setToken(token) {
+      this.token = token;
     },
-  },
-  components: {
-    ModalDialog,
+    setCode(code) {
+      this.code = code;
+    },
   },
 };
 </script>
@@ -40,37 +44,20 @@ export default {
       <a href="http://docs.freedomsex.info/blog/#/Как-пользоваться/?id=Простая-проверка" target="_blank"
        aria-hidden="true" class="glyphicon glyphicon-info-sign"></a>
     </div>
-    <div class="captcha-dialog__body">
-      <div class="human-dialog__desire">
-        Введите код с картинки, чтобы продолжить
-      </div>
-      <div class="input-group" style="max-width: 300px;">
-        <span class="captcha-dialog__addon input-group-addon captcha-img__addon">
-          <span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span>
-        </span>
-        <span class="captcha-dialog__addon input-group-addon captcha-img__addon">
-          <img class="form-message__captcha-img" :src="src" width="48" height="20" @click="update">
-        </span>
-        <input class="form-control"
-         type="tel"
-         inputmode="numeric"
-         autocomplete="off"
-         v-model="code">
-      </div>
-    </div>
 
-    <div class="captcha-dialog__option">
-      <button class="btn btn-default" @click="$router.push('/credits')">
-        Поднять доверие
-      </button>
+    <div class="modal-dialog__wrapper capped">
+      <SimpleCaptcha ref="captcha"
+       @token="setToken"
+       @input="setCode"/>
+
       <button class="btn btn-warning" @click="send">
         Отправить
       </button>
+      <button class="btn btn-default" @click="$router.push('/credits')">
+        Поднять доверие
+      </button>
     </div>
 
-    <div class="human-dialog__form">
-
-    </div>
   </ModalDialog>
 </template>
 
@@ -86,9 +73,12 @@ export default {
   font-weight: bold;
   font-size: 16px;
   padding: @indent-sm @indent-md;
+  vertical-align: middle;
   .glyphicon {
     float: right;
     color: @white;
+    font-size: 20px;
+    text-decoration: none;
   }
 }
 
@@ -97,7 +87,8 @@ export default {
 }
 
 .captcha-dialog__option {
-  padding: @indent-md @indent-md 0;
+  padding: 0 @indent-md ;
+  margin-top: @indent-md;
   text-align: right;
 }
 

@@ -3,7 +3,7 @@
 export default {
   data() {
     return {
-      enabled: true,
+      enable: false,
       iframe: true,
       width: 0,
       rotation: {
@@ -13,10 +13,20 @@ export default {
   },
   mounted() {
     this.width = this.$el.offsetWidth;
+    this.adAdScripts('https://promo-bc.com/promo.php?type=chat_head&c=642892&lang=&ch%5Bmodel_zone%5D=free&ch%5Blanding%5D=chat&ch%5Bleft%5D=95&ch%5Btop%5D=85&ch%5Banimation%5D=0&ch%5Btop_models%5D=1');
   },
   methods: {
     random(min, max) {
       return Math.floor(Math.random() * ((max - min) + 1)) + min;
+    },
+    adAdScripts(src) {
+      const scriptIsset = document.querySelector(`script[src='${src}']`);
+      if (!scriptIsset && this.regular) {
+        const script = document.createElement('script');
+        script.src = src;
+        script.async = true;
+        document.body.appendChild(script);
+      }
     },
   },
   computed: {
@@ -32,6 +42,9 @@ export default {
     },
     source() {
       return `/static/img/ad/${this.banner}`;
+    },
+    enabled() {
+      return this.enable && !DEVELOPMENT;
     },
   },
 };
