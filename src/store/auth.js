@@ -1,24 +1,15 @@
 import _ from 'underscore';
 import api from '~config/api';
-import axios from 'axios';
 
 export default {
   namespaced: true,
   state: {
-    iss: '',
-    exp: '',
-    iat: '',
-    sid: '',
     uid: '',
-    auth: '',
-    ip: '',
     login: '',
     pass: '',
     email: '',
     promt: '',
     subscr: false,
-    last: '',
-    error: '',
   },
   actions: {
     sync({commit}) {
@@ -43,9 +34,6 @@ export default {
     SAVE_SUSCRIBE({commit}) {
       commit('subscr');
       return api.user.saveSubscribe();
-    },
-    UPDATE_KEY() {
-      return axios.get('/sync/sess/');
     },
   },
   mutations: {

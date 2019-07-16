@@ -2,6 +2,7 @@
 import CensoredText from '~components/CensoredText';
 import ConfirmDialog from '~dialogs/ConfirmDialog';
 import InfoDialog from '~dialogs/InfoDialog';
+import ColorContactIcon from './ColorContactIcon';
 
 export default {
   props: ['item', 'index', 'idle', 'quick'],
@@ -14,6 +15,12 @@ export default {
         accept: false,
       },
     };
+  },
+  components: {
+    ConfirmDialog,
+    InfoDialog,
+    CensoredText,
+    ColorContactIcon,
   },
   computed: {
     name() {
@@ -55,10 +62,14 @@ export default {
     acceptRemove() {
       return this.$store.state.accepts.removeContacts;
     },
+    userpic() {
+      return this.item.userpic ? this.item.userpic.source : '';
+    },
   },
   methods: {
     show() {
       // this.$emit('show');
+      this.humanPush();
       if (this.idle && !this.acceptSettings) {
         this.$emit('accept');
       } else if (this.quick) {
@@ -68,29 +79,26 @@ export default {
         this.dialog();
       }
     },
+    humanPush() {
+      this.$store.commit('human/save', this.item.user);
+      this.$store.commit('human/save', {
+        id: this.humanId,
+        message: this.message,
+        userpic: this.item.userpic,
+      });
+    },
     reply() {
       this.$emit('read', this.index);
-      console.log('item show', {
-        humanId: this.humanId,
-        message: this.message,
-        index: this.index,
-      });
-      this.$router.push({
-        name: 'quickReply',
+      this.$router.push({name: 'quickReply',
         params: {
           humanId: this.humanId,
-          message: this.message,
           index: this.index,
-        },
-      });
+        }});
     },
     dialog() {
       this.$emit('read', this.index);
       // this.$emit('dialog', {id: this.humanId, title: this.title});
-      this.$router.push({
-        name: 'dialog',
-        params: {humanId: this.humanId, title: this.title},
-      });
+      this.$router.push({name: 'dialog', params: {humanId: this.humanId}});
     },
     confirmBun() {
       this.confirm = 'doit';
@@ -120,16 +128,14 @@ export default {
       this.close();
     },
   },
-  components: {
-    ConfirmDialog,
-    InfoDialog,
-    CensoredText,
-  },
 };
 </script>
 
 <template>
   <div class="contact-item" :class="{idle: idle}">
+    <div class="contact-item__photo" @click="show">
+      <ColorContactIcon :uid="humanId" :item="{name, city, age}" :src="userpic"/>
+    </div>
     <div class="contact-item__content" @click="show">
       <div class="contact-item__info">
         <span class="user-list__name" :class="{idle: idle}">{{name}}</span>
@@ -186,26 +192,34 @@ export default {
     border-bottom-width: 0px;
   }
   display: flex;
+  align-items: center;
   border-bottom: 1px solid @light;
   position: relative;
   background: @white;
   overflow: hidden;
   font-size: 14px;
+    padding: 7px @indent-sm;
+
+  &__photo {
+    margin-right: @indent-sm;
+    flex: 0 0 auto;
+    position: relative;
+  }
 
   &__content {
     .link;
     display: flex;
     flex-direction: column;
+    align-self: flex-start;
     flex: 1 2 auto;
-    padding: 7px @indent-sm;
     white-space: nowrap;
     overflow: hidden;
+    min-height: 40px;
   }
 
   &__edit {
     flex: 0 0 auto;
-    align-self: center;
-    padding: 5px;
+    padding: 5px 0px 5px 5px;
     font-size: 0px;
     color: @gray;
     cursor: pointer;

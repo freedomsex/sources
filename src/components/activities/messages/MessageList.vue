@@ -2,24 +2,26 @@
 import _ from 'underscore';
 import axios from 'axios';
 import hasher from '~legacy/utils/simple-hash';
+import CONFIG from '~config/';
 
-import AbuseWidget from '~components/abuses/AbuseWidget';
 import InfoDialog from '~dialogs/InfoDialog';
 import MessageItem from './MessageItem';
 import ListDate from './ListDate';
+
+import HumanSummary from '~halves/HumanSummary';
 
 const fdate = null; // eslint-disable-line no-unused-vars
 const prev = null; // eslint-disable-line no-unused-vars
 // TODO: переписать глобальную зависимость
 
 export default {
-  props: ['humanId'],
+  props: ['humanId', 'readonly'],
   data() {
     return {
       messages: [],
       response: null,
       error: 0,
-      next: 0,
+      offset: 0,
       newCount: 0,
       batch: 15,
       received: 0,
@@ -35,7 +37,7 @@ export default {
   },
   methods: {
     reload() {
-      this.next = 0;
+      this.offset = 0;
       this.newCount = 0;
       this.messages = [];
       this.load();
@@ -44,26 +46,26 @@ export default {
       // console.log('load MessList data');
       this.response = 0;
       const config = {
-        headers: {Authorization: `Bearer ${this.$store.state.apiToken}`},
-        params: {id: this.humanId, next: this.next, hash: hasher.random()},
+        headers: {Authorization: `Bearer ${this.$store.state.token.access}`},
+        params: {tid: this.humanId, offset: this.offset, hash: hasher.random()},
       };
-      axios
-        .get('/ajax/messages_load.php', config)
-        .then((response) => {
-          this.onLoad(response);
-        })
+      axios.get(`${CONFIG.API_DIALOG}/api/v1/users/${this.userId}/dialog`, config).then(({data}) => {
+        this.onLoad(data);
+      })
         .catch((error) => {
           this.error = 10;
+          this.$Progress.fail();
           console.log(error);
         });
-      setTimeout(() => { this.toSlow = true; }, 7000);
+      // setTimeout(() => { this.toSlow = true; }, 7000);
+      this.$Progress.start();
     },
     loadNext() {
       this.skipScroll = true;
       this.load();
     },
-    onLoad(response) {
-      const {messages} = response.data;
+    onLoad(data) {
+      const messages = data;
       this.received = messages ? messages.length : 0;
       if (!messages && !this.messages.length) {
         this.noMessages();
@@ -71,14 +73,20 @@ export default {
         if (this.received) {
           this.messages = _.union(messages.reverse(), this.messages);
         }
-        this.next += this.batch;
+        this.offset += this.batch;
         this.scammer();
       }
       this.response = 200;
       this.toSlow = false;
+      this.$Progress.finish();
       this.$nextTick(() => {
         // this.scroll();
       });
+
+      const config = {
+        headers: {Authorization: `Bearer ${this.$store.state.token.access}`},
+      };
+      axios.put(`${CONFIG.API_DIALOG}/api/v1/users/${this.userId}/dialog/read`, {tid: this.humanId}, config);
     },
     scroll() {
       if (this.skipScroll) {
@@ -135,7 +143,7 @@ export default {
     },
   },
   components: {
-    AbuseWidget,
+    HumanSummary,
     MessageItem,
     InfoDialog,
     ListDate,
@@ -145,7 +153,8 @@ export default {
 
 <template>
   <div class="message-list" v-show="!error">
-    <AbuseWidget :humanId="humanId"/>
+
+    <HumanSummary :vip="null" :humanId="humanId" :centred="true" v-if="!readonly"/>
 
     <div class="messages__new" v-show="newCount" @click="load">
       <span class="messages__new-lamp">Новые
@@ -171,7 +180,7 @@ export default {
     </div>
     <div class="messages__loader" v-show="!error && !response">
       <span>
-        <img src="~static/img/icon/mess_loader.gif" v-show="toSlow" style="display: none;">
+        <img src="~static/img/icon/mess_loader.gif" v-show="toSlow">
         Загружаем
       </span>
     </div>

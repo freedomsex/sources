@@ -5,7 +5,7 @@ import AccentDialog from '~dialogs/AccentDialog';
 import CensoredText from '~components/CensoredText';
 
 import Loadable from '~mixins/Loadable';
-import DesireListCompact from './DesireListCompact';
+import DesireListCompact from '~modules/DesireListCompact';
 import DialogSendForm from './DialogSendForm';
 
 
@@ -133,57 +133,57 @@ export default {
 </template>
 
 <style lang="less">
-.human-dialog {
-  &__input {
-    border-width: 0px;
-  }
-  &__body {
-    padding: @indent-sm @indent-md 0;
-  }
-  &__text {
-    padding: @indent-sm @indent-sm;
-    background: @light;
-    margin-bottom: @indent-xs;
-    cursor: pointer;
-    &.message {
-      background: @light;
-    }
-    &.warning {
-      background: @alert-sand;
-      border-left: 3px solid @orange-light;
-    }
-  }
-}
-
-.human-dialog__form {
-  position: relative;
-  padding-bottom: @indent-sm;
-  &-send {
-    .btn-circle;
-    background: @menu-color;
-    position: absolute;
-    padding: @indent-sm;
-    right: @indent-sm;
-    bottom: @indent-sm;
-    .glyphicon {
-      position: relative;
-      left: -2px;
-    }
-  }
-  &-anketa {
-    width: 40px;
-    position: absolute;
-    left: @indent-sm;
-    bottom: @indent-sm;
-  }
-  &-input {
-    margin: 0 55px 0 45px;
-    padding: @indent-sm @indent-sm;
-    &:empty:not(:focus):before {
-      color: @gray-dark;
-      content: attr(placeholder);
-      display: block;
-    }
-  }
-}
+// .human-dialog {
+//   &__input {
+//     border-width: 0px;
+//   }
+//   &__body {
+//     padding: @indent-sm @indent-md 0;
+//   }
+//   &__text {
+//     padding: @indent-sm @indent-sm;
+//     background: @light;
+//     // margin-bottom: @indent-xs;
+//     cursor: pointer;
+//     &.message {
+//       background: @light;
+//     }
+//     &.warning {
+//       background: @alert-sand;
+//       border-left: 3px solid @orange-light;
+//     }
+//   }
+// }
+//
+// .human-dialog__form {
+//   position: relative;
+//   padding-bottom: @indent-sm;
+//   &-send {
+//     .btn-circle;
+//     background: @menu-color;
+//     position: absolute;
+//     padding: @indent-sm;
+//     right: @indent-sm;
+//     bottom: @indent-sm;
+//     .glyphicon {
+//       position: relative;
+//       left: -2px;
+//     }
+//   }
+//   &-anketa {
+//     width: 40px;
+//     position: absolute;
+//     left: @indent-sm;
+//     bottom: @indent-sm;
+//   }
+//   &-input {
+//     margin: 0 55px 0 45px;
+//     padding: @indent-sm @indent-sm;
+//     &:empty:not(:focus):before {
+//       color: @gray-dark;
+//       content: attr(placeholder);
+//       display: block;
+//     }
+//   }
+// }
 </style>

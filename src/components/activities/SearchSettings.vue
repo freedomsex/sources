@@ -166,8 +166,7 @@ export default {
 </i18n>
 
 <template>
-  <ActivityActions type="wrapped" @close="close">
-    <span slot="caption">{{$t('settings')}}</span>
+  <ActivityActions :caption="$t('settings')" type="wrapped" @close="close">
     <div class="activity-section">
       <div class="activity-section__title">{{$t('myCity')}}:</div>
       <div class="form-inline" @click="$router.push({path: 'account', query: {back: 'search'}})">

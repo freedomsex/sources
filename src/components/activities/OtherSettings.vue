@@ -17,6 +17,8 @@ export default {
       this.$emit('close');
     },
     logout() {
+      this.$store.commit('token/logout');
+      // TODO: remove logout.php
       window.location = '/logout.php';
     },
   },
@@ -27,8 +29,7 @@ export default {
 </script>
 
 <template>
-  <ActivityActions type="wrapped" @close="$emit('close')">
-    <span slot="caption">Подробнее</span>
+  <ActivityActions caption="Подробнее" type="wrapped" @close="$emit('close')">
 <!--
     <div class="activity-section">
       <div class="activity-section__title">Статус анкеты</div>

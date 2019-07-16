@@ -1,5 +1,6 @@
 <script>
 import axios from 'axios';
+import CONFIG from '~config/';
 import hasher from '~legacy/utils/simple-hash';
 import InfoDialog from '~dialogs/InfoDialog';
 import AdaptPhotoData from '~assets/AdaptPhotoData';
@@ -24,14 +25,13 @@ export default {
       this.$emit('close');
     },
     loadPhoto() {
-      const server = this.$store.state.photoServer;
       const {uid} = this.$store.state.user;
       const config = {
-        headers: {Authorization: `Bearer ${this.$store.state.apiToken}`},
+        headers: {Authorization: `Bearer ${this.$store.state.token.access}`},
         params: {hash: hasher.random()},
       };
       axios
-        .get(`//${server}/api/v1/users/${uid}/photos`, config)
+        .get(`${CONFIG.API_PHOTO}/api/v1/users/${uid}/photos`, config)
         .then((response) => {
           const result = response.data.photos;
           if (result && result.length) {
@@ -75,8 +75,7 @@ export default {
 </script>
 
 <template>
-  <ActivityActions type="wrapped" @close="close">
-    <span slot="caption">Отправить фото</span>
+  <ActivityActions caption="Отправить фото" type="wrapped" @close="close">
     <div class="activity-section">
       <PhotoGalery :list="photos" @show="show">
         Фотографии которые вы загрузите будут здесь

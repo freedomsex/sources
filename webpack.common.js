@@ -21,9 +21,9 @@ module.exports = {
     app: ['./src/index.js'],
   },
   output: {
-    filename: '[hash].js',
+    // filename: '[hash].js',
     path: path.resolve(__dirname, 'dist'),
-    publicPath: '/static/',
+    publicPath: '/static/build/',
   },
   resolve: {
     extensions: ['.js', '.json', '.vue', '.ts'],
@@ -32,6 +32,7 @@ module.exports = {
       '~store': path.resolve(__dirname, './src/store/'),
       '~activities': path.resolve(__dirname, './src/components/activities/'),
       '~dialogs': path.resolve(__dirname, './src/components/dialogs/'),
+      '~halves': path.resolve(__dirname, './src/components/halves/'),
       '~components': path.resolve(__dirname, './src/components/'),
       '~modules': path.resolve(__dirname, './src/components/modules/'),
       '~widgets': path.resolve(__dirname, './src/components/widgets/'),
@@ -86,7 +87,7 @@ module.exports = {
       },
       {
         test: /\.js$/,
-        exclude: /node_modules/,
+        exclude: /node_modules\/(?!(vuex-persist)\/)/,
         loader: 'babel-loader',
         options: {
           presets: ['env'],

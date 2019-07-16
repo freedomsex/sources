@@ -1,5 +1,6 @@
 <script>
 import axios from 'axios';
+import CONFIG from '~config/';
 import hasher from '~legacy/utils/simple-hash';
 import PhotoSend from '~modules/PhotoSend';
 import PhotoGalery from '~widgets/PhotoGalery';
@@ -11,12 +12,10 @@ export default {
     return {
       photos: [],
       user: 0,
-      server: null,
       preview: null,
     };
   },
   created() {
-    this.server = this.$store.state.photoServer;
   },
   mounted() {
     this.loadPhoto();
@@ -29,11 +28,11 @@ export default {
   methods: {
     loadPhoto() {
       const config = {
-        headers: {Authorization: `Bearer ${this.$store.state.apiToken}`},
+        headers: {Authorization: `Bearer ${this.$store.state.token.access}`},
         params: {tid: this.humanId, hash: hasher.random()},
       };
       axios
-        .get(`//${this.server}/api/v1/users/${this.uid}/sends`, config)
+        .get(`${CONFIG.API_PHOTO}/api/v1/users/${this.uid}/sends`, config)
         .then((response) => {
           this.photos = response.data.photos;
           // console.log(this.photos);
@@ -70,8 +69,7 @@ export default {
 </script>
 
 <template>
-  <ActivityActions type="wrapped" @close="close">
-    <span slot="caption">Галерея</span>
+  <ActivityActions caption="Галерея" type="wrapped" @close="close">
     <div class="activity-section">
       <PhotoGalery
        :list="photos"

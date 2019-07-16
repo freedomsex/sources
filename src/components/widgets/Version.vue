@@ -23,10 +23,10 @@ export default {
     },
   },
   mounted() {
+    this.reset();
     this.updated = this.now();
     this.version = APP_VERSION;
     this.hosted = this.version;
-    console.log('DEVELOPMENT', DEVELOPMENT);
   },
   updated() {
     this.request();
@@ -69,6 +69,15 @@ export default {
       this.major = (current[0] !== hosted[0]);
       this.minor = (current[1] !== hosted[1]);
       this.patch = (current[2] !== hosted[2]);
+      this.notify();
+    },
+    notify(force) {
+      if (force || this.alert) {
+        this.$store.commit('updateAvailable', 1);
+      }
+    },
+    reset() {
+      this.$store.commit('updateAvailable', 0);
     },
     refresh() {
       this.skip = false;
@@ -77,7 +86,15 @@ export default {
     force() {
       this.skip = false;
       this.major = true;
+      this.notify(true);
     },
+  },
+
+  created() {
+    global.addEventListener('focus', this.refresh);
+  },
+  destroyed() {
+    global.removeEventListener('focus', this.refresh);
   },
 };
 </script>
@@ -193,7 +210,7 @@ export default {
   .glyphicon {
     position: relative;
     line-height: 1;
-    margin-right: @indent-xs;
+    margin-right: 3px;
     // font-size: 16px;
     color: @green-dark;
     top: 2px;

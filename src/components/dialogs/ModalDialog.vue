@@ -58,6 +58,7 @@ export default {
     }
   }
   &__container {
+        width: 100%;
     min-width: 200px;
     max-width: 400px;
     // max-height: 100%;

@@ -44,13 +44,12 @@ export default {
 </script>
 
 <template>
-  <ActivityActions @close="$emit('close')">
-    <span slot="caption">Замечания к анкете</span>
+  <ActivityActions caption="Замечания к анкете" @close="$emit('close')">
 
     <template slot="option">
-      <div class="menu-button" @click="add()">
+      <div class="header-bar__button" @click="add()">
         <i class="material-icons">&#xE145;</i>
-        <span class="menu-button__title">
+        <span class="header-bar__title">
           Добавить
         </span>
       </div>

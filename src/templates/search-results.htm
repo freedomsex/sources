@@ -1,25 +1,28 @@
-  <div class="container content">
-    <aside class="row">
-      <auth-board v-if="promt"></auth-board>
-      <search-wizard>
-        <div class="search-wizard" v-html="$t('almostDone')">
-          Почти готово...
-        </div>
-      </search-wizard>
-    </aside>
-    <div class="row">
-      <nav class="preloader" v-show="!ready">
-        <!-- <div class="preloader__img"></div> -->
-        ${require('~templates/preloader-raw-svg.htm')}
-        <div class="preloader__hint" v-html="$t('preloader')">
-          Поиск анкет, всегда бесплатно
-        </div>
-      </nav>
 
-      <ad-top></ad-top>
 
-      <search-list ref="results"></search-list>
-    </div>
+<div class="container content">
+  <aside class="row">
+    <auth-board v-if="promt"></auth-board>
+    <photo-line-widget ></photo-line-widget>
+    <search-wizard>
+      <div class="search-wizard" v-html="$t('almostDone')">
+        Почти готово...
+      </div>
+    </search-wizard>
+  </aside>
+  <div class="row">
+    <nav class="preloader" v-show="!ready">
+      <!-- <div class="preloader__img"></div> -->
+      ${require('~templates/preloader-raw-svg.htm')}
+      <div class="preloader__hint" v-html="$t('preloader')">
+        Поиск анкет, всегда бесплатно
+      </div>
+    </nav>
+
+    <ad-top></ad-top>
+
+    <search-list ref="results"></search-list>
   </div>
+</div>
 
-  <desires-widget :tags="tags" v-if="tags.length"></desires-widget>
+<desires-widget :tags="tags" v-if="tags.length"></desires-widget>

@@ -27,8 +27,7 @@ export default {
 </script>
 
 <template>
-  <ActivityActions type="wrapped" @close="$emit('close')">
-    <span slot="caption">Статус анкеты</span>
+  <ActivityActions caption="Статус анкеты" type="wrapped" @close="$emit('close')">
 
     <div class="activity-section">
       Статус отображается в результатах поиска

@@ -1,9 +1,9 @@
 <script>
 export default {
   props: ['tags'],
-  methods: {
+  computed: {
     count() {
-      return this.tags.length > 0;
+      return this.tags.length || 0;
     },
   },
 };

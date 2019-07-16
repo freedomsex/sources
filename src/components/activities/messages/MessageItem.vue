@@ -1,4 +1,6 @@
 <script>
+import api from '~config/api';
+import CONFIG from '~config/';
 import axios from 'axios';
 import PhotoSend from '~modules/PhotoSend';
 import Toast from '~widgets/Toast';
@@ -49,17 +51,17 @@ export default {
       return this.showOption || this.fixOption ? 1 : 0;
     },
     sent() {
-      return !this.uid || this.uid == this.item.from ? 1 : 0;
+      return !this.uid || this.uid == this.item.sender ? 1 : 0;
     },
     read() {
-      return this.item.read != 0;
+      return this.item.readed != 0;
     },
     time() {
-      return this.$moment(this.item.date).format('HH:mm');
+      return this.$moment(this.item.added).format('HH:mm');
     },
     alias() {
       let result = false;
-      const text = this.item.mess;
+      const text = this.item.message;
       const old = /.+images.intim?.(.{32})\.(jpg)/i;
       const now = /\[\[IMG:(.{32})\]\]/i;
       result = old.test(text) ? old.exec(text) : false;
@@ -70,13 +72,12 @@ export default {
       return result;
     },
     image() {
-      const server = this.$store.state.photoServer;
       const image = this.pathName(this.alias);
-      return image ? `http://${server}/res/photo/preview/${image}.png` : false;
+      return image ? `${CONFIG.API_PHOTO}/res/photo/preview/${image}.png` : false;
     },
     previous() {
       const p = prev;
-      prev = this.item.from;
+      prev = this.item.sender;
       return !!(!p || p == prev);
     },
     acceptRemove() {
@@ -94,14 +95,11 @@ export default {
       }
     },
     bun() {
-      const config = {
-        headers: {Authorization: `Bearer ${this.$store.state.apiToken}`},
-      };
       const data = {
         id: this.item.id,
-        tid: this.item.from,
+        tid: this.item.sender,
       };
-      axios.post('/mess/bun/', data, config).then(() => {
+      api.messages.bun(data).then(() => {
         this.$emit('remove', this.index);
       }).catch(() => {
         console.log('error');
@@ -112,17 +110,12 @@ export default {
       console.log('cancel');
     },
     remove() {
-      const config = {
-        headers: {Authorization: `Bearer ${this.$store.state.apiToken}`},
-      };
       const data = {
         id: this.item.id,
       };
-      axios
-        .post('/mess/delete/', data, config)
-        .then(() => {
-          // this.$emit('remove', this.index);
-        })
+      api.messages.delete(data).then(() => {
+        // this.$emit('remove', this.index);
+      })
         .catch((error) => {
           console.log(error);
         });
@@ -139,11 +132,10 @@ export default {
     },
     play() {
       const config = {
-        headers: {Authorization: `Bearer ${this.$store.state.apiToken}`},
-        params: {tid: this.item.from},
+        headers: {Authorization: `Bearer ${this.$store.state.token.access}`},
+        params: {tid: this.item.sender},
       };
-      const server = this.$store.state.photoServer;
-      const url = `//${server}/api/v1/users/${this.uid}/sends/${
+      const url = `${CONFIG.API_PHOTO}/api/v1/users/${this.uid}/sends/${
         this.alias
       }.jpg`;
       axios
@@ -207,7 +199,7 @@ export default {
           </span>
         </div>
         <span v-else>
-          <CensoredText :text="item.mess" :bypass="sent"/>
+          <CensoredText :text="item.message" :bypass="sent"/>
           <span class="message-info">
             <span class="message-info__status" v-show="!read"></span>
             <span class="message-info__time">{{time}}</span>

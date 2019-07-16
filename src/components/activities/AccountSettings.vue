@@ -4,6 +4,7 @@ import _ from 'underscore';
 import InfoDialog from '~dialogs/InfoDialog';
 import SuggestInput from '~modules/SuggestInput';
 import ActivityActions from '~activities/ActivityActions';
+import UploadProfilePhoto from '~activities/photos/UploadProfilePhoto';
 
 export default {
   props: ['root'],
@@ -20,10 +21,16 @@ export default {
       },
     };
   },
+  components: {
+    ActivityActions,
+    InfoDialog,
+    SuggestInput,
+    UploadProfilePhoto,
+  },
   mounted() {
     // do something after mounting vue instance
-    console.log(this.$store.state.user.sex);
-    console.log(this.sex);
+    // console.log(this.$store.state.user.sex);
+    // console.log(this.sex);
   },
   computed: Vuex.mapState({
     sex(state) {
@@ -110,17 +117,16 @@ export default {
       // --
     },
   },
-  components: {
-    ActivityActions,
-    InfoDialog,
-    SuggestInput,
-  },
 };
 </script>
 
 <template>
-  <ActivityActions type="wrapped" @close="close">
-    <span slot="caption">Аккаунт</span>
+  <ActivityActions caption="Аккаунт" type="wrapped" @close="close">
+
+    <template slot="option">
+      <UploadProfilePhoto />
+    </template>
+
     <div class="activity-section">
       <div class="activity-section__title">Мой город:</div>
       <div class="form-inline">

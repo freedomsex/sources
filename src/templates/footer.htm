@@ -1,6 +1,3 @@
-<registration-promo v-if="!$store.state.user.sex"></registration-promo>
-<bottom-nav v-else></bottom-nav>
-
 <alert-widget inline-template>
   <div class="container alert-widget">
     <div class="row">
@@ -71,11 +68,9 @@
   </div>
 
   <version ref="version-info"></version>
+  <authenticator ref="authenticator"></authenticator>
   <failed-chunk :show="failedChunk" @close="failedChunk = false"></failed-chunk>
 
 
-  <div class="notation">
-    Защита от спама <a href="https://www.google.com/recaptcha" target="_blank" rel="nofollow">reCAPTCHA</a> <i>·</i>
-   <a class="notation__link" rel="nofollow" href="https://www.google.com/intl/ru/policies/privacy/" target="_blank" rel="nofollow">Конфиденциальность</a> <i>·</i>
-   <a class="notation__link" rel="nofollow" href="https://www.google.com/intl/ru/policies/terms/" target="_blank" rel="nofollow">Условия использования</a>
-  </div>
+
+  <recaptcha3v ref="recaptcha"></recaptcha3v>

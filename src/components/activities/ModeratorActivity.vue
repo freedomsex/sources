@@ -95,12 +95,11 @@ export default {
 
 <template>
   <div>
-    <ActivityActions type="wrapped" @close="close">
-      <span slot="caption">Защитить</span>
+    <ActivityActions caption="Защитить" type="wrapped" @close="close">
 
       <template slot="option">
-        <a class="menu-button" href="security/action" target="_blank">
-          <span class="menu-button__title">
+        <a class="header-bar__button" href="security/action" target="_blank">
+          <span class="header-bar__title">
             В админку
           </span>
           <i class="material-icons">&#xE895;</i>

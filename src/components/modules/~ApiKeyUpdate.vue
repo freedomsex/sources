@@ -1,16 +1,15 @@
 <script>
-import ConfirmDialog from '~dialogs/ConfirmDialog';
+import api from '~config/api';
 
 export default {
   data() {
     return {
       attempt: 0,
       timer: null,
-      authorized: true,
     };
   },
   mounted() {
-    this.load();
+    // this.load();
   },
   methods: {
     tick(delay) {
@@ -32,11 +31,10 @@ export default {
       this.tick(delay);
     },
     load() {
-      return this.$store.dispatch('auth/UPDATE_KEY').then(({data}) => {
+      return api.user.syncData().then(({data}) => {
         if (data.uid || data.reg) {
           this.$store.commit('resetUser', data);
           this.$store.commit('search/restore', data);
-          this.$store.dispatch('LOAD_API_TOKEN');
           this.next();
         } else {
           this.reload();
@@ -58,26 +56,10 @@ export default {
       this.attempt = 0;
       this.tick(delay);
     },
-    error() {
-      this.authorized = false;
-    },
-  },
-  components: {
-    ConfirmDialog,
   },
 };
 </script>
 
 <template>
-  <div>
-    <ConfirmDialog v-if="!authorized"
-     yesText="Обновить"
-     @cancel="authorized = true"
-     @confirm="$root.redirectHome()">
-      <span slot="title">Что-то не так</span>
-      Кажется нужно обновить страницу. Так бывает,
-      если открыть страничку и продолжать читать новости.
-      Ключ авторизации не найден или устарел.
-    </ConfirmDialog>
-  </div>
+  <div> &nbsp; </div>
 </template>

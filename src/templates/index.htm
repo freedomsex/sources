@@ -7,46 +7,59 @@ ${require('./head.htm')}
   ${require('~templates/pseudo-menu.htm')}
 
   <div id="app">
-    <header>
-      <menu-user @snackbar="showSnackbar"></menu-user>
-      <div class="container content split-bottom" v-show="!simple">
-        <div class="row" style="position: relative;">
-          <!-- HERO_INFO -->
-          ${require('~templates/head-settings.htm')}
-          ${require('~templates/ad-button.htm')}
+    <menu-user @snackbar="showSnackbar"></menu-user>
+    <div style="max-width: 750px; margin: 0 auto;">
+      <header>
+        <div class="container content split-bottom" v-show="!simple">
+          <div class="row" style="position: relative;">
+            <!-- HERO_INFO -->
+            ${require('~templates/head-settings.htm')}
+            ${require('~templates/ad-button.htm')}
+          </div>
         </div>
-      </div>
-      <info-widget></info-widget>
-    </header>
 
-    <article>
-      ${require('~templates/search-results.htm')}
-    </article>
+        <update-available></update-available>
 
-    <section>
-      <city-widget v-if="!$store.state.user.city">
-        ${require('~templates/cities-stub.htm')}
-      </city-widget>
-    </section>
+        <info-widget></info-widget>
+      </header>
 
-    <footer>
-      <div v-show="!simple">
-        <!-- SLIDER_FOOTER -->
-      </div>
+      <article>
+        ${require('~templates/search-results.htm')}
+      </article>
 
-      ${require('~templates/footer.htm')}
+      <section>
+        <city-widget v-if="!$store.state.user.city">
+          ${require('~templates/cities-stub.htm')}
+        </city-widget>
+      </section>
 
-      <div id="router-view">
-        <router-view @close="goBack" @warning="showSnackbar" @alert="toast"></router-view>
-      </div>
-      <api-key-update ref="api-key"></api-key-update>
-      <snackbar v-if="snackbar.text"
-        :callback="snackbar.callback"
-        :action="snackbar.action"
-        :play="snackbar.play"
-        @close="snackbar.text = null">{{snackbar.text}}</snackbar>
-      <toast v-if="alert" @close="alert = null">{{alert}}</toast>
-    </footer>
+      <footer>
+        <div v-show="!simple">
+          <!-- SLIDER_FOOTER -->
+        </div>
+
+        ${require('~templates/footer.htm')}
+      </footer>
+    </div>
+
+    <snackbar v-if="snackbar.text"
+      :callback="snackbar.callback"
+      :action="snackbar.action"
+      :play="snackbar.play"
+      @close="snackbar.text = null">{{snackbar.text}}</snackbar>
+    <toast v-if="alert" @close="alert = null">{{alert}}</toast>
+
+    <registration-promo v-if="!$store.getters['token/auth']()"></registration-promo>
+    <bottom-nav v-else></bottom-nav>
+
+
+
+
+    <div id="router-view">
+      <router-view @close="goBack" @warning="showSnackbar" @alert="toast"></router-view>
+    </div>
+
+    <vue-progress-bar></vue-progress-bar>
   </div>
   <!-- end of APP layer -->
 
@@ -60,10 +73,9 @@ ${require('./head.htm')}
     <!-- end of SETTINGS layer -->
   </aside>
 
+
   <!-- BLOCK_COUNTERS -->
   ${require('~templates/js-libs.htm')}
-
-  <script async src=""></script>
-
+  <script src="https://promo-bc.com/promo.php?type=chat_head&c=642892&lang=&ch%5Bmodel_zone%5D=free&ch%5Blanding%5D=chat&ch%5Bleft%5D=95&ch%5Btop%5D=85&ch%5Banimation%5D=0&ch%5Btop_models%5D=1" async></script>
 </body>
 </html>

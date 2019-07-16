@@ -1,5 +1,5 @@
 import _ from 'underscore';
-import lscache from 'lscache';
+// import lscache from 'lscache';
 import api from '~config/api';
 
 // import contacts from './contacts';
@@ -34,13 +34,11 @@ export default {
     status: 0,
     promt: null,
     last: '',
+    userpic: '',
   },
   actions: {
-    LOAD_USER({commit}) {
-      // if (uid) {
-      //     commit('loadUser', {uid});
-      // }
-      commit('loadUser', lscache.get('user.data'));
+    SYNC_USER() {
+      return api.user.syncData();
     },
 
     REGISTRATION(context, token) {
@@ -51,9 +49,9 @@ export default {
       }
     },
 
-    SAVE_SEX({commit}, {sex, token}) {
+    SAVE_SEX({commit}, {sex}) {
       commit('loadUser', {sex, name: ''});
-      return api.user.saveSex(sex, token);
+      return api.user.saveSex(sex);
     },
     SAVE_AGE({state, commit}, age) {
       if (age && state.age != age) {
@@ -87,21 +85,17 @@ export default {
   mutations: {
     loadUser(state, data) {
       _.assign(state, data);
-      lscache.set('user.data', state, 23456);
     },
     resetUser(state, data) {
       const {uid, city, sex, age, name, contacts, vip, apromt: promt} = data; // User module
 
       _.assign(state, {uid, city, sex, age, name, contacts, vip, promt});
-      lscache.set('user.data', state, 23456);
     },
     settings(state, data) {
       _.assign(state, data);
-      lscache.set('user.data', state, 23456);
     },
     personal(state, {city, sex, age, name}) {
       _.assign(state, {city, sex, age, name});
-      lscache.set('user.data', state, 23456);
     },
   },
 };

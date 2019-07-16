@@ -60,8 +60,7 @@ export default {
 </script>
 
 <template>
-  <ActivityActions type="wrapped" @close="$emit('close')">
-    <span slot="caption">Готовые сообщения</span>
+  <ActivityActions caption="Готовые сообщения" type="wrapped" @close="$emit('close')">
     <div class="activity-section">
       <button class="btn btn-sm" :class="buttonStyle('public')"
        @click="load('public')">Познакомиться</button>

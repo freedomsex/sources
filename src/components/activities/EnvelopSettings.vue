@@ -9,8 +9,7 @@ export default {
 </script>
 
 <template>
-  <ActivityActions type="wrapped" @close="$emit('close')">
-    <span slot="caption">Написать разработчикам</span>
+  <ActivityActions caption="Написать разработчикам" type="wrapped" @close="$emit('close')">
     <div class="activity-section">
       Обсудить развитие можно на
       <a href="//freedomsex.info/" rel="nofollow" target="_blank">Форуме</a> или

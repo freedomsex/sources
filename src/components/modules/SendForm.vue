@@ -9,9 +9,10 @@ import InfoDialog from '~dialogs/InfoDialog';
 import Toast from '~widgets/Toast';
 import MessangerService from '~modules/MessangerService';
 import HornMessageProblem from '~modules/HornMessageProblem';
+import ColorContactIcon from '~components/contacts/ColorContactIcon';
 
 export default {
-  props: ['humanId', 'count', 'reply'],
+  props: ['humanId', 'count', 'initial'],
   mixins: [NegativeDetection],
   data() {
     return {
@@ -25,9 +26,15 @@ export default {
       cliche: false,
     };
   },
+  mounted() {
+    // do something after mounting vue instance
+  },
   computed: {
     user() {
       return this.$store.state.user;
+    },
+    human() {
+      return this.$store.state.human;
     },
     begin() {
       return this.count < 5;
@@ -88,6 +95,7 @@ export default {
     HornMessageProblem,
     PhotoSend,
     Toast,
+    ColorContactIcon,
   },
 };
 </script>
@@ -110,7 +118,7 @@ export default {
     <div class="send-form">
       <div class="send-form__button-account"
        @click="$router.push(`${humanId}/detail`)">
-        <i class="material-icons">&#xE853;</i>
+        <ColorContactIcon :uid="human.id" :item="human"/>
       </div>
       <div class="send-form__textarea">
         <textarea class="send-form__message-text"
@@ -118,6 +126,10 @@ export default {
          :disabled="process == true"
          :placeholder="process ? $t('sending') : $t('placeholder')"
          @keyup.ctrl.enter.prevent="sendMessage"></textarea>
+      </div>
+      <div class="send-form__button-send"
+       @click="cliche = true" v-if="!message && initial">
+        <i class="material-icons">&#xE02F;</i>
       </div>
       <div class="send-form__button-send"
        @click="notepad = true" v-if="!message">
@@ -143,7 +155,7 @@ export default {
 
     <MessangerService
      :id="humanId"
-     :reply="reply"
+     :reply="human.message"
      @sended="sended"
      @close="close"
      @process="busy"/>
@@ -172,4 +184,46 @@ export default {
 
 <style lang="less">
 
+.send-form {
+  position: relative;
+  display: flex;
+  width: 100%;
+  // min-height: 64px;
+    border-top: 1px solid #cccccc;
+  align-items: flex-end;
+  &__textarea {
+    flex: 1 1 auto;
+    border: 0px solid gray;
+    padding: 5px 0;
+    line-height: 1;
+    align-self: center;
+  }
+  &__message-text {
+    height: 0;
+    overflow: auto;
+    min-height: 36px;
+    padding: 10px 5px;
+    font-size: 14px;
+    margin: auto;
+    overflow-y: hidden;
+    resize: vertical;
+  }
+
+  &__button {
+    &-send {
+      cursor: pointer;
+      flex: 0 0 auto;
+      color: @dark-light;
+      padding: 0 7px 10px;
+    }
+    &-account {
+      flex: 0 0 auto;
+      padding: 0 5px 3px;
+    }
+  }
+
+  i {
+    vertical-align: bottom;
+  }
+}
 </style>

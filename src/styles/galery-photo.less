@@ -1,0 +1,34 @@
+
+.galery-photo {
+  margin: 0 -5px;
+  font-size: 0;
+  //background: @gray;
+  &__item {
+    display: inline-block;
+    width: 98px;
+    height: 98px;
+    @media (max-width: 400px) {
+      @indent: (20 * 2 + 2 - 5 * 2) / 3;
+      width: ~'calc(33.33vmin - @{indent}px)';
+      height: ~'calc(33.33vmin - @{indent}px)';
+    }
+    @media (max-width: 540px) and (min-width: 400px) {
+      @indent: (20 * 2 + 2 - 5 * 2) / 4;
+      width: ~'calc(25vmin - @{indent}px)';
+      height: ~'calc(25vmin - @{indent}px)';
+    }
+    border: 2px solid @white;
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    background-color: @gray-light;
+    // background-color: @light;
+  }
+
+  &__placeholder {
+    color: @gray-dark;
+    background: @light;
+    padding: @indent-md @indent-md;
+  }
+
+}

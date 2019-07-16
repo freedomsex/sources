@@ -67,7 +67,6 @@ export default {
 </script>
 
 <template>
-  <div>
     <ModalDialog @close="$emit('close')">
       <div class="dialog-caption warning">
         <div class="dialog-caption__title">Опубликовать замечание</div>
@@ -113,7 +112,6 @@ export default {
 
       <LoadingCover :show="process"/>
     </ModalDialog>
-  </div>
 </template>
 
 <style lang="less">

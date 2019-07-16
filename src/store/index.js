@@ -1,12 +1,13 @@
 import _ from 'underscore';
-import lscache from 'lscache';
 import Vue from 'vue';
 import Vuex from 'vuex';
-import cookies from '~assets/legacy/utils/cookies'; // TODO: remove
-import CONFIG from '~config/';
-import api from '~config/api';
+import VuexPersist from 'vuex-persist';
+// import cookies from '~assets/legacy/utils/cookies'; // TODO: remove
+// import CONFIG from '~config/';
+// import api from '~config/api';
 
 import user from './user';
+import token from './token';
 import auth from './auth';
 import search from './search';
 import human from './human';
@@ -22,9 +23,22 @@ import message from './message';
 
 Vue.use(Vuex);
 
+// const vuexLocal = new VuexPersist({
+//
+// })
+const VuexLocalStorage = new VuexPersist({
+  reducer(state) {
+    return _.omit(state, ['auth']);
+  },
+});
+
 const store = new Vuex.Store({
+  plugins: [
+    VuexLocalStorage.plugin,
+  ],
   modules: {
     user,
+    token,
     auth,
     search,
     human,
@@ -43,24 +57,16 @@ const store = new Vuex.Store({
     locale: 'ru',
     apiToken: '',
     grecaptchaToken: null,
-    photoServer: CONFIG.API_PHOTO,
     simple: false,
     mute: false,
+    update: false,
+    hideLine: false,
     // scrolling: false,
   },
   actions: {
-    LOAD_API_TOKEN({commit}) {
-      const token = cookies.get('jwt');
-      commit('setApiToken', {apiToken: token});
-      api.contacts.initial.setAuthKey(token); // TODO: Переписать API
-      api.contacts.intimate.setAuthKey(token);
-    },
+    //
   },
   mutations: {
-    load(state) {
-      state.mute = lscache.get('app.mute');
-      state.locale = lscache.get('app.locale');
-    },
     setApiToken(state, data) {
       if (data) {
         _.assign(state, data);
@@ -74,22 +80,26 @@ const store = new Vuex.Store({
       state.ready = data == true;
     },
 
+    showLine(state, data) {
+      state.hideLine = data !== true;
+    },
     mute(state) {
       state.mute = state.mute !== true;
-      lscache.set('app.mute', state.mute);
     },
     lang(state, lang) {
       state.locale = lang;
-      lscache.set('app.locale', lang);
     },
-    grecaptchaTokenUpdate(state, token) {
-      if (token) {
-        state.grecaptchaToken = token;
+    grecaptchaTokenUpdate(state, data) {
+      if (data) {
+        state.grecaptchaToken = data;
       }
     },
     // stopScrolling(state, value) {
     //   state.scrolling = (value === true);
     // },
+    updateAvailable(state, value) {
+      state.update = (value == true);
+    },
   },
   getters: {
     registered(state) {

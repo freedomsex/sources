@@ -29,8 +29,7 @@ export default {
 </script>
 
 <template>
-  <ActivityActions type="wrapped" @close="close">
-    <span slot="caption">Мой город</span>
+  <ActivityActions caption="Мой город" type="wrapped" @close="close">
     <div class="activity-section">
       <div class="form-inline">
         <SuggestInput url="town/suggest"

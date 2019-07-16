@@ -64,8 +64,7 @@ export default {
 </script>
 
 <template>
-  <ActivityActions type="wrapped" @close="$emit('close')">
-    <span slot="caption">Доверие</span>
+  <ActivityActions caption="Доверие" type="wrapped" @close="$emit('close')">
 
     <div class="activity-section">
       Кредиты доверия позволяют проходить все проверки

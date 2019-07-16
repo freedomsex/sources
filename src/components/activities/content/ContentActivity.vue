@@ -68,8 +68,7 @@ export default {
 </script>
 
 <template>
-  <ActivityActions type="content" @close="$emit('close')">
-    <span slot="caption">{{title}}</span>
+  <ActivityActions :caption="title" type="content" @close="$emit('close')">
     <div class="activity__loader" v-show="loader && !error">
       Загружаю...
     </div>

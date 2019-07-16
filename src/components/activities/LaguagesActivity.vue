@@ -54,8 +54,7 @@ export default {
 </i18n>
 
 <template>
-  <ActivityActions @close="$emit('close')">
-    <span slot="caption">{{$t('Язык')}}</span>
+  <ActivityActions :caption="$t('Язык')" @close="$emit('close')">
       <div class="activity-section">
         <div class="list-view">
           <div class="list-item" v-for="(item, index) in list"

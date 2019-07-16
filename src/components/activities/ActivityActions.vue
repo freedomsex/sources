@@ -1,12 +1,18 @@
 <script>
-import HeaderBar from '~widgets/HeaderBar';
+import ActivityHeader from '~widgets/ActivityHeader';
 import ScrollBodyPrevent from '~modules/ScrollBodyPrevent';
+import UpdateAvailable from '~widgets/UpdateAvailable';
 
 export default {
-  props: ['type'],
+  props: ['caption', 'type'],
   beforeRouteLeave(to, from, next) {
     console.log('Leave:', [to, from]);
     next();
+  },
+  components: {
+    ActivityHeader,
+    ScrollBodyPrevent,
+    UpdateAvailable,
   },
   computed: {
     style() {
@@ -19,10 +25,6 @@ export default {
       return 'default-activity';
     },
   },
-  components: {
-    HeaderBar,
-    ScrollBodyPrevent,
-  },
 };
 </script>
 
@@ -32,19 +34,14 @@ export default {
     <div :class="style"
      @click.self="$emit('close')">
       <div class="activity__wrapper">
-        <div class="menu-user">
-          <div class="menu-button"
-           @click="$emit('close')">
-            <i class="material-icons">&#xE5C4;</i>
-            <span class="menu-button__title">
-              <slot name="caption"></slot>
-            </span>
-          </div>
-
-          <div class="menu-user__navbar">
+        <ActivityHeader :caption="caption" :back="true" @close="$emit('close')">
+          <template slot="option">
             <slot name="option"></slot>
-          </div>
-        </div>
+          </template>
+        </ActivityHeader>
+
+          <UpdateAvailable :small="true"/>
+
         <div class="activity__container">
           <slot></slot>
         </div>
@@ -101,16 +98,12 @@ export default {
 }
 
 .activity-mixin() {
+  .fixed-container();
+
   max-width: @document-width;
-  position: fixed;
-  top: 0px;
-  bottom: 0;
-  right: 0;
-  left: 0;
 
   margin: 0 auto;
   overflow: hidden;
-  z-index: 1;
 }
 
 .default-activity {

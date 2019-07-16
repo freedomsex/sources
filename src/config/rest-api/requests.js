@@ -6,7 +6,7 @@ let retryAttempt = false;
 axios.interceptors.response.use(response => response,
   (error) => {
     // retry the request that errored out
-    if (error.response.status === 401) {
+    if (error.response && error.response.status === 401) {
       if (retryAttempt) {
         global.App.$root.unauthorized();
       } else {

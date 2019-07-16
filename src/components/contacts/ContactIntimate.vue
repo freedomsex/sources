@@ -29,7 +29,7 @@ export default {
           this.loaded();
         })
         .catch((error) => {
-          this.error = error;
+          this.failed(error);
         });
       this.amount = this.count;
       this.hope();
@@ -60,13 +60,12 @@ export default {
 
 <template>
   <div>
-    <ActivityActions @close="close">
-      <span slot="caption">Общение</span>
+    <ActivityActions caption="Общение" @close="close">
 
       <template slot="option">
-        <div class="menu-button" @click="$router.push('/protect')">
+        <div class="header-bar__button" @click="$router.push('/protect')">
           <i class="material-icons">&#xE53F;</i>
-          <span class="menu-button__title">
+          <span class="header-bar__title">
             Защитить
           </span>
         </div>

@@ -76,8 +76,7 @@ export default {
 </script>
 
 <template>
-  <ActivityActions type="wrapped" @close="$emit('close')">
-    <span slot="caption">Отзыв</span>
+  <ActivityActions caption="Отзыв" type="wrapped" @close="$emit('close')">
     <div class="activity-section">
       Пожалуйста, оставьте отзыв о сайте. Для нас важно каждое мнение и в любой форме.
       Будет ещё приятнее, если вы выскажитесь максимально подробно.

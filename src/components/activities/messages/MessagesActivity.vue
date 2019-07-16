@@ -1,16 +1,15 @@
 <script>
 import ActivityActions from '~activities/ActivityActions';
-import Recaptcha from '~modules/Recaptcha';
 import Toast from '~widgets/Toast';
 import CaptchaDialog from '~dialogs/CaptchaDialog';
-import SendForm from './SendForm';
+import SendForm from '~modules/SendForm';
+import HumanTitle from '~assets/HumanTitle';
 import MessageList from './MessageList';
 
 export default {
   props: ['humanId', 'title'],
   data() {
     return {
-      caption: '',
       reply: '',
       show: true,
       count: 0,
@@ -27,9 +26,15 @@ export default {
   //     next();
   // },
   mounted() {
-    if (this.title) {
-      this.caption = this.title;
-    }
+    this.$store.dispatch('human/load', this.humanId);
+  },
+  computed: {
+    human() {
+      return this.$store.state.human;
+    },
+    caption() {
+      return HumanTitle(this.human);
+    },
   },
   methods: {
     sended() {
@@ -67,7 +72,6 @@ export default {
     MessageList,
     CaptchaDialog,
     Toast,
-    Recaptcha,
     SendForm,
   },
 };
@@ -75,14 +79,13 @@ export default {
 
 <template>
   <div>
-    <ActivityActions @close="close">
-      <span slot="caption">{{caption}}</span>
+    <ActivityActions :caption="caption" @close="close">
 
       <template slot="option">
-        <div class="menu-button" @click="videochat">
+        <div class="header-bar__button" @click="videochat">
           <i class="material-icons">&#xE04B;</i>
         </div>
-        <div class="menu-button" @click="$router.push(`${humanId}/incoming`)">
+        <div class="header-bar__button" @click="$router.push(`${humanId}/incoming`)">
           <i class="material-icons">&#xE3B6;</i>
         </div>
       </template>
@@ -132,53 +135,9 @@ export default {
   }
   &__tools {
     flex: none;
-    border-top: 1px solid @gray;
-    background: @light;
+    // border-top: 1px solid @gray;
+    // background: @light;
   }
 }
 
-.send-form {
-  position: relative;
-  display: flex;
-  width: 100%;
-  // min-height: 64px;
-  border: 0px solid red;
-  align-items: flex-end;
-  &__textarea {
-    flex: 1 1 auto;
-    border: 0px solid gray;
-    padding: 7px 0;
-    line-height: 1;
-    align-self: center;
-  }
-  &__message-text {
-    height: 0;
-    overflow: auto;
-    min-height: 36px;
-    padding: 10px 5px;
-    font-size: 14px;
-    margin: auto;
-    overflow-y: hidden;
-    resize: vertical;
-  }
-
-  &__button {
-    &-send {
-      cursor: pointer;
-      flex: 0 0 auto;
-      color: @dark-light;
-      padding: 0 10px 12px;
-    }
-    &-account {
-      cursor: pointer;
-      flex: 0 0 auto;
-      color: @dark-light;
-      padding: 0 10px 12px;
-    }
-  }
-
-  i {
-    vertical-align: bottom;
-  }
-}
 </style>

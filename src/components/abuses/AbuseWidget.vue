@@ -27,7 +27,13 @@ export default {
     },
   },
   methods: {
-
+    action() {
+      if (this.alert) {
+        this.show = true;
+      } else {
+        this.dialog = true;
+      }
+    },
   },
   components: {
     AbuseList,
@@ -38,22 +44,17 @@ export default {
 </script>
 
 <template>
-  <div>
-    <div class="abuse-widget">
-      <button class="btn btn-danger" v-if="alert"
-       @click="show = true">
-        Есть замечания ({{count}})
-      </button>
-      <button class="btn" v-else
-       @click="dialog = true">
-        Замечаний нет
-      </button>
-
-      <div class="abuse-widget__hint" v-if="success"
-       @click="success = false">
-        Спасибо, замечание скоро появится в списке
-      </div>
+  <span>
+    <div class="abuse-button" :class="{'alert-abuses': alert}" @click="action()">
+      <span v-if="alert">Есть замечания ({{count}}) </span>
+      <span v-else>Замечаний нет</span>
     </div>
+
+    <div class="abuse-widget__hint" v-if="success"
+     @click="success = false">
+      Спасибо, замечание скоро появится в списке
+    </div>
+
 
     <AbuseList v-if="show"
      :list="list"
@@ -75,16 +76,25 @@ export default {
       а также степень вины.
     </InfoDialog>
 
-  </div>
+  </span>
 </template>
 
 <style lang="less">
 
-.abuse-widget {
-  text-align: center;
+.abuse-button {
+  .rounded-button();
+  border: 1px solid @gray;
+
+  &.alert-abuses {
+    color: @white;
+    background-color: @dark;
+  }
+
+  display: inline-block;
   &__hint {
     color: @gray-dark;
     padding: @indent-xs;
+    margin: 5px 0;
   }
 }
 </style>

@@ -59,8 +59,7 @@ export default {
 </script>
 
 <template>
-  <ActivityActions type="wrapped" @close="close">
-    <span slot="caption">Желания и фантазии</span>
+  <ActivityActions caption="Желания и фантазии" type="wrapped" @close="close">
     <div class="activity-section">
       <div class="activity-section__title">
         Добавить желание

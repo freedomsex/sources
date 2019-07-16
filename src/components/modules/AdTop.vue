@@ -13,7 +13,7 @@ export default {
   },
   mounted() {
     this.width = this.$el.offsetWidth;
-    this.adAdScripts('https://promo-bc.com/promo.php?type=chat_head&c=642892&lang=&ch%5Bmodel_zone%5D=free&ch%5Blanding%5D=chat&ch%5Bleft%5D=95&ch%5Btop%5D=85&ch%5Banimation%5D=0&ch%5Btop_models%5D=1');
+    // this.adAdScripts('https://promo-bc.com/promo.php?type=chat_head&c=642892&lang=&ch%5Bmodel_zone%5D=free&ch%5Blanding%5D=chat&ch%5Bleft%5D=95&ch%5Btop%5D=85&ch%5Banimation%5D=0&ch%5Btop_models%5D=1');
   },
   methods: {
     random(min, max) {
@@ -25,6 +25,7 @@ export default {
         const script = document.createElement('script');
         script.src = src;
         script.async = true;
+        script.type = 'text/javascript';
         document.body.appendChild(script);
       }
     },

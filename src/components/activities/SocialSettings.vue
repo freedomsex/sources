@@ -48,8 +48,7 @@ export default {
 </script>
 
 <template>
-  <ActivityActions type="wrapped" @close="close">
-    <span slot="caption">Контакты</span>
+  <ActivityActions caption="Контакты" type="wrapped" @close="close">
     <div class="activity-section">
       <div class="activity-section__title">Контакты, соцсети</div>
         <div class="checkbox">

@@ -110,8 +110,10 @@
 </i18n>
 
 <script>
+import axios from 'axios';
+import CONFIG from '~config/';
+
 import ModalDialog from '~dialogs/ModalDialog';
-import Recaptcha from '~modules/Recaptcha';
 import AutoRegistration from '~mixins/AutoRegistration';
 import Loadable from '~mixins/Loadable';
 
@@ -146,22 +148,42 @@ export default {
     verify(sex) {
       this.sex = sex;
       this.processTimeout();
-      this.$refs.recaptcha.render(this.save);
+      this.status = 'Подождите...';
+      global.recaptcha.execute3v().then((token) => {
+        console.log('recaptcha RESPONSE');
+        this.recaptchaToken = token;
+        this.save(token);
+      });
+      // .catch(() => {
+      //   console.log('recaptcha ERROR !');
+      // });
     },
     save(token) {
       this.process = true;
       if (this.sex) {
-        this.$store.dispatch('SAVE_SEX', {sex: this.sex, token}).then(() => {
-          // TODO: $root APP dep refresh() / reload()
-          this.autoCity();
-          this.autoAge();
-          this.$root.refresh();
+        axios.post(`${CONFIG.API_AUTH}/api/v1/registration`, {token}).then(({data}) => {
+          this.handle(data);
+          this.$store.dispatch('SAVE_SEX', {sex: this.sex}).then(() => {
+            // TODO: $root APP dep refresh() / reload()
+            this.autoCity();
+            this.autoAge();
+            this.$root.refresh();
+          });
         });
+
         this.$root.reload();
         this.$emit('select', this.show);
         this.redirect();
       }
-      this.$refs.recaptcha.reset();
+      // this.$refs.recaptcha.reset();
+    },
+    handle(data) {
+      if (!data.error) {
+        this.$store.commit('token/save', data);
+        this.$root.$refs.authenticator.fix();
+      } else {
+        //
+      }
     },
     login() {
       this.$emit('login');
@@ -187,7 +209,6 @@ export default {
   },
   components: {
     ModalDialog,
-    Recaptcha,
   },
 };
 </script>
@@ -213,7 +234,6 @@ export default {
       </div>
     </div>
 
-    <Recaptcha ref="recaptcha" @verify="save" @cancel="close"/>
   </ModalDialog>
 </template>
 

@@ -24,6 +24,22 @@ class ApiMessages extends Api {
   send(data) {
     return this.post(data, null, 'mailer/post/');
   }
+
+  status() {
+    return this.load(null, 'mailer/status');
+  }
+
+  bun(data) {
+    return this.post(data, null, 'mess/bun');
+  }
+
+  delete(data) {
+    return this.post(data, null, 'mess/delete');
+  }
+
+  check(list) {
+    return this.load(null, `mailer/check_${list}`);
+  }
 }
 
 class ApiModerator extends Api {
@@ -49,7 +65,7 @@ class ApiModerator extends Api {
 class ApiSearch extends Api {
   constructor() {
     const key = '1234';
-    const host = `//${CONFIG.API_SEARCH}/`;
+    const host = `${CONFIG.API_SEARCH}/`;
     const routing = {
       route: 'users',
       get: '{tid}',
@@ -61,7 +77,7 @@ class ApiSearch extends Api {
 class ApiContact extends Api {
   constructor(routing) {
     const key = 1234;
-    const host = `//${CONFIG.API_CONTACT}/`;
+    const host = `${CONFIG.API_CONTACT}/api/v1/`;
     super(host, key, null, routing);
   }
 

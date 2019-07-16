@@ -1,3 +1,5 @@
+import _ from 'underscore';
+
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import {store} from '~store';
@@ -11,14 +13,50 @@ import AccountActivity from '~activities/AccountActivity';
 
 Vue.use(VueRouter);
 
-const routes = [
+
+const sendForm = [
   {
+    path: 'uploads',
+    meta: {
+      back: '.',
+    },
+    component: () => import('~activities/photos/PhotoSettings'),
+    props: true,
+  },
+  {
+    path: 'incoming',
+    meta: {
+      back: '.',
+    },
+    component: () => import('~activities/IncomingPhoto'),
+    props: true,
+  },
+];
+
+const dialogHistory = {
+  path: 'dialog',
+  component: () => import('~activities/messages/MessagesActivity'),
+  props: true,
+  children: sendForm,
+};
+
+const writeDialog = {
+  component: () => import('~halves/WriteMessageDialog'),
+  props: true,
+  beforeEnter: (to, from, next) => (store.state.user.sex ? next() : next('/confirm-sex/message')),
+  children: _.union(sendForm, [{
+    path: 'dialog',
+    component: () => import('~activities/messages/HistoryActivity'),
+    props: true,
+  }]),
+};
+
+const routes = [
+  _.extend({}, writeDialog, {
     path: '/write/:humanId(\\d+)/(.*)?',
     name: 'quickWrite',
-    component: () => import('~dialogs/quick-message/QuickMessage'),
     props: true,
-    beforeEnter: (to, from, next) => (store.state.user.sex ? next() : next('/confirm-sex/message')),
-  },
+  }),
   {
     path: '/initial/(.*)?',
     name: 'initial',
@@ -29,15 +67,13 @@ const routes = [
     // beforeEnter: (to, from, next) => store.state.user.sex ? next() :
     // next('/confirm-sex/messages'),
     children: [
-      {
+      _.extend({}, writeDialog, {
         path: ':humanId(\\d+)/(.*)?',
         name: 'quickReply',
         meta: {
           back: '/initial',
         },
-        component: () => import('~dialogs/quick-message/QuickReply'),
-        props: true,
-      },
+      }),
     ],
   },
   {
@@ -48,38 +84,25 @@ const routes = [
     // beforeEnter: (to, from, next) => store.state.user.sex ? next() :
     // next('/confirm-sex/messages'),
     children: [
-      {
-        path: ':humanId(\\d+)/(.*)?',
+      _.extend({}, dialogHistory, {
+        path: ':humanId(\\d+)/dialog',
         name: 'dialog',
-        meta: {
-          back: '/intimate',
-        },
-        component: () => import('~activities/messages/MessagesActivity'),
-        props: true,
-        children: [
-          {
-            path: 'uploads',
-            name: 'uploads',
-            meta: {
-              back: '.',
-            },
-            component: () => import('~activities/photos/PhotoSettings'),
-            props: true,
-          },
-          {
-            path: 'incoming',
-            name: 'incoming',
-            meta: {
-              back: '.',
-            },
-            component: () => import('~activities/IncomingPhoto'),
-            props: true,
-          },
-          // { path: 'preview', name: 'preview', component: PhotoViewer, props: true },
-        ],
-      },
+        meta: {back: '/intimate'},
+      }),
     ],
   },
+  {
+    path: '/hotphoto',
+    component: () => import('~activities/HotPhotoActivity'),
+    children: [
+      _.extend({}, writeDialog, {
+        path: ':humanId(\\d+)/(.*)?',
+        name: 'hotWriteDialog',
+      }),
+    ],
+  },
+
+
   {
     path: '/confirm-sex/:show?',
     component: SexConfirm,
@@ -267,7 +290,11 @@ const settingsRouter = new VueRouter({
       component: () => import('~activities/MessagesCliche'),
       props: true,
     },
-    // { path: '(.*)?/uploads', component: PhotoSettings },
+    // {
+    //   path: '(.*)?/uploads',
+    //   component: () => import('~activities/photos/PhotoSettings'),
+    //   props: true,
+    // },
     // { path: '(.*)?/preview', name: 'preview', component: PhotoViewer, props: true },
 
     {

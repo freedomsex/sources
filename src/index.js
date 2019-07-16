@@ -1,5 +1,6 @@
 import {Vue, store} from '~store';
 import VueI18n from 'vue-i18n';
+import VueProgressBar from 'vue-progressbar';
 import '~assets/directives/resized'; // TODO: оформить директивы
 // import '~legacy/navigate'; // TODO: проверить/переписать навигацию клавиатуры
 
@@ -11,10 +12,10 @@ import AdTop from '~modules/AdTop';
 
 import InfoWidget from '~widgets/InfoWidget';
 import AuthBoard from '~widgets/AuthBoard';
+import UpdateAvailable from '~widgets/UpdateAvailable';
 import SearchWizard from '~widgets/SearchWizard';
 import AlertWidget from '~widgets/AlertWidget';
 
-import ApiKeyUpdate from '~modules/ApiKeyUpdate';
 import SearchList from '~components/SearchList';
 import SliderFooter from '~components/SliderFooter';
 import DesiresWidget from '~widgets/DesiresWidget';
@@ -26,6 +27,9 @@ import BottomNav from '~widgets/BottomNav/NavBar';
 import Language from '~widgets/Language';
 import Version from '~widgets/Version';
 import FailedChunk from '~dialogs/FailedChunk';
+import Authenticator from '~modules/Authenticator';
+import Recaptcha3v from '~modules/Recaptcha3v';
+import PhotoLineWidget from '~widgets/PhotoLineWidget';
 
 import 'styles/core/body.less';
 
@@ -35,10 +39,11 @@ moment.locale('ru');
 
 Vue.prototype.$moment = moment;
 
-store.dispatch('LOAD_API_TOKEN');
-store.dispatch('accepts/LOAD');
-store.dispatch('LOAD_USER');
-store.commit('load');
+Vue.use(VueProgressBar, {
+  color: '#869CCA',
+  failedColor: 'red',
+  thickness: '3px',
+});
 
 Vue.use(VueI18n);
 
@@ -89,6 +94,10 @@ global.App = new Vue({
       this.$store.dispatch('human/load', this.humanId);
     }
     this.updateLocale();
+    this.userDataSync();
+
+    global.recaptcha = this.$refs.recaptcha;
+    global.recaptchaLoad = global.recaptcha.onload;
 
     this.scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
   },
@@ -123,9 +132,7 @@ global.App = new Vue({
     },
     refresh() {
       // TODO: without $root and $refs
-      return this.$refs['api-key'].load().then(() => {
-        this.$store.dispatch('auth/sync');
-      });
+      this.$refs.authenticator.refresh();
     },
     reload() {
       const home = this.$refs.results;
@@ -154,7 +161,17 @@ global.App = new Vue({
       }
     },
     unauthorized() {
-      this.$refs['api-key'].error();
+      this.$refs.authenticator.unauthorized();
+    },
+    userDataSync() {
+      this.$refs.authenticator.refresh().then(() => {
+        this.$store.dispatch('SYNC_USER').then(({data}) => {
+          if (data.uid || data.reg) {
+            this.$store.commit('resetUser', data);
+            this.$store.commit('search/restore', data);
+          }
+        });
+      });
     },
   },
   el: '#app',
@@ -168,10 +185,10 @@ global.App = new Vue({
     AccountComponent,
     InfoWidget,
     AuthBoard,
+    UpdateAvailable,
     SearchWizard,
     AdTop,
     SearchList,
-    ApiKeyUpdate,
     SliderFooter,
     DesiresWidget,
     AlertWidget,
@@ -181,6 +198,9 @@ global.App = new Vue({
     Toast,
     Version,
     FailedChunk,
+    Authenticator,
+    Recaptcha3v,
+    PhotoLineWidget,
   },
 });
 

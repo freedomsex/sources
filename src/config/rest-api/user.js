@@ -53,6 +53,10 @@ class ApiUser extends Api {
     return super.load(null, 'sync/authdata');
   }
 
+  syncData() {
+    return super.load(null, 'sync/sess');
+  }
+
   saveLogin(login) {
     return super.save({login}, null, 'option/login');
   }

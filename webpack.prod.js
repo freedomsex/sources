@@ -5,17 +5,21 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const WebpackCdnPlugin = require('webpack-cdn-plugin');
 // const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+// const CopyPlugin = require('copy-webpack-plugin');
+const FileManagerPlugin = require('filemanager-webpack-plugin');
 // const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 const common = require('./webpack.common.js');
+
+console.log(`\n ${path.resolve(process.env.HOME, 'DATA/freed/dist')}\n`);
+
 
 module.exports = merge(common, {
   mode: 'production',
 
   output: {
-    filename: '[name].[chunkhash:5].js',
-    chunkFilename: 'scripts/[name].[chunkhash:5].js',
+    filename: '[name].[contenthash].js',
+    chunkFilename: 'scripts/[name].[contenthash].js',
   },
 
   module: {
@@ -78,15 +82,23 @@ module.exports = merge(common, {
       ],
     }),
     new MiniCssExtractPlugin({
-      filename: '[name].[chunkhash:5].css',
-      chunkFilename: 'styles/[name].[chunkhash:5].css',
+      filename: '[name].[contenthash].css',
+      chunkFilename: 'styles/[name].[contenthash].css',
     }),
-    new CopyWebpackPlugin([
-      {from: './dist/*', to: '~/DATA/freed/dist', flatten: true},
-      // {from: './dist/app.*', to: `${rootPath}${publicPath}`, flatten: true},
-      // {from: './dist/vendors*', to: `${rootPath}${publicPath}`, flatten: true},
-      // {from: './dist/index.html', to: '../../app/view/template/', flatten: true},
-    ]),
+
+    new FileManagerPlugin({
+      onEnd: {
+        copy: [
+          {source: 'dist', destination: path.resolve(process.env.HOME, 'DATA/freed/dist')},
+        ],
+      },
+    }),
+    // new CopyPlugin([
+    //   // {from: path.resolve(__dirname, './dist/*'), to: path.resolve(process.env.HOME, 'DATA/freed/dist')},
+    //   {from: './build/**/*', to: path.resolve(process.env.HOME, 'DATA/freed/dist')},
+    //   // {from: './dist/vendors*', to: `${rootPath}${publicPath}`, flatten: true},
+    //   // {from: './dist/index.html', to: '../../app/view/template/', flatten: true},
+    // ], {logLevel: 'debug'}),
   ],
 
   externals: {moment: 'moment'},

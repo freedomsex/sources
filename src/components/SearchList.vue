@@ -29,7 +29,6 @@ export default {
     this.$store.dispatch('search/load');
     this.reload();
     this.visitedSync();
-    this.$store.dispatch('desires/PICK');
   },
   computed: {
     items() {

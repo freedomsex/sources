@@ -8,6 +8,9 @@ export default {
     write: false,
     humanId: null,
   }),
+  mounted() {
+    this.$store.commit('simple', false);
+  },
   computed: {
     muted() {
       return this.$store.state.mute;

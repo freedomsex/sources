@@ -1,5 +1,6 @@
 <script>
 import axios from 'axios';
+import CONFIG from '~config/';
 import InfoDialog from '~dialogs/InfoDialog';
 import PhotoView from './PhotoView';
 
@@ -9,9 +10,6 @@ export default {
     return {
       remove: false,
     };
-  },
-  created() {
-    this.server = this.$store.state.photoServer;
   },
   computed: {
     uid() {
@@ -24,10 +22,10 @@ export default {
     },
     removePhoto() {
       const config = {
-        headers: {Authorization: `Bearer ${this.$store.state.apiToken}`},
+        headers: {Authorization: `Bearer ${this.$store.state.token.access}`},
         // params: { uid: this.uid, hash }
       };
-      const url = `//${this.server}/api/v1/users/${this.uid}/photos/${this.photo.alias}.jpg`;
+      const url = `${CONFIG.API_PHOTO}/api/v1/users/${this.uid}/photos/${this.photo.alias}.jpg`;
       axios.delete(url, config).then(() => {
         this.$emit('removed');
         this.close();

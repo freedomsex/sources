@@ -59,7 +59,7 @@ export default {
     quick() {
       this.$router.push({
         name: 'quickWrite',
-        params: {humanId: this.human.id},
+        params: {humanId: this.human.id, initial: true},
       });
     },
     load() {

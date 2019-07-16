@@ -12,7 +12,7 @@ export default {
     };
   },
   mounted() {
-    _.delay(() => { this.$store.dispatch('auth/sync'); }, 2500);
+    _.delay(() => { this.$store.dispatch('auth/sync'); }, 3000);
   },
   computed: {
     login() {

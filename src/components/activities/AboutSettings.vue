@@ -67,8 +67,7 @@ export default {
 </script>
 
 <template>
-  <ActivityActions type="wrapped" @close="close">
-    <span slot="caption">Данные</span>
+  <ActivityActions caption="Данные" type="wrapped" @close="close">
     <div class="activity-section">
       <div class="activity-section__title">Ваш рост</div>
       <div class="form-inline">

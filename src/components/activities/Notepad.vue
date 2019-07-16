@@ -36,11 +36,10 @@ export default {
 </script>
 
 <template>
-  <ActivityActions @close="$emit('close')">
-    <span slot="caption">Блокнот</span>
+  <ActivityActions caption="Блокнот" @close="$emit('close')">
 
     <template slot="option">
-      <div class="menu-button" @click="edited = (edited !== true)">
+      <div class="header-bar__button" @click="edited = (edited !== true)">
         <i class="material-icons" v-if="!edited">&#xE254;</i>
         <i class="material-icons" v-else>&#xE876;</i>
       </div>

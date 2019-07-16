@@ -37,7 +37,6 @@ export default {
     },
   }),
   mounted() {
-    console.log('auth/sync');
     this.$store.dispatch('auth/sync').then(() => {
       this.init();
       this.process = false;
@@ -133,8 +132,7 @@ export default {
 </script>
 
 <template>
-  <ActivityActions type="wrapped" @close="close">
-    <span slot="caption">Безопасность</span>
+  <ActivityActions caption="Безопасность" type="wrapped" @close="close">
     <div class="activity-section">
       <div class="activity-section__title">Логин:</div>
       <div class="form-inline">

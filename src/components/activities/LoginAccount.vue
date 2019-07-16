@@ -1,6 +1,6 @@
 <script>
-import Vuex from 'vuex';
-import api from '~config/api';
+import axios from 'axios';
+import CONFIG from '~config/';
 import RemindLogin from '~dialogs/RemindLogin';
 import SimpleCaptcha from '~dialogs/SimpleCaptcha';
 import ActivityActions from '~activities/ActivityActions';
@@ -19,32 +19,28 @@ export default {
       hint: 'Введите данные',
     };
   },
-  computed: Vuex.mapState({
-    city(state) {
-      return state.user.city;
-    },
-  }),
-  mounted() {},
   methods: {
     send() {
-      const data = {
+      const payload = {
         login: this.login,
-        pass: this.password,
+        password: this.password,
         token: this.token,
         code: this.code,
+        refresh: this.$store.state.token.refresh,
       };
-      api.user.post(data, null, 'sync/login').then((response) => {
-        this.hint = response.data.say;
-        this.error = response.data.err;
-        this.captcha = response.data.captcha;
-        this.onLogin();
+      axios.post(`${CONFIG.API_AUTH}/api/v1/login`, payload).then(({data}) => {
+        this.onLogin(data);
       });
     },
-    onLogin() {
-      if (!this.error) {
+    onLogin(data) {
+      this.hint = data.say;
+      this.captcha = data.strict;
+      if (data && !data.error) {
         this.hint = 'Успешно. Подождите.';
+        this.$store.commit('token/save', data);
         window.location.href = '/';
       } else {
+        this.error = data.error;
         this.$refs.captcha.refresh();
       }
     },
@@ -64,8 +60,7 @@ export default {
 </script>
 
 <template>
-  <ActivityActions type="wrapped" @close="$emit('close')">
-    <span slot="caption">Войти</span>
+  <ActivityActions caption="Войти" type="wrapped" @close="$emit('close')">
     <div class="limited-form">
       <div class="activity-section">
         <div class="activity-section__title">Ваш логин</div>

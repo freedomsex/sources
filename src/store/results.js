@@ -1,5 +1,5 @@
 import _ from 'underscore';
-import lscache from 'lscache';
+// import lscache from 'lscache';
 import api from '~config/api';
 
 export default {
@@ -13,8 +13,8 @@ export default {
     url: '',
   },
   actions: {
-    load({state, rootState, commit, dispatch}, params) {
-      dispatch('LOAD_USER', null, {root: true}); // КОСТЫЛЬ [!!!]
+    load({state, rootState, commit}, params) {
+      // dispatch('LOAD_USER', null, {root: true}); // КОСТЫЛЬ [!!!]
       const {sex, any, virt} = rootState.user;
       let {who, city} = params;
       const {up, to} = params;
@@ -52,7 +52,7 @@ export default {
     last(state, {users}) {
       if (users && !state.last) {
         state.last = users;
-        lscache.set('last-search', users, 31 * 24 * 60 * 60);
+        // lscache.set('last-search', users, 31 * 24 * 60 * 60);
       }
     },
     next(state, reset) {

@@ -78,13 +78,12 @@ export default {
 
 <template>
   <div>
-    <ActivityActions @close="close">
-      <span slot="caption">Знакомства</span>
+    <ActivityActions caption="Знакомства" @close="close">
 
       <template slot="option">
-        <div class="menu-button" @click="$router.push('/settings/search')">
+        <div class="header-bar__button" @click="$router.push('/settings/search')">
           <i class="material-icons">&#xE8B9;</i>
-          <span class="menu-button__title">
+          <span class="header-bar__title">
             Настроить
           </span>
         </div>

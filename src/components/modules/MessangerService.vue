@@ -1,7 +1,6 @@
 <script>
 import api from '~config/api';
 import CaptchaDialog from '~dialogs/CaptchaDialog';
-import Recaptcha from '~modules/Recaptcha';
 
 export default {
   props: ['id', 'reply'],
@@ -12,6 +11,7 @@ export default {
       photo: null,
       token: null,
       code: null,
+      active: false,
     };
   },
   mounted() {
@@ -23,7 +23,17 @@ export default {
       this.text = null;
       this.photo = null;
       this.captcha = false;
+      this.resetRecaptcha();
     },
+    cancel() {
+      // this.$emit('process', false);
+      this.resetRecaptcha();
+      this.captcha = false;
+    },
+    resetRecaptcha() {
+      this.$root.$refs.recaptcha.reset();
+    },
+
     sendMessage(text) {
       if (text) {
         this.text = text;
@@ -37,6 +47,7 @@ export default {
       }
     },
     send(token) {
+      this.$emit('process', true);
       this.$store.commit('grecaptchaTokenUpdate', token);
       const params = {
         id: this.id,
@@ -57,20 +68,20 @@ export default {
       }).catch((error) => {
         this.onError(error);
       });
-      this.$emit('process', true);
     },
     onMessageSend({saved, error}) {
+      this.$emit('process', false);
       if (!saved && error) {
         if (error == 'need_captcha') {
           this.captcha = true;
         }
         if (error == 'need_verify') {
-          this.$refs.recaptcha.render(this.send);
+          this.$root.$refs.recaptcha.render(this.send, 'recaptcha-messenger');
+          this.$root.$refs.recaptcha.execute2v();
         }
       } else {
         this.sended();
       }
-      this.$emit('process', false);
     },
     onError() {
       this.$emit('process', false);
@@ -80,17 +91,12 @@ export default {
       this.$emit('process', false);
       this.$emit('sended');
       this.reset();
-      this.$refs.recaptcha.reset();
       this.$store.dispatch('notes/UPDATE', text);
     },
     setCode({token, code}) {
       this.token = token;
       this.code = code;
       this.send();
-    },
-    cancel() {
-      // this.$emit('process', false);
-      this.captcha = false;
     },
     close() {
       this.reset();
@@ -99,7 +105,10 @@ export default {
   },
   components: {
     CaptchaDialog,
-    Recaptcha,
+  },
+
+  destroyed() {
+    this.resetRecaptcha();
   },
 };
 </script>
@@ -107,15 +116,16 @@ export default {
 <template>
   <div>
     <slot></slot>
+    <div id="recaptcha-messenger" class="g-recaptcha"></div>
     <CaptchaDialog v-if="captcha"
      @close="close"
      @cancel="cancel"
      @send="setCode"/>
-    <Recaptcha ref="recaptcha"
-     @cancel="close"/>
   </div>
 </template>
 
 <style lang="less">
-
+.g-recaptcha {
+  display: none;
+}
 </style>

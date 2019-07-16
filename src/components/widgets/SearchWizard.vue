@@ -113,7 +113,7 @@ export default {
 
 <style lang="less">
 .search-wizard {
-  padding: @indent-sm @indent-md;
+  padding: @indent-md @indent-md;
   text-align: center;
   margin-top: 0px;
   color: @dark-light;

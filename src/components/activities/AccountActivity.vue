@@ -50,8 +50,7 @@ export default {
 </script>
 
 <template>
-  <ActivityActions type="wrapped" @close="$emit('close')">
-    <span slot="caption">Анкета</span>
+  <ActivityActions caption="Анкета" type="wrapped" @close="$emit('close')">
     <AccountComponent
      :human="human"
      :key="humanId"

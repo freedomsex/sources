@@ -9,16 +9,16 @@ export default {
       return this.list[this.index];
     },
     currDate() {
-      return this.$moment(this.item.date).date();
+      return this.$moment(this.item.added).date();
     },
     prevDate() {
       if (this.index && this.index < this.count) {
-        return this.$moment(this.list[this.index - 1].date).date();
+        return this.$moment(this.list[this.index - 1].added).date();
       }
       return null;
     },
     month() {
-      return this.$moment(this.item.date)
+      return this.$moment(this.item.added)
         .format('MMMM')
         .substring(0, 3);
     },

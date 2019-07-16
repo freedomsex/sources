@@ -1,5 +1,5 @@
 <script>
-import axios from 'axios';
+import api from '~config/api';
 import Snackbar from '~widgets/Snackbar';
 
 export default {
@@ -25,17 +25,21 @@ export default {
       const {status} = this.$store.state.contacts.initial;
       return status == false || status < 8;
     },
+    needed() {
+      return !this.message || !this.contact;
+    },
   },
   methods: {
     check() {
-      axios
-        .get('/mailer/status')
-        .then(({data}) => {
-          this.handle(data);
-        })
-        .catch(() => {
-          this.attempt += 1;
-        });
+      if (this.needed && this.$store.getters['token/auth']()) {
+        api.messages.status()
+          .then(({data}) => {
+            this.handle(data);
+          })
+          .catch(() => {
+            this.attempt += 1;
+          });
+      }
     },
     handle({message, contact}) {
       this.intimate(message);
@@ -44,7 +48,6 @@ export default {
     },
     loadStatus() {
       const {uid} = this.$store.state.user;
-      // console.log('888uid888', uid);
       let delay = !uid ? 2 : 15;
       if (uid) {
         this.check();

@@ -51,6 +51,7 @@ export default {
     hope() {
       const sec = 2;
       setTimeout(() => { this.slow = true; }, sec * 1000);
+      this.$Progress.start();
       this.reset();
     },
     loaded() {
@@ -62,7 +63,14 @@ export default {
       this.amount = this.count;
       this.response = true;
       this.slow = false;
+      this.$Progress.finish();
     },
+
+    failed(error) {
+      this.error = error;
+      this.$Progress.fail();
+    },
+
     bun(index) {
       const item = this.contacts[index];
       console.log('bun', item);

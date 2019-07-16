@@ -1,6 +1,7 @@
 <script>
 import _ from 'underscore';
 import axios from 'axios';
+import CONFIG from '~config/';
 
 export default {
   props: ['progress'],
@@ -14,10 +15,9 @@ export default {
       return this.$refs.file;
     },
     url() {
-      const server = this.$store.state.photoServer;
       const {uid} = this.$store.state.user;
-      const token = this.$store.state.apiToken;
-      return `//${server}/api/v1/users/${uid}/photos?jwt=${token}`;
+      // const token = this.$store.state.token.access;
+      return `${CONFIG.API_PHOTO}/api/v1/users/${uid}/photos`;
     },
   },
   methods: {
@@ -32,7 +32,10 @@ export default {
     upload(formData) {
       this.busy = true;
       axios.post(this.url, formData, {
-        headers: {'Content-Type': 'multipart/form-data'},
+        headers: {
+          Authorization: `Bearer ${this.$store.state.token.access}`,
+          'Content-Type': 'multipart/form-data',
+        },
       }).then(({data}) => {
         this.preview(data.photo);
       }).catch(() => {
