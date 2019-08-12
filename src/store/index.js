@@ -54,6 +54,7 @@ const store = new Vuex.Store({
   },
   state: {
     ready: false,
+    authorized: false,
     locale: 'ru',
     apiToken: '',
     grecaptchaToken: null,
@@ -61,17 +62,13 @@ const store = new Vuex.Store({
     mute: false,
     update: false,
     hideLine: false,
+    promt: false,
     // scrolling: false,
-  },
-  actions: {
-    //
+    autoPaste: true,
   },
   mutations: {
-    setApiToken(state, data) {
-      if (data) {
-        _.assign(state, data);
-      }
-      // console.log(state)
+    authorize(state, value) {
+      state.authorized = (value === true);
     },
     simple(state, data) {
       state.simple = data == true;
@@ -83,6 +80,11 @@ const store = new Vuex.Store({
     showLine(state, data) {
       state.hideLine = data !== true;
     },
+
+    pasting(state, data) {
+      console.log('pasting', [state.autoPaste, data]);
+      state.autoPaste = data == true;
+    },
     mute(state) {
       state.mute = state.mute !== true;
     },
@@ -93,6 +95,9 @@ const store = new Vuex.Store({
       if (data) {
         state.grecaptchaToken = data;
       }
+    },
+    promted(state, data) {
+      state.promt = data == true;
     },
     // stopScrolling(state, value) {
     //   state.scrolling = (value === true);

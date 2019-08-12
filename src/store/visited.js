@@ -9,7 +9,7 @@ export default {
   },
   actions: {
     sync({rootState, state, commit}) {
-      const index = `visited-${rootState.user.uid}`;
+      const index = `visited-${rootState.token.uid}`;
       commit('update', lscache.get(index));
       return api.user.visitedList().then((response) => {
         const {data} = response;
@@ -18,7 +18,7 @@ export default {
       });
     },
     ADD({rootState, state, commit}, tid) {
-      const {uid} = rootState.user;
+      const {uid} = rootState.token;
       const index = `visited-${uid}`;
       commit('add', tid);
       lscache.set(index, state.list, 31 * 24 * 60 * 60);

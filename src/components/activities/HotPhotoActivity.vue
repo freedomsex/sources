@@ -10,7 +10,7 @@ export default {
     confirm: false,
     accept: false,
     page: 0,
-    limits: [30, 100, 300],
+    limits: [100, 300],
     list: [],
   }),
   components: {
@@ -60,7 +60,7 @@ export default {
       if (!this.confirm) {
         this.accept = true;
       } else {
-        axios.post(`${CONFIG.API_CONTACT}/api/v1/photoline/${this.user.uid}`, {source: this.user.userpic}, {
+        axios.post(`${CONFIG.API_CONTACT}/api/v1/photoline/${this.user.uid}`, {source: this.user.userpic.source}, {
           headers: {Authorization: `Bearer ${this.$store.state.token.access}`},
         }).then(() => {
           this.accept = false;
@@ -107,7 +107,7 @@ export default {
     <div class="activity-section">
 
       <div class="galery-photo" v-if="list.length > 0">
-        <div class="galery-photo__item" v-for="(item, index) in list"
+        <div class="galery-photo__item blured-preview" v-for="(item, index) in list"
          :style="{backgroundImage: `url(${source(item.source)})`}"
          @click="quick(item.id)"></div>
       </div>

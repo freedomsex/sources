@@ -49,7 +49,7 @@ ${require('./head.htm')}
       @close="snackbar.text = null">{{snackbar.text}}</snackbar>
     <toast v-if="alert" @close="alert = null">{{alert}}</toast>
 
-    <registration-promo v-if="!$store.getters['token/auth']()"></registration-promo>
+    <registration-promo v-if="!$store.state.authorized"></registration-promo>
     <bottom-nav v-else></bottom-nav>
 
 

@@ -39,7 +39,7 @@ export default {
   },
   computed: {
     uid() {
-      return this.$store.state.user.uid;
+      return this.$store.state.token.uid;
     },
     attention() {
       return this.alert || this.alertOption ? 1 : 0;
@@ -376,7 +376,7 @@ export default {
 .message-item__date {
   height: 14px;
   text-align: center;
-  margin: @indent-md auto;
+  margin: @indent-sm auto @indent-md;
   span {
     background-color: @white;
     font-size: 14px;

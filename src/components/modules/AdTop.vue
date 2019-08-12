@@ -32,7 +32,8 @@ export default {
   },
   computed: {
     regular() {
-      const {uid, vip} = this.$store.state.user;
+      const {uid} = this.$store.state.token;
+      const {vip} = this.$store.state.user;
       return !uid || vip.status < 1;
     },
     desktop() {

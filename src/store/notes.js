@@ -23,7 +23,7 @@ export default {
     },
     LOAD({state, dispatch, rootState}) {
       if (!state.db) {
-        const {uid} = rootState.user;
+        const {uid} = rootState.token;
         state.db = new Dexie(`DataBaseFS__${uid}`);
         state.db.version(1).stores({
           writes: '++id, &text, count, updated',

@@ -81,10 +81,10 @@ export default {
     position: relative;
     flex: 1 1 auto;
     overflow-y: auto;
-    padding: @indent-md @indent-lg @indent-md;
+    padding: @indent-sm @indent-sm @indent-md;
   }
   &__content {
-    padding: @indent-md @indent-lg @indent-md;
+    padding: @indent-sm @indent-sm @indent-md;
   }
   &__loader {
     color: @gray-dark;
@@ -119,7 +119,7 @@ export default {
   .activity-mixin;
   .activity {
     &__container {
-      padding: @indent-md @indent-lg @indent-md;
+      padding: @indent-sm @indent-sm @indent-md;
     }
   }
 }
@@ -134,7 +134,7 @@ export default {
     }
     &__container {
       height: calc(~'100% - 50px');
-      padding: @indent-md @indent-lg @indent-xl;
+      padding: @indent-sm @indent-sm @indent-xl;
       h1 {
         margin-top: @indent-xs;
       }
@@ -152,6 +152,7 @@ export default {
 
 .activity-section {
   margin-bottom: @indent-lg;
+
   &__title {
     margin-bottom: @indent-sm;
     font-size: 20px;

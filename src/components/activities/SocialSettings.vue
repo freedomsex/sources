@@ -1,31 +1,17 @@
 <script>
-import Vuex from 'vuex';
 import ActivityActions from '~activities/ActivityActions';
 
 export default {
   props: [],
   data() {
     return {
-      checkedContact: {
-        em: 0,
-        vk: 0,
-        ok: 0,
-        fb: 0,
-        go: 0,
-        sk: 0,
-        ph: 0,
-      },
+      contacts: {},
       virgin: true,
     };
   },
-  computed: Vuex.mapState({
-    contacts(state) {
-      return state.user.contacts;
-    },
-  }),
   mounted() {
-    console.log('user', this.contacts);
-    this.checkedContact = this.contacts;
+    const {em, vk, ok, fb, go, sk, ph} = this.$store.state.user;
+    this.contacts = {em, vk, ok, fb, go, sk, ph};
   },
   methods: {
     close() {
@@ -37,7 +23,7 @@ export default {
     },
     save() {
       if (!this.virgin) {
-        this.$store.dispatch('SAVE_CONTACTS', this.checkedContact);
+        this.$store.dispatch('SAVE_CONTACTS', this.contacts);
       }
     },
   },
@@ -53,31 +39,31 @@ export default {
       <div class="activity-section__title">Контакты, соцсети</div>
         <div class="checkbox">
           <label>
-            <input type="checkbox" v-model="checkedContact.em" @change="deflower">
+            <input type="checkbox" v-model="contacts.em" @change="deflower">
             У меня есть электронная почта
           </label>
         </div>
         <div class="checkbox">
           <label>
-            <input type="checkbox" v-model="checkedContact.vk" @change="deflower">
+            <input type="checkbox" v-model="contacts.vk" @change="deflower">
             Есть страничка Вконтакте
           </label>
         </div>
         <div class="checkbox">
           <label>
-            <input type="checkbox" v-model="checkedContact.ok" @change="deflower">
+            <input type="checkbox" v-model="contacts.ok" @change="deflower">
             Я есть в Одноклассниках
           </label>
         </div>
         <div class="checkbox">
           <label>
-            <input type="checkbox" v-model="checkedContact.fb" @change="deflower">
+            <input type="checkbox" v-model="contacts.fb" @change="deflower">
             У меня страница на Фэйсбуке
           </label>
         </div>
         <div class="checkbox">
           <label>
-            <input type="checkbox" v-model="checkedContact.go" @change="deflower">
+            <input type="checkbox" v-model="contacts.go" @change="deflower">
             Имею Google+
           </label>
         </div>
@@ -86,19 +72,16 @@ export default {
       <div class="activity-section__title">Видеочат и телефон</div>
         <div class="checkbox">
           <label>
-            <input type="checkbox" v-model="checkedContact.sk" @change="deflower">
+            <input type="checkbox" v-model="contacts.sk" @change="deflower">
             Видеозвонок, видеочат, скайп
           </label>
         </div>
         <div class="checkbox">
           <label>
-            <input type="checkbox" v-model="checkedContact.ph" @change="deflower">
+            <input type="checkbox" v-model="contacts.ph" @change="deflower">
             Позвоню или дам номер телефона
           </label>
         </div>
     </div>
   </ActivityActions>
 </template>
-
-<style lang="less">
-</style>

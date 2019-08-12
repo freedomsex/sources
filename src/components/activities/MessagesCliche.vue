@@ -23,10 +23,12 @@ export default {
   },
   methods: {
     load(value) {
+      this.process = true;
       const result = value || this.default.tab;
       api.raw.load(null, `static/json/cliche/${result}.json?v=${this.version}`).then(({data}) => {
         this.texts = data;
         this.active = result;
+        this.process = false;
         lscache.set('cliche-active', this.active, 3 * 24 * 60 * 60);
       });
     },
@@ -60,24 +62,34 @@ export default {
 </script>
 
 <template>
-  <ActivityActions caption="Готовые сообщения" type="wrapped" @close="$emit('close')">
-    <div class="activity-section">
+  <ActivityActions caption="Готовые сообщения" @close="$emit('close')">
+    <div class="cliche-header">
       <button class="btn btn-sm" :class="buttonStyle('public')"
        @click="load('public')">Познакомиться</button>
       <button class="btn btn-sm" :class="buttonStyle('virt')"
        @click="load('virt')">Вирт</button>
       <button class="btn btn-sm" :class="buttonStyle('sex')"
        @click="load('sex')">Секс</button>
+      <span class="btn btn-link btn-sm" v-if="process">Загружаю...</span>
     </div>
-    <div class="activity-section" v-if="texts && texts.length">
-      <span class="cliche-item" :style="style(item)" @click="select(item.text)"
-       v-for="item in texts" >{{item.text}}</span> &nbsp;
+
+    <div class="list-view" v-if="texts && texts.length">
+      <div class="list-item" v-for="item in texts" @click="select(item.text)">
+        <div class="list-item__body">
+          {{item.text}}
+        </div>
+      </div>
     </div>
-    <div class="activity__loader" v-else>Загружаю...</div>
+
   </ActivityActions>
 </template>
 
 <style lang="less">
+.cliche-header {
+  padding: @indent-sm;
+  border-bottom: 1px solid @gray-light;
+}
+
 .cliche-item {
   line-height: 2;
   margin-right: @indent-sm;

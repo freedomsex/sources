@@ -1,9 +1,11 @@
 const title = {
   human: '',
   name() {
-    let result = 'Парень или девушка';
+    let result = '•••';
     if (this.human) {
-      result = this.human.sex == 2 ? 'Девушка' : 'Парень';
+      if (this.human.sex) {
+        result = this.human.sex == 2 ? 'Девушка' : 'Парень';
+      }
       if (this.human.name) {
         result = this.human.name;
       }

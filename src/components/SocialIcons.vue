@@ -45,32 +45,33 @@ export default {
   display: flex;
 
   .icon {
-    height: 16px;
-    width: 16px;
-    margin-left: 5px;
-    background-repeat: no-repeat;
-    background-position: left center;
+    height: 20px;
+    width: 20px;
+    margin-left: 3px;
+    border-radius: 20px;
+    // background-repeat: no-repeat;
+    background-position: center center;
 
     &.vk {
-      background: url('~static/img/icon/social/search/vk.png');
+      background-image: url('~static/img/icon/social/search/vk.png');
     }
     &.sk {
-      background: url('~static/img/icon/social/search/sk.png');
+      background-image: url('~static/img/icon/social/search/sk.png');
     }
     &.ok {
-      background: url('~static/img/icon/social/search/ok.png');
+      background-image: url('~static/img/icon/social/search/ok.png');
     }
     &.fb {
-      background: url('~static/img/icon/social/search/fb.png');
+      background-image: url('~static/img/icon/social/search/fb.png');
     }
     &.ph {
-      background: url('~static/img/icon/social/search/ph.png');
+      background-image: url('~static/img/icon/social/search/ph.png');
     }
     &.em {
-      background: url('~static/img/icon/social/search/em.png');
+      background-image: url('~static/img/icon/social/search/em.png');
     }
     &.go {
-      background: url('~static/img/icon/social/search/go.png');
+      background-image: url('~static/img/icon/social/search/go.png');
     }
   }
 }

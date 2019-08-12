@@ -52,7 +52,7 @@ export default {
   background: @menu-color;
   color: @white;
   font-size: 16px;
-  padding: (@indent-sm + @indent-sm * 0.2) @indent-md @indent-sm;
+  padding: (@indent-sm + @indent-sm * 0.2) @indent-sm @indent-sm;
   display: flex;
   &__title {
     flex: 3 1 auto;

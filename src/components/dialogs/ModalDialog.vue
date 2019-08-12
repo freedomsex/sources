@@ -83,6 +83,10 @@ export default {
   &__body {
     font-size: 14px;
     margin: @indent-xs 0 @indent-md;
+
+    .body-spacer {
+      margin-bottom: @indent-sm;
+    }
   }
   &__section {
     margin: 0 0 @indent-sm;

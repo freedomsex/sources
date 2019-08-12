@@ -13,22 +13,6 @@ class ApiUser extends Api {
     return this.save({token}, null, 'user/regnow');
   }
 
-  saveSex(sex, token) {
-    return this.save({sex, token}, null, 'option/sex');
-  }
-
-  saveAge(age) {
-    return super.save({age}, null, 'option/age');
-  }
-
-  saveName(name) {
-    return super.save({name}, null, 'option/name');
-  }
-
-  saveCity(city) {
-    return super.save({city}, null, 'option/city');
-  }
-
   saveContacts(data) {
     return super.save({contact: data}, null, 'option/contact');
   }
@@ -67,10 +51,6 @@ class ApiUser extends Api {
 
   saveEmail(email) {
     return super.save({email}, null, 'option/email');
-  }
-
-  removeEmail() {
-    return super.remove(null, null, 'option/demail');
   }
 
   saveSubscribe() {

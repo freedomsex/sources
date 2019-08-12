@@ -1,8 +1,10 @@
 import expunix from 'expires-unixtime';
+import jwtDecode from 'jwt-decode';
 
 export default {
   namespaced: true,
   state: {
+    uid: null,
     access: null,
     refresh: null,
     expires: null,
@@ -10,7 +12,6 @@ export default {
     access_ttl: 3600,
     lifetime: 2592000,
   },
-  actions: {},
   mutations: {
     save(state, data) {
       if (data) {
@@ -20,6 +21,9 @@ export default {
         state.lifetime = data.lifetime;
         state.created = data.refresh.split('.', 2)[1];
         state.access_ttl = expunix.left(data.expires);
+
+        const {uid} = jwtDecode(state.access);
+        state.uid = uid;
       }
       // state.expires = data.token.split('.', 2)[0];
     },
@@ -36,5 +40,9 @@ export default {
       }
       return !expunix.expired(state.expires); // 3600
     },
+    // uid(state) {
+    //   const {uid} = jwtDecode(state.access);
+    //   return uid;
+    // },
   },
 };

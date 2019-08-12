@@ -21,7 +21,7 @@ export default {
   },
   computed: {
     userId() {
-      return this.$store.state.user.uid;
+      return this.$store.state.token.uid;
     },
     sex() {
       return this.$store.state.user.sex;

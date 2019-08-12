@@ -1,6 +1,8 @@
 <script>
 import _ from 'underscore';
 import ConfirmDialog from '~dialogs/ConfirmDialog';
+import SimpleCaptcha from '~dialogs/SimpleCaptcha';
+import EmailSended from '~dialogs/EmailSended';
 
 export default {
   data() {
@@ -8,49 +10,95 @@ export default {
       confirmSend: false,
       hint: 'Введите ваш емаил.',
       process: false,
+      error: false,
       email: null,
+
+      emailSended: false,
+
+      captcha: {
+        need: false,
+        code: '',
+        token: null,
+      },
     };
   },
   mounted() {
-    _.delay(() => { this.$store.dispatch('auth/sync'); }, 3000);
+    _.delay(this.sync, 3000);
   },
   computed: {
+    promt() {
+      return this.$store.state.auth.promt;
+    },
     login() {
-      return this.$store.state.auth.login;
+      return this.$store.getters['auth/login'];
     },
     password() {
-      return this.$store.state.auth.pass;
+      return this.$store.state.auth.password;
     },
     loaded() {
       return this.login && this.password;
     },
   },
   methods: {
+    sync() {
+      this.$service.run('auth/checkEmail');
+      this.$service.run('auth/syncData');
+
+      // if (this.$store.state.authorized) {
+      //   console.log('promted', this.$store.state.promt);
+      //   this.$store.dispatch('auth/sync').then((data) => {
+      //     this.$store.commit('promted', data.promt);
+      //   });
+      // }
+    },
     send() {
       if (!this.email) {
         return;
       }
       this.process = true;
+      const params = {
+        email: this.email,
+        token: this.captcha.token,
+        code: this.captcha.code,
+      };
       this.hint = this.$t('Отправляю...');
-      this.$store.dispatch('auth/SAVE_EMAIL', this.email).then((response) => {
-        this.hint = response.data.say;
-        this.error = response.data.err;
-        this.sended();
+      this.$api.res('send', 'auth').post(params).then(({data}) => {
+        this.hint = data.say;
+        this.error = data.error;
+        this.sended(data);
       });
     },
-    sended() {
+    sended(data) {
       this.process = false;
-      if (!this.error) {
+      if (!data.error) {
+        this.emailSended = true;
+        this.confirmSend = false;
         this.emit('close');
+      }
+      if (data.error == 'strict') {
+        this.captcha.need = true;
       }
     },
     dialog() {
       this.email = this.$store.state.auth.email;
       this.confirmSend = true;
     },
+    setToken(token) {
+      this.captcha.token = token;
+    },
+    setCode(code) {
+      this.captcha.code = code;
+    },
+
+    close() {
+      this.captcha.need = false;
+      this.confirmSend = false;
+    },
   },
   components: {
     ConfirmDialog,
+    EmailSended,
+    SimpleCaptcha,
   },
 };
 </script>
@@ -100,7 +148,7 @@ export default {
 </i18n>
 
 <template>
-  <nav>
+  <nav v-if="!promt">
     <div class="auth-board">
       <div v-show="!loaded">
         {{$t('important')}}
@@ -117,8 +165,11 @@ export default {
       </transition>
     </div>
 
+
+    <EmailSended @close="emailSended = false" v-if="emailSended"/>
+
     <ConfirmDialog v-if="confirmSend" yesText="Отправить"
-     @confirm="send()" @close="confirmSend = false">
+     @confirm="send()" @close="close()">
       <div class="modal-dialog__section">
        {{$t('confirm')}}
       </div>
@@ -131,7 +182,13 @@ export default {
            :placeholder="$t('email')">
         </div>
       </div>
-      <div class="modal-dialog__section" v-html="$t('hint')"></div>
+
+      <div class="activity-section" v-show="error && captcha.need" style="max-width: 270px;">
+        <div class="activity-section__title">Код</div>
+        <SimpleCaptcha ref="captcha" @token="setToken" @input="setCode"/>
+      </div>
+
+      <div class="modal-dialog__section" v-html="hint"></div>
 
       <span slot="yesIcon" class="glyphicon glyphicon-ok"></span>
     </ConfirmDialog>

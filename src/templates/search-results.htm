@@ -2,7 +2,7 @@
 
 <div class="container content">
   <aside class="row">
-    <auth-board v-if="promt"></auth-board>
+    <auth-board ref="authboard"></auth-board>
     <photo-line-widget ></photo-line-widget>
     <search-wizard>
       <div class="search-wizard" v-html="$t('almostDone')">

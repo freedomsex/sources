@@ -31,6 +31,7 @@ export default {
         this.error = false;
         this.active = false;
         global.grecaptcha.reset();
+        document.getElementById('g-recaptcha').innerHTML = '';
       }
     },
     render(callback, id) {

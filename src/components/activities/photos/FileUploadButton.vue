@@ -15,7 +15,7 @@ export default {
       return this.$refs.file;
     },
     url() {
-      const {uid} = this.$store.state.user;
+      const {uid} = this.$store.state.token;
       // const token = this.$store.state.token.access;
       return `${CONFIG.API_PHOTO}/api/v1/users/${uid}/photos`;
     },

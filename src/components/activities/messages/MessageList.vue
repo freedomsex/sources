@@ -139,7 +139,7 @@ export default {
       return false;
     },
     userId() {
-      return this.$store.state.user.uid;
+      return this.$store.state.token.uid;
     },
   },
   components: {
@@ -190,7 +190,7 @@ export default {
 <style lang="less">
 .message-list {
   flex: 1 0 auto;
-  padding: @indent-sm @indent-md 0;
+  padding: @indent-xs @indent-xs 0;
   min-height: 100%;
   // margin-top: @indent-sm;
 }

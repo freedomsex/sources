@@ -31,18 +31,18 @@ export default {
       this.tick(delay);
     },
     load() {
-      return api.user.syncData().then(({data}) => {
-        if (data.uid || data.reg) {
-          this.$store.commit('resetUser', data);
-          this.$store.commit('search/restore', data);
-          this.next();
-        } else {
-          this.reload();
-        }
-        if (!data.uid && data.reg) {
-          this.noReg(data);
-        }
-      });
+      // return api.user.syncData().then(({data}) => {
+      //   if (data.uid || data.reg) {
+      //     this.$store.commit('resetUser', data);
+      //     this.$store.commit('search/restore', data);
+      //     this.next();
+      //   } else {
+      //     this.reload();
+      //   }
+      //   if (!data.uid && data.reg) {
+      //     this.noReg(data);
+      //   }
+      // });
       // console.log('KEY LOAD');
     },
     noReg() {

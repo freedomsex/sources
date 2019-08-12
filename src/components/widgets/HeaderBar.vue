@@ -29,7 +29,8 @@ export default {
   }
 
   &__container {
-    min-height: 42px;
+    padding: 0 @indent-xs;
+    min-height: @menu-bar-height;
     display: flex;
     justify-content: space-between;
     align-items: stretch;
@@ -48,18 +49,26 @@ export default {
   &__navbar {
     display: flex;
     align-items: stretch;
+
+    .header-bar__button:last-child {
+      padding-right: 0px;
+    }
   }
 
   &__button {
     font-size: 0;
     display: flex;
     align-items: center;
-    padding: 0px 8px;
+    padding: 0px 5px;
     overflow: hidden;
     white-space: nowrap;
     border-radius: 3px;
     cursor: pointer;
     text-decoration: none;
+
+    &.caption {
+      padding-left: 0px;
+    }
 
     a {
       color: #ffffff;
@@ -70,7 +79,8 @@ export default {
   }
 
   &__title {
-    font-size: 15px;
+    font-size: 16px;
+    padding-top: 2px;
     margin: 0px 5px;
     position: relative;
     // top: 1px;

@@ -61,12 +61,14 @@ textarea {
 .list-view {
   display: flex;
   flex-direction: column;
+  line-height: 1;
   &:last-child {
     border-bottom-width: 0px;
   }
 
   .list-item {
-    border-bottom: 1px solid @light;
+    min-height: 40px;
+    border-bottom: 1px solid @gray-light;
     position: relative;
     background: @white;
     cursor: pointer;
@@ -74,6 +76,10 @@ textarea {
     flex-direction: row;
     align-items: center;
     padding: @indent-sm @indent-sm;
+    &__icon {
+      flex: 0 0 auto;
+      margin-right: @indent-xs;
+    }
     &__body {
       overflow: hidden;
       font-size: 14px;

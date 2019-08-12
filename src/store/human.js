@@ -32,11 +32,11 @@ export default {
   namespaced: true,
   state: humanState,
   actions: {
-    load({commit}, tid) {
-      const index = `human.data.${tid}`;
+    load({commit}, uid) {
+      const index = `human.data.${uid}`;
       commit('save', lscache.get(index));
-      commit('reset', tid);
-      return api.search.get({tid}).then(({data}) => {
+      commit('reset', uid);
+      return api.search.get({uid}).then(({data}) => {
         commit('save', data);
         lscache.set(index, data, 1500);
       }).catch(() => {
@@ -45,8 +45,8 @@ export default {
     },
   },
   mutations: {
-    reset(state, tid) {
-      if (state && state.id != tid) {
+    reset(state, uid) {
+      if (state && state.id != uid) {
         // Сбросить предыдущие данные, если там что-то не то
         _.assign(state, humanState);
         state.reload = true;

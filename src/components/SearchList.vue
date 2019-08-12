@@ -4,11 +4,9 @@ import json from '~legacy/utils/json';
 import InfoDialog from '~dialogs/InfoDialog';
 import Snackbar from '~widgets/Snackbar';
 import QuickMessage from '~dialogs/quick-message/QuickMessage';
-import AutoRegistration from '~mixins/AutoRegistration';
 import SearchItem from './SearchItem';
 
 export default {
-  mixins: [AutoRegistration],
   data() {
     return {
       loading: false,
@@ -86,7 +84,7 @@ export default {
       return this.$store.state.search.who || who || null;
     },
     userId() {
-      return this.$store.state.user.uid || 0;
+      return this.$store.state.token.uid || 0;
     },
     // TODO: chech readable settings
   },
@@ -123,8 +121,8 @@ export default {
           this.toSlow = false;
         });
 
-      this.autoCity();
-      this.autoAge();
+      this.$service.run('user/autoAge');
+      this.$service.run('user/autoCity');
     },
     loadNext() {
       // this.skipScroll = true;
@@ -268,8 +266,12 @@ export default {
     cursor: pointer;
   }
   &__options {
-    text-align: center;
-    margin-top: @indent-sm;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 75px;
+    // text-align: center;
+    // margin-top: @indent-sm;
   }
   &__next {
     text-transform: uppercase;

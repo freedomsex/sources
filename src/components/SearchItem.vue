@@ -118,7 +118,8 @@ export default {
     border-bottom-width: 0px;
   }
   margin: 0;
-  padding: @indent-md @indent-md;
+  min-height: 60px;
+  padding: 0 @indent-xs;
   border-bottom: 1px solid @light;
   position: relative;
   background: @white;
@@ -185,7 +186,7 @@ export default {
 
   &__search {
     color: @gray-dark;
-    font-size: 12px;
+    // font-size: 12px;
     margin-left: 10px;
     white-space: nowrap;
     overflow: hidden;
@@ -199,9 +200,10 @@ export default {
 
   &__desires {
     margin-left: @indent-xs;
-    font-size: 11px;
-    //margin: 0 @indent-xs;
-    padding: 4px 7px 3px;
+    font-size: 12px;
+    min-width: 23px;
+    text-align: center;
+    padding: 3px 5px;
     border-radius: @radius-xs;
     color: @dark-light;
     background: #e8e5ff;
@@ -209,12 +211,12 @@ export default {
   }
   &__virt {
     color: @green;
-    font-size: 11px;
+    font-size: 12px;
     margin-left: @indent-xs;
   }
   &__real {
     color: @pink-dark;
-    font-size: 11px;
+    font-size: 12px;
     margin-left: @indent-xs;
   }
   &__vip {
@@ -223,13 +225,13 @@ export default {
   }
   &__online {
     background: #ffffff;
-    border-radius: 3px;
+    border-radius: 20px;
     border: 1px solid #ff9900;
     color: #ff9900;
     display: inline-block;
-    font-size: 11px;
-    margin-right: 5px;
-    padding: 0px 3px 1px;
+    font-size: 13px;
+    // margin-right: 20px;
+    padding: 1px 5px 1px;
     margin-left: @indent-xs;
   }
 }

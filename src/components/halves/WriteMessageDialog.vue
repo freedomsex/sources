@@ -135,11 +135,9 @@ export default {
     </template>
 
     <div class="human-dialog__body">
-
       <DesireListCompact :tags="tags" @select="account()"/>
 
       <HumanSummary :vip="human.vip" :humanId="humanId"/>
-
     </div>
 
     <div class="human-dialog__text message" v-if="human.message">
@@ -177,7 +175,7 @@ export default {
 //     border-width: 0px;
 //   }
   &__body {
-    padding: @indent-sm @indent-sm 0;
+    padding: @indent-sm @indent-sm 7px;
   }
   &__text {
     padding: @indent-sm @indent-sm;

@@ -1,4 +1,6 @@
 import {Vue, store} from '~store';
+import RestAPI from './plugins/RestAPI';
+import Service from './plugins/Service';
 import VueI18n from 'vue-i18n';
 import VueProgressBar from 'vue-progressbar';
 import '~assets/directives/resized'; // TODO: оформить директивы
@@ -36,16 +38,17 @@ import 'styles/core/body.less';
 import moment from 'moment';
 
 moment.locale('ru');
-
 Vue.prototype.$moment = moment;
+
+Vue.use(VueI18n);
+Vue.use(RestAPI);
+Vue.use(Service);
 
 Vue.use(VueProgressBar, {
   color: '#869CCA',
   failedColor: 'red',
   thickness: '3px',
 });
-
-Vue.use(VueI18n);
 
 const {locale} = global.defaultSettings || 'ru';
 
@@ -87,6 +90,10 @@ global.App = new Vue({
     },
     scrollbarWidth: 15,
   },
+  created() {
+    this.$service.run('auth/fix');
+    this.$service.run('auth/tick');
+  },
   mounted() {
     const humanId = parseInt(window.location.pathname.split('/')[1], 10);
     this.humanId = humanId || null;
@@ -109,8 +116,7 @@ global.App = new Vue({
       return this.$store.state.ready;
     },
     promt() {
-      const {promt} = this.$store.state.user;
-      return !promt || promt == 'no';
+      return this.$store.state.promt;
     },
     tags() {
       return this.$store.getters['results/tags'];
@@ -132,7 +138,7 @@ global.App = new Vue({
     },
     refresh() {
       // TODO: without $root and $refs
-      this.$refs.authenticator.refresh();
+      return this.$refs.authenticator.refresh();
     },
     reload() {
       const home = this.$refs.results;
@@ -163,14 +169,15 @@ global.App = new Vue({
     unauthorized() {
       this.$refs.authenticator.unauthorized();
     },
+    userSync() {
+      const {uid} = this.$store.state.token;
+      this.$store.dispatch('SYNC_USER', uid).then((data) => {
+        this.$store.commit('search/restore', data);
+      });
+    },
     userDataSync() {
       this.$refs.authenticator.refresh().then(() => {
-        this.$store.dispatch('SYNC_USER').then(({data}) => {
-          if (data.uid || data.reg) {
-            this.$store.commit('resetUser', data);
-            this.$store.commit('search/restore', data);
-          }
-        });
+        this.userSync();
       });
     },
   },

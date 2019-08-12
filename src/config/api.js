@@ -68,7 +68,7 @@ class ApiSearch extends Api {
     const host = `${CONFIG.API_SEARCH}/`;
     const routing = {
       route: 'users',
-      get: '{tid}',
+      get: '{uid}',
     };
     super(host, key, null, routing);
   }

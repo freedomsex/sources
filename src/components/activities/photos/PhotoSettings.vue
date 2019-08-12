@@ -25,7 +25,7 @@ export default {
       this.$emit('close');
     },
     loadPhoto() {
-      const {uid} = this.$store.state.user;
+      const {uid} = this.$store.state.token;
       const config = {
         headers: {Authorization: `Bearer ${this.$store.state.token.access}`},
         params: {hash: hasher.random()},

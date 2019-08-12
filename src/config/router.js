@@ -34,7 +34,6 @@ const sendForm = [
 ];
 
 const dialogHistory = {
-  path: 'dialog',
   component: () => import('~activities/messages/MessagesActivity'),
   props: true,
   children: sendForm,
@@ -85,7 +84,7 @@ const routes = [
     // next('/confirm-sex/messages'),
     children: [
       _.extend({}, dialogHistory, {
-        path: ':humanId(\\d+)/dialog',
+        path: ':humanId(\\d+)',
         name: 'dialog',
         meta: {back: '/intimate'},
       }),

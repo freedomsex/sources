@@ -50,7 +50,7 @@ export default {
     },
     sent() {
       return this.item.message
-        ? this.item.message.sender == this.$store.state.user.uid
+        ? this.item.message.sender == this.$store.state.token.uid
         : 0;
     },
     humanId() {
@@ -198,7 +198,7 @@ export default {
   background: @white;
   overflow: hidden;
   font-size: 14px;
-    padding: 7px @indent-sm;
+    padding: @indent-sm @indent-xs;
 
   &__photo {
     margin-right: @indent-sm;

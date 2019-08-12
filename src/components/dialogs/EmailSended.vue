@@ -1,32 +1,24 @@
 <script>
-import ModalDialog from '~dialogs/ModalDialog';
+import InfoDialog from '~dialogs/InfoDialog';
 
 export default {
   components: {
-    ModalDialog,
+    InfoDialog,
   },
 };
 </script>
 
 <template>
-  <ModalDialog @close="$emit('close')">
-    <div class="modal-dialog__wrapper">
-      <div class="modal-dialog__caption">
-        Письмо отправлено
-      </div>
-      <div class="modal-dialog__body">
-        <div class="modal-dialog__section">
-          Доставка письма занимает от секунды до нескольких минут.
-          Если письма долго нет - проверьте папку спам, особенно
-          если ваша почта на «Gmail».
-        </div>
-        <div class="modal-dialog__section">
-          <a href="http://docs.freedomsex.info/blog/#/Как-пользоваться/Настройки?id=Восстановление-пароля"
-           target="_blank">Что делать если писимо не пришло &raquo;</a>
-        </div>
-      </div>
-    </div>
-  </ModalDialog>
+  <InfoDialog @close="$emit('close')" v-else>
+    <span slot="title">Письмо отправлено</span>
+    Доставка письма занимает от секунды до нескольких минут.
+    Если письма долго нет - проверьте папку спам, особенно
+    если ваша почта на «Gmail».
+    <div class="body-spacer"></div>
+    <a href="http://docs.freedomsex.info/blog/#/Как-пользоваться/Настройки?id=Восстановление-пароля" target="_blank">
+      Что делать если писимо не пришло...
+    </a>
+  </InfoDialog>
 </template>
 
 <style lang="less">

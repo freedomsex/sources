@@ -118,7 +118,7 @@ export default {
 <style lang="less">
 
 .human-summary {
-  padding-bottom: 7px;
+  padding-bottom: 0px;
 
   &__container {
     &.centred {

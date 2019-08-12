@@ -44,14 +44,16 @@ export default {
 
     start() {
       this.process = true;
-      axios.get(`//${CONFIG.API_VIRIFY}/time?hash=${hasher.random()}`).then(({data}) => {
+      axios.get(`${CONFIG.API_VIRIFY}/time?hash=${hasher.random()}`).then(({data}) => {
         this.id = data.id;
         console.log('time', data.time);
         this.wait(data.time);
+      }).catch(() => {
+        this.process = false;
       });
     },
     getToken() {
-      axios.post(`//${CONFIG.API_VIRIFY}/token`, {id: this.id}).then(({data}) => {
+      axios.post(`${CONFIG.API_VIRIFY}/token`, {id: this.id}).then(({data}) => {
         if (data.token) {
           this.token = data.token;
           this.expires = data.token.split('.', 3)[1];
@@ -60,16 +62,20 @@ export default {
         } else {
           this.wait(data.retry);
         }
+      }).catch(() => {
+        this.process = false;
       });
     },
 
 
     draw() {
-      axios.get(`//${CONFIG.API_VIRIFY}/image/${this.token}`).then(({data}) => {
+      axios.get(`${CONFIG.API_VIRIFY}/image/${this.token}`).then(({data}) => {
         this.process = false;
         this.image = `data:image/jpeg;base64,${data.image}`;
         this.updated = this.now();
         this.inc += 1;
+      }).catch(() => {
+        this.process = false;
       });
     },
     update() {
@@ -94,7 +100,7 @@ export default {
 </script>
 
 <template>
-  <div class="simple-captcha">
+  <div class="simple-captcha"  style="max-width: 270px;">
     <div class="activity-section__tile">
       <div class="image-field" @click="renew()">
         <div class="image-field__addon">

@@ -23,7 +23,7 @@ export default {
   },
   computed: {
     authorized() {
-      return this.$store.getters['token/auth']();
+      return this.$store.state.authorized;
     },
     item() {
       return this.$store.state.user;
@@ -92,7 +92,7 @@ export default {
         <div class="header-bar__navbar" v-show="authorized">
           <div class="header-bar__button" @click="$router.push('/settings/account')">
             <span class="header-bar__title limit" v-text="signature"></span>
-            <ColorContactIcon :uid="item.uid" :item="item" :src="item.userpic" size="small-icon"/>
+            <ColorContactIcon :uid="item.uid" :item="item" size="small-icon"/>
           </div>
           <div class="header-bar__button" @click="notificaton = true">
             <i class="material-icons">&#xE7F4;</i>
@@ -138,7 +138,7 @@ export default {
     display: flex;
     align-items: center;
     font-size: 18px;
-    margin: 0 5px 0 10px;
+    margin-right: 5px;
     cursor: pointer;
   }
 }

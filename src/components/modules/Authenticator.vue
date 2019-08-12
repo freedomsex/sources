@@ -1,11 +1,8 @@
 <script>
-import axios from 'axios';
 import expunix from 'expires-unixtime';
 import TTLColorBadge from '~modules/TTLColorBadge';
 import ConfirmDialog from '~dialogs/ConfirmDialog';
-import CONFIG from '~config/';
 import cookies from '~assets/legacy/utils/cookies'; // TODO: remove
-import api from '~config/api'; // TODO: remove
 
 export default {
   data: () => ({
@@ -28,7 +25,6 @@ export default {
     this.verify();
     this.timed();
     window.setInterval(this.timed, 3000);
-    this.fix(); // TODO: Переписать API
   },
   computed: {
     token() {
@@ -62,10 +58,12 @@ export default {
       const {expires, refresh, created, lifetime} = this.$store.state.token;
       this.left = expires && expunix.left(expires); // 3600...0
       this.available = (refresh && !expunix.exceeded(created, lifetime)) || this.fallbackSid;
-      this.expired = !this.$store.getters['token/auth']();
+      this.expired = !this.$store.state.authorized;
+      // console.log('flash', {expires, refresh, created, lifetime});
     },
 
     timed() {
+      this.$service.run('auth/tick');
       // const {created} = this.$store.state.token; // TODO: костыль
       // this.expired = this.$store.getters['token/auth'];
       this.flash();
@@ -81,56 +79,28 @@ export default {
         this.update();
       }
     },
-    refresh() {
+
+    reset() {
       this.attempt = 0;
+      this.process = false;
+      this.flash();
+    },
+
+    refresh() {
+      this.reset();
       return this.update();
     },
     update() {
-      // HOT FIX
-      const token = this.$store.state.token.refresh || this.fallbackSid;
-      if (!token) {
-        console.log('empty refresh_token');
-        return Promise.resolve();
-      }
       this.process = true;
       this.attempt += 1;
-      return axios.post(`${CONFIG.API_AUTH}/api/v1/refresh`, {token}).then(({data}) => {
-        this.$store.commit('token/save', data);
-        this.attempt = 0;
-        this.process = false;
-        this.flash();
-        this.fix(token); // TODO: Переписать API
-      }).catch(({response}) => {
-        this.error(response);
-      }).finally(() => {
-        this.process = false;
-      });
+      return this.$service.run('auth/refresh').then(() => {
+        this.reset();
+      })
+        .finally(() => {
+          this.process = false;
+        });
     },
 
-    error(response) {
-      if (response) {
-        console.log(response.status);
-        if ([401, 400].indexOf(response.status) >= 0) {
-          this.$store.commit('token/logout');
-          this.fallback = false;
-          this.skipError = true;
-        }
-      }
-    },
-
-    fix() { // TODO: Переписать API
-      const {access, refresh} = this.$store.state.token;
-
-      api.contacts.initial.setAuthKey(access); // TODO: Переписать API
-      api.contacts.intimate.setAuthKey(access);// TODO: Переписать API
-
-      api.user.setAuthKey(refresh);// TODO: Переписать API
-      api.search.setAuthKey(refresh);// TODO: Переписать API
-      api.bun.setAuthKey(refresh);// TODO: Переписать API
-      api.messages.setAuthKey(refresh);// TODO: Переписать API
-      api.moderator.setAuthKey(refresh);// TODO: Переписать API
-      api.raw.setAuthKey(refresh);// TODO: Переписать API
-    },
     unauthorized() {
       this.authorized = false;
     },

@@ -22,7 +22,7 @@ export default {
   },
   computed: {
     uid() {
-      return this.$store.state.user.uid;
+      return this.$store.state.token.uid;
     },
   },
   methods: {

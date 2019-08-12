@@ -1,6 +1,4 @@
 <script>
-import axios from 'axios';
-import CONFIG from '~config/';
 import RemindLogin from '~dialogs/RemindLogin';
 import SimpleCaptcha from '~dialogs/SimpleCaptcha';
 import ActivityActions from '~activities/ActivityActions';
@@ -28,7 +26,7 @@ export default {
         code: this.code,
         refresh: this.$store.state.token.refresh,
       };
-      axios.post(`${CONFIG.API_AUTH}/api/v1/login`, payload).then(({data}) => {
+      this.$api.res('login', 'auth').post(payload).then(({data}) => {
         this.onLogin(data);
       });
     },

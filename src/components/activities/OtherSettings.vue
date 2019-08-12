@@ -9,7 +9,7 @@ export default {
   },
   computed: Vuex.mapState({
     uid() {
-      return this.$store.state.user.uid;
+      return this.$store.state.token.uid;
     },
   }),
   methods: {
@@ -17,9 +17,7 @@ export default {
       this.$emit('close');
     },
     logout() {
-      this.$store.commit('token/logout');
-      // TODO: remove logout.php
-      window.location = '/logout.php';
+      this.$service.run('auth/logout');
     },
   },
   components: {

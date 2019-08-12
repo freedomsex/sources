@@ -70,7 +70,7 @@ export default {
       return this.sex ? variant[this.sex][x] : '';
     },
     saveSex() {
-      this.$store.dispatch('SAVE_SEX', {sex: this.selectSex, token: null});
+      this.$service.run('user/sex', {sex: this.selectSex, token: null});
       this.resetName();
     },
     sexPrerequisites() {
@@ -83,18 +83,18 @@ export default {
         this.selectCity = city;
       }
       if (this.selectCity !== this.city) {
-        this.$store.dispatch('SAVE_CITY', this.selectCity);
+        this.$service.run('user/city', this.selectCity);
         this.$root.reload();
       }
     },
     saveAge() {
       if (this.selectAge !== this.age) {
-        this.$store.dispatch('SAVE_AGE', this.selectAge);
+        this.$service.run('user/age', this.selectAge);
       }
     },
     saveName(name) {
       this.selectName = name;
-      this.$store.dispatch('SAVE_NAME', name).catch(() => {
+      this.$service.run('user/age', name).catch(() => {
         this.resetName();
         this.nameAlert = true;
       });

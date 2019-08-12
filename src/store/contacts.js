@@ -32,7 +32,7 @@ const initial = _.extend({
     LOAD({commit, rootState}) {
       return api.contacts.initial
         .cget({
-          uid: rootState.user.uid,
+          uid: rootState.token.uid,
           offset: 0,
         })
         .then((response) => {
@@ -42,7 +42,7 @@ const initial = _.extend({
     NEXT({commit, rootState}, offset) {
       return api.contacts.initial
         .cget({
-          uid: rootState.user.uid,
+          uid: rootState.token.uid,
           offset,
         })
         .then((response) => {
@@ -51,7 +51,7 @@ const initial = _.extend({
     },
     DELETE({state, commit, rootState}, index) {
       const result = api.contacts.initial.delete({
-        uid: rootState.user.uid,
+        uid: rootState.token.uid,
         resource_id: state.list[index].id,
       });
       commit('delete', index);
@@ -59,7 +59,7 @@ const initial = _.extend({
     },
     READ({state, commit, rootState}, index) {
       const result = api.contacts.initial.put(null, {
-        uid: rootState.user.uid,
+        uid: rootState.token.uid,
         resource_id: state.list[index].id,
       });
       commit('read', index);
@@ -96,7 +96,7 @@ const intimate = _.extend({
     LOAD({commit, rootState}) {
       return api.contacts.intimate
         .cget({
-          uid: rootState.user.uid,
+          uid: rootState.token.uid,
           offset: 0,
         })
         .then((response) => {
@@ -106,7 +106,7 @@ const intimate = _.extend({
     NEXT({commit, rootState}, offset) {
       return api.contacts.intimate
         .cget({
-          uid: rootState.user.uid,
+          uid: rootState.token.uid,
           offset,
         })
         .then((response) => {
@@ -115,7 +115,7 @@ const intimate = _.extend({
     },
     DELETE({state, commit, rootState}, index) {
       const result = api.contacts.intimate.delete({
-        uid: rootState.user.uid,
+        uid: rootState.token.uid,
         resource_id: state.list[index].id,
       });
       commit('delete', index);
@@ -123,7 +123,7 @@ const intimate = _.extend({
     },
     READ({state, commit, rootState}, index) {
       const result = api.contacts.intimate.put(null, {
-        uid: rootState.user.uid,
+        uid: rootState.token.uid,
         resource_id: state.list[index].id,
       });
       commit('read', index);
@@ -158,7 +158,7 @@ const sends = _.extend({
     LOAD({commit, rootState}) {
       return api.contacts.sends
         .cget({
-          uid: rootState.user.uid,
+          uid: rootState.token.uid,
           offset: 0,
         })
         .then((response) => {
@@ -168,7 +168,7 @@ const sends = _.extend({
     NEXT({commit, rootState}, offset) {
       return api.contacts.sends
         .cget({
-          uid: rootState.user.uid,
+          uid: rootState.token.uid,
           offset,
         })
         .then((response) => {
@@ -177,7 +177,7 @@ const sends = _.extend({
     },
     DELETE({state, commit, rootState}, index) {
       const result = api.contacts.sends.delete({
-        uid: rootState.user.uid,
+        uid: rootState.token.uid,
         resource_id: state.list[index].id,
       });
       commit('delete', index);

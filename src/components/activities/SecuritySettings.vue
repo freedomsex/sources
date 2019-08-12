@@ -1,7 +1,8 @@
 <script>
-import Vuex from 'vuex';
 import ModalDialog from '~dialogs/ModalDialog';
 import ActivityActions from '~activities/ActivityActions';
+import EmailSended from '~dialogs/EmailSended';
+import ConfirmDialog from '~dialogs/ConfirmDialog';
 
 export default {
   props: [],
@@ -16,28 +17,36 @@ export default {
       processPasswd: false,
       processEmail: false,
       confirmRemove: false,
+      confirmSend: false,
+      emailSensed: false,
       virgin: true,
     };
   },
-  computed: Vuex.mapState({
-    login(state) {
-      return state.auth.login;
+  components: {
+    ActivityActions,
+    ModalDialog,
+    EmailSended,
+    ConfirmDialog,
+  },
+  computed: {
+    login() {
+      return this.$store.getters['auth/login'];
     },
-    passwd(state) {
-      return state.auth.pass;
+    passwd() {
+      return this.$store.state.auth.password;
     },
-    email(state) {
-      return state.auth.email;
+    email() {
+      return this.$store.state.auth.email;
     },
-    promt(state) {
-      return state.auth.promt;
+    promt() {
+      return this.$store.state.auth.promt;
     },
-    subscr(state) {
-      return state.auth.subscr;
+    subscr() {
+      return !this.$store.state.auth.unsbcr;
     },
-  }),
+  },
   mounted() {
-    this.$store.dispatch('auth/sync').then(() => {
+    this.$service.run('auth/syncData').then(() => {
       this.init();
       this.process = false;
     }).catch(() => {
@@ -79,43 +88,46 @@ export default {
             this.$emit('warning', data.say);
           }
           this.processPasswd = false;
-        })
-        .catch(() => {
-          this.processPasswd = false;
+        }).catch(() => {
+          this.onError();
         });
     },
     saveEmail() {
+      this.confirmSend = false;
       this.processEmail = true;
-      this.$store
-        .dispatch('auth/SAVE_EMAIL', this.inputEmail)
-        .then(({data}) => {
-          if (data.err) {
-            this.$emit('warning', data.say);
-          }
-          this.processEmail = false;
-        })
-        .catch(() => {
-          this.processEmail = false;
-        });
+      this.$service.run('auth/saveEmail', this.inputEmail).then(() => {
+        if (this.inputEmail) {
+          this.emailSensed = true;
+        }
+        this.processEmail = false;
+      }).catch(() => {
+        this.onError();
+      });
     },
     removeEmail() {
       this.confirmRemove = false;
       this.processEmail = true;
-      this.$store
-        .dispatch('auth/REMOVE_EMAIL')
-        .then(({data}) => {
-          if (data.err) {
-            this.$emit('warning', data.say);
-          }
-          this.processEmail = false;
-        })
-        .catch(() => {
-          this.processEmail = false;
-        });
+      this.$api.res('email/remove/request', 'mailer').post({email: this.email}).then(() => {
+        this.emailSensed = true;
+      }).catch(() => {
+        this.onError();
+      });
+    },
+
+    onError() {
+      this.processEmail = false;
+      this.$root.toast('Произошла ошибка');
     },
     saveSubscribe() {
-      this.$store.dispatch('auth/SAVE_SUSCRIBE');
+      this.$service.run('auth/subscribe', this.checkSubscribe);
     },
+
+    reSend() {
+      if (this.email && this.inputEmail == this.email) {
+        this.confirmSend = true;
+      }
+    },
+
     close() {
       if (!this.processLogin && !this.processPasswd && !this.processEmail) {
         this.$emit('close');
@@ -123,10 +135,6 @@ export default {
         this.$emit('alert', 'Подождите, сохраняю.');
       }
     },
-  },
-  components: {
-    ActivityActions,
-    ModalDialog,
   },
 };
 </script>
@@ -156,7 +164,7 @@ export default {
       <div class="form-inline">
         <label @click="promt ? confirmRemove = true : false">
           <input class="form-control" type="text" v-model="inputEmail"
-           @change="saveEmail"
+           @change="saveEmail()" @blur="reSend()"
            :disabled="process || promt || processEmail">
         </label>
       </div>
@@ -193,6 +201,18 @@ export default {
         в письме на указанный вами адрес электронной почты.
       </div>
     </div>
+
+    <EmailSended @close="emailSensed = false" v-if="emailSensed"/>
+
+
+    <ConfirmDialog v-if="confirmSend" yesText="Отправить"
+     @confirm="saveEmail()" @close="confirmSend = false">
+      <div slot="title">Отправить новое письмо?</div>
+      Ваш емаил не подтвержден. Следуйте инструкциям
+      в письме которое было отправлено на ваш емаил.
+      Отправить новое письмо?
+    </ConfirmDialog>
+
 
     <ModalDialog @close="confirmRemove = false" v-if="confirmRemove">
       <div class="modal-dialog__wrapper">

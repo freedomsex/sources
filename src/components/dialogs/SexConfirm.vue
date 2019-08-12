@@ -1,3 +1,118 @@
+<script>
+import ModalDialog from '~dialogs/ModalDialog';
+import RegistrationDialog from '~dialogs/RegistrationDialog';
+import Loadable from '~mixins/Loadable';
+
+// Автоматически сохраняет город. Отправляет пол пользователя вместе с кодом капчи
+export default {
+  extends: ModalDialog,
+  mixins: [Loadable],
+  props: ['show'],
+  data() {
+    return {
+      sex: null,
+      token: null,
+    };
+  },
+  components: {
+    ModalDialog,
+    RegistrationDialog,
+  },
+  computed: {
+    variant() {
+      return this.show ? this.show : 'message';
+    },
+    caption() {
+      return this.$t(`dialogs.${this.variant}.caption`);
+    },
+    text() {
+      return this.$t(`dialogs.${this.variant}.text`);
+    },
+  },
+  methods: {
+    close() {
+      this.$emit('close');
+    },
+    index(val) {
+      return val == this.variant;
+    },
+    verify(sex) {
+      this.sex = sex;
+      this.processTimeout();
+      this.status = 'Подождите...';
+      global.recaptcha.execute3v().then((token) => {
+        console.log('recaptcha RESPONSE');
+        this.token = token; // this.save(token);
+      });
+      // .catch(() => {
+      //   console.log('recaptcha ERROR !');
+      // });
+    },
+    login() {
+      this.$emit('login');
+      this.close();
+    },
+    redirect() {
+      if (this.index('search')) {
+        this.$router.replace('/search');
+      } else if (this.index('account')) {
+        this.$router.replace('/settings/account');
+      } else if (this.index('message')) {
+        this.$router.replace('/');
+      } else if (this.index('city')) {
+        this.$router.replace('/wizard/city');
+      } else {
+        this.$router.replace('/');
+      }
+      // if (this.index('contacts')) {
+      //     console.log('leave', 'contacts');
+      //     next({name: 'search-settings'});
+      // }
+    },
+    finished() {
+      // this.token = token;
+      this.$root.reload();
+      this.$emit('select', this.show);
+      this.redirect();
+    },
+  },
+};
+</script>
+
+<template>
+  <div>
+    <ModalDialog @close="close" v-if="!sex || !token">
+      <div class="modal-dialog__wrapper" style="padding-bottom: 10px;">
+        <div class="modal-dialog__caption">
+          {{caption}}
+        </div>
+        <div class="modal-dialog__body">
+          {{text}}
+        </div>
+        <div class="modal-dialog__centred" style="margin-bottom: 10px;">
+          <button class="btn btn-primary btn-fat"
+          @click="verify(2)" :disabled="process">   {{$t('Девушка')}}   </button>
+          <button class="btn btn-primary btn-fat"
+          @click="verify(1)" :disabled="process">   {{$t('Парень')}}   </button>
+        </div>
+        <div class="modal-dialog__centred">
+          <button class="btn btn-link btn-fat"
+          @click="$router.push('/login')">  {{$t('Уже есть анкета?')}}  </button>
+        </div>
+      </div>
+    </ModalDialog>
+    <RegistrationDialog :sex="sex" :token="token" v-else
+      @finish="finished()"/>
+  </div>
+</template>
+
+<style lang="less">
+.btn-fat {
+  padding-left: @indent-xl;
+  padding-right: @indent-xl;
+}
+</style>
+
 <i18n>
 {
   "ru": {
@@ -108,138 +223,3 @@
   }
 }
 </i18n>
-
-<script>
-import axios from 'axios';
-import CONFIG from '~config/';
-
-import ModalDialog from '~dialogs/ModalDialog';
-import AutoRegistration from '~mixins/AutoRegistration';
-import Loadable from '~mixins/Loadable';
-
-// Автоматически сохраняет город. Отправляет пол пользователя вместе с кодом капчи
-export default {
-  extends: ModalDialog,
-  mixins: [AutoRegistration, Loadable],
-  props: ['show'],
-  data() {
-    return {
-      sex: null,
-    };
-  },
-  computed: {
-    variant() {
-      return this.show ? this.show : 'message';
-    },
-    caption() {
-      return this.$t(`dialogs.${this.variant}.caption`);
-    },
-    text() {
-      return this.$t(`dialogs.${this.variant}.text`);
-    },
-  },
-  methods: {
-    close() {
-      this.$emit('close');
-    },
-    index(val) {
-      return val == this.variant;
-    },
-    verify(sex) {
-      this.sex = sex;
-      this.processTimeout();
-      this.status = 'Подождите...';
-      global.recaptcha.execute3v().then((token) => {
-        console.log('recaptcha RESPONSE');
-        this.recaptchaToken = token;
-        this.save(token);
-      });
-      // .catch(() => {
-      //   console.log('recaptcha ERROR !');
-      // });
-    },
-    save(token) {
-      this.process = true;
-      if (this.sex) {
-        axios.post(`${CONFIG.API_AUTH}/api/v1/registration`, {token}).then(({data}) => {
-          this.handle(data);
-          this.$store.dispatch('SAVE_SEX', {sex: this.sex}).then(() => {
-            // TODO: $root APP dep refresh() / reload()
-            this.autoCity();
-            this.autoAge();
-            this.$root.refresh();
-          });
-        });
-
-        this.$root.reload();
-        this.$emit('select', this.show);
-        this.redirect();
-      }
-      // this.$refs.recaptcha.reset();
-    },
-    handle(data) {
-      if (!data.error) {
-        this.$store.commit('token/save', data);
-        this.$root.$refs.authenticator.fix();
-      } else {
-        //
-      }
-    },
-    login() {
-      this.$emit('login');
-      this.close();
-    },
-    redirect() {
-      if (this.index('search')) {
-        this.$router.replace('/search');
-      } else if (this.index('account')) {
-        this.$router.replace('/settings/account');
-      } else if (this.index('message')) {
-        this.$router.replace('/');
-      } else if (this.index('city')) {
-        this.$router.replace('/wizard/city');
-      } else {
-        this.$router.replace('/');
-      }
-      // if (this.index('contacts')) {
-      //     console.log('leave', 'contacts');
-      //     next({name: 'search-settings'});
-      // }
-    },
-  },
-  components: {
-    ModalDialog,
-  },
-};
-</script>
-
-<template>
-  <ModalDialog @close="close">
-    <div class="modal-dialog__wrapper" style="padding-bottom: 10px;">
-      <div class="modal-dialog__caption">
-        {{caption}}
-      </div>
-      <div class="modal-dialog__body">
-        {{text}}
-      </div>
-      <div class="modal-dialog__centred" style="margin-bottom: 10px;">
-        <button class="btn btn-primary btn-fat"
-         @click="verify(2)" :disabled="process">   {{$t('Девушка')}}   </button>
-        <button class="btn btn-primary btn-fat"
-         @click="verify(1)" :disabled="process">   {{$t('Парень')}}   </button>
-      </div>
-      <div class="modal-dialog__centred">
-        <button class="btn btn-link btn-fat"
-         @click="$router.push('/login')">  {{$t('Уже есть анкета?')}}  </button>
-      </div>
-    </div>
-
-  </ModalDialog>
-</template>
-
-<style lang="less">
-.btn-fat {
-  padding-left: @indent-xl;
-  padding-right: @indent-xl;
-}
-</style>

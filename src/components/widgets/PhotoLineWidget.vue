@@ -65,7 +65,7 @@ export default {
   <div class="photo-line-widget">
     <div class="photo-line__container">
       <div class="photo-line__items" ref="photoline">
-        <div class="photo-line__item" v-for="item in list" :key="item.id"
+        <div class="photo-line__item blured-preview" v-for="item in list" :key="item.id"
           :style="{backgroundImage: `url(${source(item.source)})`}"
           @click="quick(item.id)">
         </div>
@@ -97,12 +97,12 @@ export default {
 @import './widget.less';
 
 .photo-line {
-  @size: 70px;
+  @size: 80px;
 
   &-widget {
     border-bottom: 1px solid @gray-light;
-    background-color: @dark-light;
-      padding: 10px 0 10px;
+    background-color: #272727;
+      padding: @indent-md 0;
     position: relative;
   }
 
@@ -116,7 +116,7 @@ export default {
   }
 
   &__options {
-    padding: @indent-xs @indent-sm 0;
+    padding-top: @indent-sm;
     text-align: center;
     button i {
       margin-right: 4px;
@@ -159,8 +159,11 @@ export default {
     background-position: center;
     background-color: @gray-light;
     margin-right: 3px;
-    border-radius: 4px;
+    border-radius: 2px;
     cursor: pointer;
+    &.blured-preview {
+      filter: blur(1px);
+    }
   }
 
   &__line-options {

@@ -31,7 +31,7 @@ export default {
   },
   methods: {
     check() {
-      if (this.needed && this.$store.getters['token/auth']()) {
+      if (this.needed && this.$store.state.authorized) {
         api.messages.status()
           .then(({data}) => {
             this.handle(data);
@@ -47,7 +47,7 @@ export default {
       this.attempt = 0;
     },
     loadStatus() {
-      const {uid} = this.$store.state.user;
+      const {uid} = this.$store.state.token;
       let delay = !uid ? 2 : 15;
       if (uid) {
         this.check();

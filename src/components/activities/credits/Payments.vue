@@ -11,7 +11,7 @@ export default {
       return `btn-${this.button || 'primary'}`;
     },
     href() {
-      const {uid} = this.$store.state.user;
+      const {uid} = this.$store.state.token;
       const gateway = 'http://x69.me/payments';
       // const gateway = '/payments';
       return `${gateway}/merchant/${this.product}/${uid}/${this.hash()}`;

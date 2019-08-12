@@ -55,7 +55,7 @@ export default {
       axios.post(`${CONFIG.API_CONTACT}/api/v1/userpic/${this.item.uid}`, {source}, {
         headers: {Authorization: `Bearer ${this.$store.state.token.access}`},
       }).then(() => {
-        this.$store.commit('settings', {userpic: source});
+        this.$store.commit('settings', {userpic: {source}});
       }).catch(() => {
         this.$store.commit('settings', {userpic: ''});
         console.log('FAILED store Source');
@@ -75,7 +75,7 @@ export default {
     <span class="header-bar__title">
       {{busy ? 'Загружаю...' : 'Загрузить фото'}}
     </span>
-    <ColorContactIcon :uid="item.uid" :item="item" :src="item.userpic" size="small-icon"/>
+    <ColorContactIcon :uid="item.uid" :item="item" size="small-icon"/>
     <input class="input-file-hidden" type="file" ref="file" @change="submit()"/>
   </div>
 </template>

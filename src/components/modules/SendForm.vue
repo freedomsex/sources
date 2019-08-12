@@ -10,9 +10,12 @@ import Toast from '~widgets/Toast';
 import MessangerService from '~modules/MessangerService';
 import HornMessageProblem from '~modules/HornMessageProblem';
 import ColorContactIcon from '~components/contacts/ColorContactIcon';
+import StickersActivity from '~activities/StickersActivity';
+
+import SmartInsert from '~dialogs/SmartInsert';
 
 export default {
-  props: ['humanId', 'count', 'initial'],
+  props: ['humanId', 'count', 'initial', 'excess'],
   mixins: [NegativeDetection],
   data() {
     return {
@@ -22,12 +25,17 @@ export default {
       photo: false,
       photoIsRemoved: false,
       ignores: {},
+
+      insert: false,
       notepad: false,
       cliche: false,
+      sticker: false,
     };
   },
   mounted() {
-    // do something after mounting vue instance
+    if (this.initial) {
+      this.setText(this.$store.state.message.first);
+    }
   },
   computed: {
     user() {
@@ -37,7 +45,10 @@ export default {
       return this.$store.state.human;
     },
     begin() {
-      return this.count < 5;
+      return this.initial || this.count < 5;
+    },
+    completed() {
+      return !(this.user.city && this.user.age && this.user.name);
     },
   },
   methods: {
@@ -47,6 +58,24 @@ export default {
       this.preview = null;
       this.$emit('sendPhoto', this.photo);
     },
+
+    initialChecks() {
+      if (!this.initial) {
+        return true;
+      }
+      if (this.message.length > 140 && !this.ignores.twitter) {
+        this.problem('twitter');
+      } else if (this.completed) {
+        this.problem('contacts');
+      } else
+      if (this.excess && !this.ignores.interest) {
+        this.problem('interest');
+      } else {
+        return true;
+      }
+      return false;
+    },
+
     sendMessage() {
       if (this.message.length > 500) {
         this.problem('exceed');
@@ -54,10 +83,19 @@ export default {
         this.problem('dirt');
       } else if (this.begin && this.isSpam(this.message) && !this.ignores.spam) {
         this.problem('spam');
-      } else {
+      } else if (this.initialChecks()) {
+        this.saveFirst();
         this.$emit('sendMessage', this.message);
       }
     },
+
+    saveFirst() {
+      if (this.initial) {
+        this.$store.commit('message/saveFirst', this.message);
+      }
+    },
+
+
     sended() {
       // this.reset();
       // this.cancelPhoto();
@@ -96,6 +134,8 @@ export default {
     PhotoSend,
     Toast,
     ColorContactIcon,
+    SmartInsert,
+    StickersActivity,
   },
 };
 </script>
@@ -127,14 +167,12 @@ export default {
          :placeholder="process ? $t('sending') : $t('placeholder')"
          @keyup.ctrl.enter.prevent="sendMessage"></textarea>
       </div>
+
       <div class="send-form__button-send"
-       @click="cliche = true" v-if="!message && initial">
-        <i class="material-icons">&#xE02F;</i>
-      </div>
-      <div class="send-form__button-send"
-       @click="notepad = true" v-if="!message">
+        @click="insert = true"v-if="!message">
         <i class="material-icons">&#xE14F;</i>
       </div>
+
       <div class="send-form__button-send"
        @click="sendMessage" v-if="message">
         <i class="material-icons">&#xE163;</i>
@@ -152,6 +190,8 @@ export default {
     <MessagesCliche v-if="cliche"
       @select="setText"
       @close="cliche = false"/>
+    <StickersActivity v-if="sticker"
+      @close="sticker = false"/>
 
     <MessangerService
      :id="humanId"
@@ -163,6 +203,11 @@ export default {
     <HornMessageProblem
      @ignore="ignore"
      @solve="sendMessage"/>
+
+    <SmartInsert v-if="insert" @close="insert = false"
+      @notepad="notepad = true"
+      @cliche="cliche = true"
+      @sticker="sticker = true"/>
 
     <router-view @close="$root.goBack()" @select="select"/>
 
