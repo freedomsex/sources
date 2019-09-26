@@ -2,17 +2,20 @@ import _ from 'underscore';
 import lscache from 'lscache';
 import cookies from '~assets/legacy/utils/cookies'; // TODO: remove
 
+/* eslint class-methods-use-this: "off" */
 export default class Worker {
   constructor(config) {
     // super();
     this.$api = {};
     this.$store = {};
     this.$session = {};
+    this.$modules = {};
     this.$cache = lscache;
     this.defaults = {
       expire: 86400 * 30 * 3,
     };
     this.tasks = config.tasks || {};
+    // this.$modules = config.modules;
     this.loadModules(config.modules);
     // this.created();
   }
@@ -31,11 +34,24 @@ export default class Worker {
     return this.$store;
   }
 
+  // loadModules(modules) {
+  //   _.each(modules, (module, namespace) => {
+  //     _.each(module.tasks, (task, name) => {
+  //       this.tasks[`${namespace}/${name}`] = task;
+  //     });
+  //   });
+  // }
+
+  moduleInfo(name) {
+    const parts = name.split('/');
+    const task = parts.pop();
+    const namespace = parts.join('/');
+    return {namespace, task};
+  }
+
   loadModules(modules) {
     _.each(modules, (module, namespace) => {
-      _.each(module.tasks, (task, name) => {
-        this.tasks[`${namespace}/${name}`] = task;
-      });
+      this.$modules[namespace] = module;
     });
   }
 
@@ -71,13 +87,36 @@ export default class Worker {
     this.$session[key] = true;
   }
 
-  run(task, args) {
-    return this.tasks[task]({
+  context() {
+    return {
       run: this.run,
       api: this.$api,
       store: this.$store,
       root: this,
       cookies,
-    }, args);
+    };
+  }
+
+  isModule(name) {
+    return name.indexOf('/') >= 0;
+  }
+
+  runTask(object, task, args) {
+    return task.call(object, this.context(), args);
+  }
+
+  runModule(name, args) {
+    const {namespace, task} = this.moduleInfo(name);
+    const module = this.$modules[namespace];
+    const target = module.tasks[task];
+    return this.runTask(module, target, args);
+  }
+
+  run(task, args) {
+    if (this.isModule(task)) {
+      return this.runModule(task, args);
+    }
+    const target = this.tasks[task];
+    return this.runTask(this, target, args);
   }
 }

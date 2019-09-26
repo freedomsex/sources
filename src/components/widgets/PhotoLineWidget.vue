@@ -54,6 +54,10 @@ export default {
     quick(uid) {
       this.$router.push({name: 'quickWrite', params: {humanId: uid, initial: true}});
     },
+
+    image(item) {
+      return {backgroundImage: `url(${this.source(item.source)})`};
+    },
   },
   components: {
     ConfirmDialog,
@@ -65,9 +69,8 @@ export default {
   <div class="photo-line-widget">
     <div class="photo-line__container">
       <div class="photo-line__items" ref="photoline">
-        <div class="photo-line__item blured-preview" v-for="item in list" :key="item.id"
-          :style="{backgroundImage: `url(${source(item.source)})`}"
-          @click="quick(item.id)">
+        <div class="photo-line__item" v-for="item in list" :key="item.id" :style="image(item)">
+          <div class="photo-line__item-blured" :style="image(item)" @click="quick(item.id)"></div>
         </div>
       </div>
     </div>
@@ -151,19 +154,29 @@ export default {
         display: none;
     }
   }
-  &__item {
-    min-width: @size;
-    min-height: @size;
 
+  .photo-line-item() {
     background-size: cover;
     background-position: center;
-    background-color: @gray-light;
-    margin-right: 3px;
     border-radius: 2px;
     cursor: pointer;
-    &.blured-preview {
-      filter: blur(1px);
-    }
+  }
+
+  &__item {
+    .photo-line-item();
+    min-width: @size;
+    min-height: @size;
+    margin-right: 3px;
+    background-color: @gray-light;
+    position: relative;
+  }
+
+  &__item-blured {
+    .photo-line-item();
+    min-width: 100%;
+    min-height: 100%;
+    position: absolute;
+    filter: blur(1px);
   }
 
   &__line-options {

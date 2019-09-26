@@ -1,5 +1,4 @@
 <script>
-import api from '~config/api';
 import AbuseList from '~activities/AbuseList';
 import AbuseDialog from '~components/abuses/AbuseDialog';
 import InfoDialog from '~dialogs/InfoDialog';
@@ -14,7 +13,7 @@ export default {
     success: false,
   }),
   mounted() {
-    api.raw.get({id: this.humanId}, 'abuse/load').then(({data}) => {
+    this.$api.res('abuse/load', 'raw').get({id: this.humanId}).then(({data}) => {
       this.list = data;
     });
   },

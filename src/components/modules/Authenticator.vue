@@ -7,7 +7,7 @@ import cookies from '~assets/legacy/utils/cookies'; // TODO: remove
 export default {
   data: () => ({
     left: 0,
-    trigger: 600,
+    trigger: 200,
     attempt: 0,
     available: false,
     expired: true,

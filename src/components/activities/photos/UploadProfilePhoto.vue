@@ -34,7 +34,8 @@ export default {
     },
     upload(formData) {
       this.busy = true;
-      axios.post(`${CONFIG.API_PHOTO}/api/v1/userpic/${this.item.uid}`, formData, {
+      const {uid} = this.$store.state.token;
+      axios.post(`${CONFIG.API_PHOTO}/api/v1/userpic/${uid}`, formData, {
         headers: {
           Authorization: `Bearer ${this.$store.state.token.access}`,
           'Content-Type': 'multipart/form-data',
@@ -52,7 +53,8 @@ export default {
       this.busy = false;
     },
     storeSource(source) {
-      axios.post(`${CONFIG.API_CONTACT}/api/v1/userpic/${this.item.uid}`, {source}, {
+      const {uid} = this.$store.state.token;
+      axios.post(`${CONFIG.API_CONTACT}/api/v1/userpic/${uid}`, {source}, {
         headers: {Authorization: `Bearer ${this.$store.state.token.access}`},
       }).then(() => {
         this.$store.commit('settings', {userpic: {source}});

@@ -26,7 +26,7 @@ export default {
   //     next();
   // },
   mounted() {
-    this.$store.dispatch('human/load', this.humanId);
+    this.$service.run('human/load', this.humanId);
   },
   computed: {
     human() {

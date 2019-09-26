@@ -105,8 +105,7 @@ export default {
         virt: this.checkedVirt,
       };
       if (!this.virgin) {
-        this.$store.dispatch('SAVE_SEARCH', data);
-        this.$store.commit('search/restore', data);
+        this.$service.run('user/search', data);
       }
     },
     close() {

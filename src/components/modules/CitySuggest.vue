@@ -1,5 +1,4 @@
 <script>
-import api from '~config/api';
 import hasher from '~legacy/utils/simple-hash';
 
 export default {
@@ -26,7 +25,8 @@ export default {
       if (!this.query.length) {
         return this.reset();
       }
-      api.user.get({q: this.query, hash: hasher.random()}, 'town/suggest').then((response) => {
+      this.$api.res('town/suggest', 'raw').get({q: this.query,
+        hash: hasher.random()}).then((response) => {
         this.loaded(response.data.cities);
       });
       return null;

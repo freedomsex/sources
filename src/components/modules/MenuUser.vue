@@ -92,7 +92,7 @@ export default {
         <div class="header-bar__navbar" v-show="authorized">
           <div class="header-bar__button" @click="$router.push('/settings/account')">
             <span class="header-bar__title limit" v-text="signature"></span>
-            <ColorContactIcon :uid="item.uid" :item="item" size="small-icon"/>
+            <ColorContactIcon :item="item" size="small-icon"/>
           </div>
           <div class="header-bar__button" @click="notificaton = true">
             <i class="material-icons">&#xE7F4;</i>

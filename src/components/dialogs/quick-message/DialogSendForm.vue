@@ -50,7 +50,7 @@ export default {
         this.problem('spam');
       } else {
         this.$emit('sendMessage', this.message);
-        this.$store.commit('message/saveFirst', this.message);
+        this.$store.commit('message/first', this.message);
       }
     },
     problem(type) {

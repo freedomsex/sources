@@ -1,5 +1,5 @@
 import service from '../config/worker/service';
-import api from '../config/api-rest-config';
+import api from '../config/api';
 import {store} from '~store';
 
 export default {

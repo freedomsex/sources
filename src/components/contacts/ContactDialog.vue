@@ -1,5 +1,5 @@
 <script>
-import api from '~config/api';
+import BigIconPlaceholder from '~widgets/BigIconPlaceholder';
 
 export default {
   props: ['quick'],
@@ -18,6 +18,9 @@ export default {
       },
     };
   },
+  components: {
+    BigIconPlaceholder,
+  },
   computed: {
     showLoader() {
       return this.slow && !this.response;
@@ -29,8 +32,10 @@ export default {
       return this.count < 1;
     },
     count() {
-      const result = this.contacts ? this.contacts.length : 0;
-      return result;
+      return this.contacts ? this.contacts.length : 0;
+    },
+    empty() {
+      return !this.count && !this.error && this.response;
     },
     more() {
       const max = this.offset <= this.max - this.batch;
@@ -66,15 +71,21 @@ export default {
       this.$Progress.finish();
     },
 
-    failed(error) {
-      this.error = error;
+    failed({response}) {
+      if (response && response.status == 404) {
+        this.response = 404;
+        this.$Progress.finish();
+      } else {
+        this.error = 10;
+        this.$Progress.fail();
+      }
       this.$Progress.fail();
     },
 
     bun(index) {
       const item = this.contacts[index];
       console.log('bun', item);
-      api.bun.send({
+      this.$api.res('mess/bun', 'raw').post({
         id: item.message.mess_id,
         tid: item.human_id,
         // text: this.item.message,

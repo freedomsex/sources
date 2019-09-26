@@ -1,4 +1,4 @@
-import api from '../config/api-rest-config';
+import api from '../config/api';
 
 export default {
   install(Vue) {

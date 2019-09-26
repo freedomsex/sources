@@ -1,5 +1,4 @@
 <script>
-import api from '~config/api';
 import CaptchaDialog from '~dialogs/CaptchaDialog';
 
 export default {
@@ -63,7 +62,7 @@ export default {
         params.mess = this.text;
         params.re = this.reply;
       }
-      api.messages.send(params).then(({data}) => {
+      this.$api.res('mailer/post', 'raw').post(params).then(({data}) => {
         this.onMessageSend(data);
       }).catch((error) => {
         this.onError(error);

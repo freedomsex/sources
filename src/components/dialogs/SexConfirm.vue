@@ -1,12 +1,9 @@
 <script>
 import ModalDialog from '~dialogs/ModalDialog';
 import RegistrationDialog from '~dialogs/RegistrationDialog';
-import Loadable from '~mixins/Loadable';
 
 // Автоматически сохраняет город. Отправляет пол пользователя вместе с кодом капчи
 export default {
-  extends: ModalDialog,
-  mixins: [Loadable],
   props: ['show'],
   data() {
     return {
@@ -17,6 +14,12 @@ export default {
   components: {
     ModalDialog,
     RegistrationDialog,
+  },
+  mounted() {
+    // if (!this.$store.state.clientId) {
+    //
+    // }
+    this.$service.run('client/start');
   },
   computed: {
     variant() {
@@ -38,15 +41,6 @@ export default {
     },
     verify(sex) {
       this.sex = sex;
-      this.processTimeout();
-      this.status = 'Подождите...';
-      global.recaptcha.execute3v().then((token) => {
-        console.log('recaptcha RESPONSE');
-        this.token = token; // this.save(token);
-      });
-      // .catch(() => {
-      //   console.log('recaptcha ERROR !');
-      // });
     },
     login() {
       this.$emit('login');
@@ -81,7 +75,7 @@ export default {
 
 <template>
   <div>
-    <ModalDialog @close="close" v-if="!sex || !token">
+    <ModalDialog @close="close" v-if="!sex">
       <div class="modal-dialog__wrapper" style="padding-bottom: 10px;">
         <div class="modal-dialog__caption">
           {{caption}}
@@ -91,9 +85,9 @@ export default {
         </div>
         <div class="modal-dialog__centred" style="margin-bottom: 10px;">
           <button class="btn btn-primary btn-fat"
-          @click="verify(2)" :disabled="process">   {{$t('Девушка')}}   </button>
+          @click="verify(2)">   {{$t('Девушка')}}   </button>
           <button class="btn btn-primary btn-fat"
-          @click="verify(1)" :disabled="process">   {{$t('Парень')}}   </button>
+          @click="verify(1)">   {{$t('Парень')}}   </button>
         </div>
         <div class="modal-dialog__centred">
           <button class="btn btn-link btn-fat"
@@ -101,7 +95,7 @@ export default {
         </div>
       </div>
     </ModalDialog>
-    <RegistrationDialog :sex="sex" :token="token" v-else
+    <RegistrationDialog :sex="sex" @close="close" v-else
       @finish="finished()"/>
   </div>
 </template>

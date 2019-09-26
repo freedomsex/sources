@@ -3,6 +3,7 @@ import ActivityActions from '~activities/ActivityActions';
 import MessagesActivity from '~activities/messages/MessagesActivity';
 import ContactDialog from './ContactDialog';
 import ContactItem from './ContactItem';
+import NextButton from '~widgets/NextButton';
 
 export default {
   extends: ContactDialog,
@@ -11,69 +12,67 @@ export default {
       max: 100,
     };
   },
+  components: {
+    ActivityActions,
+    ContactItem,
+    MessagesActivity,
+    NextButton,
+  },
   mounted() {
-    this.$store.dispatch('intimate/CHECK');
+    this.$service.run('intimates/check');
   },
   computed: {
     initial: () => true,
     simple: () => false,
     contacts() {
-      return this.$store.state.contacts.intimate.list;
+      return this.$store.state.intimates.list;
     },
   },
   methods: {
     load() {
-      this.$store
-        .dispatch('intimate/LOAD', this.next)
-        .then(() => {
-          this.loaded();
-        })
-        .catch((error) => {
-          this.failed(error);
-        });
+      this.$service.run('intimates/load', this.next).then(() => {
+        this.loaded();
+      }).catch((error) => {
+        this.failed(error);
+      });
       this.amount = this.count;
       this.hope();
     },
     next() {
-      this.$store.dispatch('intimate/NEXT', this.offset).then(() => {
+      this.$service.run('intimates/next', this.offset).then(() => {
         this.loaded();
       });
       this.hope();
     },
     remove(index) {
-      this.$store.dispatch('intimate/DELETE', index);
+      this.$service.run('intimates/delete', index);
     },
     read(index) {
-      this.$store.dispatch('intimate/READ', index);
+      this.$service.run('intimates/read', index);
     },
     splice(index) {
-      this.$store.commit('intimate/delete', index);
+      this.$store.commit('intimates/delete', index);
     },
-  },
-  components: {
-    ActivityActions,
-    ContactItem,
-    MessagesActivity,
   },
 };
 </script>
 
 <template>
   <div>
-    <ActivityActions caption="Общение" @close="close">
+    <ActivityActions :caption="$t('Общение')" @close="close">
 
       <template slot="option">
         <div class="header-bar__button" @click="$router.push('/protect')">
           <i class="material-icons">&#xE53F;</i>
           <span class="header-bar__title">
-            Защитить
+            {{$t('Защитить')}}
           </span>
         </div>
       </template>
 
-
-      <div class="contact-list" v-if="count">
-        <ContactItem v-for="(item, index) in contacts" :key="item.human_id"
+      <div v-if="count">
+        <div class="contact-list">
+          <ContactItem v-for="(item, index) in contacts" :key="item.human_id"
           :item="item"
           :index="index"
           :quick="quick"
@@ -81,24 +80,28 @@ export default {
           @read="read"
           @close="close"
           @remove="remove"/>
+        </div>
+
+        <div class="contact-list__next">
+          <NextButton
+          :show="more"
+          :ready="response"
+          :hold="!response"
+          :loader="true"
+          @next="next()"/>
+        </div>
       </div>
-      <div class="activity__content" v-else>
+
+      <BigIconPlaceholder icon="&#xE001;" text="Ошибка списка" v-else-if="error"/>
+      <BigIconPlaceholder icon="&#xE0E1;" text="Список пуст" v-else-if="empty"/>
+
+      <!-- <div class="activity__content" v-else>
         <div class="hint-info">
-          Здесь будет список ваших контактов, сообщений, диалогов.
-          Чтобы начать общение, нужно Познакомиться.
+
         </div>
         Воспользуйтесь Поиском, отправьте первое сообщение,
         это и будет предложением знакомства.
-      </div>
-
-      <div class="contact-list__next">
-        <div class="btn btn-default btn-sm"
-         @click="next()"
-         :disabled="response == false"
-         v-show="more">
-          Следующие
-        </div>
-      </div>
+      </div> -->
       <MessagesActivity
        @close="dialog = false"
        :humanId="dialog"
@@ -109,6 +112,23 @@ export default {
     </ActivityActions>
   </div>
 </template>
+
+<i18n>
+{
+  "en": {
+    "Общение": "Messages",
+    "Защитить": "Protect"
+  },
+  "kz": {
+    "Общение": "Байланыс",
+    "Защитить": "Қорғаңыз"
+  },
+  "ua": {
+    "Общение": "Спілкування",
+    "Защитить": "Захистити"
+  }
+}
+</i18n>
 
 <style lang="less">
 </style>

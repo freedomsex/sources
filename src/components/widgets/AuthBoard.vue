@@ -41,8 +41,8 @@ export default {
   },
   methods: {
     sync() {
-      this.$service.run('auth/checkEmail');
-      this.$service.run('auth/syncData');
+      this.$service.run('email/check');
+      this.$service.run('account/auth');
 
       // if (this.$store.state.authorized) {
       //   console.log('promted', this.$store.state.promt);

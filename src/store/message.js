@@ -3,14 +3,19 @@ export default {
   state: {
     first: '',
     reply: '',
+    preview: '',
+    human: null,
   },
-  actions: {},
   mutations: {
-    saveFirst(state, message) {
+    first(state, message) {
       state.first = message;
     },
-    saveReply(state, message) {
+    reply(state, message) {
       state.reply = message;
+    },
+    preview(state, {id, message}) {
+      state.human = id;
+      state.preview = message;
     },
   },
 };

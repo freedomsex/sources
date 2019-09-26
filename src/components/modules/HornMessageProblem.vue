@@ -16,6 +16,7 @@ export default {
     },
   }),
   mounted() {
+    console.log('human:::human', this.human);
     this.$parent.$on('problem', this.problem);
   },
   methods: {

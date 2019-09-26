@@ -94,7 +94,7 @@ export default {
     },
     saveName(name) {
       this.selectName = name;
-      this.$service.run('user/age', name).catch(() => {
+      this.$service.run('user/name', name).catch(() => {
         this.resetName();
         this.nameAlert = true;
       });

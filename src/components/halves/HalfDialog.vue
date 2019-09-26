@@ -16,10 +16,9 @@ export default {
   <div class="half-dialog">
     <div class="half-dialog__mask" @click.self="$emit('close')"></div>
     <div class="half-dialog__container">
-      <ActivityHeader :glass="true" :caption="caption" @close="$emit('close')">
-        <template slot="option">
-          <slot name="option"></slot>
-        </template>
+      <ActivityHeader :glass="true" :back="true" @close="$emit('close')">
+        <slot name="caption" slot="caption"></slot>
+        <slot name="option" slot="option"></slot>
       </ActivityHeader>
 
       <slot></slot>

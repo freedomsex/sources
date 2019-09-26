@@ -17,10 +17,12 @@ export default {
 <template>
   <HeaderBar :glass="glass" :caption="caption">
     <div class="header-bar__container">
-      <div class="header-bar__button caption" @click="$emit('close')" v-if="backButton">
-        <i class="material-icons">&#xE5C4;</i>
-        <span class="header-bar__title">
-          {{caption}}
+      <div class="header-bar__button caption" @click="$emit('close')">
+        <i class="material-icons" v-if="backButton">&#xE5C4;</i>
+        <span class="header-bar__title" >
+          <slot name="caption">
+            {{caption}}
+          </slot>
         </span>
       </div>
 

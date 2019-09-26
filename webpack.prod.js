@@ -9,21 +9,35 @@ const WebpackCdnPlugin = require('webpack-cdn-plugin');
 const FileManagerPlugin = require('filemanager-webpack-plugin');
 // const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
+const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer');
+
 const common = require('./webpack.common.js');
 
 console.log(`\n ${path.resolve(process.env.HOME, 'DATA/freed/dist')}\n`);
 
 
 module.exports = merge(common, {
+  target: 'web',
   mode: 'production',
+  // entry: {
+  //   app: ['babel-polyfill'],
+  // },
 
   output: {
-    filename: '[name].[contenthash].js',
-    chunkFilename: 'scripts/[name].[contenthash].js',
+    filename: '[name].[contenthash:5].js',
+    chunkFilename: 'scripts/[name].[contenthash:5].js',
   },
 
   module: {
     rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader',
+        resolve: {
+          mainFields: ['unpkg', 'browser', 'main', 'module'],
+        },
+      },
       {
         test: /\.(less|css)$/,
         use: [
@@ -66,6 +80,11 @@ module.exports = merge(common, {
       DEVELOPMENT: false,
     }),
 
+    new BundleAnalyzerPlugin({
+      openAnalyzer: false,
+      analyzerMode: 'disable',
+    }),
+
     // new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
     new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /ru/),
     new WebpackCdnPlugin({
@@ -82,8 +101,8 @@ module.exports = merge(common, {
       ],
     }),
     new MiniCssExtractPlugin({
-      filename: '[name].[contenthash].css',
-      chunkFilename: 'styles/[name].[contenthash].css',
+      filename: '[name].[contenthash:5].css',
+      chunkFilename: 'styles/[name].[contenthash:5].css',
     }),
 
     new FileManagerPlugin({

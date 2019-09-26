@@ -31,15 +31,12 @@ export default {
     load() {
       this.loading = true;
       this.hope();
-      this.$store
-        .dispatch('human/load', this.humanId)
-        .then(() => {
-          this.loaded();
-        })
-        .catch((error) => {
-          console.log(error);
-          this.loading = false;
-        });
+      this.$service.run('human/load', this.humanId).then(() => {
+        this.loaded();
+      }).catch((error) => {
+        console.log(error);
+        this.loading = false;
+      });
     },
   },
   components: {

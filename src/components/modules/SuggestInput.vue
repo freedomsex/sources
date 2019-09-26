@@ -1,6 +1,5 @@
 <script>
 import _ from 'underscore';
-import api from '~config/api';
 
 export default {
   props: ['url', 'disabled', 'tags', 'title', 'default', 'params'],
@@ -24,7 +23,7 @@ export default {
     load() {
       const query = this.$refs.text.value || this.query;
       const params = _.assign({q: query}, this.params);
-      api.user.get(params, this.url).then(({data}) => {
+      this.$api.res(this.url, 'raw').get(params).then(({data}) => {
         this.loaded(data);
       });
     },

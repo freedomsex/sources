@@ -1,8 +1,4 @@
 import _ from 'underscore';
-// import lscache from 'lscache';
-import api from '~config/api';
-
-// import contacts from './contacts';
 
 const userState = {
   uid: 0,
@@ -37,24 +33,6 @@ const userState = {
 
 export default {
   state: userState,
-  actions: {
-    SYNC_USER({commit}, uid) {
-      return api.search.get({uid}).then(({data}) => {
-        commit('resetUser', data);
-        return data;
-      });
-    },
-
-    SAVE_CONTACTS({commit}, contacts) {
-      api.user.saveContacts(contacts).then(() => {});
-      commit('loadUser', contacts);
-    },
-
-    SAVE_SEARCH({commit}, data) {
-      commit('loadUser', data);
-      return api.user.saveSearch(data).then(() => {});
-    },
-  },
   mutations: {
     userReset(state) {
       _.assign(state, userState);

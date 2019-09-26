@@ -25,15 +25,12 @@ export default {
     },
   }),
   mounted() {
-    this.$store
-      .dispatch('about/SYNC')
-      .then(() => {
-        this.init();
-        this.process = false;
-      })
-      .catch(() => {
-        this.process = false;
-      });
+    this.$service.run('user/anketa').then(() => {
+      this.init();
+      this.process = false;
+    }).catch(() => {
+      this.process = false;
+    });
     this.process = true;
     this.init();
   },
@@ -52,7 +49,7 @@ export default {
     },
     save() {
       if (!this.virgin) {
-        this.$store.dispatch('about/SAVE', {
+        this.$service.run('user/about', {
           growth: this.inputGrowth,
           weight: this.inputWeight,
           figure: this.selectFigure,

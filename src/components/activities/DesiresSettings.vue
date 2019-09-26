@@ -29,7 +29,7 @@ export default {
   }),
   mounted() {
     this.process = true;
-    this.$store.dispatch('desires/SYNC').then(() => {
+    this.$service.run('desires/load').then(() => {
       this.process = false;
     });
   },
@@ -39,12 +39,12 @@ export default {
     },
     add(tag) {
       this.process = true;
-      this.$store.dispatch('desires/ADD', tag).then(() => {
+      this.$service.run('desires/save', tag).then(() => {
         this.process = false;
       });
     },
     remove() {
-      this.$store.dispatch('desires/DELETE', this.confirmRemove);
+      this.$service.run('desires/remove', this.confirmRemove);
       this.confirmRemove = null;
     },
   },

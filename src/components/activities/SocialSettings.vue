@@ -23,7 +23,7 @@ export default {
     },
     save() {
       if (!this.virgin) {
-        this.$store.dispatch('SAVE_CONTACTS', this.contacts);
+        this.$service.run('user/contacts', this.contacts);
       }
     },
   },

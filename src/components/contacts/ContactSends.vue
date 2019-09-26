@@ -8,28 +8,28 @@ export default {
     initial: () => false,
     simple: () => false,
     contacts() {
-      return this.$store.state.contacts.sends.list;
+      return this.$store.state.offers.list;
     },
   },
   methods: {
     load() {
-      this.$store.dispatch('sends/LOAD', this.next).then(() => {
+      this.$service.run('offers/load', this.next).then(() => {
         this.loaded();
       });
       this.amount = this.count;
       this.hope();
     },
     next() {
-      this.$store.dispatch('sends/NEXT', this.offset).then(() => {
+      this.$service.run('offers/next', this.offset).then(() => {
         this.loaded();
       });
       this.reset();
     },
     remove(index) {
-      this.$store.dispatch('sends/DELETE', index);
+      this.$service.run('offers/delete', index);
     },
     splice(index) {
-      this.$store.commit('sends/delete', index);
+      this.$service.run('offers/delete', index);
     },
   },
 };

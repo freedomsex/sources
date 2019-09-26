@@ -1,6 +1,7 @@
 import _ from 'underscore';
-import api from '~config/api';
 import Dexie from 'dexie';
+
+import api from '~config/api';
 import hasher from '~legacy/utils/simple-hash';
 
 export default {
@@ -11,7 +12,8 @@ export default {
   },
   actions: {
     INIT({state, dispatch, rootState}) {
-      return api.raw.load(null, `static/json/notes/${rootState.locale}.json`).then(({data}) => {
+      const uri = `static/json/notes/${rootState.locale}.json`;
+      return api.res(uri, 'raw').load().then(({data}) => {
         state.db.transaction('rw', state.db.writes, () => {
           _.each(data.reverse(), (text) => {
             dispatch('UPDATE', text);
@@ -21,7 +23,7 @@ export default {
         console.log('! Ошибка загрузки блокнота, инет есть?');
       });
     },
-    LOAD({state, dispatch, rootState}) {
+    CREATE({state, rootState}) {
       if (!state.db) {
         const {uid} = rootState.token;
         state.db = new Dexie(`DataBaseFS__${uid}`);
@@ -29,6 +31,9 @@ export default {
           writes: '++id, &text, count, updated',
         });
       }
+    },
+    LOAD({state, dispatch}) {
+      dispatch('CREATE');
       return state.db.writes.count().then((count) => {
         if (!count || (count && count < 10)) {
           dispatch('INIT').then(() => {
@@ -37,6 +42,9 @@ export default {
         } else {
           dispatch('WRITES');
         }
+      }).catch(() => {
+      // console.log('Dexie::: ', state.db.writes.count());
+        console.log('пустая база');
       });
     },
     WRITES({state, commit}) {

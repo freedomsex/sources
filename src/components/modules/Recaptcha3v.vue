@@ -22,8 +22,9 @@ export default {
         global.grecaptcha.execute();
       });
     },
-    execute3v() {
-      return global.grecaptcha.execute(this.v3sitekey, {action: 'homepage'}).then(token => token);
+    execute3v(page) {
+      const action = page || 'homepage';
+      return global.grecaptcha.execute(this.v3sitekey, {action}).then(token => token);
     },
 
     reset() {

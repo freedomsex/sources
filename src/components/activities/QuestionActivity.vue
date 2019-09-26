@@ -1,7 +1,6 @@
 <script>
 import lscache from 'lscache';
 import axios from 'axios';
-import api from '~config/api';
 import hasher from '~legacy/utils/simple-hash';
 import InfoDialog from '~dialogs/InfoDialog';
 import ConfirmDialog from '~dialogs/ConfirmDialog';
@@ -64,15 +63,14 @@ export default {
       }
     },
     send() {
-      api.raw.post({
+      this.$api.res('security/askme', 'raw').post({
         text: this.text,
         hash: hasher.random(),
-      }, null, 'security/askme')
-        .then(() => {
-          this.process = false;
-          this.text = '';
-          lscache.remove('review-text');
-        });
+      }).then(() => {
+        this.process = false;
+        this.text = '';
+        lscache.remove('review-text');
+      });
       this.isEmpty = false;
       this.process = true;
       this.sended = true;

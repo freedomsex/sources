@@ -114,6 +114,7 @@ export default {
       } else years = '';
       return city + who + years;
     },
+
   },
   components: {
     DesireList,
@@ -128,7 +129,9 @@ export default {
       <div class="human-info__general">
         <span class="human-info__name">{{human.name}}</span>
         <span class="human-info__age">{{age}}</span>
-        <span class="human-info__ago">({{ago}})</span>
+        <span class="human-info__ago" v-show="ago">
+          ({{ago}})
+        </span>
       </div>
       <div>
         <span class="human-info__city">{{human.city}}</span>
@@ -188,6 +191,13 @@ export default {
         <DesireList :tags="tags"/>
       </div>
     </div>
+
+    <div class="account-section">
+      <div class="account-section__header">Номер анкеты</div>
+      <div class="human-info__id">
+        ID: <b>{{human.id}}</b>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -213,6 +223,11 @@ export default {
   }
   &__ago {
     color: @gray;
+  }
+  &__id {
+    // color: @gray;
+    font-size: @font-md;
+    position: relative;
   }
   &__city {
     display: inline-block;
@@ -259,7 +274,7 @@ export default {
   margin: @indent-sm 0;
   &__header {
     color: @dark;
-    font-size: @font-md;
+    font-size: @font-lg;
     margin-bottom: @indent-sm;
     margin-top: @indent-md;
   }

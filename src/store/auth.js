@@ -1,5 +1,4 @@
 import _ from 'underscore';
-import api from '~config/api';
 
 export default {
   namespaced: true,
@@ -10,14 +9,6 @@ export default {
     email: '',
     promt: false,
     unsbcr: false,
-  },
-  actions: {
-    SAVE_LOGIN(context, data) {
-      return api.user.saveLogin(data);
-    },
-    SAVE_PASSWD(context, data) {
-      return api.user.savePasswd(data);
-    },
   },
   mutations: {
     update(state, data) {

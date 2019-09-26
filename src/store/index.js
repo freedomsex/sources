@@ -13,13 +13,15 @@ import search from './search';
 import human from './human';
 import about from './about';
 import results from './results';
-import contacts from './contacts';
 import desires from './desires';
-import visited from './visited';
+import visits from './visits';
 import accepts from './accepts';
 import modals from './modals';
 import notes from './notes';
 import message from './message';
+import client from './client';
+
+import {initials, intimates, offers} from './contacts';
 
 Vue.use(Vuex);
 
@@ -28,7 +30,14 @@ Vue.use(Vuex);
 // })
 const VuexLocalStorage = new VuexPersist({
   reducer(state) {
-    return _.omit(state, ['auth']);
+    return _.omit(state, [
+      'auth',
+      'visits',
+      'notes',
+      'human',
+      'message',
+      'search',
+    ]);
   },
 });
 
@@ -44,13 +53,17 @@ const store = new Vuex.Store({
     human,
     about,
     results,
-    contacts,
     desires,
-    visited,
+    visits,
     accepts,
     modals,
     notes,
     message,
+    client,
+
+    initials,
+    intimates,
+    offers,
   },
   state: {
     ready: false,
@@ -65,6 +78,7 @@ const store = new Vuex.Store({
     promt: false,
     // scrolling: false,
     autoPaste: true,
+    clientId: null,
   },
   mutations: {
     authorize(state, value) {

@@ -1,8 +1,8 @@
 <script>
 import _ from 'underscore';
-import json from '~legacy/utils/json';
 import InfoDialog from '~dialogs/InfoDialog';
 import Snackbar from '~widgets/Snackbar';
+import NextButton from '~widgets/NextButton';
 import QuickMessage from '~dialogs/quick-message/QuickMessage';
 import SearchItem from './SearchItem';
 
@@ -22,11 +22,18 @@ export default {
       ignore: false,
     };
   },
+  components: {
+    SearchItem,
+    InfoDialog,
+    NextButton,
+    QuickMessage,
+    Snackbar,
+  },
   mounted() {
     this.preload();
     this.$store.dispatch('search/load');
     this.reload();
-    this.visitedSync();
+    this.$service.run('visits/load');
   },
   computed: {
     items() {
@@ -41,7 +48,7 @@ export default {
       return city && !any;
     },
     visited() {
-      return this.$store.state.visited.list;
+      return this.$store.state.visits.list;
     },
     accept() {
       const {next, batch} = this.$store.state.results;
@@ -50,7 +57,7 @@ export default {
     },
     defaults() {
       // TODO: global dep for search results "defaultResults"
-      const result = global.defaultResults ? json.parse(global.defaultResults) : null;
+      const result = global.defaultResults ? JSON.parse(global.defaultResults) : null;
       return result && _.isObject(result) && _.has(result, 'users') && result.users.length
         ? result
         : [];
@@ -94,11 +101,6 @@ export default {
       this.$store.commit('results/reset', false);
       this.load();
     },
-    visitedSync() {
-      this.$store.dispatch('visited/sync').catch(() => {
-        console.log('! Ошибка визита');
-      });
-    },
     preload() {
       this.$store.commit('results/results', this.defaults);
       this.onLoad();
@@ -111,16 +113,12 @@ export default {
         up: this.up,
         to: this.to,
       };
-      this.$store
-        .dispatch('results/load', params)
-        .then(() => {
-          this.onLoad();
-        })
-        .catch(() => {
-          this.response = 200;
-          this.toSlow = false;
-        });
-
+      this.$service.run('search/load', params).then(() => {
+        this.onLoad();
+      }).catch(() => {
+        this.response = 200;
+        this.toSlow = false;
+      });
       this.$service.run('user/autoAge');
       this.$service.run('user/autoCity');
     },
@@ -148,47 +146,37 @@ export default {
       this.$store.commit('accepts/search');
     },
   },
-  components: {
-    SearchItem,
-    InfoDialog,
-    QuickMessage,
-    Snackbar,
-  },
 };
 </script>
 
 <template>
   <div>
     <div class="search-list">
+      <div v-if="userId">
+        <div class="search-list__alert" v-if="!city" @click="$router.push('wizard/city')">
+          Получайте в десять раз больше новых знакомств.
+          Укажите <span class="link_dashed">ваш город</span>  в анкете.
+        </div>
+        <div class="search-list__alert" v-else-if="!age" @click="$router.push('settings/account')">
+          Укажите <span class="link_dashed">возраст в анкете</span> и получайте
+          больше интересных знакомств.
+        </div>
+      </div>
+
       <SearchItem v-for="item in items"
        :human="item"
        :visited="old(item.id)"
        :gold="gold(item.tags)"
        :key="item.id" :compact="compact"/>
 
-      <div v-if="userId">
-        <div class="search-list__alert" v-if="!city" @click="$router.push('wizard/city')">
-          Получайте в десять раз больше новых знакомств.
-          Укажите <span class="link_dashed">ваш город</span>  в анкете.
-          Вы редко появляетесь в результатах поиска. Ведь все ищут по
-          Городу, а он у вас не указан.
-        </div>
-        <div class="search-list__alert" v-else-if="!age" @click="$router.push('settings/account')">
-          Укажите <span class="link_dashed">возраст в анкете</span> и получайте
-          больше интересных знакомств.
-          Вашу анкету находят только те, кому безразличен возраст.
-          Таких мало, и вам очень редко пишут.
-        </div>
-      </div>
-
       <div class="search-list__options" v-show="more">
-        <span class="btn btn-default btn-sm search-list__next"
-         @click="loadNext" v-show="more && !loader" :disabled="!response">
-          {{$t('Следующие')}}
-        </span>
-        <span class="btn btn-default btn-sm" v-show="loader" disabled>
-          {{$t('Загружаю')}}...
-        </span>
+        <NextButton
+         :show="more"
+         :ready="!loader"
+         :hold="!response"
+         :verbose="true"
+         :loader="true"
+         @next="loadNext"/>
 
         <a class="btn btn-link btn-sm" target="_blank"
          href="http://docs.freedomsex.info/blog/#/Способ-знакомства/">
@@ -259,10 +247,11 @@ export default {
   margin: 0 0 @indent-sm;
   padding: 0;
   &__alert {
+    text-align: center;
     background: @alert-sand;
     padding: @indent-md @indent-md;
     border: 1px solid #f6e4a2;
-    border-width: 1px 0 1px;
+    border-width: 0px 0 1px;
     cursor: pointer;
   }
   &__options {

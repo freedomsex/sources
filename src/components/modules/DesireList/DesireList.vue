@@ -12,7 +12,7 @@ export default {
   methods: {
     add(tag) {
       if (!this.added(tag)) {
-        this.$store.dispatch('desires/ADD', tag).then(() => {});
+        this.$service.run('desires/save', tag);
       }
     },
     added(tag) {

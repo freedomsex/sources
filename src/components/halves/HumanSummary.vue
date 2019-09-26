@@ -1,5 +1,4 @@
 <script>
-import api from '~config/api';
 import AbuseList from '~activities/AbuseList';
 import AbuseDialog from '~components/abuses/AbuseDialog';
 import InfoDialog from '~dialogs/InfoDialog';
@@ -16,13 +15,14 @@ export default {
     error: false,
   }),
   mounted() {
-    api.raw.get({id: this.humanId}, 'abuse/load').then(({data}) => {
+    this.$api.res('abuse/load', 'raw').get({id: this.humanId}).then(({data}) => {
       this.list = data;
     }).catch(() => {
       this.error = true;
-    }).finally(() => {
-      this.loading = false;
-    });
+    })
+      .finally(() => {
+        this.loading = false;
+      });
   },
   computed: {
     human() {
@@ -129,7 +129,7 @@ export default {
   &__status {
     .rounded-button();
     border: 1px solid @gray;
-    background-color: @light;
+    background-color: @white;
 
     &.status {
       &-special {

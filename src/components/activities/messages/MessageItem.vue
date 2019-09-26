@@ -1,7 +1,6 @@
 <script>
-import api from '~config/api';
-import CONFIG from '~config/';
 import axios from 'axios';
+import CONFIG from '~config/';
 import PhotoSend from '~modules/PhotoSend';
 import Toast from '~widgets/Toast';
 import ConfirmDialog from '~dialogs/ConfirmDialog';
@@ -99,7 +98,7 @@ export default {
         id: this.item.id,
         tid: this.item.sender,
       };
-      api.messages.bun(data).then(() => {
+      this.$api.res('mess/bun', 'raw').post(data).then(() => {
         this.$emit('remove', this.index);
       }).catch(() => {
         console.log('error');
@@ -113,7 +112,7 @@ export default {
       const data = {
         id: this.item.id,
       };
-      api.messages.delete(data).then(() => {
+      this.$api.res('mess/delete', 'raw').post(data).then(() => {
         // this.$emit('remove', this.index);
       })
         .catch((error) => {

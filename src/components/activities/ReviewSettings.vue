@@ -1,6 +1,5 @@
 <script>
 import lscache from 'lscache';
-import api from '~config/api';
 import hasher from '~legacy/utils/simple-hash';
 import InfoDialog from '~dialogs/InfoDialog';
 import ConfirmDialog from '~dialogs/ConfirmDialog';
@@ -43,18 +42,14 @@ export default {
       }
     },
     send() {
-      api.raw
-        .post({
-          text: this.text,
-          hash: hasher.random(),
-        },
-        null,
-        'security/remark')
-        .then(() => {
-          this.process = false;
-          this.text = '';
-          lscache.remove('review-text');
-        });
+      this.$api.res('security/remark', 'raw').post({
+        text: this.text,
+        hash: hasher.random(),
+      }).then(() => {
+        this.process = false;
+        this.text = '';
+        lscache.remove('review-text');
+      });
       this.isEmpty = false;
       this.process = true;
       this.sended = true;

@@ -3,44 +3,53 @@ import ActivityActions from '~activities/ActivityActions';
 import InfoDialog from '~dialogs/InfoDialog';
 import ContactDialog from './ContactDialog';
 import ContactItem from './ContactItem';
+import NextButton from '~widgets/NextButton';
 
 export default {
   extends: ContactDialog,
+  components: {
+    ActivityActions,
+    ContactItem,
+    InfoDialog,
+    NextButton,
+  },
   mounted() {
-    this.$store.dispatch('initial/CHECK');
+    this.$service.run('initials/check');
   },
   computed: {
     initial: () => true,
     simple: () => true,
     contacts() {
       // console.log(this.$store);
-      return this.$store.state.contacts.initial.list;
+      return this.$store.state.initials.list;
     },
   },
   methods: {
     load() {
-      this.$store.dispatch('initial/LOAD').then(() => {
+      this.$service.run('initials/load').then(() => {
         this.loaded();
+      }).catch((error) => {
+        this.failed(error);
       });
       this.amount = this.count;
       this.hope();
     },
     next() {
-      this.$store.dispatch('initial/NEXT', this.offset).then(() => {
+      this.$service.run('initials/next', this.offset).then(() => {
         this.loaded();
       });
       this.reset();
     },
     remove(index) {
-      this.$store.dispatch('initial/DELETE', index);
+      this.$service.run('initials/delete', index);
     },
     read(index) {
       console.log('initial=read', index);
-      this.$store.dispatch('initial/READ', index);
+      this.$service.run('initials/read', index);
     },
     splice(index) {
       // console.log(this.$store); return;
-      this.$store.commit('initial/delete', index);
+      this.$store.commit('initials/delete', index);
     },
     idle(data) {
       let result = false;
@@ -68,29 +77,25 @@ export default {
       this.$store.commit('accepts/settings');
     },
   },
-  components: {
-    ActivityActions,
-    ContactItem,
-    InfoDialog,
-  },
 };
 </script>
 
 <template>
   <div>
-    <ActivityActions caption="Знакомства" @close="close">
+    <ActivityActions :caption="$t('Знакомства')" @close="close">
 
       <template slot="option">
         <div class="header-bar__button" @click="$router.push('/settings/search')">
           <i class="material-icons">&#xE8B9;</i>
           <span class="header-bar__title">
-            Настроить
+            {{$t('Настроить')}}
           </span>
         </div>
       </template>
 
-      <div class="contact-list" v-if="count">
-        <ContactItem v-for="(item, index) in contacts" :key="item.human_id"
+      <div v-if="count">
+        <div class="contact-list">
+          <ContactItem v-for="(item, index) in contacts" :key="item.human_id"
           :item="item"
           :index="index"
           :idle="idle(item)"
@@ -100,24 +105,30 @@ export default {
           @close="close"
           @accept="modals.acceptSettings = true"
           @remove="remove"/>
+        </div>
+
+        <div class="contact-list__next">
+          <NextButton
+          :show="more"
+          :ready="response"
+          :hold="!response"
+          :loader="true"
+          @next="next()"/>
+        </div>
       </div>
-      <div class="activity__content" v-else>
+
+      <BigIconPlaceholder icon="&#xE001;" text="Ошибка списка" v-else-if="error"/>
+      <BigIconPlaceholder icon="&#xE87E;" text="Список пуст" v-else-if="empty"/>
+
+      <!-- <div class="activity__content" v-else>
         <div class="hint-info">
           Здесь будет список поступивших вам предложений знакомства.
           Список отправленных посмотреть нельзя.
         </div>
         Все ответы приходят во вкладку "Общение". Кружочки могут светиться без причины.
         Пишите сообщения - это Бесплатно, а значит всё честно и реально!
-      </div>
+      </div> -->
 
-      <div class="contact-list__next">
-        <div class="btn btn-default btn-sm"
-         @click="next()"
-         :disabled="response == false"
-         v-show="more">
-          Следующие
-        </div>
-      </div>
 
       <InfoDialog v-if="modals.acceptSettings"
        @close="modals.acceptSettings = false"
@@ -133,6 +144,23 @@ export default {
     <router-view @close="$root.goBack()" @sended="splice"/>
   </div>
 </template>
+
+<i18n>
+{
+  "en": {
+    "Знакомства": "Dating",
+    "Настроить": "Customize"
+  },
+  "kz": {
+    "Знакомства": "Танысу",
+    "Настроить": "Теңшеу"
+  },
+  "ua": {
+    "Знакомства": "Знайомства",
+    "Настроить": "Налаштувати"
+  }
+}
+</i18n>
 
 <style lang="less">
 </style>

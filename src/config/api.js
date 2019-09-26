@@ -1,130 +1,79 @@
-import CONFIG from '~config/';
-import Api from '~config/rest-api/core';
-import ApiUser from '~config/rest-api/user';
+import Api from 'axios-rest-api';
+import config from './index';
 
-class ApiBun extends Api {
-  constructor() {
-    const key = '1234';
-    const host = '/';
-    super(host, key);
-  }
+const resouses = [];
 
-  send(data) {
-    return this.post(data, null, 'mess/bun/');
-  }
-}
-
-class ApiMessages extends Api {
-  constructor() {
-    const key = '1234';
-    const host = '/';
-    super(host, key);
-  }
-
-  send(data) {
-    return this.post(data, null, 'mailer/post/');
-  }
-
-  status() {
-    return this.load(null, 'mailer/status');
-  }
-
-  bun(data) {
-    return this.post(data, null, 'mess/bun');
-  }
-
-  delete(data) {
-    return this.post(data, null, 'mess/delete');
-  }
-
-  check(list) {
-    return this.load(null, `mailer/check_${list}`);
-  }
-}
-
-class ApiModerator extends Api {
-  constructor() {
-    const key = '1234';
-    const host = '/';
-    super(host, key);
-  }
-
-  promt() {
-    return this.post(null, null, 'moder/promt');
-  }
-
-  load() {
-    return this.post(null, null, 'moder/auth');
-  }
-
-  press(data) {
-    return this.post(data, null, 'moder/press');
-  }
-}
-
-class ApiSearch extends Api {
-  constructor() {
-    const key = '1234';
-    const host = `${CONFIG.API_SEARCH}/`;
-    const routing = {
-      route: 'users',
-      get: '{uid}',
-    };
-    super(host, key, null, routing);
-  }
-}
-
-class ApiContact extends Api {
-  constructor(routing) {
-    const key = 1234;
-    const host = `${CONFIG.API_CONTACT}/api/v1/`;
-    super(host, key, null, routing);
-  }
-
-  // refreshToken(token) {
-  //   this.setAuthKey(token.apiToken);
-  // }
-}
-
-class ApiInitial extends ApiContact {
-  constructor() {
-    const routing = {
-      route: 'users/{uid}/initials',
-    };
-    super(routing);
-  }
-}
-
-class ApiIntimate extends ApiContact {
-  constructor() {
-    const routing = {
-      route: 'users/{uid}/intimates',
-    };
-    super(routing);
-  }
-}
-
-class ApiSends extends ApiContact {
-  constructor() {
-    const routing = {
-      route: 'users/{uid}/sends',
-    };
-    super(routing);
-  }
-}
-
-export default {
-  user: new ApiUser(),
-  search: new ApiSearch(),
-  bun: new ApiBun(),
-  contacts: {
-    initial: new ApiInitial(),
-    intimate: new ApiIntimate(),
-    sends: new ApiSends(),
-  },
-  messages: new ApiMessages(),
-  moderator: new ApiModerator(),
-  raw: new Api(),
+resouses.default = {
+  delay: config.NET_DELAY,
+  prefix: 'api',
+  version: 'v1',
 };
 
-// ApiMessages.send();
+resouses.raw = {
+  host: '',
+  prefix: '',
+  version: '',
+  routing: {},
+};
+
+resouses.mailer = {
+  host: config.API_MAILER,
+  prefix: 'mailer/api',
+};
+
+resouses.auth = {
+  host: config.API_AUTH,
+};
+
+resouses.search = {
+  host: config.API_SEARCH,
+  routing: {route: 'users'},
+  prefix: '',
+  version: '',
+};
+
+// resouses.messages = {
+//   host: config.API_CONTACT,
+//   routing: {route: 'users/{uid}/initials'},
+// };
+
+resouses.initials = {
+  host: config.API_CONTACT,
+  routing: {route: 'users/{uid}/initials'},
+};
+
+resouses.intimates = {
+  host: config.API_CONTACT,
+  routing: {route: 'users/{uid}/intimates'},
+};
+
+resouses.sends = {
+  host: config.API_CONTACT,
+  routing: {route: 'users/{uid}/sends'},
+};
+
+resouses.dialog = {
+  host: config.API_DIALOG,
+  routing: {route: 'users/{uid}/dialog',
+    put: 'read'},
+};
+
+
+const api = new Api(resouses);
+export default api;
+
+
+// const retryAttempt = false;
+
+// axios.interceptors.response.use(response => response, (error) => {
+//   // retry the request that errored out
+//   if (error.response.status === 401) {
+//     if (retryAttempt) {
+//       global.App.$root.unauthorized();
+//     } else {
+//       retryAttempt = true; // now it can be retried
+//       return global.App.$root.refresh().then(() => axios(error.config));
+//     }
+//   }
+//   return Promise.reject(error);
+// });

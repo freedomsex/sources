@@ -9,11 +9,11 @@ export default {
   }),
   computed: {
     newMessage() {
-      const {status} = this.$store.state.contacts.intimate;
+      const {status} = this.$store.state.intimates;
       return status == false || status < 8;
     },
     newContact() {
-      const {status} = this.$store.state.contacts.initial;
+      const {status} = this.$store.state.initials;
       return status == false || status < 8;
     },
   },

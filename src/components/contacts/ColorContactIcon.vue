@@ -8,13 +8,13 @@ export default {
   data: () => ({
     image: false,
     colors: [
-      'grey', 'red', 'pink', 'purple', 'deepPurple', 'indigo', 'blue', 'lightBlue', 'cyan', 'teal', 'green', 'lightGreen', 'lime', 'yellow', 'amber', 'orange', 'deepOrange', 'brown', 'blueGrey', 'black',
+      'red', 'pink', 'purple', 'deepPurple', 'indigo', 'blue', 'lightBlue', 'cyan', 'teal', 'green', 'lightGreen', 'lime', 'yellow', 'amber', 'orange', 'deepOrange', 'brown', 'blueGrey',
     ],
   }),
   mounted() {
     // do something after mounting vue instance
-    const {uid, item, src} = this;
-    console.log('ColorItem', [uid, item, src]);
+    // const {uid, item, src} = this;
+    // console.log('ColorItem', [uid, item, src]);
   },
   computed: {
     letter() {
@@ -39,7 +39,7 @@ export default {
       while (i > 0) {
         position += 1;
         i -= 1;
-        if (position >= colorCount) {
+        if (position > colorCount - 1) {
           position = 0;
         }
       }

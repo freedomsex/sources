@@ -1,12 +1,12 @@
 <script>
 import _ from 'underscore';
-import axios from 'axios';
 import hasher from '~legacy/utils/simple-hash';
-import CONFIG from '~config/';
 
+import BigIconPlaceholder from '~widgets/BigIconPlaceholder';
 import InfoDialog from '~dialogs/InfoDialog';
 import MessageItem from './MessageItem';
 import ListDate from './ListDate';
+import NextButton from '~widgets/NextButton';
 
 import HumanSummary from '~halves/HumanSummary';
 
@@ -30,7 +30,18 @@ export default {
       toSlow: false,
       skipScroll: false,
       abuseSuccessHint: false,
+
+      timer: null,
+      process: false,
     };
+  },
+  components: {
+    BigIconPlaceholder,
+    HumanSummary,
+    MessageItem,
+    InfoDialog,
+    ListDate,
+    NextButton,
   },
   mounted() {
     this.load();
@@ -44,25 +55,44 @@ export default {
     },
     load() {
       // console.log('load MessList data');
-      this.response = 0;
-      const config = {
-        headers: {Authorization: `Bearer ${this.$store.state.token.access}`},
-        params: {tid: this.humanId, offset: this.offset, hash: hasher.random()},
-      };
-      axios.get(`${CONFIG.API_DIALOG}/api/v1/users/${this.userId}/dialog`, config).then(({data}) => {
+      if (!this.count) {
+        this.response = 0;
+      }
+      // const config = {
+      //   headers: {Authorization: `Bearer ${this.$store.state.token.access}`},
+      //   params: {tid: this.humanId, offset: this.offset, hash: hasher.random()},
+      // };
+      this.process = true;
+      this.$api.res('dialog').load({
+        uid: this.userId,
+        tid: this.humanId,
+        offset: this.offset,
+        hash: hasher.random(),
+      }).then(({data}) => {
         this.onLoad(data);
+        console.log(data);
       })
         .catch((error) => {
-          this.error = 10;
-          this.$Progress.fail();
-          console.log(error);
+          this.onError(error);
+        })
+        .finally(() => {
+          this.process = false;
         });
-      // setTimeout(() => { this.toSlow = true; }, 7000);
+      this.timer = setTimeout(() => { this.toSlow = true; }, 1000);
       this.$Progress.start();
     },
     loadNext() {
       this.skipScroll = true;
       this.load();
+    },
+    onError({response}) {
+      if (response && response.status == 404) {
+        this.response = 404;
+        this.$Progress.finish();
+      } else {
+        this.error = 10;
+        this.$Progress.fail();
+      }
     },
     onLoad(data) {
       const messages = data;
@@ -77,27 +107,21 @@ export default {
         this.scammer();
       }
       this.response = 200;
+
+      clearTimeout(this.timer);
       this.toSlow = false;
       this.$Progress.finish();
       this.$nextTick(() => {
-        // this.scroll();
+        this.scroll();
       });
 
-      const config = {
-        headers: {Authorization: `Bearer ${this.$store.state.token.access}`},
-      };
-      axios.put(`${CONFIG.API_DIALOG}/api/v1/users/${this.userId}/dialog/read`, {tid: this.humanId}, config);
+      this.$api.res('dialog').put({tid: this.humanId}, {uid: this.userId});
     },
     scroll() {
       if (this.skipScroll) {
         this.skipScroll = false;
-        return true; // TODO: проверить и удалить
+        document.getElementById('dialog-history').scrollTop = 0;
       }
-      const objDiv = document.getElementById('dialog-history');
-      console.log('scroll', objDiv.scrollTop);
-      objDiv.scrollTop = objDiv.scrollHeight + 30;
-      console.log('scroll', objDiv.scrollTop);
-      return false;
     },
     noMessages() {
       // TODO: Заменить на компоненты, страрые зависимости
@@ -129,6 +153,15 @@ export default {
     count() {
       return this.messages.length;
     },
+    empty() {
+      return !this.count && !this.error && this.response;
+    },
+    ready() {
+      return this.count && !this.error && this.response;
+    },
+    loader() {
+      return this.toSlow && !this.error && !this.response;
+    },
     replyCount() {
       return _.where(this.messages, {from: `${this.userId}`}).length;
     },
@@ -142,32 +175,28 @@ export default {
       return this.$store.state.token.uid;
     },
   },
-  components: {
-    HumanSummary,
-    MessageItem,
-    InfoDialog,
-    ListDate,
-  },
 };
 </script>
 
 <template>
-  <div class="message-list" v-show="!error">
+  <div class="message-list">
+    <BigIconPlaceholder icon="&#xE0BF;" v-if="loader" :text="$t('Загружаю') + '...'"/>
 
-    <HumanSummary :vip="null" :humanId="humanId" :centred="true" v-if="!readonly"/>
+    <div class="message-list__wrapper" v-else-if="ready">
+      <HumanSummary :vip="null" :humanId="humanId" :centred="true" v-if="!readonly"/>
 
-    <div class="messages__new" v-show="newCount" @click="load">
-      <span class="messages__new-lamp">Новые
-      +<b>{{newCount}}</b>
-      </span>
-    </div>
-    <div class="messages__next" @click="loadNext" v-show="more">
-      <span class="btn btn-default btn-xs">Следующие</span>
-    </div>
-    <div class="messages" v-if="count">
-      <template v-for="(item, index) in messages">
-        <ListDate :list="messages" :index="index"/>
-        <MessageItem
+      <div class="messages__new" v-show="newCount" @click="load">
+        <span class="messages__new-lamp">Новые
+          +<b>{{newCount}}</b>
+        </span>
+      </div>
+      <div class="messages__next" v-show="more">
+        <NextButton :ready="!process" :loader="true" @next="loadNext()"/>
+      </div>
+      <div class="messages" v-if="count">
+        <template v-for="(item, index) in messages">
+          <ListDate :list="messages" :index="index"/>
+          <MessageItem
           :item="item"
           :index="index"
           :count="count"
@@ -176,22 +205,46 @@ export default {
           @admit="admit"
           @remove="remove"
           @set-new="setNew"/>
-      </template>
+        </template>
+      </div>
     </div>
-    <div class="messages__loader" v-show="!error && !response">
-      <span>
-        <img src="~static/img/icon/mess_loader.gif" v-show="toSlow">
-        Загружаем
-      </span>
-    </div>
+
+    <BigIconPlaceholder icon="&#xE87F;" :text="$t('Ошибка диалога')" v-if="error"/>
+    <BigIconPlaceholder icon="&#xE0CB;" :text="$t('Пустой диалог')" v-else-if="empty"/>
   </div>
 </template>
 
+
+<i18n>
+{
+  "en": {
+    "Загружаю": "Loading",
+    "Пустой диалог": "Empty dialogue",
+    "Ошибка диалога": "Dialogue error"
+  },
+  "kz": {
+    "Загружаю": "Жүктелуде",
+    "Пустой диалог": "Бос диалог",
+    "Ошибка диалога": "Диалог қатесі"
+  },
+  "ua": {
+    "Загружаю": "Завантажую",
+    "Пустой диалог": "Порожній діалог",
+    "Ошибка диалога": "Помилка діалогу"
+  }
+}
+</i18n>
+
 <style lang="less">
 .message-list {
-  flex: 1 0 auto;
-  padding: @indent-xs @indent-xs 0;
   min-height: 100%;
+  flex: 1 0 auto;
+
+  &__wrapper {
+    flex: 1 0 auto;
+    padding: @indent-xs @indent-xs 0;
+    min-height: 100%;
+  }
   // margin-top: @indent-sm;
 }
 

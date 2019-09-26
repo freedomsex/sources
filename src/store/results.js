@@ -1,6 +1,4 @@
 import _ from 'underscore';
-// import lscache from 'lscache';
-import api from '~config/api';
 
 export default {
   namespaced: true,
@@ -11,28 +9,6 @@ export default {
     next: null,
     batch: 15,
     url: '',
-  },
-  actions: {
-    load({state, rootState, commit}, params) {
-      // dispatch('LOAD_USER', null, {root: true}); // КОСТЫЛЬ [!!!]
-      const {sex, any, virt} = rootState.user;
-      let {who, city} = params;
-      const {up, to} = params;
-      if (sex) {
-        who = sex == 2 ? 1 : 2;
-      }
-      if (!city || any) {
-        city = null;
-      }
-      console.log('SRCH-LOAD', {who, sex, city, up, to, any, virt});
-      return api.search
-        .load({who, city, up, to, next: state.next})
-        .then(({data}) => {
-          commit('results', data);
-          commit('last', data);
-          commit('next');
-        });
-    },
   },
   mutations: {
     reset(state) {

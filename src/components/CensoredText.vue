@@ -1,12 +1,12 @@
 <script>
-import Censoring from '~assets/lib/Censoring/dist/Censoring';
-import NumbersSayCensor from '~assets/lib/Censoring/src/plugins/NumbersSayCensor';
-import PurifyRuCensor from '~assets/lib/Censoring/src/plugins/PurifyRuCensor';
+import TextCensor from '@freedomsex/text-censor';
+import NumbersSayCensor from '@freedomsex/text-censor/dist/plugins/NumbersSayCensor';
+import PurifyRuCensor from '@freedomsex/text-censor/dist/plugins/PurifyRuCensor';
 import ConfirmDialog from '~dialogs/ConfirmDialog';
 
-Censoring.use(NumbersSayCensor);
-Censoring.use(PurifyRuCensor);
-const Censor = new Censoring();
+TextCensor.use(NumbersSayCensor);
+TextCensor.use(PurifyRuCensor);
+const Censor = new TextCensor();
 Censor.$filters.disable('url_link');
 
 export default {

@@ -1,5 +1,4 @@
 import _ from 'underscore';
-import api from '~config/api';
 
 const mutations = {
   load(state, data) {
@@ -21,56 +20,12 @@ const mutations = {
 };
 // // //
 
-const initial = _.extend({
+const initials = _.extend({
   namespaced: true,
   state: {
     status: 8,
     notified: false,
     list: [],
-  },
-  actions: {
-    LOAD({commit, rootState}) {
-      return api.contacts.initial
-        .cget({
-          uid: rootState.token.uid,
-          offset: 0,
-        })
-        .then((response) => {
-          commit('load', response.data);
-        });
-    },
-    NEXT({commit, rootState}, offset) {
-      return api.contacts.initial
-        .cget({
-          uid: rootState.token.uid,
-          offset,
-        })
-        .then((response) => {
-          commit('add', response.data);
-        });
-    },
-    DELETE({state, commit, rootState}, index) {
-      const result = api.contacts.initial.delete({
-        uid: rootState.token.uid,
-        resource_id: state.list[index].id,
-      });
-      commit('delete', index);
-      return result;
-    },
-    READ({state, commit, rootState}, index) {
-      const result = api.contacts.initial.put(null, {
-        uid: rootState.token.uid,
-        resource_id: state.list[index].id,
-      });
-      commit('read', index);
-      return result;
-    },
-    CHECK({commit}) {
-      api.messages.check('contact').then(() => {
-        commit('status', 8);
-        commit('notifi', false);
-      });
-    },
   },
   mutations: _.extend({
     delete(state, index) {
@@ -85,56 +40,12 @@ const initial = _.extend({
   mutations),
 });
 
-const intimate = _.extend({
+const intimates = _.extend({
   namespaced: true,
   state: {
     status: 8,
     notified: false,
     list: [],
-  },
-  actions: {
-    LOAD({commit, rootState}) {
-      return api.contacts.intimate
-        .cget({
-          uid: rootState.token.uid,
-          offset: 0,
-        })
-        .then((response) => {
-          commit('load', response.data);
-        });
-    },
-    NEXT({commit, rootState}, offset) {
-      return api.contacts.intimate
-        .cget({
-          uid: rootState.token.uid,
-          offset,
-        })
-        .then((response) => {
-          commit('add', response.data);
-        });
-    },
-    DELETE({state, commit, rootState}, index) {
-      const result = api.contacts.intimate.delete({
-        uid: rootState.token.uid,
-        resource_id: state.list[index].id,
-      });
-      commit('delete', index);
-      return result;
-    },
-    READ({state, commit, rootState}, index) {
-      const result = api.contacts.intimate.put(null, {
-        uid: rootState.token.uid,
-        resource_id: state.list[index].id,
-      });
-      commit('read', index);
-      return result;
-    },
-    CHECK({commit}) {
-      api.messages.check('message').then(() => {
-        commit('status', 8);
-        commit('notifi', false);
-      });
-    },
   },
   mutations: _.extend({
     delete(state, index) {
@@ -149,40 +60,10 @@ const intimate = _.extend({
   mutations),
 });
 
-const sends = _.extend({
+const offers = _.extend({
   namespaced: true,
   state: {
     list: [],
-  },
-  actions: {
-    LOAD({commit, rootState}) {
-      return api.contacts.sends
-        .cget({
-          uid: rootState.token.uid,
-          offset: 0,
-        })
-        .then((response) => {
-          commit('load', response.data);
-        });
-    },
-    NEXT({commit, rootState}, offset) {
-      return api.contacts.sends
-        .cget({
-          uid: rootState.token.uid,
-          offset,
-        })
-        .then((response) => {
-          commit('add', response.data);
-        });
-    },
-    DELETE({state, commit, rootState}, index) {
-      const result = api.contacts.sends.delete({
-        uid: rootState.token.uid,
-        resource_id: state.list[index].id,
-      });
-      commit('delete', index);
-      return result;
-    },
   },
   mutations: _.extend({
     delete(state, index) {
@@ -192,10 +73,8 @@ const sends = _.extend({
   mutations),
 });
 
-export default {
-  modules: {
-    initial,
-    intimate,
-    sends,
-  },
+export {
+  initials,
+  intimates,
+  offers,
 };

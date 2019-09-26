@@ -91,7 +91,7 @@ export default {
 
     saveFirst() {
       if (this.initial) {
-        this.$store.commit('message/saveFirst', this.message);
+        this.$store.commit('message/first', this.message);
       }
     },
 
@@ -201,6 +201,7 @@ export default {
      @process="busy"/>
 
     <HornMessageProblem
+     :human="human"
      @ignore="ignore"
      @solve="sendMessage"/>
 

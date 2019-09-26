@@ -3,6 +3,7 @@ import CensoredText from '~components/CensoredText';
 import ConfirmDialog from '~dialogs/ConfirmDialog';
 import InfoDialog from '~dialogs/InfoDialog';
 import ColorContactIcon from './ColorContactIcon';
+import ColoredUserInfo from '~widgets/ColoredUserInfo';
 
 export default {
   props: ['item', 'index', 'idle', 'quick'],
@@ -21,27 +22,9 @@ export default {
     InfoDialog,
     CensoredText,
     ColorContactIcon,
+    ColoredUserInfo,
   },
   computed: {
-    name() {
-      let result = 'Парень или девушка';
-      if (this.item.user) {
-        result = this.item.user.sex == 2 ? 'Девушка' : 'Парень';
-        if (this.item.user.name) {
-          result = this.item.user.name;
-        }
-      }
-      return result;
-    },
-    age() {
-      return this.item.user && this.item.user.age ? this.item.user.age : '';
-    },
-    city() {
-      return this.item.user && this.item.user.city ? this.item.user.city : '';
-    },
-    title() {
-      return `${this.name} ${this.age} ${this.city}`;
-    },
     message() {
       return this.item.message ? this.item.message.text : '';
     },
@@ -80,10 +63,13 @@ export default {
       }
     },
     humanPush() {
-      this.$store.commit('human/save', this.item.user);
-      this.$store.commit('human/save', {
+      this.$store.commit('message/preview', {
         id: this.humanId,
         message: this.message,
+      });
+      this.$service.run('human/save', this.item.user);
+      this.$service.run('human/update', {
+        id: this.humanId,
         userpic: this.item.userpic,
       });
     },
@@ -134,13 +120,11 @@ export default {
 <template>
   <div class="contact-item" :class="{idle: idle}">
     <div class="contact-item__photo" @click="show">
-      <ColorContactIcon :uid="humanId" :item="{name, city, age}" :src="userpic"/>
+      <ColorContactIcon :uid="humanId" :item="item.user" :src="userpic"/>
     </div>
     <div class="contact-item__content" @click="show">
       <div class="contact-item__info">
-        <span class="user-list__name" :class="{idle: idle}">{{name}}</span>
-        <span class="user-list__age" :class="{idle: idle}" v-show="age">{{age}}</span>
-        <span class="user-list__city" :class="{idle: idle}" v-show="city">{{city}}</span>
+        <ColoredUserInfo :user="item.user" :idle="idle"/>
       </div>
       <div class="contact-item__preview">
         <span class="contact-item__status-read" :class="{idle: idle}" v-if="unread"></span>
@@ -245,6 +229,7 @@ export default {
     flex: 1 1 auto;
     display: flex;
     align-items: center;
+    padding: 2px 0;
     //padding-top: @indent-xs;
   }
 

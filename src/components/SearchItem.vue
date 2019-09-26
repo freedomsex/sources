@@ -1,7 +1,7 @@
 <script>
-import api from '~config/api';
 import SocialIcons from './SocialIcons';
 import VipStatus from './VipStatus';
+import ColoredUserInfo from '~widgets/ColoredUserInfo';
 
 export default {
   props: ['human', 'visited', 'gold', 'compact'],
@@ -23,10 +23,6 @@ export default {
       }
       return result;
     },
-    name() {
-      const sex = this.human.sex == 1 ? 'Парень' : 'Девушка';
-      return this.human.name ? this.human.name : sex;
-    },
     tagsCount() {
       return this.human.tags.length;
     },
@@ -36,7 +32,7 @@ export default {
     online() {
       return this.human.last < 777;
     },
-    differ() {
+    idle() {
       let result = false;
       const {sex} = this.$store.state.user;
       if (sex && this.human.who && this.human.who != sex) {
@@ -57,20 +53,22 @@ export default {
       this.$emit('close');
     },
     quick() {
+      this.$service.run('human/save', this.human);
       this.$router.push({
         name: 'quickWrite',
         params: {humanId: this.human.id, initial: true},
       });
     },
     load() {
-      api.search.load(null).then((response) => {
-        this.users = response.data.users;
+      this.$api.res('search').load().then(({data}) => {
+        this.users = data.users;
       });
     },
   },
   components: {
     SocialIcons,
     VipStatus,
+    ColoredUserInfo,
   },
 };
 </script>
@@ -78,17 +76,8 @@ export default {
 <template>
   <div class="search-item" :class="{visited: visited, gold: gold && !visited}" @click="quick()">
     <div class="search-item__content" :class="{visited: visited}">
-      <div class="search-item__name" :class="{differ: differ}">
-        {{name}}
-      </div>
-      <div class="search-item__age" :class="{differ: differ}" v-if="human.age">
-        {{human.age}}
-      </div>
-      <div class="search-item__city"
-        :class="{differ: differ}"
-        v-if="human.city && !compact">
-        {{human.city}}
-      </div>
+      <ColoredUserInfo :user="human" :idle="idle" :compact="compact"/>
+
       <a class="search-item__search"
         v-if="search" :href="anketaLink"
         @click.prevent>
@@ -187,7 +176,7 @@ export default {
   &__search {
     color: @gray-dark;
     // font-size: 12px;
-    margin-left: 10px;
+    margin-left: 5px;
     white-space: nowrap;
     overflow: hidden;
     flex: 0 5 auto;

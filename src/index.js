@@ -1,8 +1,12 @@
-import {Vue, store} from '~store';
-import RestAPI from './plugins/RestAPI';
-import Service from './plugins/Service';
+
 import VueI18n from 'vue-i18n';
 import VueProgressBar from 'vue-progressbar';
+import moment from 'moment';
+
+import RestAPI from './plugins/RestAPI';
+import Service from './plugins/Service';
+
+import {Vue, store} from '~store';
 import '~assets/directives/resized'; // TODO: оформить директивы
 // import '~legacy/navigate'; // TODO: проверить/переписать навигацию клавиатуры
 
@@ -22,6 +26,7 @@ import SearchList from '~components/SearchList';
 import SliderFooter from '~components/SliderFooter';
 import DesiresWidget from '~widgets/DesiresWidget';
 import Toast from '~widgets/Toast';
+import Snackbar from '~widgets/Snackbar';
 
 import CityWidget from '~widgets/CityWidget';
 import RegistrationPromo from '~widgets/RegistrationPromo';
@@ -34,8 +39,6 @@ import Recaptcha3v from '~modules/Recaptcha3v';
 import PhotoLineWidget from '~widgets/PhotoLineWidget';
 
 import 'styles/core/body.less';
-
-import moment from 'moment';
 
 moment.locale('ru');
 Vue.prototype.$moment = moment;
@@ -91,14 +94,13 @@ global.App = new Vue({
     scrollbarWidth: 15,
   },
   created() {
-    this.$service.run('auth/fix');
     this.$service.run('auth/tick');
   },
   mounted() {
     const humanId = parseInt(window.location.pathname.split('/')[1], 10);
     this.humanId = humanId || null;
     if (this.humanId) {
-      this.$store.dispatch('human/load', this.humanId);
+      this.$service.run('human/load', this.humanId);
     }
     this.updateLocale();
     this.userDataSync();
@@ -169,15 +171,9 @@ global.App = new Vue({
     unauthorized() {
       this.$refs.authenticator.unauthorized();
     },
-    userSync() {
-      const {uid} = this.$store.state.token;
-      this.$store.dispatch('SYNC_USER', uid).then((data) => {
-        this.$store.commit('search/restore', data);
-      });
-    },
     userDataSync() {
       this.$refs.authenticator.refresh().then(() => {
-        this.userSync();
+        this.$service.run('user/load');
       });
     },
   },
@@ -203,6 +199,7 @@ global.App = new Vue({
     RegistrationPromo,
     BottomNav,
     Toast,
+    Snackbar,
     Version,
     FailedChunk,
     Authenticator,

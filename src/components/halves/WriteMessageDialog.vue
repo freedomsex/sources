@@ -10,19 +10,32 @@ import Loadable from '~mixins/Loadable';
 import SendForm from '~modules/SendForm';
 import DesireListCompact from '~modules/DesireListCompact';
 import HumanSummary from './HumanSummary';
+import ColoredUserInfo from '~widgets/ColoredUserInfo';
 
 export default {
   props: ['humanId', 'index', 'initial'],
   mixins: [Loadable],
   data: () => ({
+    preview: '',
     loading: false,
     confirm: false,
     ignore: false,
     code: null,
   }),
+  components: {
+    HalfDialog,
+    SendForm,
+    // LoadingWall,
+    AttentionWall,
+    DesireListCompact,
+    CensoredText,
+    HumanSummary,
+    ColoredUserInfo,
+  },
 
   mounted() {
     this.reload();
+    this.restore();
   },
   computed: {
     human() {
@@ -73,13 +86,21 @@ export default {
       return result;
     },
 
+    restore() {
+      this.preview = '';
+      const {human, preview} = this.$store.state.message;
+      if (human == this.humanId) {
+        this.preview = preview;
+      }
+    },
 
     reload() {
       this.loading = true;
       setTimeout(() => {
         this.loading = false;
       }, 3 * 1000);
-      this.$store.dispatch('human/load', this.humanId).then(() => {
+
+      this.$service.run('human/load', this.humanId).then(() => {
         this.loaded();
       }).catch(() => {
         this.loading = false;
@@ -87,7 +108,7 @@ export default {
     },
     loaded() {
       this.loading = false;
-      this.visited();
+      this.$service.run('visits/save', this.humanId);
     },
     remove() {
       this.$emit('remove');
@@ -96,9 +117,6 @@ export default {
       this.captcha = false;
       this.confirm = false;
       this.ignore = true;
-    },
-    visited() {
-      this.$store.dispatch('visited/ADD', this.humanId);
     },
     close() {
       this.$emit('close');
@@ -113,20 +131,14 @@ export default {
       this.$router.push(`${this.humanId}/dialog`);
     },
   },
-  components: {
-    HalfDialog,
-    SendForm,
-    // LoadingWall,
-    AttentionWall,
-    DesireListCompact,
-    CensoredText,
-    HumanSummary,
-  },
 };
 </script>
 
 <template>
-  <HalfDialog :caption="caption" @close="close">
+  <HalfDialog :caption="true" @close="close">
+    <template slot="caption">
+      <ColoredUserInfo :user="human"/>
+    </template>
     <template slot="option">
       <div class="header-bar__button" @click="dialog()">
         <span class="header-bar__title">Диалог</span>
@@ -140,8 +152,8 @@ export default {
       <HumanSummary :vip="human.vip" :humanId="humanId"/>
     </div>
 
-    <div class="human-dialog__text message" v-if="human.message">
-      <CensoredText :text="human.message" :passive="true"/>
+    <div class="human-dialog__text message" v-if="preview">
+      <CensoredText :text="preview" :passive="true"/>
     </div>
     <div class="human-dialog__text warning" v-if="information()"
      @click="action()">
@@ -183,6 +195,7 @@ export default {
     // margin-bottom: @indent-xs;
     cursor: pointer;
     &.message {
+      border-top: 1px solid @gray-light;
       background: @light;
     }
     &.warning {

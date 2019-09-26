@@ -1,5 +1,4 @@
 <script>
-import api from '~config/api';
 import ConfirmDialog from '~dialogs/ConfirmDialog';
 import ActivityActions from '~activities/ActivityActions';
 
@@ -32,20 +31,17 @@ export default {
   methods: {
     approve() {
       this.process = true;
-      api.moderator
-        .promt()
-        .then(() => {
-          this.load();
-        })
-        .catch(() => {
-          this.needPromt();
-          this.process = false;
-        });
+      this.$api.res('moder/promt', 'raw').post().then(() => {
+        this.load();
+      }).catch(() => {
+        this.needPromt();
+        this.process = false;
+      });
       this.$store.commit('accepts/moderator', 1);
     },
     load() {
       this.process = true;
-      api.moderator.load().then(({data}) => {
+      this.$api.res('moder/auth', 'raw').post().then(({data}) => {
         this.error = data.error;
         if (this.error == 'promt') {
           this.needPromt();
@@ -78,7 +74,7 @@ export default {
         mark,
       };
       this.process = true;
-      api.moderator.press(data).then(() => {
+      this.$api.res('moder/press', 'raw').post(data).then(() => {
         this.load();
       });
     },

@@ -1,5 +1,4 @@
 <script>
-import api from '~config/api';
 import hasher from '~legacy/utils/simple-hash';
 import ModalDialog from '~dialogs/ModalDialog';
 import LoadingCover from '~dialogs/LoadingCover';
@@ -48,7 +47,7 @@ export default {
         hash,
       };
       this.process = true;
-      api.raw.save(params, null, 'abuse/send').then(({data}) => {
+      this.$api.res('abuse/send', 'raw').save(params).then(({data}) => {
         if (data.error) {
           this.$emit('needed');
         } else {

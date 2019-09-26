@@ -46,7 +46,7 @@ export default {
     },
   },
   mounted() {
-    this.$service.run('auth/syncData').then(() => {
+    this.$service.run('account/auth').then(() => {
       this.init();
       this.process = false;
     }).catch(() => {
@@ -67,8 +67,7 @@ export default {
     },
     saveLogin() {
       this.processLogin = true;
-      this.$store
-        .dispatch('auth/SAVE_LOGIN', this.inputLogin)
+      this.$service.run('security/login', this.inputLogin)
         .then(({data}) => {
           if (data.say) {
             this.$emit('warning', data.say);
@@ -81,8 +80,7 @@ export default {
     },
     savePasswd() {
       this.processPasswd = true;
-      this.$store
-        .dispatch('auth/SAVE_PASSWD', this.inputPasswd)
+      this.$service.run('security/password', this.inputPasswd)
         .then(({data}) => {
           if (data.say) {
             this.$emit('warning', data.say);
@@ -95,7 +93,7 @@ export default {
     saveEmail() {
       this.confirmSend = false;
       this.processEmail = true;
-      this.$service.run('auth/saveEmail', this.inputEmail).then(() => {
+      this.$service.run('email/save', this.inputEmail).then(() => {
         if (this.inputEmail) {
           this.emailSensed = true;
         }
@@ -119,7 +117,7 @@ export default {
       this.$root.toast('Произошла ошибка');
     },
     saveSubscribe() {
-      this.$service.run('auth/subscribe', this.checkSubscribe);
+      this.$service.run('email/subscribe', this.checkSubscribe);
     },
 
     reSend() {

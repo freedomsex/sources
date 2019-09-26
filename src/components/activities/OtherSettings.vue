@@ -1,25 +1,7 @@
 <script>
-import Vuex from 'vuex';
 import ActivityActions from '~activities/ActivityActions';
 
 export default {
-  props: [],
-  data() {
-    return {};
-  },
-  computed: Vuex.mapState({
-    uid() {
-      return this.$store.state.token.uid;
-    },
-  }),
-  methods: {
-    close() {
-      this.$emit('close');
-    },
-    logout() {
-      this.$service.run('auth/logout');
-    },
-  },
   components: {
     ActivityActions,
   },
@@ -28,18 +10,6 @@ export default {
 
 <template>
   <ActivityActions caption="Подробнее" type="wrapped" @close="$emit('close')">
-<!--
-    <div class="activity-section">
-      <div class="activity-section__title">Статус анкеты</div>
-      Обычный
-      <span class="link_simple" @click="$emit('security')">Изменить</span>
-    </div>
-
-    <div class="activity-section">
-      <div class="activity-section__title">Кредиты доверия</div>
-      <span class="link_simple" @click="$emit('security')">Получить</span>
-    </div>
- -->
     <div class="activity-section">
       <div class="activity-section__title">Настройки</div>
       <div class="activity-section__tile">
@@ -80,10 +50,12 @@ export default {
 
     <div class="activity-section">
       <div class="activity-section__title">Аккаунт</div>
-      ID: {{uid}}
+      ID: {{$store.state.token.uid}}
     </div>
     <div class="activity-section">
-      <span class="btn btn-primary" @click="logout">Выйти с сайта</span>
+      <span class="btn btn-primary" @click="$service.run('account/logout')">
+        Выйти с сайта
+      </span>
     </div>
     <div class="activity-section">
       <div class="activity-section__tile">
@@ -95,6 +67,3 @@ export default {
 
   </ActivityActions>
 </template>
-
-<style lang="less">
-</style>

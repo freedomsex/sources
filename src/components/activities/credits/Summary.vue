@@ -1,6 +1,4 @@
 <script>
-import api from '~config/api';
-
 import ActivityActions from '~activities/ActivityActions';
 import Tooltip from '~widgets/Tooltip';
 import ConfirmDialog from '~dialogs/ConfirmDialog';
@@ -23,7 +21,7 @@ export default {
   },
   mounted() {
     this.loadStart();
-    api.user.syncTrust().then(({data}) => {
+    this.$api.res('sync/trust', 'raw').load().then(({data}) => {
       this.user.vip.status = data.status;
       this.user.vip.credits = data.credits;
       this.loadStop();

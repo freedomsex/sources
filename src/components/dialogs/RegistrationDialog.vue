@@ -1,16 +1,19 @@
 <script>
+import JWTDecode from 'jwt-decode';
 import BlankDialog from '~dialogs/BlankDialog';
 import InfoDialog from '~dialogs/InfoDialog';
 import SimpleCaptcha from '~dialogs/SimpleCaptcha';
 
 export default {
-  props: ['sex', 'token'],
+  props: ['sex'],
   data: () => ({
     process: true,
-    success: false,
     strict: false,
     error: false,
-    hint: '',
+    status: '',
+
+    time: null,
+    temer: null,
 
     captcha: {
       need: false,
@@ -24,34 +27,76 @@ export default {
     SimpleCaptcha,
   },
   mounted() {
-    this.save();
+    if (this.sex) {
+      this.start();
+    }
   },
   methods: {
-    save() {
-      this.process = true;
-      if (this.sex) {
-        this.hint = 'Подготовка участника...';
-        this.$service.run('account/registration', {token: this.token}).then((data) => {
-          if (!data.error) {
-            this.saveSex(data);
-          } else {
-            this.onError(data);
-          }
-        }).catch(() => {
-          this.onError();
-        });
-      }
-      // this.$refs.recaptcha.reset();
+    recaptcha(action) {
+      return global.recaptcha.execute3v(action).then(token => token);
     },
+
+    start() {
+      this.process = true;
+      this.status = 'Подождите...';
+      this.recaptcha('registration').then((token) => {
+        this.$api.res('registration/start', 'auth').post({token}).then(({data}) => {
+          this.retry(data.time_token);
+        });
+      });
+    },
+
+    retry(token) {
+      const payload = JWTDecode(token);
+      this.hold(payload.time, token);
+      this.time = payload.time;
+      this.timer = setInterval(() => {
+        this.time -= 1;
+      }, 1000);
+    },
+
+    hold(time, token) {
+      this.status = 'Подготовка участника';
+      setTimeout(() => {
+        this.token(token);
+        this.time = null;
+        clearInterval(this.timer);
+      }, time * 1000);
+    },
+
+    token(token) {
+      this.process = true;
+      this.$api.res('registration/token', 'auth').post({time_token: token}).then(({data}) => {
+        if (data.retry) {
+          this.retry(data.retry);
+        } else {
+          this.registration(data.token);
+        }
+      });
+    },
+
+    registration(token) {
+      this.process = true;
+      this.status = 'Создание анкеты...';
+      this.$service.run('account/registration', {token}).then((data) => {
+        if (!data.error) {
+          this.saveSex(data);
+        } else {
+          this.onError(data);
+        }
+      }).catch(() => {
+        this.onError();
+      });
+    },
+
     fallback() {
       this.process = true;
       this.error = false;
       const params = {
-        sex: this.sex,
         token: this.captcha.token,
         code: this.captcha.code,
       };
-      this.hint = 'Создание анкеты...';
+      // this.status = 'Создание анкеты...';
       this.$service.run('account/fallback', params).then((data) => {
         if (!data.error) {
           this.strict = false;
@@ -59,16 +104,14 @@ export default {
         } else {
           this.onError(data);
         }
-      }).catch((error) => {
+      }).catch(() => {
         this.onError();
-        console.log('REEO fallback', error);
       });
     },
 
     saveSex(data) {
       this.$service.run('user/sex', {sex: this.sex, token: this.token}).catch(() => {
         this.onError();
-        console.log('REEO saveSex');
       });
       this.handle(data);
     },
@@ -78,7 +121,6 @@ export default {
       // TODO: $root APP dependency $refs.authenticator
       if (!data.error) {
         this.$root.$refs.authenticator.reset();
-        this.$service.run('auth/fix');
         this.$root.$refs.authboard.sync();
         this.$emit('finish');
       } else {
@@ -118,8 +160,12 @@ export default {
       Сейчас создается ваша анкета, для этого требуется несколько секунд.
       Иногда необходимо простое подтверждение. Всё бесплатно.
       <div class="body-spacer"></div>
-      <span class="registration-state">
-        {{hint}}
+      <span class="registration-state text-muted">
+        {{status}}
+        <span v-show="time">
+          <span v-if="time <= 5">...</span>
+          <span v-else>({{time}})</span>
+        </span>
       </span>
     </BlankDialog>
 
@@ -132,7 +178,7 @@ export default {
       </div>
       <SimpleCaptcha ref="captcha" @token="setToken" @input="setCode"/>
       <div class="modal-dialog__section">
-        {{hint}}
+        {{status}}
       </div>
     </InfoDialog>
 

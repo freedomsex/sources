@@ -49,7 +49,7 @@ export default {
       setTimeout(() => {
         this.loading = false;
       }, 4 * 1000);
-      this.$store.dispatch('human/load', this.humanId).then(() => {
+      this.$service.run('human/load', this.humanId).then(() => {
         this.loaded();
       }).catch(() => {
         this.loading = false;
@@ -71,7 +71,7 @@ export default {
       this.$router.push(`${this.humanId}/detail`);
     },
     visited() {
-      this.$store.dispatch('visited/ADD', this.humanId);
+      this.$service.run('visits/save', this.humanId);
     },
     close() {
       this.$emit('close');

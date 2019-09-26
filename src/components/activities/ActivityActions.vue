@@ -68,7 +68,10 @@ export default {
     height: 100%;
     margin: 0 auto;
     max-width: @activity-width;
-    max-height: @activity-height;
+    @media (min-width: @activity-width) {
+      max-height: @activity-height;
+    }
+
     background: @white;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
     display: flex;

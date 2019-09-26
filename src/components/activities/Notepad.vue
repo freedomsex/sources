@@ -20,7 +20,7 @@ export default {
       this.$store.dispatch('notes/WRITES');
     },
     select(text) {
-      this.$store.commit('message/saveFirst', text);
+      this.$store.commit('message/first', text);
       this.$emit('select', text);
       this.$emit('close');
     },

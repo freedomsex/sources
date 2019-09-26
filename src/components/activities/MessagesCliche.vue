@@ -1,6 +1,5 @@
 <script>
 import lscache from 'lscache';
-import api from '~config/api';
 import ActivityActions from '~activities/ActivityActions';
 
 export default {
@@ -25,7 +24,8 @@ export default {
     load(value) {
       this.process = true;
       const result = value || this.default.tab;
-      api.raw.load(null, `static/json/cliche/${result}.json?v=${this.version}`).then(({data}) => {
+      const uri = `static/json/cliche/${result}.json?v=${this.version}`;
+      this.$api.res(uri, 'raw').load().then(({data}) => {
         this.texts = data;
         this.active = result;
         this.process = false;
@@ -50,7 +50,7 @@ export default {
       return this.active == value ? 'btn-primary' : 'btn-default';
     },
     select(text) {
-      this.$store.commit('message/saveFirst', text);
+      this.$store.commit('message/first', text);
       this.$emit('select', text);
       this.$emit('close');
     },

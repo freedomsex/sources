@@ -6,7 +6,7 @@ const CircularDependencyPlugin = require('circular-dependency-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const formatter = require('eslint-friendly-formatter');
 const WriteFilePlugin = require('write-file-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 
 
 const APP_VERSION = require('./package.json').version;
@@ -84,14 +84,6 @@ module.exports = {
             },
           },
         ],
-      },
-      {
-        test: /\.js$/,
-        exclude: /node_modules\/(?!(vuex-persist)\/)/,
-        loader: 'babel-loader',
-        options: {
-          presets: ['env'],
-        },
       },
       {
         test: /\.vue$/,

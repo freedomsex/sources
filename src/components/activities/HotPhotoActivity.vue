@@ -60,7 +60,8 @@ export default {
       if (!this.confirm) {
         this.accept = true;
       } else {
-        axios.post(`${CONFIG.API_CONTACT}/api/v1/photoline/${this.user.uid}`, {source: this.user.userpic.source}, {
+        const {uid} = this.$store.state.token;
+        axios.post(`${CONFIG.API_CONTACT}/api/v1/photoline/${uid}`, {source: this.user.userpic.source}, {
           headers: {Authorization: `Bearer ${this.$store.state.token.access}`},
         }).then(() => {
           this.accept = false;
@@ -90,6 +91,10 @@ export default {
     close() {
       this.$emit('close');
     },
+
+    image(item) {
+      return {backgroundImage: `url(${this.source(item.source)})`};
+    },
   },
 };
 </script>
@@ -107,9 +112,10 @@ export default {
     <div class="activity-section">
 
       <div class="galery-photo" v-if="list.length > 0">
-        <div class="galery-photo__item blured-preview" v-for="(item, index) in list"
-         :style="{backgroundImage: `url(${source(item.source)})`}"
-         @click="quick(item.id)"></div>
+        <div class="galery-photo__item" v-for="(item, index) in list" :style="image(item)">
+          <div class="photo-line__item-blured" :style="image(item)" @click="quick(item.id)">
+        </div>
+      </div>
       </div>
       <div class="galery-photo__placeholder" v-else>
         <slot></slot>

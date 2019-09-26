@@ -1,5 +1,4 @@
 <script>
-import api from '~config/api';
 import Snackbar from '~widgets/Snackbar';
 
 export default {
@@ -18,11 +17,11 @@ export default {
   },
   computed: {
     message() {
-      const {status} = this.$store.state.contacts.intimate;
+      const {status} = this.$store.state.intimates;
       return status == false || status < 8;
     },
     contact() {
-      const {status} = this.$store.state.contacts.initial;
+      const {status} = this.$store.state.initials;
       return status == false || status < 8;
     },
     needed() {
@@ -32,13 +31,11 @@ export default {
   methods: {
     check() {
       if (this.needed && this.$store.state.authorized) {
-        api.messages.status()
-          .then(({data}) => {
-            this.handle(data);
-          })
-          .catch(() => {
-            this.attempt += 1;
-          });
+        this.$api.res('mailer/status', 'raw').load().then(({data}) => {
+          this.handle(data);
+        }).catch(() => {
+          this.attempt += 1;
+        });
       }
     },
     handle({message, contact}) {
@@ -65,22 +62,22 @@ export default {
     },
 
     intimate(received) {
-      this.$store.commit('intimate/status', received);
-      const {status, notified} = this.$store.state.contacts.intimate;
+      this.$store.commit('intimates/status', received);
+      const {status, notified} = this.$store.state.intimates;
       const notify = (!notified || status != received);
       if (received == 1 && notify && this.message) {
-        this.$store.commit('intimate/notifi', true);
+        this.$store.commit('intimates/notifi', true);
         this.snacbar.message = true;
       }
       // this.snacbar.message = true;
     },
 
     initial(received) {
-      this.$store.commit('initial/status', received);
-      const {status, notified} = this.$store.state.contacts.initial;
+      this.$store.commit('initials/status', received);
+      const {status, notified} = this.$store.state.initials;
       const notify = (!notified || status != received);
       if (received == 1 && notify && this.contact && !this.message) {
-        this.$store.commit('initial/notifi', true);
+        this.$store.commit('initials/notifi', true);
         this.snacbar.contact = true;
       }
     },
