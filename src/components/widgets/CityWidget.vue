@@ -48,7 +48,6 @@ export default {
 </template>
 
 <style lang="less">
-@import './widget.less';
 
 .city-widget {
   .widget();

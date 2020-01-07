@@ -143,7 +143,12 @@ export default {
         <div v-if="!showForm && text">
           <button class="btn btn-primary" @click="expand()">Продолжить</button>
         </div>
+
         <div v-show="labels.load">Загружаю...</div>
+
+        <div class="context-info">
+          Текст вопроса будет доступен для участников сообщества, Модераторов и Администраторов сообщества. Конфиденциальную информацию отправьте непосредственно разработчикам на почту.
+        </div>
 
 
       <InfoDialog @close="isShort = false" v-if="isShort">

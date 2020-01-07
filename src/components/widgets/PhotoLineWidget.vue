@@ -97,7 +97,6 @@ export default {
 </template>
 
 <style lang="less">
-@import './widget.less';
 
 .photo-line {
   @size: 80px;

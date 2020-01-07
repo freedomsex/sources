@@ -6,13 +6,12 @@ export default {
     };
   },
   mounted() {
-    this.compact = true;
+    // this.compact = true;
   },
 };
 </script>
 
 <style lang="less">
-@import './widget.less';
 
 .alert-widget {
   .widget();

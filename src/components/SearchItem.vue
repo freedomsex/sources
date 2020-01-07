@@ -1,6 +1,6 @@
 <script>
+import VipStatus from '@freedomsex/account-component/VipStatus';
 import SocialIcons from './SocialIcons';
-import VipStatus from './VipStatus';
 import ColoredUserInfo from '~widgets/ColoredUserInfo';
 
 export default {

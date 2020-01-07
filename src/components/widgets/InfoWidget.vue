@@ -74,7 +74,6 @@ export default {
 </template>
 
 <style lang="less">
-@import './widget.less';
 
 .info-widget {
   .widget();

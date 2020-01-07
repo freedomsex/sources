@@ -13,6 +13,20 @@ import AccountActivity from '~activities/AccountActivity';
 
 Vue.use(VueRouter);
 
+// FIX Back go(-1)
+function backFix(to, from) {
+  if (from.path != '/') {
+    store.commit('navigate', from.path);
+  }
+}
+
+function chunkFailed(error) {
+  if (/loading chunk \d* failed./i.test(error.message)) {
+    global.App.failedChunk = true;
+  }
+}
+// ---
+
 
 const sendForm = [
   {
@@ -239,6 +253,14 @@ const routes = [
     path: '/trust',
     component: () => import('~activities/credits/Status'),
   },
+  {
+    path: '/notifications',
+    component: () => import('~activities/notice/NotificationsActivity'),
+  },
+  {
+    path: '/feedback',
+    component: () => import('~activities/notice/FeedbackActivity'),
+  },
 ];
 
 const router = new VueRouter({
@@ -246,13 +268,8 @@ const router = new VueRouter({
   routes,
 });
 
-function chunkFailed(error) {
-  if (/loading chunk \d* failed./i.test(error.message)) {
-    global.App.failedChunk = true;
-  }
-}
-
 router.onError(chunkFailed);
+router.afterEach(backFix);
 
 // router.beforeEach((to, from, next) => {
 //     console.log('router:', [to, from]);
@@ -305,6 +322,7 @@ const settingsRouter = new VueRouter({
 });
 
 settingsRouter.onError(chunkFailed);
+settingsRouter.afterEach(backFix);
 settingsRouter.beforeEach((to, from, next) => {
   // console.log('sRouter:', [to, from]);
   if (!to.meta.back) {
@@ -319,25 +337,3 @@ export {Vue, router, settingsRouter};
 //   e.returnValue = dialogText;
 //   return dialogText;
 // };
-
-// //
-// РОУТЕР ==========================================================
-// //
-
-// const routes = [
-//     { path: '/sends-contacts', name: 'sends', component: SendsDialog, props: { quick: false } },
-//     { path: '/initial-contacts', name: 'initial',
-// component: InitialDialog, props: { quick: true } },
-//     { path: '/intimate-contacts',  name: 'intimate',
-// component: IntimateDialog, props: { quick: false },
-//         // children: [
-//         //     {
-//         //         path: 'quick-reply',
-//         //         component: HumanDialog,
-//         //         props: {
-//         //             show : true
-//         //         }
-//         //     },
-//         // ]
-//     }
-// ];

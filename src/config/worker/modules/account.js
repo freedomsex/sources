@@ -14,6 +14,7 @@ export default {
     registration({api, store, root}, params) {
       params.id = store.state.client.hash;
       params.data = store.state.client.data;
+      params.tokenId = root.run('client/sess', params.tokenId);
       return api.res('registration/create', 'auth').post(params).then(({data}) => {
         root.run('auth/token', data);
         return data;
@@ -45,6 +46,20 @@ export default {
     //     this.onError(data);
     //   }
     // },
+
+    verify({api, store, root}) {
+      const params = {};
+      params.id = store.state.client.hash;
+      params.data = store.state.client.data;
+      params.tokenId = store.state.client.sess;
+
+      if (1 || !store.state.verified) {
+        api.res('verify', 'auth').post(params).then(({data}) => {
+          root.run('client/sess', data.tokenId);
+          store.commit('verify');
+        });
+      }
+    },
 
   },
 };

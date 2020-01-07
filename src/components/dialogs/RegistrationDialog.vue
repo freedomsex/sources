@@ -70,15 +70,15 @@ export default {
         if (data.retry) {
           this.retry(data.retry);
         } else {
-          this.registration(data.token);
+          this.registration(data);
         }
       });
     },
 
-    registration(token) {
+    registration({token, tokenId}) {
       this.process = true;
       this.status = 'Создание анкеты...';
-      this.$service.run('account/registration', {token}).then((data) => {
+      this.$service.run('account/registration', {token, tokenId}).then((data) => {
         if (!data.error) {
           this.saveSex(data);
         } else {
@@ -163,7 +163,7 @@ export default {
       <span class="registration-state text-muted">
         {{status}}
         <span v-show="time">
-          <span v-if="time <= 5">...</span>
+          <span v-if="time < 5">...</span>
           <span v-else>({{time}})</span>
         </span>
       </span>

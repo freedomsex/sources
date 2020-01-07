@@ -69,6 +69,7 @@ module.exports = {
             options: {
               limit: 8000, // Convert images < 8kb to base64 strings
               name: 'images/[name].[hash].[ext]',
+              esModule: false,
             },
           },
         ],
@@ -90,9 +91,7 @@ module.exports = {
         loader: 'vue-loader',
         options: {
           extractCSS: true,
-          loaders: {
-            // less: 'style!css!less',
-          },
+          // loaders: { js: 'babel-loader' },
         },
       },
       // {

@@ -48,6 +48,7 @@ textarea {
 
 
 @import 'links';
+@import 'widgets';
 
 .right {
   text-align: right;
@@ -67,15 +68,11 @@ textarea {
   }
 
   .list-item {
-    min-height: 40px;
-    border-bottom: 1px solid @gray-light;
-    position: relative;
-    background: @white;
+    .list-item();
     cursor: pointer;
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: @indent-sm @indent-sm;
     &__icon {
       flex: 0 0 auto;
       margin-right: @indent-xs;

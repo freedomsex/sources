@@ -4,10 +4,10 @@ const path = require('path');
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const WebpackCdnPlugin = require('webpack-cdn-plugin');
-// const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 // const CopyPlugin = require('copy-webpack-plugin');
 const FileManagerPlugin = require('filemanager-webpack-plugin');
-// const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer');
 
@@ -32,10 +32,12 @@ module.exports = merge(common, {
     rules: [
       {
         test: /\.js$/,
-        exclude: /node_modules/,
+        exclude: file => (
+          /node_modules/.test(file) && !/\.vue\.js/.test(file)
+        ),
         loader: 'babel-loader',
         resolve: {
-          mainFields: ['unpkg', 'browser', 'main', 'module'],
+          mainFields: ['browser', 'main', 'module'],
         },
       },
       {
@@ -82,7 +84,7 @@ module.exports = merge(common, {
 
     new BundleAnalyzerPlugin({
       openAnalyzer: false,
-      analyzerMode: 'disable',
+      analyzerMode: 'static',
     }),
 
     // new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
@@ -123,29 +125,29 @@ module.exports = merge(common, {
   externals: {moment: 'moment'},
 
   optimization: {
-    // minimizer: [
-    //   new OptimizeCSSAssetsPlugin({
-    //     assetNameRegExp: /\.optimize\.css$/g,
-    //     cssProcessor: require('cssnano'),
-    //     cssProcessorOptions: {discardComments: {removeAll: true}},
-    //     canPrint: true,
-    //   }),
-    // ],
+    // minimize: false,
+    minimizer: [
+      new OptimizeCSSAssetsPlugin({
+        cssProcessorOptions: {discardComments: {removeAll: true}},
+      }),
+      new UglifyJSPlugin({
+        cache: true,
+        parallel: true,
+        sourceMap: true,
+      }),
+    ],
     splitChunks: {
       chunks: 'async',
-      minSize: 30000,
-      minChunks: 1,
+      // chunks: 'all',
       name: true,
 
       cacheGroups: {
         vendors: {
-          test: /[\\/]node_modules[\\/]/,
-          priority: -10,
           chunks: 'all',
         },
         styles: {
           name: 'styles',
-          test: /\.css$/,
+          test: /\.(css|scss|less)$/,
           // chunks: 'all',
           // enforce: true,
         },

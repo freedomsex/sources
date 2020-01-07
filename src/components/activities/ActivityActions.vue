@@ -153,6 +153,12 @@ export default {
   padding: 10px 15px;
 }
 
+.context-info {
+// margin-top: 10px;
+  //border: 1px solid @gray-light;
+  color: @gray-dark;
+}
+
 .activity-section {
   margin-bottom: @indent-lg;
 

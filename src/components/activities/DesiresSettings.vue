@@ -1,8 +1,8 @@
 <script>
 import _ from 'underscore';
 import Vuex from 'vuex';
+import DesireItem from '@freedomsex/account-component/DesireList/DesireItem';
 import InfoDialog from '~dialogs/InfoDialog';
-import DesireItem from '~modules/DesireList/DesireItem';
 import SuggestInput from '~modules/SuggestInput';
 import Tooltip from '~widgets/Tooltip';
 import ActivityActions from '~activities/ActivityActions';

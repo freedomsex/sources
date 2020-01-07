@@ -1,6 +1,6 @@
 <script>
 import _ from 'underscore';
-import DesireList from '~modules/DesireList/DesireList';
+import DesireList from '@freedomsex/account-component/DesireList/DesireList';
 
 export default {
   props: ['tags'],
@@ -81,7 +81,6 @@ export default {
 </template>
 
 <style lang="less">
-@import './widget.less';
 
 .desires-widget {
   .widget();

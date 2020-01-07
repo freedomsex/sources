@@ -20,6 +20,8 @@ import modals from './modals';
 import notes from './notes';
 import message from './message';
 import client from './client';
+import notice from './notice';
+import feedback from './feedback';
 
 import {initials, intimates, offers} from './contacts';
 
@@ -31,6 +33,7 @@ Vue.use(Vuex);
 const VuexLocalStorage = new VuexPersist({
   reducer(state) {
     return _.omit(state, [
+      'back',
       'auth',
       'visits',
       'notes',
@@ -64,8 +67,11 @@ const store = new Vuex.Store({
     initials,
     intimates,
     offers,
+    notice,
+    feedback,
   },
   state: {
+    back: null,
     ready: false,
     authorized: false,
     locale: 'ru',
@@ -79,8 +85,12 @@ const store = new Vuex.Store({
     // scrolling: false,
     autoPaste: true,
     clientId: null,
+    verified: false,
   },
   mutations: {
+    navigate(state, name) {
+      state.back = name;
+    },
     authorize(state, value) {
       state.authorized = (value === true);
     },
@@ -89,6 +99,9 @@ const store = new Vuex.Store({
     },
     ready(state, data) {
       state.ready = data == true;
+    },
+    verify(state) {
+      state.verified = true;
     },
 
     showLine(state, data) {

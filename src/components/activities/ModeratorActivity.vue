@@ -1,6 +1,7 @@
 <script>
 import ConfirmDialog from '~dialogs/ConfirmDialog';
 import ActivityActions from '~activities/ActivityActions';
+import CONFIG from '~config/index';
 
 export default {
   data() {
@@ -26,6 +27,9 @@ export default {
     },
     accept() {
       return this.$store.state.accepts.moderator;
+    },
+    adminka() {
+      return `${CONFIG.PROTECT_LINK}/index/token/`;
     },
   },
   methods: {
@@ -94,12 +98,16 @@ export default {
     <ActivityActions caption="Защитить" type="wrapped" @close="close">
 
       <template slot="option">
-        <a class="header-bar__button" href="security/action" target="_blank">
+        <div class="header-bar__button" @click="$refs.form.submit()">
           <span class="header-bar__title">
             В админку
           </span>
           <i class="material-icons">&#xE895;</i>
-        </a>
+        </div>
+
+        <form ref="form" :action="adminka" method="post" target="_blank">
+          <input type="hidden" name="refresh" :value="$store.state.token.refresh">
+        </form>
       </template>
 
       <div v-if="error == 'count'">

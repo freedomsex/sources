@@ -1,31 +1,31 @@
 import Api from 'axios-rest-api';
 import config from './index';
 
-const resouses = [];
+const resourses = [];
 
-resouses.default = {
+resourses.default = {
   delay: config.NET_DELAY,
   prefix: 'api',
   version: 'v1',
 };
 
-resouses.raw = {
+resourses.raw = {
   host: '',
   prefix: '',
   version: '',
   routing: {},
 };
 
-resouses.mailer = {
+resourses.mailer = {
   host: config.API_MAILER,
   prefix: 'mailer/api',
 };
 
-resouses.auth = {
+resourses.auth = {
   host: config.API_AUTH,
 };
 
-resouses.search = {
+resourses.search = {
   host: config.API_SEARCH,
   routing: {route: 'users'},
   prefix: '',
@@ -37,29 +37,35 @@ resouses.search = {
 //   routing: {route: 'users/{uid}/initials'},
 // };
 
-resouses.initials = {
+resourses.initials = {
   host: config.API_CONTACT,
   routing: {route: 'users/{uid}/initials'},
 };
 
-resouses.intimates = {
+resourses.intimates = {
   host: config.API_CONTACT,
   routing: {route: 'users/{uid}/intimates'},
 };
 
-resouses.sends = {
+resourses.sends = {
   host: config.API_CONTACT,
   routing: {route: 'users/{uid}/sends'},
 };
 
-resouses.dialog = {
+resourses.dialog = {
   host: config.API_DIALOG,
   routing: {route: 'users/{uid}/dialog',
     put: 'read'},
 };
 
+resourses.notice = {
+  prefix: 'api',
+  version: '',
+  host: config.API_NOTICE,
+};
 
-const api = new Api(resouses);
+
+const api = new Api(resourses);
 export default api;
 
 

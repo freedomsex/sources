@@ -50,9 +50,15 @@ export default {
     display: flex;
     align-items: stretch;
 
-    .header-bar__button:last-child {
-      padding-right: 0px;
-    }
+    // .header-bar__button:last-child {
+    //   padding-right: 0px;
+    // }
+  }
+
+  &__icon {
+    flex: 0 auto;
+    font-size: 0px;
+    position: relative;
   }
 
   &__button {
@@ -65,6 +71,7 @@ export default {
     border-radius: 3px;
     cursor: pointer;
     text-decoration: none;
+    position: relative;
 
     &.caption {
       padding-left: 0px;

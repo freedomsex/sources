@@ -2,6 +2,7 @@
 import VueI18n from 'vue-i18n';
 import VueProgressBar from 'vue-progressbar';
 import moment from 'moment';
+import AccountComponent from '@freedomsex/account-component';
 
 import RestAPI from './plugins/RestAPI';
 import Service from './plugins/Service';
@@ -13,7 +14,6 @@ import '~assets/directives/resized'; // TODO: оформить директив�
 import {router, settingsRouter} from '~config/router';
 
 import MenuUser from '~modules/MenuUser';
-import AccountComponent from '~components/AccountComponent';
 import AdTop from '~modules/AdTop';
 
 import InfoWidget from '~widgets/InfoWidget';
@@ -37,6 +37,7 @@ import FailedChunk from '~dialogs/FailedChunk';
 import Authenticator from '~modules/Authenticator';
 import Recaptcha3v from '~modules/Recaptcha3v';
 import PhotoLineWidget from '~widgets/PhotoLineWidget';
+import FeedbackButtons from '~widgets/FeedbackButtons';
 
 import 'styles/core/body.less';
 
@@ -107,6 +108,7 @@ global.App = new Vue({
 
     global.recaptcha = this.$refs.recaptcha;
     global.recaptchaLoad = global.recaptcha.onload;
+    this.verify();
 
     this.scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
   },
@@ -161,8 +163,15 @@ global.App = new Vue({
       }
       this.$i18n.locale = this.$store.state.locale;
     },
+    verify() {
+      setTimeout(() => {
+        if (this.$store.state.token.uid) {
+          this.$service.run('account/verify');
+        }
+      }, 60 * 1000);
+    },
     goBack() {
-      if (window.history.length > 1) {
+      if (this.$store.state.back) {
         this.$router.go(-1);
       } else {
         this.$router.push('/');
@@ -205,6 +214,7 @@ global.App = new Vue({
     Authenticator,
     Recaptcha3v,
     PhotoLineWidget,
+    FeedbackButtons,
   },
 });
 
@@ -221,7 +231,7 @@ global.Layer = new Vue({
       this.alert = text;
     },
     goBack() {
-      if (global.history.length > 1) {
+      if (this.$store.state.back) {
         this.$router.go(-1);
       } else {
         this.$router.push('/');

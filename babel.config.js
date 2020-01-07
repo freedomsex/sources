@@ -1,10 +1,10 @@
-{
-  "presets": [
+const presets = [
     ["@babel/env", {
       "modules": false,
     }],
-  ],
-  "plugins": [
+  ];
+const plugins = [
     "@babel/plugin-syntax-dynamic-import",
-  ],
-}
+  ];
+
+module.exports = { presets, plugins };

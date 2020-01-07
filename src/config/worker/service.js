@@ -10,6 +10,8 @@ import messages from './modules/messages';
 import human from './modules/human';
 import client from './modules/client';
 import security from './modules/security';
+import notice from './modules/notice';
+import feedback from './modules/feedback';
 
 import initials from './modules/contacts/initials';
 import intimates from './modules/contacts/intimates';
@@ -42,6 +44,8 @@ const worker = new Worker({
     offers,
     human,
     client,
+    notice,
+    feedback,
   },
 });
 

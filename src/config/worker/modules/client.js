@@ -1,5 +1,8 @@
 import _ from 'underscore';
 import ClientId from 'fingerprintjs2';
+import Somelib from '~legacy/libs/some/lib';
+
+const somelib = new Somelib();
 
 export default {
   hash(data) {
@@ -35,6 +38,11 @@ export default {
           this.generate().then(data => this.handle(store, data));
         }, 500);
       }
+    },
+    sess({store}, id) {
+      const tokenId = somelib.let('tokenId', id);
+      store.commit('client/sess', tokenId);
+      return tokenId;
     },
   },
 };

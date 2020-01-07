@@ -1,21 +1,20 @@
 <script>
 import HeaderBar from '~widgets/HeaderBar';
 
-import InfoDialog from '~dialogs/InfoDialog';
 import AppSettings from '~widgets/AppSettings';
+import Notifications from '~modules/Notifications';
 import ColorContactIcon from '~components/contacts/ColorContactIcon';
 
 export default {
   data() {
     return {
       attempt: 0,
-      notificaton: false,
     };
   },
   components: {
     AppSettings,
     HeaderBar,
-    InfoDialog,
+    Notifications,
     ColorContactIcon,
   },
   mounted() {
@@ -94,9 +93,7 @@ export default {
             <span class="header-bar__title limit" v-text="signature"></span>
             <ColorContactIcon :item="item" size="small-icon"/>
           </div>
-          <div class="header-bar__button" @click="notificaton = true">
-            <i class="material-icons">&#xE7F4;</i>
-          </div>
+          <Notifications />
         </div>
 
         <div class="header-bar__button" v-show="!authorized"
@@ -118,14 +115,6 @@ export default {
       </div>
     </div>
 
-
-    <InfoDialog v-if="notificaton"
-      @close="notificaton = false">
-      <div slot="title">Уведомлений нет</div>
-      Здесь будут информационные уведомления и
-      уведомления от службы поддержки.
-    </InfoDialog>
-
   </HeaderBar>
 </template>
 
@@ -140,6 +129,19 @@ export default {
     font-size: 18px;
     margin-right: 5px;
     cursor: pointer;
+  }
+
+  &__status {
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    bottom: 0px;
+    right: -3px;
+    display: inline-block;
+    border-radius: 10px;
+    box-shadow: 0 0 0 2px @menu-color;
+    vertical-align: middle;
+    background-color: @pink-dark;
   }
 }
 </style>

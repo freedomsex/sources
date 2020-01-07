@@ -3,6 +3,7 @@ export default {
   state: {
     data: '',
     hash: '',
+    sess: '',
   },
   mutations: {
     data(state, value) {
@@ -10,6 +11,9 @@ export default {
     },
     hash(state, value) {
       state.hash = value;
+    },
+    sess(state, value) {
+      state.sess = value;
     },
   },
 };

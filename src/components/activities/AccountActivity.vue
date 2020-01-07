@@ -1,5 +1,5 @@
 <script>
-import AccountComponent from '~components/AccountComponent';
+import AccountComponent from '@freedomsex/account-component';
 import ActivityActions from '~activities/ActivityActions';
 
 export default {
