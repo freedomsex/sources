@@ -12,10 +12,21 @@
   </aside>
   <div class="row">
     <nav class="preloader" v-show="!ready">
-      <!-- <div class="preloader__img"></div> -->
-      ${require('~templates/preloader-raw-svg.htm')}
-      <div class="preloader__hint" v-html="$t('preloader')">
-        Поиск анкет, всегда бесплатно
+      <div v-if="!renderTimeout">
+        <!-- <div class="preloader__img"></div> -->
+        ${require('~templates/preloader-raw-svg.htm')}
+        <div class="preloader__hint" v-html="$t('preloader')">
+          Поиск анкет, всегда бесплатно
+        </div>
+      </div>
+      <div v-else>
+        <div class="preloader__hint" data-nosnippet>
+          Результат устарел или недоступен
+        </div>
+        <button class="btn btn-default" @click="reload()">
+          <span aria-hidden="true" class="glyphicon glyphicon-repeat"></span>
+          Обновить
+        </button>
       </div>
     </nav>
 

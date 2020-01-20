@@ -166,7 +166,7 @@ export default {
     min-width: @size;
     min-height: @size;
     margin-right: 3px;
-    background-color: @gray-light;
+    background-color: @dark-light;
     position: relative;
   }
 

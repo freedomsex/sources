@@ -93,6 +93,7 @@ global.App = new Vue({
       action: '',
     },
     scrollbarWidth: 15,
+    renderTimeout: false,
   },
   created() {
     this.$service.run('auth/tick');

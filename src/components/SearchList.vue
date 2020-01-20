@@ -105,8 +105,13 @@ export default {
       this.$store.commit('results/results', this.defaults);
       this.onLoad();
     },
+    resetRenderTimeout(time) {
+      this.$root.renderTimeout = false;
+      setTimeout(() => { this.$root.renderTimeout = true; }, time);
+    },
     load() {
       this.response = 0;
+      this.resetRenderTimeout(7 * 1000);
       const params = {
         who: this.who,
         city: this.city,
@@ -281,6 +286,7 @@ export default {
     background-image: url('~static/img/preloader.gif');
   }
   &__hint {
+    margin-bottom: @indent-md;
     color: @gray-dark;
   }
 }
