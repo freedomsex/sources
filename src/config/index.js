@@ -21,7 +21,7 @@ const config = {
     API_DIALOG: 'https://dialog.a4sex.net',
     API_MAILER: 'https://mailer.a4sex.net',
     API_NOTICE: 'https://notice.a4sex.net',
-    PROTECT_LINK: 'http://admin4sex.com',
+    PROTECT_LINK: 'https://admin4sex.com',
   },
   get(env) {
     return this[env];

@@ -29,7 +29,7 @@ export default {
       return this.$store.state.accepts.moderator;
     },
     adminka() {
-      return `${CONFIG.PROTECT_LINK}/index/token/`;
+      return `${CONFIG.PROTECT_LINK}/index/token/#/auth-sync/`;
     },
   },
   methods: {
