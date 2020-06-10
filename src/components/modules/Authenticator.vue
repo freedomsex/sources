@@ -3,11 +3,12 @@ import expunix from 'expires-unixtime';
 import TTLColorBadge from '~modules/TTLColorBadge';
 import ConfirmDialog from '~dialogs/ConfirmDialog';
 import cookies from '~assets/legacy/utils/cookies'; // TODO: remove
+import Visiter from '~modules/Visiter'; // Обновление "онлайн"
 
 export default {
   data: () => ({
     left: 0,
-    trigger: 200,
+    trigger: 60,
     attempt: 0,
     available: false,
     expired: true,
@@ -20,6 +21,7 @@ export default {
   components: {
     TTLColorBadge,
     ConfirmDialog,
+    Visiter,
   },
   mounted() {
     this.verify();
@@ -119,6 +121,7 @@ export default {
   <div>
     <div class="authenticator" v-show="1 || auth && left">
       <TTLColorBadge @refresh="refresh" :left="left" :accent="trigger"/>
+      <Visiter />
     </div>
 
     <ConfirmDialog v-if="!skipError && !process && alert"

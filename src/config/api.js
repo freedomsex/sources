@@ -16,6 +16,12 @@ resourses.raw = {
   routing: {},
 };
 
+resourses.verify = {
+  host: config.API_VIRIFY,
+  prefix: '',
+  version: '',
+};
+
 resourses.mailer = {
   host: config.API_MAILER,
   prefix: 'mailer/api',
@@ -62,6 +68,12 @@ resourses.notice = {
   prefix: 'api',
   version: '',
   host: config.API_NOTICE,
+};
+
+resourses.a4sex = {
+  prefix: 'api',
+  version: '',
+  host: config.API_A4SEX,
 };
 
 

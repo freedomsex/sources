@@ -70,7 +70,6 @@ export default {
         hash: hasher.random(),
       }).then(({data}) => {
         this.onLoad(data);
-        console.log(data);
       })
         .catch((error) => {
           this.onError(error);
@@ -163,7 +162,7 @@ export default {
       return this.toSlow && !this.error && !this.response;
     },
     replyCount() {
-      return _.where(this.messages, {from: `${this.userId}`}).length;
+      return _.where(this.messages, {sender: this.humanId}).length;
     },
     more() {
       if (this.received && this.received == this.batch) {

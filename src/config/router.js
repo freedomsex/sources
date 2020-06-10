@@ -261,6 +261,10 @@ const routes = [
     path: '/feedback',
     component: () => import('~activities/notice/FeedbackActivity'),
   },
+  {
+    path: '/limitations',
+    component: () => import('~activities/credits/LimitationsActivity'),
+  },
 ];
 
 const router = new VueRouter({

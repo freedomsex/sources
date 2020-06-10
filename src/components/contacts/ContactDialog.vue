@@ -22,6 +22,9 @@ export default {
     BigIconPlaceholder,
   },
   computed: {
+    sex() {
+      return this.$store.state.user.sex;
+    },
     showLoader() {
       return this.slow && !this.response;
     },
@@ -130,6 +133,9 @@ export default {
   &__next {
     text-align: center;
     margin: 10px 0 15px;
+  }
+  &__alerts {
+    padding: 0 @indent-xs;
   }
 }
 

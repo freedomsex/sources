@@ -21,6 +21,7 @@ import AuthBoard from '~widgets/AuthBoard';
 import UpdateAvailable from '~widgets/UpdateAvailable';
 import SearchWizard from '~widgets/SearchWizard';
 import AlertWidget from '~widgets/AlertWidget';
+import BanAlert from '~widgets/BanAlert';
 
 import SearchList from '~components/SearchList';
 import SliderFooter from '~components/SliderFooter';
@@ -38,6 +39,7 @@ import Authenticator from '~modules/Authenticator';
 import Recaptcha3v from '~modules/Recaptcha3v';
 import PhotoLineWidget from '~widgets/PhotoLineWidget';
 import FeedbackButtons from '~widgets/FeedbackButtons';
+import LimitationsWidget from '~widgets/LimitationsWidget';
 
 import 'styles/core/body.less';
 
@@ -114,6 +116,9 @@ global.App = new Vue({
     this.scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
   },
   computed: {
+    user() {
+      return this.$store.state.user;
+    },
     simple() {
       return this.$store.state.simple;
     },
@@ -205,6 +210,7 @@ global.App = new Vue({
     SliderFooter,
     DesiresWidget,
     AlertWidget,
+    BanAlert,
     CityWidget,
     RegistrationPromo,
     BottomNav,
@@ -216,6 +222,7 @@ global.App = new Vue({
     Recaptcha3v,
     PhotoLineWidget,
     FeedbackButtons,
+    LimitationsWidget,
   },
 });
 

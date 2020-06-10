@@ -36,4 +36,6 @@
   </div>
 </div>
 
+<limitations-widget v-if="!user.vip || !user.vip.status"></limitations-widget>
+
 <desires-widget :tags="tags" v-if="tags.length"></desires-widget>

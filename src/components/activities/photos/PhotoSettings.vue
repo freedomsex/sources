@@ -90,6 +90,13 @@ export default {
       <input id="fileupload" type="file" name="file" data-form-data='{"script": "true"}'>
     </div>
 
+    <div class="alert alert-warning" v-if="$store.state.user.sex === 1">
+      <b>Сохраняйте анонимность</b>. Не отправляйте интимные фото, если вы мало знакомы.
+      Отправляйте только их или только лицо. Не отправляйте фото лица или селфи полность обнаженного тела.
+      Мошенники смогут найти вас, ваших друзей, родственников и коллег по работе в соцсетях, по номеру телефона или
+      по фотографии вашего лица. Вас будут шантажировать вашими же фотографиями или записью видео вашей мастурбации.
+    </div>
+
 
     <div class="activity-section" v-if="photos.length < 5">
       <div class="activity-section__tile">
@@ -105,6 +112,7 @@ export default {
         <a class="activity-section__link" href="http://docs.freedomsex.info/blog/#/Как-пользоваться/Где-фотографии" target="_blank">Узнать больше о фотографиях...</a>
       </div>
     </div>
+
 
     <InfoDialog @close="photoAlert = false" v-if="photoAlert">
       Загрузите новое фото. Для предупреждения использования чужих фото,

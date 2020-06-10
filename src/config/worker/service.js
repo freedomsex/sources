@@ -12,6 +12,7 @@ import client from './modules/client';
 import security from './modules/security';
 import notice from './modules/notice';
 import feedback from './modules/feedback';
+import moderator from './modules/moderator';
 
 import initials from './modules/contacts/initials';
 import intimates from './modules/contacts/intimates';
@@ -46,6 +47,7 @@ const worker = new Worker({
     client,
     notice,
     feedback,
+    moderator,
   },
 });
 

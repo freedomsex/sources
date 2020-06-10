@@ -1,6 +1,4 @@
 <script>
-import axios from 'axios';
-import CONFIG from '~config/';
 import hasher from '~legacy/utils/simple-hash';
 
 export default {
@@ -44,16 +42,15 @@ export default {
 
     start() {
       this.process = true;
-      axios.get(`${CONFIG.API_VIRIFY}/time?hash=${hasher.random()}`).then(({data}) => {
+      this.$api.res('time', 'verify').load({hash: hasher.random()}).then(({data}) => {
         this.id = data.id;
-        console.log('time', data.time);
         this.wait(data.time);
       }).catch(() => {
         this.process = false;
       });
     },
     getToken() {
-      axios.post(`${CONFIG.API_VIRIFY}/token`, {id: this.id}).then(({data}) => {
+      this.$api.res('token', 'verify').post({id: this.id}).then(({data}) => {
         if (data.token) {
           this.token = data.token;
           this.expires = data.token.split('.', 3)[1];
@@ -69,7 +66,7 @@ export default {
 
 
     draw() {
-      axios.get(`${CONFIG.API_VIRIFY}/image/${this.token}`).then(({data}) => {
+      this.$api.res(`image/${this.token}`, 'verify').load().then(({data}) => {
         this.process = false;
         this.image = `data:image/jpeg;base64,${data.image}`;
         this.updated = this.now();

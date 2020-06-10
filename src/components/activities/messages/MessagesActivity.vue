@@ -110,7 +110,6 @@ export default {
            @close="close"/>
         </div>
       </div>
-
     </ActivityActions>
   </div>
 </template>

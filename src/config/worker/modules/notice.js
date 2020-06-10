@@ -19,7 +19,7 @@ export default {
       });
     },
     async texts({api, store}) {
-      const {data} = await api.res('notice_texts', 'notice').load();
+      const {data} = await api.res('notice_texts', 'notice').load({pagination: false});
       store.commit('notice/storeTexts', data);
     },
   },

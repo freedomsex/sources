@@ -13,7 +13,6 @@ export default {
     },
     toggle() {
       this.$store.commit('pasting', true);
-      console.log('autoPaste', this.$store.state.autoPaste);
     },
   },
   components: {

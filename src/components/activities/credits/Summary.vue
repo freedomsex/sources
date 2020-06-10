@@ -17,6 +17,7 @@ export default {
         },
       },
       confirm: false,
+      bounty: true,
     };
   },
   mounted() {
@@ -26,6 +27,8 @@ export default {
       this.user.vip.credits = data.credits;
       this.loadStop();
     });
+
+    this.$service.run('moderator/sync');
   },
   computed: {
     // user() {
@@ -50,6 +53,10 @@ export default {
       this.$router.push('/protect');
       this.confirm = false;
     },
+    bountyRequest() {
+      this.bounty = false;
+      this.$api.res('bounty/take', 'verify').post();
+    },
   },
   components: {
     ActivityActions,
@@ -63,6 +70,15 @@ export default {
 
 <template>
   <ActivityActions caption="Доверие" type="wrapped" @close="$emit('close')">
+
+    <template slot="option">
+      <div class="header-bar__button" @click="">
+        <a class="header-bar__title" href="http://docs.freedomsex.info/blog/#/Как-пользоваться/Кредиты-доверия" target="_blank">
+          Информация
+        </a>
+        <i class="material-icons">&#xE88F;</i>
+      </div>
+    </template>
 
     <div class="activity-section">
       Кредиты доверия позволяют проходить все проверки
@@ -118,6 +134,33 @@ export default {
       <a class="btn btn-link" href="http://docs.freedomsex.info/blog/#/Как-пользоваться/Кредиты-доверия?id=Статус-анкеты" target="_blank">
         Подробнее...
       </a>
+    </div>
+
+    <div class="activity-section">
+      <div class="activity-section__title">
+        Ежедневный бонус
+      </div>
+
+      <div class="activity-section__tile">
+        <span>Нажмите на кнопку, чтобы проверить наличие подарка.</span>
+        <Tooltip>
+          Каждый день вы можете получить Кредиты доверия в подарок.
+          Наличие, а также размер подарка определяется в момент нажатия на кнопку.
+        </Tooltip>
+      </div>
+
+      <div class="activity__splitter"></div>
+      <button class="btn " :class="{'btn-danger': bounty}" @click="bountyRequest()" :disabled="!bounty">
+        Получить подарок
+      </button>
+
+    </div>
+
+    <div class="activity-section" v-if="!bounty">
+      <div class="alert alert-info">
+        Подарок будет добавлен в течении нескольких минут.
+        Когда у вас уже имеются Кредиты или на вас поступали жалобы, подарок добавлен не будет.
+      </div>
     </div>
 
     <ConfirmDialog v-if="confirm"

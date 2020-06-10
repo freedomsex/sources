@@ -11,6 +11,7 @@ import MessangerService from '~modules/MessangerService';
 import HornMessageProblem from '~modules/HornMessageProblem';
 import ColorContactIcon from '~components/contacts/ColorContactIcon';
 import StickersActivity from '~activities/StickersActivity';
+import SafeActivity from '~activities/messages/SafeActivity';
 
 import SmartInsert from '~dialogs/SmartInsert';
 
@@ -25,6 +26,8 @@ export default {
       photo: false,
       photoIsRemoved: false,
       ignores: {},
+
+      variants: false,
 
       insert: false,
       notepad: false,
@@ -49,6 +52,13 @@ export default {
     },
     completed() {
       return !(this.user.city && this.user.age && this.user.name);
+    },
+
+    safe() {
+      if ((!this.count || this.count < 3) && this.variants) {
+        return true;
+      }
+      return false;
     },
   },
   methods: {
@@ -136,6 +146,7 @@ export default {
     ColorContactIcon,
     SmartInsert,
     StickersActivity,
+    SafeActivity,
   },
 };
 </script>
@@ -165,6 +176,7 @@ export default {
          v-model="message" v-resized
          :disabled="process == true"
          :placeholder="process ? $t('sending') : $t('placeholder')"
+         @focus="variants = true"
          @keyup.ctrl.enter.prevent="sendMessage"></textarea>
       </div>
 
@@ -192,6 +204,12 @@ export default {
       @close="cliche = false"/>
     <StickersActivity v-if="sticker"
       @close="sticker = false"/>
+
+
+    <SafeActivity v-if="safe"
+     :text="message"
+     @select="setText"
+     @close="variants = false"/>
 
     <MessangerService
      :id="humanId"

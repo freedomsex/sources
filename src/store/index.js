@@ -22,6 +22,7 @@ import message from './message';
 import client from './client';
 import notice from './notice';
 import feedback from './feedback';
+import moderator from './moderator';
 
 import {initials, intimates, offers} from './contacts';
 
@@ -69,6 +70,7 @@ const store = new Vuex.Store({
     offers,
     notice,
     feedback,
+    moderator,
   },
   state: {
     back: null,
@@ -84,6 +86,7 @@ const store = new Vuex.Store({
     promt: false,
     // scrolling: false,
     autoPaste: true,
+    trustCheck: true,
     clientId: null,
     verified: false,
   },
@@ -95,10 +98,10 @@ const store = new Vuex.Store({
       state.authorized = (value === true);
     },
     simple(state, data) {
-      state.simple = data == true;
+      state.simple = data === true;
     },
     ready(state, data) {
-      state.ready = data == true;
+      state.ready = data === true;
     },
     verify(state) {
       state.verified = true;
@@ -109,8 +112,11 @@ const store = new Vuex.Store({
     },
 
     pasting(state, data) {
-      console.log('pasting', [state.autoPaste, data]);
-      state.autoPaste = data == true;
+      state.autoPaste = data === true;
+    },
+
+    trusting(state) {
+      state.trustCheck = state.trustCheck === false;
     },
     mute(state) {
       state.mute = state.mute !== true;
@@ -124,13 +130,13 @@ const store = new Vuex.Store({
       }
     },
     promted(state, data) {
-      state.promt = data == true;
+      state.promt = data === true;
     },
     // stopScrolling(state, value) {
     //   state.scrolling = (value === true);
     // },
     updateAvailable(state, value) {
-      state.update = (value == true);
+      state.update = (value === true);
     },
   },
   getters: {

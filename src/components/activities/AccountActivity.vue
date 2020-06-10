@@ -1,6 +1,7 @@
 <script>
 import AccountComponent from '@freedomsex/account-component';
 import ActivityActions from '~activities/ActivityActions';
+import CONFIG from '~config/index';
 
 export default {
   props: ['humanId'],
@@ -12,6 +13,9 @@ export default {
   computed: {
     human() {
       return this.$store.state.human;
+    },
+    profile() {
+      return `${CONFIG.PROTECT_LINK}/admin/closed/#/user-profile/${this.human.id}`;
     },
   },
   mounted() {
@@ -52,6 +56,13 @@ export default {
      :human="human"
      :key="humanId"
      v-if="human"/>
+
+    <div v-if="$store.state.token.roles.includes('ROLE_ADMINISTRATOR')">
+      <a class="btn btn-default btn-sm" :href="profile" target="_blank">
+        <span aria-hidden="true" class="glyphicon glyphicon-wrench"></span>
+        Открыть профиль
+      </a>
+    </div>
   </ActivityActions>
 </template>
 

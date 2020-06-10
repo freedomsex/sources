@@ -1,4 +1,5 @@
 <script>
+import _ from 'underscore';
 import ConfirmDialog from '~dialogs/ConfirmDialog';
 import ActivityActions from '~activities/ActivityActions';
 import CONFIG from '~config/index';
@@ -20,6 +21,7 @@ export default {
   },
   mounted() {
     this.load();
+    this.sync();
   },
   computed: {
     human() {
@@ -33,6 +35,10 @@ export default {
     },
   },
   methods: {
+    sync: _.debounce(function f() {
+      this.$service.run('moderator/sync');
+    }, 30 * 1000, true),
+
     approve() {
       this.process = true;
       this.$api.res('moder/promt', 'raw').post().then(() => {
@@ -81,6 +87,7 @@ export default {
       this.$api.res('moder/press', 'raw').post(data).then(() => {
         this.load();
       });
+      this.sync();
     },
     close() {
       this.$emit('close');
@@ -110,6 +117,13 @@ export default {
         </form>
       </template>
 
+      <div class="" v-if="$store.state.moderator.lock">
+        <div class="alert alert-warning">
+          Достигнут лимит. Нам нужно
+          время чтобы всё проверить и начислить вам бонусы в виде Кредитов доверия.
+        </div>
+      </div>
+
       <div v-if="error == 'count'">
         <div class="activity-section__title">
           Спасибо. Сообщения скоро будут.
@@ -136,46 +150,60 @@ export default {
       </div>
 
       <div v-if="accept && !error">
-          <div class="activity-section">
-            <div class="activity-section__title">Нужно ли наказать за это?</div>
-            <div class="hint-info" style="font-size: 14px; ">
-               {{message.text}}
-            </div>
-          </div>
-          <div class="activity-section">
-            <button class="btn btn-primary"
-             @click="process ? null : action(1)"
-             :disabled="process"> Да, наказать </button>
-            <button class="btn btn-default"
-             @click="process ? null : action(-1)"
-             :disabled="process"> Нет, отклонить </button>
-            <button class="btn btn-link"
-             @click="process ? null : action(0)"
-             :disabled="process"> Пропустить </button>
-            <!--
-            <select>
-              <option>Без отметки</option>
-              <option>Предложение интим услуг</option>
-              <option>Мошенники, просьба перевода денег</option>
-              <option>Ссылка на другой сайт, спам</option>
-              <option>Грубые намеренные оскорбления</option>
-            </select>-->
-          </div>
-
-          <div id="" class="" style="font-size: 14px; margin-bottom: 10px; color: #777;">
-              Просто ответьте, соответствует ли текст сообщения нарушению или нет. Нарушитель получит новую порцию наказания, если вы подтвердите это.
-          </div>
-
-          <div id="" class="" style="font-size: 12px; color: #999; margin-bottom: 0px;">
-            Нажмите "Да", если текст содержит грубое оскорбление собеседника,
-            предложение интим услуг или мошеннические схемы.
-            Нажмите "Нет", если не считаете нужным наказывать
-            за содержание текста.
-            <a class="link_simple"
-             href="http://docs.freedomsex.info/blog/#/Сообщество/Администрирование?id=Интерфейс-модератора"
-             target="_blank">Подробнее..</a>
+        <div class="activity-section">
+          <div class="activity-section__title">Нужно ли наказать за это?</div>
+          <div class="hint-info" style="font-size: 14px; ">
+             {{message.text}}
           </div>
         </div>
+        <div class="activity-section">
+          <button class="btn btn-primary"
+           @click="process ? null : action(1)"
+           :disabled="process"> Да, наказать </button>
+          <button class="btn btn-default"
+           @click="process ? null : action(-1)"
+           :disabled="process"> Нет, отклонить </button>
+          <button class="btn btn-link"
+           @click="process ? null : action(0)"
+           :disabled="process"> Пропустить </button>
+          <!--
+          <select>
+            <option>Без отметки</option>
+            <option>Предложение интим услуг</option>
+            <option>Мошенники, просьба перевода денег</option>
+            <option>Ссылка на другой сайт, спам</option>
+            <option>Грубые намеренные оскорбления</option>
+          </select>-->
+        </div>
+
+        <div id="" class="" style="font-size: 14px; margin-bottom: 10px; color: #777;">
+          Просто ответьте, соответствует ли текст сообщения нарушению или нет.
+          Нарушитель получит новую порцию наказания, если вы подтвердите это.
+        </div>
+
+        <div class="activity-section">
+          <div class="alert alert-warning">
+            <b>Популярная схема мошенничества сейчас:</b> приглашать в телеграм или скайп и указывать логин сразу.
+            Ниже приведен список примеров. По таким жалобам нужно выбрать "Наказать", а далее "Блокировать"
+            <ul>
+              <li>Пиши в тележку selxbo</li>
+              <li>baglkin моя телеграмка</li>
+              <li>Моя тележенька llaofn</li>
+              <li>Привет пиши в телеграмочку poinx жду</li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="" class="" style="font-size: 12px; color: #999; margin-bottom: 0px;">
+          Нажмите "Да", если текст содержит грубое оскорбление собеседника,
+          предложение интим услуг или мошеннические схемы.
+          Нажмите "Нет", если не считаете нужным наказывать
+          за содержание текста.
+          <a class="link_simple"
+           href="http://docs.freedomsex.info/blog/#/Сообщество/Администрирование?id=Интерфейс-модератора"
+           target="_blank">Подробнее..</a>
+        </div>
+      </div>
 
     </ActivityActions>
 

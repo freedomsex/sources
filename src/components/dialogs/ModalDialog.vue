@@ -47,10 +47,11 @@ export default {
     justify-content: center;
     flex-direction: column;
     min-height: 100%;
+    padding: 2px;
   }
 
   &__wrapper {
-    padding: @indent-md;
+    padding: @indent-md @indent-sm;
     text-align: left;
     white-space: normal;
     &.capped {

@@ -12,5 +12,11 @@ export default {
         console.log('! Ошибка загрузки визитов !');
       });
     },
+    visit({api, store}) {
+      const {uid, access} = store.state.token;
+      if (uid && access) {
+        api.res('visit', 'verify').post();
+      }
+    },
   },
 };

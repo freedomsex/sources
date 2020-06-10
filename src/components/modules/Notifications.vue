@@ -23,7 +23,9 @@ export default {
   },
   methods: {
     load() {
-      this.$service.run('notice/load');
+      if (this.$store.state.authorized) {
+        this.$service.run('notice/load');
+      }
     },
     route() {
       if (this.count) {

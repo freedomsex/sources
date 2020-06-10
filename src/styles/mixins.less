@@ -10,11 +10,16 @@
 }
 
 .list-item() {
+  height: auto;
   min-height: 40px;
   padding: @indent-sm @indent-sm;
-  border-bottom: 1px solid @gray-light;
+  border: 1px solid @gray-light;
+  border-width: 0px 0 1px;
   position: relative;
   background: @white;
+  &.reversed {
+    border-width: 1px 0 0px;
+  }
 }
 
 
@@ -82,7 +87,7 @@
 /////////////////////////////////
 
 .widget {
-  .split-top;
+  .split-top();
   background: @white;
   &__caption {
     padding: @indent-sm @indent-md;

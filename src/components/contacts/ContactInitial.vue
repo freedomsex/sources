@@ -117,6 +117,18 @@ export default {
         </div>
       </div>
 
+      <div class="contact-list__alerts" v-if="sex === 1 && count && count < batch">
+        <div class="alert alert-warning">
+          <b>Девушки не напишут вам сами</b>, так поступают только мошенники.
+          Отправляйте жалобы на них. Сохраняйте особую осторожность при общении,
+          если девушка начинает диалог сама.
+        </div>
+        <div class="alert alert-danger">
+          <b>Игнорируйте просьбы перейти в мессенджер</b>, соцсеть, скайп, телеграм.
+          Если такая просьба поступает в самом начале общения, это мошенники.
+        </div>
+      </div>
+
       <BigIconPlaceholder icon="&#xE001;" text="Ошибка списка" v-else-if="error"/>
       <BigIconPlaceholder icon="&#xE87E;" text="Список пуст" v-else-if="empty"/>
 
