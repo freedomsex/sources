@@ -9,7 +9,7 @@ export default {
 </script>
 
 <template>
-  <InfoDialog @close="$emit('close')" v-else>
+  <InfoDialog @close="$emit('close')">
     <span slot="title">Письмо отправлено</span>
     Доставка письма занимает от секунды до нескольких минут.
     Если письма долго нет - проверьте папку спам, особенно
