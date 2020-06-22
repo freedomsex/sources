@@ -51,7 +51,7 @@ export default {
       const auto = !name && this.sex ? this.autoName() : '';
       return name || auto;
     },
-    range: () => _.range(16, 81),
+    range: () => _.range(18, 81),
   }),
   created() {
     /* globals defaultSettings:false */

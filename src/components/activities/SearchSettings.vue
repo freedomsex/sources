@@ -7,7 +7,7 @@ export default {
   props: ['root'],
   data() {
     return {
-      ageRange: [0, 16, 17, 18, 20, 23, 25, 27, 30, 35, 40, 45, 50, 60, 80],
+      ageRange: [0, 18, 20, 23, 25, 27, 30, 35, 40, 45, 50, 60, 80],
       selectUp: 0,
       selectTo: 0,
       selectCity: '',
