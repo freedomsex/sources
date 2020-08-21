@@ -15,6 +15,7 @@ import {router, settingsRouter} from '~config/router';
 
 import MenuUser from '~modules/MenuUser';
 import AdTop from '~modules/AdTop';
+import AdAlert from '~modules/AdAlert';
 
 import InfoWidget from '~widgets/InfoWidget';
 import AuthBoard from '~widgets/AuthBoard';
@@ -206,6 +207,7 @@ global.App = new Vue({
     UpdateAvailable,
     SearchWizard,
     AdTop,
+    AdAlert,
     SearchList,
     SliderFooter,
     DesiresWidget,

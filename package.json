@@ -1,5 +1,5 @@
 {
-  "version": "3.7.4",
+  "version": "3.7.7",
   "private": true,
   "scripts": {
     "dev": "webpack --config webpack.dev.js --watch --progress --hide-modules",

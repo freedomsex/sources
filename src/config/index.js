@@ -11,6 +11,7 @@ const config = {
     API_NOTICE: 'http://127.0.0.1:8000',
     API_A4SEX: 'http://127.0.0.1:8000',
     PROTECT_LINK: 'http://adb.me',
+    EVENT_SERVER: '',
   },
   production: {
     NET_DELAY: 0,
@@ -24,6 +25,7 @@ const config = {
     API_NOTICE: 'https://notice.a4sex.net',
     API_A4SEX: 'https://a4sex.net',
     PROTECT_LINK: 'https://admin4sex.com',
+    EVENT_SERVER: '',
   },
   get(env) {
     return this[env];

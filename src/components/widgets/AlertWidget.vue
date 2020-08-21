@@ -53,20 +53,4 @@ export default {
   }
 }
 
-.freedom-alert-1 {
-  .widget();
-  margin-top: 5px;
-  background: #f5ca59;
-  color: @dark;
-  padding: @indent-sm @indent-md;
-  cursor: pointer;
-  a {
-    color: @dark;
-    text-decoration: none;
-    &:hover {
-      color: @dark-light;
-      text-decoration: none;
-    }
-  }
-}
 </style>
