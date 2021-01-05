@@ -10,7 +10,7 @@
   "dependencies": {
     "@freedomsex/account-component": "^1.0.4",
     "@freedomsex/text-censor": "0.0.4",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "axios-rest-api": "^0.1.15",
     "babel-polyfill": "^6.26.0",
     "dexie": "^2.0.4",
