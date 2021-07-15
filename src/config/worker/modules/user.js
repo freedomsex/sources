@@ -23,18 +23,24 @@ export default {
 
     load({api, store}) {
       const {uid} = store.state.token;
-      return api.res('search').get({id: uid}).then(({data}) => {
-        store.commit('resetUser', data);
-        store.commit('search/restore', data);
-      });
+      return api
+        .res('users', 'search')
+        .get({id: uid})
+        .then(({data}) => {
+          store.commit('resetUser', data);
+          store.commit('search/restore', data);
+        });
     },
 
     sex({api, store, root}, {sex, token}) {
       store.commit('loadUser', {sex, name: ''});
-      return api.res('option/sex', 'raw').post({sex, token}).then(() => {
-        root.run('user/autoAge');
-        root.run('user/autoCity');
-      });
+      return api
+        .res('option/sex', 'raw')
+        .post({sex, token})
+        .then(() => {
+          root.run('user/autoAge');
+          root.run('user/autoCity');
+        });
     },
 
     age({api, store}, age) {
@@ -53,23 +59,32 @@ export default {
 
     name({api, store}, name) {
       if (name && store.state.name != name) {
-        return api.res('option/name', 'raw').post({name}).then(() => {
-          store.commit('loadUser', {name});
-        });
+        return api
+          .res('option/name', 'raw')
+          .post({name})
+          .then(() => {
+            store.commit('loadUser', {name});
+          });
       }
       return Promise.resolve();
     },
 
     about({api, store}, data) {
-      api.res('option/anketa', 'raw').save({anketa: data}).then(() => {
-        store.commit('about/update', data);
-      });
+      api
+        .res('option/anketa', 'raw')
+        .save({anketa: data})
+        .then(() => {
+          store.commit('about/update', data);
+        });
     },
 
     anketa({api, store}) {
-      return api.res('sync/anketa', 'raw').load().then(({data}) => {
-        store.commit('about/update', data);
-      });
+      return api
+        .res('sync/anketa', 'raw')
+        .load()
+        .then(({data}) => {
+          store.commit('about/update', data);
+        });
     },
 
     search({api, store}, data) {

@@ -24,20 +24,22 @@ export default {
     ColorContactIcon,
     ColoredUserInfo,
   },
+  mounted() {
+    // do something after mounting vue instance
+    console.log(this.item);
+  },
   computed: {
     message() {
-      return this.item.message ? this.item.message.text : '';
+      return this.item.dialog ? this.item.dialog.message : '';
     },
     unread() {
-      return this.item.message ? this.item.message.unread : 0;
+      return this.item.dialog ? this.item.dialog.unread : 0;
     },
     sent() {
-      return this.item.message
-        ? this.item.message.sender == this.$store.state.token.uid
-        : 0;
+      return this.item.dialog ? this.item.dialog.fromId == this.$store.state.token.uid : 0;
     },
     humanId() {
-      return this.item.human_id;
+      return this.item.human.id;
     },
     acceptSettings() {
       return this.$store.state.accepts.settings;
@@ -67,19 +69,21 @@ export default {
         id: this.humanId,
         message: this.message,
       });
-      this.$service.run('human/save', this.item.user);
+      this.$service.run('human/save', this.item.human);
       this.$service.run('human/update', {
         id: this.humanId,
-        userpic: this.item.userpic,
+        userpic: this.item.human.userpic,
       });
     },
     reply() {
       this.$emit('read', this.index);
-      this.$router.push({name: 'quickReply',
+      this.$router.push({
+        name: 'quickReply',
         params: {
           humanId: this.humanId,
           index: this.index,
-        }});
+        },
+      });
     },
     dialog() {
       this.$emit('read', this.index);
@@ -120,57 +124,52 @@ export default {
 <template>
   <div class="contact-item" :class="{idle: idle}">
     <div class="contact-item__photo" @click="show">
-      <ColorContactIcon :uid="humanId" :item="item.user" :src="userpic"/>
+      <ColorContactIcon :uid="humanId" :item="item.human" :src="userpic" />
     </div>
     <div class="contact-item__content" @click="show">
       <div class="contact-item__info">
-        <ColoredUserInfo :user="item.user" :idle="idle"/>
+        <ColoredUserInfo :user="item.human" :idle="idle" />
       </div>
       <div class="contact-item__preview">
         <span class="contact-item__status-read" :class="{idle: idle}" v-if="unread"></span>
-        <span aria-hidden="true"
-         class="glyphicon glyphicon-chevron-left contact-item__status-send"
-         v-else v-show="sent"></span>
+        <span
+          aria-hidden="true"
+          class="glyphicon glyphicon-chevron-left contact-item__status-send"
+          v-else
+          v-show="sent"
+        ></span>
 
         <span class="contact-item__message" :class="{idle: idle}">
-          <CensoredText :text="message"
-           :bypass="sent" :passive="true"/>
+          <CensoredText :text="message" :bypass="sent" :passive="true" />
         </span>
       </div>
     </div>
-    <div class="contact-item__edit"
-     :class="{idle: idle}"
-     @click="remove(false)">
+    <div class="contact-item__edit" :class="{idle: idle}" @click="remove(false)">
       <i class="material-icons">&#xE14C;</i>
     </div>
 
-    <ConfirmDialog v-if="confirm.remove"
+    <ConfirmDialog
+      v-if="confirm.remove"
       yesText="Удалить и наказать"
       noText="Удалить"
       @confirm="bun()"
       @cancel="remove(true)"
-      @close="confirm.remove = false">
+      @close="confirm.remove = false"
+    >
       <span slot="title">Накажите как следует</span>
-      За резкие слова, за оскорбления, хамство
-      или бессмысленные сообщения,
-      накажите всех, кого считаете нужным.
-      Наказание действует сразу.
+      За резкие слова, за оскорбления, хамство или бессмысленные сообщения, накажите всех, кого
+      считаете нужным. Наказание действует сразу.
     </ConfirmDialog>
 
-    <InfoDialog v-if="confirm.accept"
-      @close="confirm.accept = false"
-      @confirm="accept()">
+    <InfoDialog v-if="confirm.accept" @close="confirm.accept = false" @confirm="accept()">
       <span slot="title">Удаляем навсегда</span>
-      Контакты удаляются без возможности возобновить общение
-      с собеседником. Обменивайтесь реальными контактами с теми
-      кто вам интересен сразу.
+      Контакты удаляются без возможности возобновить общение с собеседником. Обменивайтесь реальными
+      контактами с теми кто вам интересен сразу.
     </InfoDialog>
-
   </div>
 </template>
 
 <style lang="less">
-
 .contact-item {
   &:last-child {
     border-bottom-width: 0px;
@@ -182,7 +181,7 @@ export default {
   background: @white;
   overflow: hidden;
   font-size: 14px;
-    padding: @indent-sm @indent-xs;
+  padding: @indent-sm @indent-xs;
 
   &__photo {
     margin-right: @indent-sm;

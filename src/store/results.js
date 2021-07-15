@@ -7,7 +7,6 @@ export default {
     last: [],
     received: 0,
     next: null,
-    batch: 15,
     url: '',
   },
   mutations: {
@@ -16,18 +15,18 @@ export default {
       state.list = [];
       state.received = 0;
     },
-    results(state, {users}) {
-      state.received = users ? users.length : 0;
-      if (users && state.received) {
+    results(state, list) {
+      state.received = list ? list.length : 0;
+      if (list && state.received) {
         const ids = _.pluck(state.list, 'id');
-        const results = _.reject(users, item => (ids.indexOf(item.id) >= 0));
+        const results = _.reject(list, item => ids.indexOf(item.id) >= 0);
         state.list = _.union(state.list, results);
       }
       // state.next += state.batch;
     },
-    last(state, {users}) {
-      if (users && !state.last) {
-        state.last = users;
+    last(state, list) {
+      if (list && !state.last) {
+        state.last = list;
         // lscache.set('last-search', users, 31 * 24 * 60 * 60);
       }
     },
@@ -35,7 +34,7 @@ export default {
       if (reset) {
         state.next = 0;
       } else {
-        state.next += state.batch;
+        state.next += 1;
       }
     },
   },

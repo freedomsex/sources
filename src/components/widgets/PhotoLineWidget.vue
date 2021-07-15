@@ -1,5 +1,4 @@
 <script>
-import axios from 'axios';
 import CONFIG from '~config/';
 import ConfirmDialog from '~dialogs/ConfirmDialog';
 
@@ -35,13 +34,12 @@ export default {
     source(src) {
       return src ? `${CONFIG.API_PHOTO}${src}` : '';
     },
-    load() {
-      axios.get(`${CONFIG.API_CONTACT}/api/v1/photoline`).then(({data}) => {
-        if (data.list) {
-          this.fill(data.list);
-          this.$refs.photoline.scrollLeft = 0;
-        }
-      });
+    async load() {
+      const {data} = await this.$api.res('contact_photolines', 'initials').load();
+      if (data && data.length) {
+        this.fill(data);
+        this.$refs.photoline.scrollLeft = 0;
+      }
     },
     fill(list) {
       this.list = [];
@@ -70,7 +68,11 @@ export default {
     <div class="photo-line__container">
       <div class="photo-line__items" ref="photoline">
         <div class="photo-line__item" v-for="item in list" :key="item.id" :style="image(item)">
-          <div class="photo-line__item-blured" :style="image(item)" @click="quick(item.id)"></div>
+          <div
+            class="photo-line__item-blured"
+            :style="image(item)"
+            @click="quick(item.userId)"
+          ></div>
         </div>
       </div>
     </div>
@@ -97,14 +99,13 @@ export default {
 </template>
 
 <style lang="less">
-
 .photo-line {
   @size: 80px;
 
   &-widget {
     border-bottom: 1px solid @gray-light;
     background-color: #272727;
-      padding: @indent-md 0;
+    padding: @indent-md 0;
     position: relative;
   }
 
@@ -132,7 +133,7 @@ export default {
     // width: 100%;
     left: 0;
     right: 0;
-    background-color: rgba(#fff,.95);
+    background-color: rgba(#fff, 0.95);
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -150,7 +151,7 @@ export default {
     white-space: nowrap;
     -webkit-overflow-scrolling: touch;
     &::-webkit-scrollbar {
-        display: none;
+      display: none;
     }
   }
 

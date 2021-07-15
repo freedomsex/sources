@@ -43,6 +43,8 @@ export default {
         this.$api.res('registration/start', 'auth').post({token}).then(({data}) => {
           this.retry(data.time_token);
         });
+      }).catch(() => {
+        this.onError();
       });
     },
 

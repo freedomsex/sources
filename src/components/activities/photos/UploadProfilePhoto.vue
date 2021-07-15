@@ -15,6 +15,9 @@ export default {
   components: {
     ColorContactIcon,
   },
+  mounted() {
+    console.log('user', this.item);
+  },
   computed: {
     input() {
       return this.$refs.file;
@@ -35,33 +38,43 @@ export default {
     upload(formData) {
       this.busy = true;
       const {uid} = this.$store.state.token;
-      axios.post(`${CONFIG.API_PHOTO}/api/v1/userpic/${uid}`, formData, {
-        headers: {
-          Authorization: `Bearer ${this.$store.state.token.access}`,
-          'Content-Type': 'multipart/form-data',
-        },
-      }).then(({data}) => {
-        this.onload(data);
-      }).catch(() => {
-        this.$emit('failed');
-        this.busy = false;
-      });
+      axios
+        .post(`${CONFIG.API_PHOTO}/api/v1/userpic/${uid}`, formData, {
+          headers: {
+            Authorization: `Bearer ${this.$store.state.token.access}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+        .then(({data}) => {
+          this.onload(data);
+        })
+        .catch(() => {
+          this.$emit('failed');
+          this.busy = false;
+        });
     },
     onload({source}) {
       this.storeSource(source);
       this.$emit('loaded', source);
       this.busy = false;
     },
-    storeSource(source) {
-      const {uid} = this.$store.state.token;
-      axios.post(`${CONFIG.API_CONTACT}/api/v1/userpic/${uid}`, {source}, {
-        headers: {Authorization: `Bearer ${this.$store.state.token.access}`},
-      }).then(() => {
-        this.$store.commit('settings', {userpic: {source}});
-      }).catch(() => {
+    async storeSource(source) {
+      const {uid: userId} = this.$store.state.token;
+      const id = this.item && this.item.userpic.id;
+      // console.log('user', this.item);
+      const res = this.$api.res('contact_userpics', 'initials');
+      let data = null;
+      try {
+        if (id) {
+          ({data} = await res.put({source}, {id}));
+        } else {
+          ({data} = await res.post({userId, source}));
+        }
+      } catch (e) {
         this.$store.commit('settings', {userpic: ''});
         console.log('FAILED store Source');
-      });
+      }
+      this.$store.commit('settings', {userpic: data});
     },
     submit() {
       const formData = new FormData();
@@ -75,10 +88,10 @@ export default {
 <template>
   <div class="header-bar__button" @click="add()">
     <span class="header-bar__title">
-      {{busy ? 'Загружаю...' : 'Загрузить фото'}}
+      {{ busy ? 'Загружаю...' : 'Загрузить фото' }}
     </span>
-    <ColorContactIcon :uid="item.uid" :item="item" size="small-icon"/>
-    <input class="input-file-hidden" type="file" ref="file" @change="submit()"/>
+    <ColorContactIcon :uid="item.uid" :item="item" size="small-icon" />
+    <input class="input-file-hidden" type="file" ref="file" @change="submit()" />
   </div>
 </template>
 

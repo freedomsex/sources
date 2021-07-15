@@ -51,9 +51,9 @@ export default {
       return this.$store.state.visits.list;
     },
     accept() {
-      const {next, batch} = this.$store.state.results;
+      // const {next} = this.$store.state.results;
       const accept = this.$store.state.accepts.search;
-      return !this.ignore && !accept && next > batch;
+      return !this.ignore && !accept;
     },
     defaults() {
       // TODO: global dep for search results "defaultResults"
@@ -107,7 +107,9 @@ export default {
     },
     resetRenderTimeout(time) {
       this.$root.renderTimeout = false;
-      setTimeout(() => { this.$root.renderTimeout = true; }, time);
+      setTimeout(() => {
+        this.$root.renderTimeout = true;
+      }, time);
     },
     load() {
       this.response = 0;
@@ -118,12 +120,15 @@ export default {
         up: this.up,
         to: this.to,
       };
-      this.$service.run('search/load', params).then(() => {
-        this.onLoad();
-      }).catch(() => {
-        this.response = 200;
-        this.toSlow = false;
-      });
+      this.$service
+        .run('search/load', params)
+        .then(() => {
+          this.onLoad();
+        })
+        .catch(() => {
+          this.response = 200;
+          this.toSlow = false;
+        });
       this.$service.run('user/autoAge');
       this.$service.run('user/autoCity');
     },
@@ -159,53 +164,57 @@ export default {
     <div class="search-list">
       <div v-if="userId">
         <div class="search-list__alert" v-if="!city" @click="$router.push('wizard/city')">
-          Получайте в десять раз больше новых знакомств.
-          Укажите <span class="link_dashed">ваш город</span>  в анкете.
+          Получайте в десять раз больше новых знакомств. Укажите
+          <span class="link_dashed">ваш город</span> в анкете.
         </div>
         <div class="search-list__alert" v-else-if="!age" @click="$router.push('settings/account')">
-          Укажите <span class="link_dashed">возраст в анкете</span> и получайте
-          больше интересных знакомств.
+          Укажите <span class="link_dashed">возраст в анкете</span> и получайте больше интересных
+          знакомств.
         </div>
       </div>
 
-      <SearchItem v-for="item in items"
-       :human="item"
-       :visited="old(item.id)"
-       :gold="gold(item.tags)"
-       :key="item.id" :compact="compact"/>
+      <SearchItem
+        v-for="item in items"
+        :human="item"
+        :visited="old(item.id)"
+        :gold="gold(item.tags)"
+        :key="item.id"
+        :compact="compact"
+      />
 
       <div class="search-list__options" v-show="more">
         <NextButton
-         :show="more"
-         :ready="!loader"
-         :hold="!response"
-         :verbose="true"
-         :loader="true"
-         @next="loadNext"/>
+          :show="more"
+          :ready="!loader"
+          :hold="!response"
+          :verbose="true"
+          :loader="true"
+          @next="loadNext"
+        />
 
-        <a class="btn btn-link btn-sm" target="_blank"
-         href="http://docs.freedomsex.info/blog/#/Способ-знакомства/">
-          {{$t('Узнать больше')}}...
+        <a
+          class="btn btn-link btn-sm"
+          target="_blank"
+          href="http://docs.freedomsex.info/blog/#/Способ-знакомства/"
+        >
+          {{ $t('Узнать больше') }}...
         </a>
       </div>
     </div>
 
+    <QuickMessage
+      v-if="humanId"
+      :human-id="humanId"
+      @sended="sended = true"
+      @close="humanId = null"
+      @account="account = humanId"
+    />
+    <Snackbar v-if="sended" @close="sended = false">Сообщение отправлено.</Snackbar>
 
-    <QuickMessage v-if="humanId"
-     :human-id="humanId"
-     @sended="sended = true"
-     @close="humanId = null"
-     @account="account = humanId"/>
-    <Snackbar
-     v-if="sended"
-     @close="sended = false">Сообщение отправлено.</Snackbar>
-
-    <InfoDialog v-if="accept" @confirm="approve"
-     @close="ignore = true">
-       <slot name="title">{{$t('toTop.title')}}</slot>
-       {{$t('toTop.text')}}
+    <InfoDialog v-if="accept" @confirm="approve" @close="ignore = true">
+      <slot name="title">{{ $t('toTop.title') }}</slot>
+      {{ $t('toTop.text') }}
     </InfoDialog>
-
   </div>
 </template>
 

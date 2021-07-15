@@ -32,9 +32,7 @@ resourses.auth = {
 };
 
 resourses.search = {
-  host: config.API_SEARCH,
-  routing: {route: 'users'},
-  prefix: '',
+  host: config.API_DIALOG,
   version: '',
 };
 
@@ -44,13 +42,13 @@ resourses.search = {
 // };
 
 resourses.initials = {
-  host: config.API_CONTACT,
-  routing: {route: 'users/{uid}/initials'},
+  host: config.API_DIALOG,
+  version: '',
 };
 
 resourses.intimates = {
-  host: config.API_CONTACT,
-  routing: {route: 'users/{uid}/intimates'},
+  host: config.API_DIALOG,
+  version: '',
 };
 
 resourses.sends = {
@@ -60,8 +58,7 @@ resourses.sends = {
 
 resourses.dialog = {
   host: config.API_DIALOG,
-  routing: {route: 'users/{uid}/dialog',
-    put: 'read'},
+  routing: {route: 'users/{uid}/dialog', put: 'read'},
 };
 
 resourses.notice = {
@@ -76,10 +73,8 @@ resourses.a4sex = {
   host: config.API_A4SEX,
 };
 
-
 const api = new Api(resourses);
 export default api;
-
 
 // const retryAttempt = false;
 

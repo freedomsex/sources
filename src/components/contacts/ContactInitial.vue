@@ -26,11 +26,14 @@ export default {
   },
   methods: {
     load() {
-      this.$service.run('initials/load').then(() => {
-        this.loaded();
-      }).catch((error) => {
-        this.failed(error);
-      });
+      this.$service
+        .run('initials/load')
+        .then(() => {
+          this.loaded();
+        })
+        .catch((error) => {
+          this.failed(error);
+        });
       this.amount = this.count;
       this.hope();
     },
@@ -83,54 +86,56 @@ export default {
 <template>
   <div>
     <ActivityActions :caption="$t('Знакомства')" @close="close">
-
       <template slot="option">
         <div class="header-bar__button" @click="$router.push('/settings/search')">
           <i class="material-icons">&#xE8B9;</i>
           <span class="header-bar__title">
-            {{$t('Настроить')}}
+            {{ $t('Настроить') }}
           </span>
         </div>
       </template>
 
       <div v-if="count">
         <div class="contact-list">
-          <ContactItem v-for="(item, index) in contacts" :key="item.human_id"
-          :item="item"
-          :index="index"
-          :idle="idle(item)"
-          quick="true"
-          @bun="bun"
-          @read="read"
-          @close="close"
-          @accept="modals.acceptSettings = true"
-          @remove="remove"/>
+          <ContactItem
+            v-for="(item, index) in contacts"
+            :key="item.id"
+            :item="item"
+            :index="index"
+            :idle="idle(item)"
+            quick="true"
+            @bun="bun"
+            @read="read"
+            @close="close"
+            @accept="modals.acceptSettings = true"
+            @remove="remove"
+          />
         </div>
 
         <div class="contact-list__next">
           <NextButton
-          :show="more"
-          :ready="response"
-          :hold="!response"
-          :loader="true"
-          @next="next()"/>
+            :show="more"
+            :ready="response"
+            :hold="!response"
+            :loader="true"
+            @next="next()"
+          />
         </div>
       </div>
 
       <div class="contact-list__alerts" v-if="sex === 1 && count && count < batch">
         <div class="alert alert-warning">
-          <b>Девушки не напишут вам сами</b>, так поступают только мошенники.
-          Отправляйте жалобы на них. Сохраняйте особую осторожность при общении,
-          если девушка начинает диалог сама.
+          <b>Девушки не напишут вам сами</b>, так поступают только мошенники. Отправляйте жалобы на
+          них. Сохраняйте особую осторожность при общении, если девушка начинает диалог сама.
         </div>
         <div class="alert alert-danger">
-          <b>Игнорируйте просьбы перейти в мессенджер</b>, соцсеть, скайп, телеграм.
-          Если такая просьба поступает в самом начале общения, это мошенники.
+          <b>Игнорируйте просьбы перейти в мессенджер</b>, соцсеть, скайп, телеграм. Если такая
+          просьба поступает в самом начале общения, это мошенники.
         </div>
       </div>
 
-      <BigIconPlaceholder icon="&#xE001;" text="Ошибка списка" v-else-if="error"/>
-      <BigIconPlaceholder icon="&#xE87E;" text="Список пуст" v-else-if="empty"/>
+      <BigIconPlaceholder icon="&#xE001;" text="Ошибка списка" v-else-if="error" />
+      <BigIconPlaceholder icon="&#xE87E;" text="Список пуст" v-else-if="empty" />
 
       <!-- <div class="activity__content" v-else>
         <div class="hint-info">
@@ -141,19 +146,17 @@ export default {
         Пишите сообщения - это Бесплатно, а значит всё честно и реально!
       </div> -->
 
-
-      <InfoDialog v-if="modals.acceptSettings"
-       @close="modals.acceptSettings = false"
-       @confirm="accept">
+      <InfoDialog
+        v-if="modals.acceptSettings"
+        @close="modals.acceptSettings = false"
+        @confirm="accept"
+      >
         <span slot="title">Удобные знакомства</span>
-        Настройте знакомства для более комфортного общения.
-        Нажмите "Настройки" или "Настроить поиск" чтобы
-        уточнить ваши параметры.
-        Неподходящие знакомства отмечаются особым образом.
+        Настройте знакомства для более комфортного общения. Нажмите "Настройки" или "Настроить
+        поиск" чтобы уточнить ваши параметры. Неподходящие знакомства отмечаются особым образом.
       </InfoDialog>
-
     </ActivityActions>
-    <router-view @close="$root.goBack()" @sended="splice"/>
+    <router-view @close="$root.goBack()" @sended="splice" />
   </div>
 </template>
 
@@ -174,5 +177,4 @@ export default {
 }
 </i18n>
 
-<style lang="less">
-</style>
+<style lang="less"></style>

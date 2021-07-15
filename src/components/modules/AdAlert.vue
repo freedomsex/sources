@@ -21,15 +21,15 @@ export default {
 
 <template>
   <div class="">
-    <div class="container freedom-alert-1-2" v-if="variant == chance">
-      <a href="//fapbook.me/" target="_blank" rel="nofollow">
-        Сохраните лучшее порно или эротические фото для себя. Смотрите их в любой момент!
+    <div class="container freedom-alert-A-7" v-if="variant !== chance">
+      <a href="//virt4.com" target="_blank" rel="nofollow">
+        Виртуальный секс. Интимные возбуждающие разговоры. Начни создавать свои истории!
         <span class="link_simple">Подробнее...</span>
       </a>
     </div>
-    <div class="container freedom-alert-1-3" v-else>
-      <a href="http://virt4.com/" target="_blank" rel="nofollow">
-        Виртуальный секс. Интимные возбуждающие разговоры. Начни создавать свои истории!
+    <div class="container freedom-alert-A-5" v-else>
+      <a href="//fapbook.me/" target="_blank" rel="nofollow">
+        Сохраните лучшее порно или эротические фото для себя. Смотрите их в любой момент!
         <span class="link_simple">Подробнее...</span>
       </a>
     </div>
@@ -54,12 +54,12 @@ export default {
   }
 }
 
-.freedom-alert-1 {
-  &-2 {
+.freedom-alert-A {
+  &-5 {
     .freedom-alert();
     background: #f5ca59;
   }
-  &-3 {
+  &-7 {
     .freedom-alert();
     background: #ff99cc;
   }

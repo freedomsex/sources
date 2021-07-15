@@ -94,18 +94,17 @@ export default {
 
 <template>
   <nav class="search-wizard">
-    <div @click="$router.push('/settings/search')"
-      style="display: none;" v-show="say">
+    <div @click="$router.push('/settings/search')" style="display: none;" v-show="say">
       <i class="material-icons">&#xE8B4;</i>
-      {{$t('Вы ищете')}}: {{say}} &nbsp;
+      {{ $t('Вы ищете') }}: {{ say }} &nbsp;
       <div class="clearfix visible-xs"></div>
       <button class="btn btn-primary btn-sm">
         <span aria-hidden="true" class="glyphicon glyphicon-cog"></span>
-        {{$t('settings')}}
+        {{ $t('settings') }}
       </button>
       <button class="btn btn-default btn-sm" @click.stop="$router.push('/settings/desires')">
         <span aria-hidden="true" class="glyphicon glyphicon-flash"></span>
-        {{$t('Желания')}} ({{desires}})
+        {{ $t('Желания') }} ({{ desires }})
       </button>
     </div>
   </nav>

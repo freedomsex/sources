@@ -2,27 +2,31 @@ export default {
   tasks: {
     load({api, store}) {
       const {uid} = store.state.token;
-      return api.res('intimates').cget({uid, offset: 0}).then(({data}) => {
-        store.commit('intimates/load', data);
-      });
+      return api
+        .res('contact_intimates', 'intimates')
+        .load({userId: uid})
+        .then(({data}) => {
+          store.commit('intimates/load', data);
+        });
     },
-    next({api, store}, offset) {
+    next({api, store}, page) {
       const {uid} = store.state.token;
-      return api.res('intimates').cget({uid, offset}).then(({data}) => {
-        store.commit('intimates/add', data);
-      });
+      return api
+        .res('contact_intimates', 'intimates')
+        .cget({userId: uid, page})
+        .then(({data}) => {
+          store.commit('intimates/add', data);
+        });
     },
     delete({api, store}, index) {
-      const {uid} = store.state.token;
       const {id} = store.state.intimates.list[index];
-      const result = api.res('intimates').delete({uid, id});
+      const result = api.res('contact_intimates', 'intimates').delete({id});
       store.commit('intimates/delete', index);
       return result;
     },
     read({api, store}, index) {
-      const {uid} = store.state.token;
       const {id} = store.state.intimates.list[index];
-      const result = api.res('intimates').put(null, {id, uid});
+      const result = api.res('contact_intimates', 'intimates').put(null, {id});
       store.commit('intimates/read', index);
       return result;
     },

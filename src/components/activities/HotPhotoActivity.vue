@@ -1,5 +1,4 @@
 <script>
-import axios from 'axios';
 import CONFIG from '~config/';
 import ConfirmDialog from '~dialogs/ConfirmDialog';
 import ActivityActions from '~activities/ActivityActions';
@@ -12,6 +11,7 @@ export default {
     page: 0,
     limits: [100, 300],
     list: [],
+    self: null,
   }),
   components: {
     ActivityActions,
@@ -20,6 +20,7 @@ export default {
   mounted() {
     this.fill([]);
     this.load();
+    this.loadSelf();
     // this.timer = setInterval(this.load, 3 * 60 * 1000);
   },
   computed: {
@@ -30,19 +31,32 @@ export default {
       return this.limits.length;
     },
     limit() {
-      return this.page >= (this.pages - 1);
+      return this.page >= this.pages - 1;
     },
   },
   methods: {
     source(src) {
       return src ? `${CONFIG.API_PHOTO}${src}` : '';
     },
+    loadSelf() {
+      this.$api
+        .res('contact_photolines', 'initials')
+        .load({id: this.user.id})
+        .then(({data}) => {
+          if (data && data.length) {
+            this.self = data[0];
+          }
+        });
+    },
     load() {
-      axios.get(`${CONFIG.API_CONTACT}/api/v1/photoline/${this.limits[this.page]}`).then(({data}) => {
-        if (data.list) {
-          this.fill(data.list);
-        }
-      });
+      this.$api
+        .res('contact_photolines', 'initials')
+        .load({page: 1})
+        .then(({data}) => {
+          if (data && data.length) {
+            this.fill(data);
+          }
+        });
     },
     fill(list) {
       this.list = [];
@@ -51,26 +65,37 @@ export default {
         result.push({id: null, item: null, source: null});
       }
       this.list = result;
+      console.log('list', this.list);
     },
-    send(confirm) {
+    async send(confirm) {
       this.confirm = confirm || false;
       if (!this.user.userpic) {
         this.nofile = true;
-      } else
-      if (!this.confirm) {
+      } else if (!this.confirm) {
         this.accept = true;
       } else {
-        const {uid} = this.$store.state.token;
-        axios.post(`${CONFIG.API_CONTACT}/api/v1/photoline/${uid}`, {source: this.user.userpic.source}, {
-          headers: {Authorization: `Bearer ${this.$store.state.token.access}`},
-        }).then(() => {
-          this.accept = false;
-          this.load();
-        }).catch(() => {
+        // const {uid} = this.$store.state.token;
+
+        const res = this.$api.res('contact_photolines', 'initials');
+        const params = {
+          source: this.user.userpic.source,
+        };
+        try {
+          if (this.self) {
+            console.log('put', this.self);
+            await res.put(params, {id: this.self.id});
+          } else {
+            params.userId = this.user.id;
+            await res.post(params);
+          }
+        } catch (e) {
           // this.$store.commit('settings', {userpic: ''});
           this.accept = false;
           console.log('FAILED send photo');
-        });
+        } finally {
+          this.accept = false;
+          this.load();
+        }
       }
     },
     quick(uid) {
@@ -101,7 +126,6 @@ export default {
 
 <template>
   <ActivityActions caption="Горячие парни" type="wrapped" ref="galery" @close="close">
-
     <template slot="option">
       <div class="header-bar__button" v-if="user.sex == 1" @click="send()">
         <span class="header-bar__title">Опубликовать фото</span>
@@ -110,17 +134,18 @@ export default {
     </template>
 
     <div class="activity-section">
-
       <div class="galery-photo" v-if="list.length > 0">
         <div class="galery-photo__item" v-for="(item, index) in list" :style="image(item)">
-          <div class="photo-line__item-blured" :style="image(item)" @click="quick(item.id)">
+          <div
+            class="photo-line__item-blured"
+            :style="image(item)"
+            @click="quick(item.userId)"
+          ></div>
         </div>
-      </div>
       </div>
       <div class="galery-photo__placeholder" v-else>
         <slot></slot>
       </div>
-
     </div>
     <div class="activity-section">
       <div class="btn btn-default" @click="more()" v-if="!limit">
@@ -131,26 +156,24 @@ export default {
       </div> -->
     </div>
 
-    <router-view @close="$root.goBack()"/>
+    <router-view @close="$root.goBack()" />
 
+    <ConfirmDialog
+      v-if="nofile"
+      yesText="Загрузить"
+      @confirm="$router.push('/settings/account')"
+      @close="nofile = false"
+    >
+      <div slot="title">У вас нет фото</div>
+      В ленту можно добавить фото из вашего профиля, но фотографии там нет. Загрузите ваше фото в
+      профиль, затем добавьте его в ленту нажав эту кнопку ещё раз.
+    </ConfirmDialog>
 
-          <ConfirmDialog v-if="nofile"
-            yesText="Загрузить"
-            @confirm="$router.push('/settings/account')"
-            @close="nofile = false">
-            <div slot="title">У вас нет фото</div>
-            В ленту можно добавить фото из вашего профиля, но фотографии там нет. Загрузите ваше фото в профиль, затем добавьте его в ленту нажав эту кнопку ещё раз.
-          </ConfirmDialog>
-
-          <ConfirmDialog v-if="accept"
-            yesText="Добавить"
-            @confirm="send(true)"
-            @close="accept = false">
-            <div slot="title">Опубликовать фото</div>
-            Добавьте ваше фото профиля в ленту. Опубликованная в ленте фотография будет доступна к просмотру всем Пользователям сайта.
-          </ConfirmDialog>
-
-
+    <ConfirmDialog v-if="accept" yesText="Добавить" @confirm="send(true)" @close="accept = false">
+      <div slot="title">Опубликовать фото</div>
+      Добавьте ваше фото профиля в ленту. Опубликованная в ленте фотография будет доступна к
+      просмотру всем Пользователям сайта.
+    </ConfirmDialog>
   </ActivityActions>
 </template>
 

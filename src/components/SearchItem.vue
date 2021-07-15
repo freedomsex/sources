@@ -24,10 +24,10 @@ export default {
       return result;
     },
     tagsCount() {
-      return this.human.tags.length;
+      return this.human.tags && this.human.tags.length;
     },
     tagsList() {
-      return this.human.tags.join(', ');
+      return this.human.tags && this.human.tags.join(', ');
     },
     online() {
       return this.human.last < 777;
@@ -41,7 +41,7 @@ export default {
       return result;
     },
     anketaLink() {
-      const sex = (this.human.sex == 1) ? 'Парень' : 'Девушка';
+      const sex = this.human.sex == 1 ? 'Парень' : 'Девушка';
       const {age, name, up, to} = this.human;
       const city = this.human.city ? `/город/${this.human.city}` : '/';
 
@@ -60,9 +60,12 @@ export default {
       });
     },
     load() {
-      this.$api.res('search').load().then(({data}) => {
-        this.users = data.users;
-      });
+      this.$api
+        .res('search')
+        .load()
+        .then(({data}) => {
+          this.users = data.users;
+        });
     },
   },
   components: {
@@ -76,26 +79,21 @@ export default {
 <template>
   <div class="search-item" :class="{visited: visited, gold: gold && !visited}" @click="quick()">
     <div class="search-item__content" :class="{visited: visited}">
-      <ColoredUserInfo :user="human" :idle="idle" :compact="compact"/>
+      <ColoredUserInfo :user="human" :idle="idle" :compact="compact" />
 
-      <a class="search-item__search"
-        v-if="search" :href="anketaLink"
-        @click.prevent>
-        {{search}}
+      <a class="search-item__search" v-if="search" :href="anketaLink" @click.prevent>
+        {{ search }}
       </a>
     </div>
     <div class="search-item__option" :class="{visited: visited}">
-      <SocialIcons :human="human"/>
-      <div class="search-item__virt"
-        v-if="human.virt" title="Виртуальный секс">вирт</div>
-      <div class="search-item__real"
-        v-if="human.close" title="Реальные знакомства">реал</div>
+      <SocialIcons :human="human" />
+      <div class="search-item__virt" v-if="human.virt" title="Виртуальный секс">вирт</div>
+      <div class="search-item__real" v-if="human.close" title="Реальные знакомства">реал</div>
 
       <div class="search-item__vip">
-        <VipStatus :human="human"/>
+        <VipStatus :human="human" />
       </div>
-      <div class="search-item__desires"
-        v-if="tagsCount" :title="tagsList">{{tagsCount}}</div>
+      <div class="search-item__desires" v-if="tagsCount" :title="tagsList">{{ tagsCount }}</div>
       <div class="search-item__online" v-if="online">онлайн</div>
     </div>
   </div>
@@ -224,5 +222,4 @@ export default {
     margin-left: @indent-xs;
   }
 }
-
 </style>

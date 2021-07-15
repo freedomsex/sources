@@ -1,4 +1,3 @@
-
 import VueI18n from 'vue-i18n';
 import VueProgressBar from 'vue-progressbar';
 import moment from 'moment';
@@ -37,10 +36,12 @@ import Language from '~widgets/Language';
 import Version from '~widgets/Version';
 import FailedChunk from '~dialogs/FailedChunk';
 import Authenticator from '~modules/Authenticator';
+import AdForm from '~modules/AdForm';
 import Recaptcha3v from '~modules/Recaptcha3v';
 import PhotoLineWidget from '~widgets/PhotoLineWidget';
 import FeedbackButtons from '~widgets/FeedbackButtons';
 import LimitationsWidget from '~widgets/LimitationsWidget';
+import VirtLinksMenu from '~widgets/VirtLinksMenu';
 
 import 'styles/core/body.less';
 
@@ -225,6 +226,8 @@ global.App = new Vue({
     PhotoLineWidget,
     FeedbackButtons,
     LimitationsWidget,
+    VirtLinksMenu,
+    AdForm,
   },
 });
 
@@ -252,7 +255,6 @@ global.Layer = new Vue({
   store,
   router: settingsRouter,
 });
-
 
 // global.window.onerror = (message) => {
 //   console.log('window.onerror', message);
